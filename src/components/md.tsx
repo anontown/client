@@ -104,7 +104,7 @@ export default class Md extends React.Component<Props, State> {
             }
           }} />;
       case "router":
-        return <Link to={link.path} />
+        return <Link to={link.path}>{node.children.map(c => this.renderNode(c))}</Link>
     }
   }
 

@@ -1,17 +1,37 @@
 import * as api from "@anontown/api-types";
-import { Storage } from "./models/storage";
-import { ObjectOverwrite } from "typelevel-ts";
-
-export type ResNormalSetedProfile = ObjectOverwrite<api.ResNormal, { profile: api.Profile | null }>;
-export type ResTree = (ResNormalSetedProfile | api.ResHistory | api.ResTopic | api.ResFork | api.ResDelete)
-  & { children: { msg: string, reses: ResTree[] } | null };
+import { Storage, ResTree } from "./models";
 
 export interface Store {
+  db: {
+    clients: { [id: string]: api.Client };
+    histories: { [id: string]: api.History };
+    reses: { [id: string]: api.Res };
+    profiles: { [id: string]: api.Profile };
+    topics: { [id: string]: api.Topic };
+    msgs: { [id: string]: api.Msg };
+  },
   user: {
     token: api.TokenMaster,
-    storage: Storage
+    storage: Storage,
+    notices: {
+      reses: { id: string }[]
+    },
+    msgs: {
+      msgs: { id: string }[]
+    },
+    apps: {
+      client: { id: string }[]
+    },
+    devApps: {
+      client: { id: string }[]
+    }
   } | null,
   topics: {
-    reses: ResTree[],
+    [id: string]: {
+      reses: { id: string }[]
+    }
+  },
+  search: {
+    topics: { id: string }[]
   }
 }

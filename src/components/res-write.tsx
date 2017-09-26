@@ -6,7 +6,6 @@ import Errors from './errors';
 import MdEditor from './md-editor';
 
 export interface Props {
-  topic: api.Topic;
   profiles: api.Profile[];
   errors: string[];
   onSubmit?: (value: State) => void;
