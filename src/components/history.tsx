@@ -3,7 +3,7 @@ import * as api from '@anontown/api-types';
 import { IconButton } from 'material-ui';
 import { NavigationArrowDropUp, NavigationArrowDropDown } from 'material-ui/svg-icons';
 import { dateFormat } from '../utils';
-import Md from './md';
+import { Md } from './md';
 
 
 export interface Props {
@@ -12,14 +12,13 @@ export interface Props {
   hashReses: api.Res[],
   onHashClick?: () => void,
   categoryClick?: () => void,
-  onYouTubeClick?: (videoID: string) => void
 }
 
 export interface State {
   detail: boolean;
 }
 
-export default class History extends React.Component<Props, State> {
+export class History extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -44,8 +43,7 @@ export default class History extends React.Component<Props, State> {
             <dd><a onClick={this.props.categoryClick}>{this.props.history.tags.join(',')}</a></dd >
             <dt>本文</dt>
             <dd>
-              <Md body={this.props.history.body}
-                onYouTubeClick={this.props.onYouTubeClick} />
+              <Md body={this.props.history.body} />
             </dd >
           </dl > : null
         }

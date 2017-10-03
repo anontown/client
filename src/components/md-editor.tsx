@@ -1,42 +1,74 @@
 import * as React from 'react';
-import { TextField, IconButton, Toggle } from 'material-ui';
+import {
+  TextField,
+  IconButton,
+  Toggle,
+  Dialog
+} from 'material-ui';
 import { ImageAddAPhoto, ContentCreate } from 'material-ui/svg-icons';
-import Md from './md';
-
+import { Md } from './md';
+import { Errors } from './errors';
+import { Oekaki } from './oekaki';
 
 export interface Props {
-  onUploadImageClick?: () => void;
-  onOekakiClick?: () => void;
+  id: symbol,
+  errors?: string[],
+  onUploadImage?: (data: Blob | FormData) => void;
   value: string;
   preview?: boolean;
   maxRows?: number;
   minRows?: number;
-  onYouTubeClick?: (videoID: string) => void;
   onChange?: (e: React.FormEvent<{}>, newValue: string) => void;
 }
 
 export interface State {
   preview: boolean;
+  oekaki: boolean;
 }
 
-export default class MdEditor extends React.Component<Props, State> {
+export class MdEditor extends React.Component<Props, State> {
   defaltMinRows = 5;
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      preview: props.preview || false
+      preview: props.preview || false,
+      oekaki: false
     }
   }
 
   render() {
     return (
       <div>
+        <Errors errors={this.props.errors} />
+        <Dialog
+          title="お絵かき"
+          open={this.state.oekaki}
+          autoScrollBodyContent={true}
+          onRequestClose={() => this.setState({ oekaki: false })}>
+          <Oekaki size={{ x: 320, y: 240 }} onSubmit={svg => {
+            if (this.props.onUploadImage) {
+              this.props.onUploadImage(new Blob([svg], { type: 'image/svg+xml' }))
+            }
+          }} />
+        </Dialog>
         <div>
-          <IconButton onClick={this.props.onUploadImageClick}>
+          <IconButton type="file" onChange={e => {
+            if (this.props.onUploadImage) {
+              let target = e.target as HTMLInputElement;
+              let files = target.files;
+              if (files !== null) {
+                for (let file of Array.from(files)) {
+                  let formData = new FormData();
+                  formData.append('image', file);
+                  this.props.onUploadImage(file);
+                }
+              }
+            }
+          }}>
             <ImageAddAPhoto />
           </IconButton>
-          <IconButton onClick={this.props.onOekakiClick}>
+          <IconButton onClick={() => this.setState({ oekaki: true })}>
             <ContentCreate />
           </IconButton>
         </div >
@@ -46,8 +78,7 @@ export default class MdEditor extends React.Component<Props, State> {
           rowsMax={this.props.maxRows}
           value={this.props.value}
           onChange={this.props.onChange} />
-        <Md body={this.props.value}
-          onYouTubeClick={this.props.onYouTubeClick} />
+        <Md body={this.props.value} />
       </div>
     );
   }

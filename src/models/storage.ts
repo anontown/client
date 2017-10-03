@@ -1,3 +1,5 @@
+import * as Im from 'immutable';
+
 interface StorageJSON1 {
   ver: '1.0.0';
   topicFav: string[];
@@ -38,12 +40,38 @@ interface StorageJSON6 {
   topicRead: { [key: string]: { res: string, count: number } };
 }
 
-type StorageJSON = StorageJSON1 |
+export type StorageJSON = StorageJSON1 |
   StorageJSON2 |
   StorageJSON3 |
   StorageJSON4 |
   StorageJSON5 |
   StorageJSON6;
+
+export type StorageJSONLatest = StorageJSON6;
+
+export interface Storage {
+  topicFavo: Im.Set<string>;
+  tagsFavo: Im.Set<Im.Set<string>>;
+  topicRead: Im.Map<string, { res: string, count: number }>;
+}
+
+export function toStorage(json: StorageJSONLatest): Storage {
+  return {
+    topicFavo: Im.Set(json.topicFavo),
+    tagsFavo: Im.Set(json.tagsFavo.map(tags => Im.Set(tags))),
+    topicRead: Im.Map(json.topicRead)
+  };
+}
+
+export function toJSON(storage: Storage): StorageJSONLatest {
+  return {
+    ver: '6',
+    topicFavo: storage.topicFavo.toArray(),
+    tagsFavo: storage.tagsFavo.map(tags => tags!.toArray()).toArray(),
+    topicRead: storage.topicRead.toObject()
+  };
+}
+
 
 function convert1To2(val: StorageJSON1): StorageJSON2 {
   return {
@@ -96,8 +124,7 @@ function convert5To6(val: StorageJSON5): StorageJSON6 {
   };
 }
 
-export type Storage = StorageJSON6;
-export function convert(storage: StorageJSON): Storage {
+export function convert(storage: StorageJSON): StorageJSONLatest {
   let s1 = storage;
   let s2 = s1.ver === '1.0.0' ? convert1To2(s1) : s1;
   let s3 = s2.ver === '2' ? convert2To3(s2) : s2;

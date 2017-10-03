@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as api from '@anontown/api-types'
-import Errors from './errors';
+import { Errors } from './errors';
 import { TextField, RaisedButton } from 'material-ui';
 
 export interface Props {
@@ -16,7 +16,7 @@ export interface State {
   body: string,
 }
 
-export default class ProfileEditor extends React.Component<Props, State> {
+export class ProfileEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {

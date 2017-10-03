@@ -8,12 +8,12 @@ import {
   ContentSend,
   ContentReply
 } from 'material-ui/svg-icons';
-import Errors from './errors';
-import MdEditor from './md-editor';
-import Md from './md';
+import { Errors } from './errors';
+import { MdEditor } from './md-editor';
+import { Md } from './md';
 import { ResTree } from '../models';
-import { Link } from 'react-router';
-import ResWrite from './res-write';
+import { Link } from 'react-router-dom';
+import { ResWrite } from './res-write';
 
 export interface Props {
   res: ResTree,
@@ -28,14 +28,13 @@ export interface Props {
   onHashClick?: () => void;
   onReplyClick?: () => void;
   onSendClick?: () => void;
-  onYouTubeClick?: (videoID: string) => void;
 }
 
 export interface State {
   isReply: boolean
 }
 
-export default class Res extends React.Component<Props, State> {
+export class Res extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -109,9 +108,9 @@ export default class Res extends React.Component<Props, State> {
                 </Badge>
                 : null}
             </span>
-            {this.props.res.type === 'normal' ? <Md body={this.props.res.body} onYouTubeClick={this.props.onYouTubeClick} />
-              : this.props.res.type === 'history' ? <Md body={this.props.res.history.body} onYouTubeClick={this.props.onYouTubeClick} />
-                : this.props.res.type === 'topic' && this.props.res.topicObject.type === 'one' ? <Md body={this.props.res.topicObject.body} onYouTubeClick={this.props.onYouTubeClick} />
+            {this.props.res.type === 'normal' ? <Md body={this.props.res.body} />
+              : this.props.res.type === 'history' ? <Md body={this.props.res.history.body} />
+                : this.props.res.type === 'topic' && this.props.res.topicObject.type === 'one' ? <Md body={this.props.res.topicObject.body} />
                   : null}
             <div *ngIf="res.type==='topic'&&topicRes!==null&&topicRes.type==='fork'" >
       <p>
@@ -137,8 +136,7 @@ export default class Res extends React.Component<Props, State> {
           ? <Paper>
             <ResWrite profiles={this.props.user.profiles}
               errors: string[]
-            onSubmit?: (value: State) => void;
-            onYouTubeClick?: (videoID: string) => void;/>
+            onSubmit?: (value: State) => void/>
           </Paper>
           : null}
         <div *ngIf="children.size!==0" >

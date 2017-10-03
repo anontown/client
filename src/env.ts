@@ -1,5 +1,7 @@
 declare var __PROD__: boolean;
 
+export const PROD = __PROD__;
+
 export const Config = __PROD__ ?
     {
         client: {
@@ -17,6 +19,9 @@ export const Config = __PROD__ ?
         },
         recaptcha: {
             siteKey: '6LdoFBQUAAAAACc3lhPhbkEANEAHsmNd6UDN2vKo'
+        },
+        imgur: {
+            clientID: "042fd78266ccaaf"
         }
     }
     :
@@ -36,5 +41,8 @@ export const Config = __PROD__ ?
         },
         recaptcha: {
             siteKey: '6LeoFBQUAAAAAB0fiXvXvaBO9VyFC7igegEOlD7a'
+        },
+        imgur: {
+            clientID: "042fd78266ccaaf"
         }
     };

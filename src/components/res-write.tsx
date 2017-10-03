@@ -2,14 +2,13 @@ import * as React from 'react';
 import * as api from '@anontown/api-types'
 import { TextField, Checkbox, SelectField, MenuItem, IconButton } from 'material-ui';
 import { NavigationArrowForward } from 'material-ui/svg-icons';
-import Errors from './errors';
-import MdEditor from './md-editor';
+import { Errors } from './errors';
+import { MdEditor } from './md-editor';
 
 export interface Props {
   profiles: api.Profile[];
   errors: string[];
   onSubmit?: (value: State) => void;
-  onYouTubeClick?: (videoID: string) => void;
 }
 
 export interface State {
@@ -19,7 +18,7 @@ export interface State {
   age: boolean;
 }
 
-export default class ResWrite extends React.Component<Props, State> {
+export class ResWrite extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -49,8 +48,7 @@ export default class ResWrite extends React.Component<Props, State> {
         <MdEditor value={this.state.body}
           onChange={(_e, v) => this.setState({ body: v })}
           maxRows={5}
-          minRows={1}
-          onYouTubeClick={this.props.onYouTubeClick} />
+          minRows={1} />
         <IconButton type="submit">
           <NavigationArrowForward />
         </IconButton>

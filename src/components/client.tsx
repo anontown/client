@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as api from '@anontown/api-types'
 import { Paper, IconButton } from 'material-ui';
 import { EditorModeEdit } from 'material-ui/svg-icons';
-import ClientEditor from './client-editor';
+import { ClientEditor } from './client-editor';
 
 export interface Props {
   client: api.Client,
@@ -15,7 +15,7 @@ export interface State {
   edit: boolean
 }
 
-export default class Client extends React.Component<Props, State> {
+export class Client extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {

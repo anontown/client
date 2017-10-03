@@ -1,19 +1,22 @@
 import * as React from 'react';
 import { camo, mdParser } from '../utils';
 import { Config } from '../env';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+import YouTube from 'react-youtube';
+import { Dialog } from 'material-ui';
+
 
 type URLType = { type: 'normal', url: string } | { type: "router", path: string } | { type: 'youtube', videoID: string } | { type: 'image', url: string };
 
 export interface Props {
   body: string;
-  onYouTubeClick?: (videoID: string) => void;
 }
 
 export interface State {
+  youtube: string | null;
 }
 
-export default class Md extends React.Component<Props, State> {
+export class Md extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
@@ -22,6 +25,15 @@ export default class Md extends React.Component<Props, State> {
     let node = mdParser.parse(this.props.body);
     return (
       <div>
+        <Dialog
+          title="YouTube"
+          open={this.state.youtube !== null}
+          autoScrollBodyContent={true}
+          onRequestClose={() => this.setState({ youtube: null })}>
+          {this.state.youtube !== null
+            ? <YouTube videoId={this.state.youtube} />
+            : null}
+        </Dialog>
         {node.children.map(x => this.renderNode(x))}
       </div>
     );
@@ -98,11 +110,7 @@ export default class Md extends React.Component<Props, State> {
       case 'youtube':
         return <img src={`http://i.ytimg.com/vi/${link.videoID}/maxresdefault.jpg`}
           title={node.title || undefined}
-          onClick={() => {
-            if (this.props.onYouTubeClick !== undefined) {
-              this.props.onYouTubeClick(link.videoID);
-            }
-          }} />;
+          onClick={() => this.setState({ youtube: link.videoID })} />;
       case "router":
         return <Link to={link.path}>{node.children.map(c => this.renderNode(c))}</Link>
     }

@@ -6,7 +6,7 @@ export interface Props {
   onDecClick: () => void
 }
 
-export default class App extends React.Component<Props, {}> {
+export class App extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
   }

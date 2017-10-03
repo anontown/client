@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import { Dispatch } from "redux";
-import App from '../components/app'
-import { inc, dec } from '../actions/app'
+import { App } from '../components/app'
 import { Actions } from "../actions/type";
 import { Store } from "../store";
 
@@ -16,4 +15,4 @@ function mapDispatchToProps(dispatch: Dispatch<Actions>) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App)

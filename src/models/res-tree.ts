@@ -8,4 +8,4 @@ export type ResForkSetedHistory = ObjectOverwrite<api.ResFork, { fork: api.Topic
 
 
 export type ResTree = (ResNormalSetedProfile | ResHistorySetedHistory | ResTopicSetedTopic | ResForkSetedHistory | api.ResDelete)
-  & { children: { msg: string, reses: ResTree[] } | null };
+  & { children: { msg: string, resIDs: string[] } | null };

@@ -16,7 +16,7 @@ export interface Props {
 export interface State {
 }
 
-export default class TopicListItem extends React.Component<Props, State> {
+export class TopicListItem extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
