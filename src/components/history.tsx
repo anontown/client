@@ -6,7 +6,7 @@ import { dateFormat } from '../utils';
 import { Md } from './md';
 
 
-export interface Props {
+export interface HistoryProps {
   history: api.History,
   now: Date,
   hashReses: api.Res[],
@@ -14,12 +14,12 @@ export interface Props {
   categoryClick?: () => void,
 }
 
-export interface State {
+export interface HistoryState {
   detail: boolean;
 }
 
-export class History extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class History extends React.Component<HistoryProps, HistoryState> {
+  constructor(props: HistoryProps) {
     super(props);
 
     this.setState({ detail: false });

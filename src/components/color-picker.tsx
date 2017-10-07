@@ -1,20 +1,23 @@
 import * as React from 'react'
 import { SketchPicker, RGBColor } from 'react-color'
 
-export interface Props {
+export interface ColorPickerProps {
   color: RGBColor,
   onChange?: (color: RGBColor) => void
 }
 
-export interface State {
+export interface ColorPickerState {
   display: boolean
 }
 
 //http://casesandberg.github.io/react-color/
-export class ColorPicker extends React.Component<Props, State> {
-  state = {
-    display: false
-  };
+export class ColorPicker extends React.Component<ColorPickerProps, ColorPickerState> {
+  constructor(props: ColorPickerProps) {
+    super(props);
+    this.state = {
+      display: false
+    };
+  }
 
   render() {
     return (

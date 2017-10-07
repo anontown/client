@@ -8,16 +8,16 @@ import { Dialog } from 'material-ui';
 
 type URLType = { type: 'normal', url: string } | { type: "router", path: string } | { type: 'youtube', videoID: string } | { type: 'image', url: string };
 
-export interface Props {
+export interface MdProps {
   body: string;
 }
 
-export interface State {
+export interface MdState {
   youtube: string | null;
 }
 
-export class Md extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class Md extends React.Component<MdProps, MdState> {
+  constructor(props: MdProps) {
     super(props);
   }
 

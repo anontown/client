@@ -19,7 +19,7 @@ export function mdEditorReducer(state = initState, action: Actions): MdEditorSto
     case 'MD_EDITOR_UPLOAD_IMAGE_SUCCESS':
       return state.update(action.id, editor => ({
         ...editor,
-        body: state.get(action.id).body + `![](${action.url})`,
+        body: editor.body + `![](${action.url})`,
         isUploading: false,
         errors: []
       }));

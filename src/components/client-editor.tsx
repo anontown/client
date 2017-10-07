@@ -3,20 +3,20 @@ import * as api from '@anontown/api-types'
 import { Errors } from './errors';
 import { TextField, RaisedButton } from 'material-ui';
 
-export interface Props {
+export interface ClientEditorProps {
   client: api.Client | null,
   onUpdate?: (client: api.Client) => void,
   errors: string[],
-  onAdd?: (value: State) => void
+  onAdd?: (value: ClientEditorState) => void
 }
 
-export interface State {
+export interface ClientEditorState {
   url: string,
   name: string
 }
 
-export class ClientEditor extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class ClientEditor extends React.Component<ClientEditorProps, ClientEditorState> {
+  constructor(props: ClientEditorProps) {
     super(props);
     this.state = {
       url: props.client !== null ? props.client.url : '',

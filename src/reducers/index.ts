@@ -1,14 +1,26 @@
 import { combineReducers } from "redux";
-import { mdEditorReducer as mdEditors, MdEditorStore } from "./md-editor";
+import { mdEditorReducer, MdEditorStore } from "./md-editor";
+import { userReducer, UserStore } from "./user";
+import { resWriteReducer, ResWriteStore } from "./res-write";
+import { apiObjectReducer, APIObjectStore } from "./api-object";
 
 export interface Store {
-  mdEditors: MdEditorStore
+  mdEditors: MdEditorStore,
+  user: UserStore,
+  resWrite: ResWriteStore,
+  apiObject: APIObjectStore
 }
 
 export const reducer = combineReducers<Store>({
-  mdEditors
+  mdEditors: mdEditorReducer,
+  user: userReducer,
+  resWrite: resWriteReducer,
+  apiObject: apiObjectReducer
 });
 
 export {
-  MdEditorStore
+  MdEditorStore,
+  UserStore,
+  ResWriteStore,
+  APIObjectStore
 };

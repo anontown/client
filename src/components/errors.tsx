@@ -1,25 +1,14 @@
 import * as React from 'react';
 import { AlertError } from 'material-ui/svg-icons';
 
-export interface Props {
+export interface ErrorsProps {
   errors?: string[]
 }
 
-export interface State {
-}
-
-export class Errors extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div>
-        {this.props.errors
-          ? this.props.errors.map(e => <div><AlertError color="warn">error</AlertError> {e}</div>)
-          : null}
-      </div>
-    );
-  }
-}
+export const Errors = (props: ErrorsProps) => (
+  <div>
+    {props.errors
+      ? props.errors.map(e => <div><AlertError color="warn">error</AlertError> {e}</div>)
+      : null}
+  </div>
+);

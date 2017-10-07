@@ -10,8 +10,7 @@ import { Md } from './md';
 import { Errors } from './errors';
 import { Oekaki } from './oekaki';
 
-export interface Props {
-  id: symbol,
+export interface MdEditorProps {
   errors?: string[],
   onUploadImage?: (data: Blob | FormData) => void;
   value: string;
@@ -21,15 +20,15 @@ export interface Props {
   onChange?: (e: React.FormEvent<{}>, newValue: string) => void;
 }
 
-export interface State {
+export interface MdEditorState {
   preview: boolean;
   oekaki: boolean;
 }
 
-export class MdEditor extends React.Component<Props, State> {
+export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
   defaltMinRows = 5;
 
-  constructor(props: Props) {
+  constructor(props: MdEditorProps) {
     super(props);
     this.state = {
       preview: props.preview || false,

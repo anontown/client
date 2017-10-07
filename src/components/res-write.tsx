@@ -3,27 +3,26 @@ import * as api from '@anontown/api-types'
 import { TextField, Checkbox, SelectField, MenuItem, IconButton } from 'material-ui';
 import { NavigationArrowForward } from 'material-ui/svg-icons';
 import { Errors } from './errors';
-import { MdEditor } from './md-editor';
+import { MdEditorContainer } from '../containers';
 
-export interface Props {
+export interface ResWriteProps {
   profiles: api.Profile[];
-  errors: string[];
-  onSubmit?: (value: State) => void;
+  errors?: string[];
+  onSubmit?: (value: ResWriteState) => void;
+  mdEditorID: symbol;
 }
 
-export interface State {
+export interface ResWriteState {
   name: string;
-  body: string;
   profile: string | null;
   age: boolean;
 }
 
-export class ResWrite extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
+  constructor(props: ResWriteProps) {
     super(props);
     this.state = {
       name: '',
-      body: '',
       profile: null,
       age: true
     };
@@ -45,8 +44,7 @@ export class ResWrite extends React.Component<Props, State> {
           <MenuItem value={null} primaryText="なし" />
           {this.props.profiles.map(p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
         </SelectField>
-        <MdEditor value={this.state.body}
-          onChange={(_e, v) => this.setState({ body: v })}
+        <MdEditorContainer id={this.props.mdEditorID}
           maxRows={5}
           minRows={1} />
         <IconButton type="submit">

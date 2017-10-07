@@ -67,7 +67,7 @@ export function toJSON(storage: Storage): StorageJSONLatest {
   return {
     ver: '6',
     topicFavo: storage.topicFavo.toArray(),
-    tagsFavo: storage.tagsFavo.map(tags => tags!.toArray()).toArray(),
+    tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
     topicRead: storage.topicRead.toObject()
   };
 }

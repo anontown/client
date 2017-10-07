@@ -3,21 +3,21 @@ import * as api from '@anontown/api-types'
 import { Errors } from './errors';
 import { TextField, RaisedButton } from 'material-ui';
 
-export interface Props {
+export interface ProfileEditorProps {
   profile: api.Profile | null,
   onUpdate?: (profile: api.Profile) => void,
   errors: string[],
-  onAdd?: (value: State) => void
+  onAdd?: (value: ProfileEditorState) => void
 }
 
-export interface State {
+export interface ProfileEditorState {
   sn: string,
   name: string,
   body: string,
 }
 
-export class ProfileEditor extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class ProfileEditor extends React.Component<ProfileEditorProps, ProfileEditorState> {
+  constructor(props: ProfileEditorProps) {
     super(props);
     this.state = {
       sn: props.profile !== null ? props.profile.sn : '',

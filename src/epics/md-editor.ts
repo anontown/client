@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs'
 
-import { Store } from 'redux'
 import { combineEpics } from 'redux-observable'
-import { MdEditorStore } from "../reducers";
+import { Store } from "../reducers";
 import {
   Actions,
   MdEditorUploadImageRequest,
@@ -11,7 +10,7 @@ import {
 } from "../actions";
 import { imgur } from "../utils";
 
-function uploadImage(action$: Observable<Actions>, _store: Store<MdEditorStore>): Observable<Actions> {
+function uploadImage(action$: Observable<Actions>, _store: Store): Observable<Actions> {
   return action$
     .filter<Actions, MdEditorUploadImageRequest>((ac): ac is MdEditorUploadImageRequest => ac.type === "MD_EDITOR_UPLOAD_IMAGE_REQUEST")
     .mergeMap(ac => imgur.upload(ac.data)

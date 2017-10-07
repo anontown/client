@@ -4,7 +4,7 @@ import { Paper, Badge } from 'material-ui';
 import { AvNotInterested, ImageLooksOne, CommunicationCallSplit, AvFiberNew } from 'material-ui/svg-icons';
 import { dateFormat } from '../utils';
 
-export interface Props {
+export interface TopicListItemProps {
   topic: api.Topic;
   newRes: number | null;
   onTopicClick?: () => void;
@@ -13,11 +13,11 @@ export interface Props {
   now: Date;
 }
 
-export interface State {
+export interface TopicListItemState {
 }
 
-export class TopicListItem extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class TopicListItem extends React.Component<TopicListItemProps, TopicListItemState> {
+  constructor(props: TopicListItemProps) {
     super(props);
   }
 

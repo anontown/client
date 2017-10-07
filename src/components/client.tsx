@@ -4,19 +4,19 @@ import { Paper, IconButton } from 'material-ui';
 import { EditorModeEdit } from 'material-ui/svg-icons';
 import { ClientEditor } from './client-editor';
 
-export interface Props {
+export interface ClientProps {
   client: api.Client,
   userID: string | null,
   onUpdate: (client: api.Client) => void,
   errors: string[]
 }
 
-export interface State {
+export interface ClientState {
   edit: boolean
 }
 
-export class Client extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class Client extends React.Component<ClientProps, ClientState> {
+  constructor(props: ClientProps) {
     super(props);
     this.state = {
       edit: false

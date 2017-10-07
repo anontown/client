@@ -29,22 +29,22 @@ export interface Line {
 
 export type Value = Command<Im.List<Line>>;
 
-export interface Props {
+export interface OekakiProps {
   onSubmit?: (svg: string) => void,
   size: Vec2d
 }
 
-export interface State {
+export interface OekakiState {
   value: Value,
   color: RGBColor,
   fill: boolean,
   width: number
 }
 
-export class Oekaki extends React.Component<Props, State> {
+export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   defaltMinRows = 5;
 
-  constructor(props: Props) {
+  constructor(props: OekakiProps) {
     super(props);
     this.state = {
       value: Command.fromValue(Im.List()),
@@ -94,10 +94,10 @@ export class Oekaki extends React.Component<Props, State> {
   baseProfile="full"
   version="1.1">
   ${val.map(p => `<path strokeLinecap="round"
-        strokeWidth="${p!.width}"
-        stroke="${this.toColorString(p!.color)}"
-        fill="${p!.fill ? this.toColorString(p!.color) : 'none'}"
-        d="${`M ${p!.m.x} ${p!.m.y} ` + p!.lines.map(l => `L ${l!.x} ${l!.y} `).join(' ')}"
+        strokeWidth="${p.width}"
+        stroke="${this.toColorString(p.color)}"
+        fill="${p.fill ? this.toColorString(p.color) : 'none'}"
+        d="${`M ${p.m.x} ${p.m.y} ` + p.lines.map(l => `L ${l.x} ${l.y} `).join(' ')}"
       />`)}
 </svg>
     `;
