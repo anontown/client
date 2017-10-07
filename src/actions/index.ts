@@ -4,4 +4,7 @@ export * from './md-editor';
 import { ResWriteActions } from './res-write';
 export * from './res-write';
 
-export type Actions = MdEditorActions | ResWriteActions;
+import { ResActions } from "./res";
+export * from './res';
+
+export type Actions = MdEditorActions | ResWriteActions | ResActions;
