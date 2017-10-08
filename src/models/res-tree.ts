@@ -3,9 +3,9 @@ import { ObjectOverwrite } from "typelevel-ts";
 
 export type ResNormalSetedProfile = ObjectOverwrite<api.ResNormal, { profile: api.Profile | null }>;
 export type ResHistorySetedHistory = ObjectOverwrite<api.ResHistory, { history: api.History }>;
-export type ResTopicSetedTopic = api.ResTopic & { topicObject: api.TopicOne | api.TopicFork };
-export type ResForkSetedHistory = ObjectOverwrite<api.ResFork, { fork: api.TopicFork }>;
+export type ResTopicSetedTopic = api.ResTopic & { topicObject: api.Topic };
+export type ResForkSetedHistory = ObjectOverwrite<api.ResFork, { fork: api.Topic }>;
 
 
 export type ResTree = (ResNormalSetedProfile | ResHistorySetedHistory | ResTopicSetedTopic | ResForkSetedHistory | api.ResDelete)
-  & { children: { msg: string | null, resIDs: string[] } | null };
+  & { children: { msg: string | null, ids: symbol[] } | null };

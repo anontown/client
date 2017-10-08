@@ -7,3 +7,4 @@ export { dateFormat, mdParser, camo, imgur };
 
 export { Command } from './command';
 export { apiClient } from './api-client';
+export { connect } from './connect';
