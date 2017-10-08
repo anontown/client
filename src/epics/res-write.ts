@@ -6,7 +6,7 @@ import {
   Actions,
   ResWriteRequest,
   resWriteSuccess,
-  resWriteFAIL,
+  resWriteFail,
   mdEditorChange
 } from "../actions";
 import { apiClient } from "../utils";
@@ -37,7 +37,7 @@ function resWrite(action$: Observable<Actions>, store: Store): Observable<Action
       age: x.ac.age
     })
       .mergeMap(res => Observable.of<Actions>(resWriteSuccess(x.ac.id, res), mdEditorChange(x.mdEditorID, '')))
-      .catch((err: AtError) => Observable.of(resWriteFAIL(x.ac.id, err.errors.map(x => x.message))))
+      .catch((err: AtError) => Observable.of(resWriteFail(x.ac.id, err.errors.map(x => x.message))))
     );
 }
 

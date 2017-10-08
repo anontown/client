@@ -45,7 +45,7 @@ export function resWriteSuccess(id: ID, res: api.Res): ResWriteSuccess {
   };
 }
 
-export function resWriteFAIL(id: ID, errors: string[]): ResWriteFAIL {
+export function resWriteFail(id: ID, errors: string[]): ResWriteFAIL {
   return {
     type: 'RES_WRITE_FAIL',
     id,

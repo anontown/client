@@ -20,9 +20,29 @@ const initState: APIObjectStore = {
   msgs: Im.Map(),
 };
 
-export function apiObjectReducer(state = initState, action: Actions): APIObjectStore {
+function resReducer(state: APIObjectStore["reses"], action: Actions): APIObjectStore["reses"] {
   switch (action.type) {
+    case "RES_DELETE_SUCCESS":
+    case "RES_UV_SUCCESS":
+    case "RES_DV_SUCCESS":
+    case "RES_CV_SUCCESS":
+    case "RES_SEND_SUCCESS":
+      return state.set(action.res.id, action.res);
+    case "RES_HASH_SUCCESS":
+    case "RES_REPLY_SUCCESS":
+      return state.withMutations(x => {
+        for (let res of action.reses) {
+          x.set(res.id, res);
+        }
+      });
     default:
-      return state
+      return state;
   }
+}
+
+export function apiObjectReducer(state = initState, action: Actions): APIObjectStore {
+  return {
+    ...state,
+    reses: resReducer(state.reses, action)
+  };
 }

@@ -119,7 +119,7 @@ export interface ResSendFail {
   errors: string[]
 }
 
-export type ResActions = ResDeleteRequest | ResDeleteSuccess | ResDVFail |
+export type ResActions = ResDeleteRequest | ResDeleteSuccess | ResDeleteFail |
   ResUVRequest | ResUVSuccess | ResUVFail |
   ResDVRequest | ResDVSuccess | ResDVFail |
   ResCVRequest | ResCVSuccess | ResCVFail |
@@ -173,7 +173,7 @@ export function resUVFail(id: symbol, errors: string[]): ResUVFail {
   }
 }
 
-export function resDVequest(id: symbol): ResDVRequest {
+export function resDVRequest(id: symbol): ResDVRequest {
   return {
     type: 'RES_DV_REQUEST',
     id
@@ -196,7 +196,7 @@ export function resDVFail(id: symbol, errors: string[]): ResDVFail {
   }
 }
 
-export function resCVequest(id: symbol): ResCVRequest {
+export function resCVRequest(id: symbol): ResCVRequest {
   return {
     type: 'RES_CV_REQUEST',
     id
@@ -219,7 +219,7 @@ export function resCVFail(id: symbol, errors: string[]): ResCVFail {
   }
 }
 
-export function resHashequest(id: symbol): ResHashRequest {
+export function resHashRequest(id: symbol): ResHashRequest {
   return {
     type: 'RES_HASH_REQUEST',
     id
