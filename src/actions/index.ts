@@ -1,10 +1,4 @@
-import { MdEditorActions } from './md-editor';
-export * from './md-editor';
+import { UserActions } from './user';
+export * from './user';
 
-import { ResWriteActions } from './res-write';
-export * from './res-write';
-
-import { ResActions } from "./res";
-export * from './res';
-
-export type Actions = MdEditorActions | ResWriteActions | ResActions;
+export type Actions = UserActions;

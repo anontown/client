@@ -10,7 +10,7 @@ export class Command<T>{
   }
 
   get value(): T {
-    return this.history.get(this.index);
+    return this.history.get(this.index)!;
   }
 
   undo() {

@@ -3,20 +3,25 @@ import * as api from '@anontown/api-types'
 import { Paper, IconButton } from 'material-ui';
 import { EditorModeEdit } from 'material-ui/svg-icons';
 import { ClientEditor } from './client-editor';
+import { UserData } from "../models";
+import { connect } from "react-redux";
+import { Store } from "../reducers";
+import { ObjectOmit } from "typelevel-ts";
 
-export interface ClientProps {
+interface _ClientProps {
   client: api.Client,
-  userID: string | null,
-  onUpdate: (client: api.Client) => void,
-  errors: string[]
+  onUpdate?: (client: api.Client) => void,
+  user: UserData | null
 }
+
+export type ClientProps = ObjectOmit<_ClientProps, "user">;
 
 export interface ClientState {
   edit: boolean
 }
 
-export class Client extends React.Component<ClientProps, ClientState> {
-  constructor(props: ClientProps) {
+class _Client extends React.Component<_ClientProps, ClientState> {
+  constructor(props: _ClientProps) {
     super(props);
     this.state = {
       edit: false
@@ -25,10 +30,10 @@ export class Client extends React.Component<ClientProps, ClientState> {
 
   render() {
     let clientEditor = this.state.edit
-      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} errors={this.props.errors} />
+      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} />
       : null;
 
-    let edit = this.props.userID !== null && this.props.userID === this.props.client.user
+    let edit = this.props.user !== null && this.props.user.token.user === this.props.client.user
       ? <div>
         <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
           <EditorModeEdit />
@@ -47,3 +52,5 @@ export class Client extends React.Component<ClientProps, ClientState> {
     );
   }
 }
+
+export const Client = connect((state: Store) => ({ user: state.user }))(_Client);

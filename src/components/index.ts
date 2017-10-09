@@ -10,3 +10,4 @@ export * from './profile-editor';
 export * from './res-write';
 export * from './res';
 export * from './topic-list-item';
+export * from './snack';

@@ -3,25 +3,36 @@ import * as api from '@anontown/api-types'
 import { TextField, Checkbox, SelectField, MenuItem, IconButton } from 'material-ui';
 import { NavigationArrowForward } from 'material-ui/svg-icons';
 import { Errors } from './errors';
-import { MdEditorContainer } from '../containers';
+import { MdEditor } from './md-editor';
+import { UserData } from "../models";
+import { apiClient } from "../utils";
+import { AtError } from "@anontown/api-client";
+import { connect } from "react-redux";
+import { Store } from "../reducers";
+import { ObjectOmit } from "typelevel-ts";
 
-export interface ResWriteProps {
-  profiles: api.Profile[];
-  errors?: string[];
-  onSubmit?: (value: ResWriteState) => void;
-  mdEditorID: symbol;
+interface _ResWriteProps {
+  onSubmit?: (value: api.Res) => void;
+  topic: string;
+  reply: string | null;
+  user: UserData | null
 }
 
+export type ResWriteProps = ObjectOmit<_ResWriteProps, "user">;
+
 export interface ResWriteState {
+  errors?: string[];
+  body: string;
   name: string;
   profile: string | null;
   age: boolean;
 }
 
-export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
-  constructor(props: ResWriteProps) {
+class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
+  constructor(props: _ResWriteProps) {
     super(props);
     this.state = {
+      body: '',
       name: '',
       profile: null,
       age: true
@@ -29,28 +40,51 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
   }
 
   onSubmit() {
-    if (this.props.onSubmit) {
-      this.props.onSubmit(this.state);
+    if (this.props.user === null) {
+      return;
     }
+
+    apiClient.createRes(this.props.user.token, {
+      topic: this.props.topic,
+      name: this.state.name.length !== 0 ? this.state.name : null,
+      text: this.state.body,
+      reply: this.props.reply,
+      profile: this.state.profile,
+      age: this.state.age
+    }).subscribe(res => {
+      if (this.props.onSubmit) {
+        this.props.onSubmit(res);
+      }
+      this.setState({ errors: [] });
+    }, error => {
+      if (error instanceof AtError) {
+        this.setState({ errors: error.errors.map(e => e.message) })
+      } else {
+        throw error;
+      }
+    });
   }
 
   render() {
-    return (
-      <form onSubmit={() => this.onSubmit()} >
-        <Errors errors={this.props.errors} />
+    return this.props.user !== null
+      ? <form onSubmit={() => this.onSubmit()} >
+        <Errors errors={this.state.errors} />
         <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
         <Checkbox label="age" checked={this.state.age} onCheck={(_e, v) => this.setState({ age: v })} />
         <SelectField floatingLabelText="プロフ" value={null} onChange={(_e, _i, v) => this.setState({ profile: v })}>
           <MenuItem value={null} primaryText="なし" />
-          {this.props.profiles.map(p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
+          {this.props.user.profiles.map(p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
         </SelectField>
-        <MdEditorContainer id={this.props.mdEditorID}
+        <MdEditor value={this.state.body}
+          onChange={v => this.setState({ body: v })}
           maxRows={5}
           minRows={1} />
         <IconButton type="submit">
           <NavigationArrowForward />
         </IconButton>
       </form>
-    );
+      : <div>書き込むにはログインが必要です</div>;
   }
 }
+
+export const ResWrite = connect((state: Store) => ({ user: state.user }))(_ResWrite);

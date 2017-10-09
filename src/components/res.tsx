@@ -17,7 +17,7 @@ import {
 import { Md } from './md';
 import { ResTree } from '../models';
 import { Link } from 'react-router-dom';
-import { ResWriteContainer } from '../containers';
+import { ResWrite } from './res-write';
 
 export interface ResProps {
   res: ResTree,

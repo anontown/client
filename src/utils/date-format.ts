@@ -1,4 +1,6 @@
-export function format(value: Date | string | number, now: Date): string {
+export function format(value: Date | string | number): string {
+  let now = new Date();
+
   let date = typeof value === "string" ? new Date(value)
     : typeof value === "number" ? new Date(value)
       : value;
