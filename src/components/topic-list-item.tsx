@@ -1,35 +1,52 @@
 import * as React from 'react';
 import * as api from '@anontown/api-types'
 import { Paper, Badge } from 'material-ui';
-import { AvNotInterested, ImageLooksOne, CommunicationCallSplit, AvFiberNew } from 'material-ui/svg-icons';
+import {
+  AvNotInterested,
+  ImageLooksOne,
+  CommunicationCallSplit,
+  AvFiberNew
+} from 'material-ui/svg-icons';
 import { dateFormat } from '../utils';
+import { Link } from 'react-router-dom';
+import { UserData } from "../models";
+import { connect } from "react-redux";
+import { Store } from "../reducers";
+import { ObjectOmit } from "typelevel-ts";
 
-export interface TopicListItemProps {
+interface _TopicListItemProps {
   topic: api.Topic;
-  newRes: number | null;
-  onTopicClick?: () => void;
+  user: UserData | null
   detail: boolean;
-  onParentClick?: () => void;
-  now: Date;
 }
+export type TopicListItemProps = ObjectOmit<_TopicListItemProps, "user">;
+
 
 export interface TopicListItemState {
 }
 
-export class TopicListItem extends React.Component<TopicListItemProps, TopicListItemState> {
-  constructor(props: TopicListItemProps) {
+class _TopicListItem extends React.Component<_TopicListItemProps, TopicListItemState> {
+  constructor(props: _TopicListItemProps) {
     super(props);
   }
 
   render() {
+    let newRes: number | null = null;
+    if (this.props.user) {
+      let topicData = this.props.user.storage.topicRead.get(this.props.topic.id);
+      if (topicData !== undefined) {
+        newRes = this.props.topic.resCount - topicData.count;
+      }
+    }
+
     return (
       <Paper>
         <div>
           {!this.props.topic.active ? <AvNotInterested /> : null}
           {this.props.topic.type === 'one' ? <ImageLooksOne /> : null}
           {this.props.topic.type === 'fork' ? <CommunicationCallSplit /> : null}
-          {this.props.newRes !== null && this.props.newRes !== 0 ? <Badge badgeContent={this.props.newRes}><AvFiberNew /></Badge> : null}
-          <a onClick={this.props.onTopicClick}> {this.props.topic.title}</a>
+          {newRes !== null && newRes !== 0 ? <Badge badgeContent={newRes}><AvFiberNew /></Badge> : null}
+          <Link to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
         </div >
         {this.props.detail
           ? <div>
@@ -37,12 +54,10 @@ export class TopicListItem extends React.Component<TopicListItemProps, TopicList
               ? <div>
                 {this.props.topic.tags.join(',')}
               </div >
-              : <a onClick={this.props.onParentClick} >
-                親トピック
-              </a >}
+              : <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>}
 
             <div>
-              作成 {dateFormat.format(this.props.topic.date, this.props.now)} 更新 {dateFormat.format(this.props.topic.update, this.props.now)}
+              作成 {dateFormat.format(this.props.topic.date)} 更新 {dateFormat.format(this.props.topic.update)}
             </div>
             <div>
               総レス数 {this.props.topic.resCount}
@@ -54,3 +69,5 @@ export class TopicListItem extends React.Component<TopicListItemProps, TopicList
     );
   }
 }
+
+export const TopicListItem = connect((state: Store) => ({ user: state.user }))(_TopicListItem);
