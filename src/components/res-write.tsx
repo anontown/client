@@ -60,7 +60,7 @@ class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
       if (error instanceof AtError) {
         this.setState({ errors: error.errors.map(e => e.message) })
       } else {
-        throw error;
+        this.setState({ errors: ['エラーが発生しました'] })
       }
     });
   }

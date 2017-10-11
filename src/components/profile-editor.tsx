@@ -68,7 +68,7 @@ class _ProfileEditor extends React.Component<_ProfileEditorProps, ProfileEditorS
         if (error instanceof AtError) {
           this.setState({ errors: error.errors.map(e => e.message) })
         } else {
-          throw error;
+          this.setState({ errors: ['エラーが発生しました'] })
         }
       });
     } else {
@@ -85,7 +85,7 @@ class _ProfileEditor extends React.Component<_ProfileEditorProps, ProfileEditorS
         if (error instanceof AtError) {
           this.setState({ errors: error.errors.map(e => e.message) })
         } else {
-          throw error;
+          this.setState({ errors: ['エラーが発生しました'] })
         }
       });
     }
