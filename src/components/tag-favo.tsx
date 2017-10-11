@@ -34,7 +34,7 @@ class _TagFavo extends React.Component<_TagFavoProps, TagFavoState> {
           <br />
           <Link to='/topic/search'>検索</Link>
         </Paper>
-      : <div>書き込むにはログインが必要です</div>;
+      : <div>ログインしないと表示出来ません</div>;
   }
 }
 
