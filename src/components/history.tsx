@@ -56,7 +56,7 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
             <dt>タイトル</dt>
             <dd>{this.props.history.title}</dd>
             <dt>カテゴリ</dt>
-            <dd><Link to={{ pathname: "/topic/search", search: new URLSearchParams({ title: '', tags: this.props.history.tags.join(' ') }).toString() }}>{this.props.history.tags.join(',')}</Link></dd >
+            <dd><Link to={{ pathname: "/topic/search", search: new URLSearchParams({ tags: this.props.history.tags.join(' ') }).toString() }}>{this.props.history.tags.join(',')}</Link></dd >
             <dt>本文</dt>
             <dd>
               <Md body={this.props.history.text} />
