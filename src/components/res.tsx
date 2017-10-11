@@ -21,7 +21,6 @@ import { Link } from 'react-router-dom';
 import { ResWrite } from './res-write';
 import { UserData } from "../models";
 import { apiClient, resSetedCreate } from "../utils";
-import { AtError } from "@anontown/api-client";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
@@ -66,12 +65,8 @@ class _Res extends React.Component<_ResProps, ResState> {
         if (this.props.update) {
           this.props.update(res);
         }
-      }, error => {
-        if (error instanceof AtError) {
-          this.setState({ snackMsg: "投票に失敗しました" })
-        } else {
-          throw error;
-        }
+      }, () => {
+        this.setState({ snackMsg: "投票に失敗しました" })
       });
   }
 
@@ -125,12 +120,8 @@ class _Res extends React.Component<_ResProps, ResState> {
         .mergeMap(reses => resSetedCreate.resSet(token, reses))
         .subscribe(reses => {
           this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } })
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ snackMsg: "レス取得に失敗しました" })
-          } else {
-            throw error;
-          }
+        }, () => {
+          this.setState({ snackMsg: "レス取得に失敗しました" })
         });
     } else {
       this.setState({ children: null });
@@ -150,12 +141,8 @@ class _Res extends React.Component<_ResProps, ResState> {
         if (this.props.update) {
           this.props.update(res);
         }
-      }, error => {
-        if (error instanceof AtError) {
-          this.setState({ snackMsg: "レス削除に失敗しました" })
-        } else {
-          throw error;
-        }
+      }, () => {
+        this.setState({ snackMsg: "レス削除に失敗しました" });
       });
   }
 
@@ -168,12 +155,8 @@ class _Res extends React.Component<_ResProps, ResState> {
         .mergeMap(res => resSetedCreate.resSet(token, [res]))
         .subscribe(reses => {
           this.setState({ children: { reses: Im.List(reses), msg: null } })
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ snackMsg: "レス取得に失敗しました" })
-          } else {
-            throw error;
-          }
+        }, () => {
+          this.setState({ snackMsg: "レス取得に失敗しました" });
         });
     } else {
       this.setState({ children: null });
@@ -190,12 +173,8 @@ class _Res extends React.Component<_ResProps, ResState> {
         .mergeMap(reses => resSetedCreate.resSet(token, reses))
         .subscribe(reses => {
           this.setState({ children: { reses: Im.List(reses), msg: null } })
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ snackMsg: "レス取得に失敗しました" })
-          } else {
-            throw error;
-          }
+        }, () => {
+          this.setState({ snackMsg: "レス取得に失敗しました" });
         });
     } else {
       this.setState({ children: null });

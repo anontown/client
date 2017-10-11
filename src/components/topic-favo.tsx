@@ -12,7 +12,6 @@ import { apiClient } from "../utils";
 import * as api from "@anontown/api-types";
 import { TopicListItem } from "./topic-list-item";
 import { Snack } from "./snack";
-import { AtError } from "@anontown/api-client";
 import { NavigationRefresh } from 'material-ui/svg-icons';
 
 interface _TopicFavoProps {
@@ -45,12 +44,8 @@ class _TopicFavo extends React.Component<_TopicFavoProps, TopicFavoState> {
       .map(topics => topics.sort((a, b) => a.update > b.update ? -1 : a.update < b.update ? 1 : 0))
       .subscribe(topics => {
         this.setState({ topicFavo: topics });
-      }, error => {
-        if (error instanceof AtError) {
-          this.setState({ snackMsg: "トピック取得に失敗しました" })
-        } else {
-          throw error;
-        }
+      }, () => {
+        this.setState({ snackMsg: "トピック取得に失敗しました" })
       });
   }
 

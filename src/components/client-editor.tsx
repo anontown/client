@@ -64,7 +64,7 @@ class _ClientEditor extends React.Component<_ClientEditorProps, ClientEditorStat
         if (error instanceof AtError) {
           this.setState({ errors: error.errors.map(e => e.message) })
         } else {
-          throw error;
+          this.setState({ errors: ['エラーが発生しました'] })
         }
       });
     } else {
@@ -80,7 +80,7 @@ class _ClientEditor extends React.Component<_ClientEditorProps, ClientEditorStat
         if (error instanceof AtError) {
           this.setState({ errors: error.errors.map(e => e.message) })
         } else {
-          throw error;
+          this.setState({ errors: ['エラーが発生しました'] })
         }
       });
     }

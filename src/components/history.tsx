@@ -10,7 +10,6 @@ import {
 import { dateFormat } from '../utils';
 import { Md } from './md';
 import { UserData } from "../models";
-import { AtError } from "@anontown/api-client";
 import { apiClient } from "../utils";
 import { Snack } from "./snack";
 import { connect } from "react-redux";
@@ -79,12 +78,8 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
         hash: this.props.history.hash
       }).subscribe(reses => {
         this.setState({ hashReses: reses });
-      }, error => {
-        if (error instanceof AtError) {
-          this.setState({ snackMsg: "レスの取得に失敗しました" })
-        } else {
-          throw error;
-        }
+      }, () => {
+        this.setState({ snackMsg: "レスの取得に失敗しました" })
       });
     } else {
       this.setState({ hashReses: null });
