@@ -13,6 +13,7 @@ import { UserData } from "../models";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
+import { TagsLink } from "./tags-link";
 
 interface _TopicListItemProps {
   topic: api.Topic;
@@ -52,7 +53,7 @@ class _TopicListItem extends React.Component<_TopicListItemProps, TopicListItemS
           ? <div>
             {this.props.topic.type !== 'fork'
               ? <div>
-                {this.props.topic.tags.join(',')}
+                <TagsLink tags={this.props.topic.tags} />
               </div >
               : <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>}
 

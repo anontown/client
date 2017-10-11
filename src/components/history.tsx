@@ -10,13 +10,13 @@ import {
 import { dateFormat } from '../utils';
 import { Md } from './md';
 import { UserData } from "../models";
-import { Link } from "react-router-dom";
 import { AtError } from "@anontown/api-client";
 import { apiClient } from "../utils";
 import { Snack } from "./snack";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
+import { TagsLink } from "./tags-link";
 
 interface _HistoryProps {
   history: api.History,
@@ -56,7 +56,7 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
             <dt>タイトル</dt>
             <dd>{this.props.history.title}</dd>
             <dt>カテゴリ</dt>
-            <dd><Link to={{ pathname: "/topic/search", search: new URLSearchParams({ tags: this.props.history.tags.join(' ') }).toString() }}>{this.props.history.tags.join(',')}</Link></dd >
+            <dd><TagsLink tags={this.props.history.tags} /></dd >
             <dt>本文</dt>
             <dd>
               <Md body={this.props.history.text} />

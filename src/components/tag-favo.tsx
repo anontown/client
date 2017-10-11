@@ -7,6 +7,7 @@ import { UserData } from "../models";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
+import { TagsLink } from "./tags-link";
 
 interface _TagFavoProps {
   user: UserData | null
@@ -27,7 +28,7 @@ class _TagFavo extends React.Component<_TagFavoProps, TagFavoState> {
       ? this.props.user.storage.tagsFavo.size !== 0 ?
         this.props.user.storage.tagsFavo.map(tags =>
           <Paper>
-            <Link to={{ pathname: "/topic/search", search: new URLSearchParams({ tags: tags.join(' ') }).toString() }}>{tags.size !== 0 ? tags.join(',') : '(なし)'}</Link>
+            <TagsLink tags={tags.toArray()} />
           </Paper>).toArray()
         : <Paper>
           お気に入りタグがありません。
