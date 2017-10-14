@@ -16,3 +16,8 @@ export * from './page';
 export * from './tag-favo';
 export * from './topic-favo';
 export * from './tags-link';
+export * from './topic-favo';
+export * from './topic-edit';
+export * from './topic-fork';
+export * from './tags-input';
+
