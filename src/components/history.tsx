@@ -34,7 +34,11 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
   constructor(props: _HistoryProps) {
     super(props);
 
-    this.setState({ detail: false });
+    this.state = {
+      detail: false,
+      hashReses: null,
+      snackMsg: null
+    };
   }
 
   render() {
