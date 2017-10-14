@@ -8,6 +8,7 @@ import { AtError } from "@anontown/api-client";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
+import { MdEditor } from "./md-editor";
 
 interface _ProfileEditorProps {
   profile: api.Profile | null,
@@ -42,7 +43,7 @@ class _ProfileEditor extends React.Component<_ProfileEditorProps, ProfileEditorS
         <Errors errors={this.state.errors} />
         <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
         <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-        <TextField multiLine={true} value={this.state.body} onChange={(_e, v) => this.setState({ body: v })} />
+        <MdEditor value={this.state.body} onChange={v => this.setState({ body: v })} />
         <RaisedButton type="submit" label="OK" />
       </form>
       : <div>ログインして下さい</div>;
