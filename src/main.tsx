@@ -16,7 +16,6 @@ const store = createStore(reducer, applyMiddleware(logger));
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <App />
             <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
                 <Route path="/" component={App} />
             </MuiThemeProvider>

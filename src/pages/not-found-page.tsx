@@ -6,7 +6,7 @@ export interface NotFoundProps {
 
 }
 
-export function NotFound(_props: NotFoundProps) {
+export function NotFoundPage(_props: NotFoundProps) {
   return <Page column={1}>
     <Paper>ページが見つかりません</Paper>
   </Page>;
