@@ -1,2 +1,3 @@
-export * from './not-found-page';
-export * from './res-page';
+export * from './not-found';
+export * from './res';
+export * from './settings';
