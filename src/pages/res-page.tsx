@@ -6,8 +6,9 @@ import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
 import { RouteComponentProps } from "react-router-dom";
-import { Snack, Res } from "../components";
+import { Snack, Res, Page } from "../components";
 import { Paper } from "material-ui";
+
 
 type _ResPageProps = RouteComponentProps<{ id: string }> & { user: UserData | null };
 export type ResPageProps = ObjectOmit<_ResPageProps, "user">;
@@ -41,14 +42,16 @@ class _ResPage extends React.Component<_ResPageProps, ResPageState> {
 
   render() {
     return (
-      <Paper>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.state.res !== null
-          ? <Res res={this.state.res} isPop={false} update={res => this.setState({ res })} />
-          : null}
-      </Paper>
+      <Page column={1}>
+        <Paper>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.state.res !== null
+            ? <Res res={this.state.res} isPop={false} update={res => this.setState({ res })} />
+            : null}
+        </Paper>
+      </Page>
     );
   }
 }
