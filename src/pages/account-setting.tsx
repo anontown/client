@@ -74,18 +74,20 @@ class _AccountSettingPage extends React.Component<_AccountSettingPageProps, Acco
   }
 
   render() {
-    return <Paper>
-      <Snack
-        msg={this.state.snackMsg}
-        onHide={() => this.setState({ snackMsg: null })} />
-      <form onSubmit={() => this.onSubmit()}>
-        <Errors errors={this.state.errors} />
-        <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
-        <TextField floatingLabelText="新しいパスワード" value={this.state.newPass} onChange={(_e, v) => this.setState({ newPass: v })} />
-        <TextField floatingLabelText="現在のパスワード" value={this.state.oldPass} onChange={(_e, v) => this.setState({ oldPass: v })} />
-        <RaisedButton type="submit" label="OK" />
-      </form>
-    </Paper >;
+    return this.props.user !== null
+      ? <Paper>
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        <form onSubmit={() => this.onSubmit()}>
+          <Errors errors={this.state.errors} />
+          <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
+          <TextField floatingLabelText="新しいパスワード" value={this.state.newPass} onChange={(_e, v) => this.setState({ newPass: v })} />
+          <TextField floatingLabelText="現在のパスワード" value={this.state.oldPass} onChange={(_e, v) => this.setState({ oldPass: v })} />
+          <RaisedButton type="submit" label="OK" />
+        </form>
+      </Paper>
+      : <div>ログインして下さい。</div>;
   }
 }
 
