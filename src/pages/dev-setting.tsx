@@ -71,4 +71,4 @@ class _DevSettingPage extends React.Component<_DevSettingPageProps, DevSettingPa
   }
 }
 
-export const DevSetting = connect((state: Store) => ({ user: state.user }))(_DevSettingPage);
+export const DevSettingPage = connect((state: Store) => ({ user: state.user }))(_DevSettingPage);

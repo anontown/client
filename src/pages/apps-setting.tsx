@@ -73,4 +73,4 @@ class _AppsSettingPage extends React.Component<_AppsSettingPageProps, AppsSettin
   }
 }
 
-export const AppsSetting = connect((state: Store) => ({ user: state.user }))(_AppsSettingPage);
+export const AppsSettingPage = connect((state: Store) => ({ user: state.user }))(_AppsSettingPage);

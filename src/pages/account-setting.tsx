@@ -91,7 +91,7 @@ class _AccountSettingPage extends React.Component<_AccountSettingPageProps, Acco
   }
 }
 
-export const AccountSetting = connect(
+export const AccountSettingPage = connect(
   (state: Store) => ({ user: state.user }),
   dispatch => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
