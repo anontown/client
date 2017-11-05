@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Link } from "react-router-dom";
+import * as qs from "query-string";
 
 export interface TagsLinkProps {
   tags: string[]
 }
 
 export function TagsLink(props: TagsLinkProps) {
-  return <Link to={{ pathname: "/topic/search", search: new URLSearchParams({ tags: props.tags.join(' ') }).toString() }}>
+  return <Link to={{ pathname: "/topic/search", search: qs.stringify({ tags: props.tags.join(' ') }) }}>
     {props.tags.length !== 0 ? props.tags.join(',') : '(なし)'}
   </Link>
 }
