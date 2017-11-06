@@ -3,7 +3,7 @@ import { Paper } from "material-ui";
 import { Page } from "../components";
 import { RouteComponentProps } from "react-router-dom";
 
-export type NotFoundProps = RouteComponentProps<{}>:
+export type NotFoundProps = RouteComponentProps<{}>;
 
 export function NotFoundPage(_props: NotFoundProps) {
   return <Page column={1}>
