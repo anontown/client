@@ -48,6 +48,13 @@ export type StorageJSON = StorageJSON1 |
   StorageJSON6;
 
 export type StorageJSONLatest = StorageJSON6;
+export const initStorage: StorageJSONLatest = {
+  ver: '6',
+  topicFavo: [],
+  tagsFavo: [],
+  topicRead: {}
+};
+export const verArray: StorageJSON["ver"][] = ["6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
   topicFavo: Im.Set<string>;
@@ -132,5 +139,7 @@ export function convert(storage: StorageJSON): StorageJSONLatest {
   let s5 = s4.ver === '4' ? convert4To5(s4) : s4;
   let s6 = s5.ver === '5' ? convert5To6(s5) : s5;
 
-  return s6;
+  let json = s6.ver === '6' ? s6 : initStorage;
+
+  return json;
 }
