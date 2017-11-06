@@ -18,7 +18,7 @@ type _AppsSettingPageProps = RouteComponentProps<{}> & {
   user: UserData | null
 };
 
-export type AppsSettingPageProps = ObjectOmit<_AppsSettingPageProps, 'user' | 'updateUser'>;
+export type AppsSettingPageProps = ObjectOmit<_AppsSettingPageProps, 'user'>;
 
 interface AppsSettingPageState {
   clients: Im.List<api.Client>,
