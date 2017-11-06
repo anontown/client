@@ -57,18 +57,6 @@ class _DevSettingPage extends React.Component<_DevSettingPageProps, DevSettingPa
       </Paper>
       : <div>ログインして下さい。</div>;
   }
-
-  del(client: api.Client) {
-    if (this.props.user === null) {
-      return;
-    }
-    apiClient.deleteTokenClient(this.props.user.token, { client: client.id })
-      .subscribe(() => {
-        this.setState({ clients: this.state.clients.filter(c => c.id !== client.id) })
-      }, () => {
-        this.setState({ snackMsg: '削除に失敗しました' });
-      });
-  }
 }
 
 export const DevSettingPage = connect((state: Store) => ({ user: state.user }))(_DevSettingPage);
