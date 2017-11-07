@@ -51,7 +51,6 @@ class _InPage extends React.Component<_InPageProps, InPageState> {
       : <Paper>
         <form onSubmit={() => this.ok()}>
           <Errors errors={this.state.errors} />
-
           <TextField
             floatingLabelText="ID"
             value={this.state.sn}
