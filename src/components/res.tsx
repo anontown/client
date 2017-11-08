@@ -20,7 +20,11 @@ import { ResSeted } from '../models';
 import { Link } from 'react-router-dom';
 import { ResWrite } from './res-write';
 import { UserData } from "../models";
-import { apiClient, resSetedCreate } from "../utils";
+import {
+  apiClient,
+  resSetedCreate,
+  list
+} from "../utils";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
@@ -183,10 +187,7 @@ class _Res extends React.Component<_ResProps, ResState> {
 
   updateChildren(res: ResSeted) {
     if (this.state.children !== null) {
-      let index = this.state.children.reses.findIndex(x => x.id === res.id);
-      if (index !== -1) {
-        this.setState({ children: { ...this.state.children, reses: this.state.children.reses.set(index, res) } })
-      }
+      this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } })
     }
   }
 

@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { ResSeted } from '../models';
-import { UserData } from "../models";
-import { apiClient, resSetedCreate } from "../utils";
+import { ResSeted, UserData } from '../models';
+import {
+  apiClient,
+  resSetedCreate,
+  list
+} from "../utils";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
@@ -65,7 +68,7 @@ class _NotificationsPage extends React.Component<_NotificationsPageProps, Notifi
   }
 
   update(res: ResSeted) {
-    this.setState({ reses: this.state.reses.set(this.state.reses.findIndex((r) => r.id === res.id), res) });
+    this.setState({ reses: list.update(this.state.reses, res) });
   }
 
   findNew() {

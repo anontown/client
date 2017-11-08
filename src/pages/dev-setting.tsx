@@ -4,7 +4,10 @@ import { ObjectOmit } from "typelevel-ts";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { RouteComponentProps } from "react-router-dom";
-import { apiClient } from "../utils";
+import {
+  apiClient,
+  list
+} from "../utils";
 import { Snack, Client, ClientEditor } from "../components";
 import {
   Paper
@@ -50,7 +53,7 @@ class _DevSettingPage extends React.Component<_DevSettingPageProps, DevSettingPa
           onHide={() => this.setState({ snackMsg: null })} />
         {this.state.clients.map(c => <Client
           client={c}
-          onUpdate={c => this.setState({ clients: this.state.clients.set(this.state.clients.findIndex(x => x.id === c.id), c) })} />)}
+          onUpdate={c => this.setState({ clients: list.update(this.state.clients, c) })} />)}
         <ClientEditor
           client={null}
           onAdd={c => this.setState({ clients: this.state.clients.push(c) })} />
