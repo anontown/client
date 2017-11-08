@@ -18,7 +18,7 @@ interface _ClientEditorProps {
 
 export type ClientEditorProps = ObjectOmit<_ClientEditorProps, 'user'>;
 
-export interface ClientEditorState {
+interface ClientEditorState {
   url: string,
   name: string,
   errors: string[],

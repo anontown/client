@@ -9,7 +9,7 @@ export interface TagsInputProps {
 }
 
 
-export interface TagsInputState {
+interface TagsInputState {
   acTags: { name: string, count: number }[],
   snackMsg: null | string
 }

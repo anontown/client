@@ -6,7 +6,7 @@ export interface ColorPickerProps {
   onChange?: (color: RGBColor) => void
 }
 
-export interface ColorPickerState {
+interface ColorPickerState {
   display: boolean
 }
 

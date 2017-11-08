@@ -20,7 +20,7 @@ import { dateFormat, apiClient } from "../utils";
 type _MessagesPageProps = RouteComponentProps<{}> & { user: UserData | null };
 export type MessagesPageProps = ObjectOmit<_MessagesPageProps, "user">;
 
-export interface MessagesPageState {
+interface MessagesPageState {
   msgs: Im.List<api.Msg>
   snackMsg: null | string,
 }

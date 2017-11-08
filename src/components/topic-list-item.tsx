@@ -23,7 +23,7 @@ interface _TopicListItemProps {
 export type TopicListItemProps = ObjectOmit<_TopicListItemProps, "user">;
 
 
-export interface TopicListItemState {
+interface TopicListItemState {
 }
 
 class _TopicListItem extends React.Component<_TopicListItemProps, TopicListItemState> {

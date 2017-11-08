@@ -4,7 +4,7 @@ export interface PageProps {
   column: 1 | 2
 }
 
-export interface PageState {
+interface PageState {
 }
 
 export class Page extends React.Component<PageProps, PageState> {

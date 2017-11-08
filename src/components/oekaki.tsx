@@ -34,7 +34,7 @@ export interface OekakiProps {
   size: Vec2d
 }
 
-export interface OekakiState {
+interface OekakiState {
   value: Value,
   color: RGBColor,
   fill: boolean,

@@ -19,7 +19,7 @@ interface _ProfileEditorProps {
 
 export type ProfileEditorProps = ObjectOmit<_ProfileEditorProps, "user">;
 
-export interface ProfileEditorState {
+interface ProfileEditorState {
   errors: string[],
   sn: string,
   name: string,

@@ -12,7 +12,7 @@ export interface MdProps {
   body: string;
 }
 
-export interface MdState {
+interface MdState {
   youtube: string | null;
 }
 

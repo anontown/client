@@ -19,7 +19,7 @@ interface _TopicEditorProps {
 
 export type TopicEditorProps = ObjectOmit<_TopicEditorProps, "user">;
 
-export interface TopicEditorState {
+interface TopicEditorState {
   errors: string[],
   title: string,
   tags: string[],

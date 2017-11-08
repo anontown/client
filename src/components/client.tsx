@@ -16,7 +16,7 @@ interface _ClientProps {
 
 export type ClientProps = ObjectOmit<_ClientProps, "user">;
 
-export interface ClientState {
+interface ClientState {
   edit: boolean
 }
 

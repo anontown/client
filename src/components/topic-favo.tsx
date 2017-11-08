@@ -20,7 +20,7 @@ interface _TopicFavoProps {
 
 export type TopicFavoProps = ObjectOmit<_TopicFavoProps, "user">;
 
-export interface TopicFavoState {
+interface TopicFavoState {
   topicFavo: api.Topic[] | null,
   snackMsg: null | string
 }

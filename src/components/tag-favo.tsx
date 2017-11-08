@@ -15,7 +15,7 @@ interface _TagFavoProps {
 
 export type TagFavoProps = ObjectOmit<_TagFavoProps, "user">;
 
-export interface TagFavoState {
+interface TagFavoState {
 }
 
 class _TagFavo extends React.Component<_TagFavoProps, TagFavoState> {

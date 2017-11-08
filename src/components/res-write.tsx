@@ -20,7 +20,7 @@ interface _ResWriteProps {
 
 export type ResWriteProps = ObjectOmit<_ResWriteProps, "user">;
 
-export interface ResWriteState {
+interface ResWriteState {
   errors?: string[];
   body: string;
   name: string;

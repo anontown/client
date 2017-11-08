@@ -19,7 +19,7 @@ interface _TopicForkProps {
 
 export type TopicForkProps = ObjectOmit<_TopicForkProps, "user">;
 
-export interface TopicForkState {
+interface TopicForkState {
   errors: string[],
   title: string,
   children: api.TopicFork[],

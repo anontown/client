@@ -9,7 +9,7 @@ import { List, ListItem } from "material-ui";
 
 export type SettingsPageProps = RouteComponentProps<{}>;
 
-export interface SettingsPageState {
+interface SettingsPageState {
 }
 
 export class SettingsPage extends React.Component<SettingsPageProps, SettingsPageState> {

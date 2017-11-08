@@ -19,7 +19,7 @@ export interface MdEditorProps {
   onChange?: (newValue: string) => void;
 }
 
-export interface MdEditorState {
+interface MdEditorState {
   oekakiErrors?: string[],
   imageErrors?: string[],
   preview: boolean;

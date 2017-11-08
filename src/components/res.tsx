@@ -40,7 +40,7 @@ interface _ResProps {
 export type ResProps = ObjectOmit<_ResProps, "user">;
 
 
-export interface ResState {
+interface ResState {
   isReply: boolean,
   children: { reses: Im.List<ResSeted>, msg: string | null } | null,
   snackMsg: null | string,

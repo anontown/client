@@ -24,7 +24,7 @@ interface _HistoryProps {
 
 export type HistoryProps = ObjectOmit<_HistoryProps, "user">;
 
-export interface HistoryState {
+interface HistoryState {
   detail: boolean;
   hashReses: api.Res[] | null;
   snackMsg: null | string

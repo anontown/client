@@ -13,7 +13,7 @@ import { Paper } from "material-ui";
 type _ResPageProps = RouteComponentProps<{ id: string }> & { user: UserData | null };
 export type ResPageProps = ObjectOmit<_ResPageProps, "user">;
 
-export interface ResPageState {
+interface ResPageState {
   res: ResSeted | null
   snackMsg: null | string,
 }

@@ -34,7 +34,7 @@ export interface ScrollProps {
   newItem: Observable<ListItem>,
 }
 
-export interface ScrollState {
+interface ScrollState {
 }
 
 class HTMLElementData {

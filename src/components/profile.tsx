@@ -6,7 +6,7 @@ export interface ProfileProps {
   profile: api.Profile
 }
 
-export interface ProfileState {
+interface ProfileState {
 }
 
 export class Profile extends React.Component<ProfileProps, ProfileState> {

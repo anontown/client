@@ -11,7 +11,7 @@ export interface TopicDataProps {
   topic: api.Topic;
 }
 
-export interface TopicDataState {
+interface TopicDataState {
   histories: api.History[] | null,
   parent: api.Topic | null;
   snackMsg: null | string;
