@@ -29,7 +29,7 @@ function _HomePage(props: _HomePageProps) {
     {props.user !== null
       ? <Tabs>
         <Tab label="トピック">
-          <TopicFavo />
+          <TopicFavo detail={true} />
         </Tab>
         <Tab label="タグ">
           <TagFavo />

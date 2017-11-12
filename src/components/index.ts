@@ -17,7 +17,7 @@ export * from './tag-favo';
 export * from './topic-favo';
 export * from './tags-link';
 export * from './topic-favo';
-export * from './topic-edit';
+export * from './topic-editor';
 export * from './topic-fork';
 export * from './tags-input';
-
+export * from './scroll';

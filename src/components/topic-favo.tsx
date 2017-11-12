@@ -16,6 +16,7 @@ import { NavigationRefresh } from 'material-ui/svg-icons';
 
 interface _TopicFavoProps {
   user: UserData | null
+  detail: boolean
 }
 
 export type TopicFavoProps = ObjectOmit<_TopicFavoProps, "user">;
@@ -60,7 +61,7 @@ class _TopicFavo extends React.Component<_TopicFavoProps, TopicFavoState> {
       {this.props.user !== null
         ? this.state.topicFavo !== null
           ? this.state.topicFavo.length !== 0 ?
-            this.state.topicFavo.map(topic => <TopicListItem topic={topic} detail={false} />)
+            this.state.topicFavo.map(topic => <TopicListItem topic={topic} detail={this.props.detail} />)
             : <Paper>
               お気に入りトピックがありません。
         <br />
