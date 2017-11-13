@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { UserData } from "../models";
-import { apiClient } from "../utils";
+import { UserData, ResSeted } from "../models";
+import { apiClient, resSetedCreate } from "../utils";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
@@ -17,7 +17,8 @@ import {
   TopicFavo,
   Scroll,
   Res,
-  ResWrite
+  ResWrite,
+  ScrollListItem
 } from "../components";
 import {
   Paper,
@@ -35,6 +36,11 @@ import {
 } from "rxjs";
 import * as Im from "immutable";
 import { Toggle } from 'material-ui/Toggle';
+import { Observable } from 'rxjs/Observable';
+
+//ジェネリクス解除
+interface ResScroll { new(): Scroll<ResSeted> };
+const ResScroll = Scroll as ResScroll;
 
 type _TopicPageProps = RouteComponentProps<{ id: string }> & {
   user: UserData | null,
@@ -45,7 +51,7 @@ export type TopicPageProps = ObjectOmit<_TopicPageProps, "user" | "updateUser">;
 export interface TopicPageState {
   snackMsg: null | string,
   topic: api.Topic | null,
-  reses: api.Res[],
+  reses: ResSeted[],
   isResWrite: boolean,
   isAutoScrollDialog: boolean,
   autoScrollSpeed: number,
@@ -67,6 +73,38 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
       isAutoScroll: false,
     };
   }
+
+  storageSave(res: string | null) {
+    if (this.props.user === null || this.state.topic === null) {
+      return;
+    }
+    const storage = this.props.user.storage;
+    if (res === null) {
+      const storageRes = storage.topicRead.get(this.state.topic.id);
+      if (storageRes !== undefined) {
+        res = storageRes.res;
+      } else {
+        if (this.state.reses.length === 0) {
+          return;
+        }
+        res = this.state.reses[0].id;
+      }
+    }
+    this.props.updateUser({
+      ...this.props.user,
+      storage: {
+        ...storage,
+        topicRead: storage.topicRead.set(this.state.topic.id, {
+          res,
+          count: this.state.topic.resCount
+        })
+      }
+    });
+  }
+
+  scrollNewItem: Observable<ResSeted | null> = new Subject<ResSeted | null>();
+  updateItem: Observable<ResSeted> = new Subject<ResSeted>();
+  newItem: Observable<ResSeted> = new Subject<ResSeted>();
 
   render() {
     return <Page column={2}>
@@ -130,23 +168,43 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
                 : null}
             </div >
           </Paper>
-          <Scroll items={this.state.reses.map(r => ({
-            id: r.id,
-            date: r.date,
-            el: <Res />
-          }))}
-            onChangeItems={reses => this.setState({ reses })}
+          <ResScroll items={this.state.reses}
+            onChangeItems={reses => this.setState({ reses: reses })}
             newItemOrder="bottom"
-            findNewItem={() => this.findNewItem()}
-            findItem={(type, date, equal) => this.findItem(type, date, equal)}
+            findNewItem={() => {
+              if (this.state.topic === null) {
+                return Observable.empty();
+              }
+              const token = this.props.user !== null ? this.props.user.token : null;
+              return apiClient.findResNew(token, {
+                topic: this.state.topic.id,
+                limit: this.limit
+              })
+                .mergeMap(r => resSetedCreate.resSet(token, r));
+            }}
+            findItem={(type, date, equal) => {
+              if (this.state.topic === null) {
+                return Observable.empty();
+              }
+              const token = this.props.user !== null ? this.props.user.token : null;
+              return apiClient.findRes(token, {
+                topic: this.state.topic.id,
+                type: type,
+                equal: equal,
+                date,
+                limit: this.limit
+              })
+                .mergeMap(r => resSetedCreate.resSet(token, r));
+            }}
             width={10}
             debounceTime={500}
             autoScrollSpeed={this.state.autoScrollSpeed}
             isAutoScroll={this.state.isAutoScroll}
-            scrollNewItemChange={res => this.scrollNewItemChange(res)}
+            scrollNewItemChange={res => this.storageSave(res.id)}
             scrollNewItem={this.scrollNewItem}
-            updateItem={updateItem}
-            newItem={newItem} />
+            updateItem={this.updateItem}
+            newItem={this.newItem}
+            dataToEl={res => <Res />} />
           {this.state.isResWrite
             ? <Paper>
               <ResWrite />
