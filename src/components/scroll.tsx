@@ -6,32 +6,37 @@ import {
   Subject
 } from "rxjs";
 
-export interface ListItem {
+interface ListItemData {
   id: string,
-  date: string,
+  date: string
+};
+
+interface ListItem<T extends ListItemData> {
+  data: T,
   el: JSX.Element
 }
 
-interface ItemScrollData {
-  item: ListItem;
+interface ItemScrollData<T extends ListItemData> {
+  item: ListItem<T>;
   y: number;
   el: HTMLElementData,
 }
 
-export interface ScrollProps {
-  items: ListItem[],
-  onChangeItems: (items: ListItem[]) => void;
+export interface ScrollProps<T extends ListItemData> {
+  items: T[],
+  onChangeItems: (items: T[]) => void;
   newItemOrder: 'top' | 'bottom',
-  findNewItem: () => Observable<ListItem[]>,
-  findItem: (type: 'before' | 'after', date: string, equal: boolean) => Observable<ListItem[]>
+  findNewItem: () => Observable<T[]>,
+  findItem: (type: 'before' | 'after', date: string, equal: boolean) => Observable<T[]>
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
-  isAutoScroll: number;
-  scrollNewItemChange: (item: ListItem) => void;
-  scrollNewItem: Observable<ListItem | null>,
-  updateItem: Observable<ListItem>,
-  newItem: Observable<ListItem>,
+  isAutoScroll: boolean;
+  scrollNewItemChange: (item: T) => void;
+  scrollNewItem: Observable<T | null>,
+  updateItem: Observable<T>,
+  newItem: Observable<T>,
+  dataToEl: (data: T) => JSX.Element
 }
 
 interface ScrollState {
@@ -57,8 +62,8 @@ class HTMLElementData {
   }
 }
 
-export class Scroll extends React.Component<ScrollProps, ScrollState> {
-  constructor(props: ScrollProps) {
+export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<T>, ScrollState> {
+  constructor(props: ScrollProps<T>) {
     super(props);
   }
 
@@ -86,7 +91,14 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       });
   }
 
-  setTopElement(item: ItemScrollData) {
+  dataToListItem(data: T): ListItem<T> {
+    return {
+      data,
+      el: this.props.dataToEl(data)
+    };
+  }
+
+  setTopElement(item: ItemScrollData<T>) {
     return Observable
       .timer(0)
       .do(() => {
@@ -100,9 +112,9 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       .map(() => {
         //最短距離のアイテム
         let minItem = this.props.items
-          .map(item => ({ item, el: this.getItemEl(item.id) }))
+          .map(item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
           .reduce<{
-            item: ListItem;
+            item: ListItem<T>;
             el: HTMLElementData;
           } | null>((min, item) => {
             if (min === null) {
@@ -123,7 +135,7 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       });
   }
 
-  setBottomElement(item: ItemScrollData) {
+  setBottomElement(item: ItemScrollData<T>) {
     return Observable
       .timer(0)
       .do(() => {
@@ -137,9 +149,9 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       .map(() => {
         //最短距離のアイテム
         let minItem = this.props.items
-          .map(item => ({ item, el: this.getItemEl(item.id) }))
+          .map(item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
           .reduce<{
-            item: ListItem;
+            item: ListItem<T>;
             el: HTMLElementData;
           } | null>((min, item) => {
             if (min === null) {
@@ -163,7 +175,7 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
   render() {
     return (
       <div ref="list">
-        {this.props.items.map(item => <div ref={`item-${item.id}`}>{item.el}</div>)}
+        {this.props.items.map(item => <div ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
       </div>
     );
   }
@@ -206,7 +218,7 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       .mergeMap(() => this.props.newItemOrder === 'top' ? this.getTopElement() : this.getBottomElement())
       .subscribe(newItem => {
         if (newItem !== null) {
-          this.props.scrollNewItemChange(newItem.item);
+          this.props.scrollNewItemChange(newItem.item.data);
         }
       }));
 
@@ -254,7 +266,7 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       this._lock(() => Observable.fromPromise((async () => {
         let ise: {
           y: number;
-          item: ListItem;
+          item: ListItem<T>;
           el: HTMLElementData;
         } | null = null;
 
@@ -295,7 +307,7 @@ export class Scroll extends React.Component<ScrollProps, ScrollState> {
       this._lock(() => Observable.fromPromise((async () => {
         let ise: {
           y: number;
-          item: ListItem;
+          item: ListItem<T>;
           el: HTMLElementData;
         } | null = null;
         switch (this.props.newItemOrder) {
