@@ -5,6 +5,7 @@ import {
   Subscription,
   Subject
 } from "rxjs";
+import * as Im from "immutable";
 
 interface ListItemData {
   id: string,
@@ -23,11 +24,11 @@ interface ItemScrollData<T extends ListItemData> {
 }
 
 export interface ScrollProps<T extends ListItemData> {
-  items: T[],
-  onChangeItems: (items: T[]) => void;
+  items: Im.List<T>,
+  onChangeItems: (items: Im.List<T>) => void;
   newItemOrder: 'top' | 'bottom',
-  findNewItem: () => Observable<T[]>,
-  findItem: (type: 'before' | 'after', date: string, equal: boolean) => Observable<T[]>
+  findNewItem: () => Observable<Im.List<T>>,
+  findItem: (type: 'before' | 'after', date: string, equal: boolean) => Observable<Im.List<T>>
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
@@ -260,7 +261,8 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   findAfter() {
-    if (this.props.items.length === 0) {
+    const last = this.props.items.last();
+    if (last === undefined) {
       this.findNew();
     } else {
       this._lock(() => Observable.fromPromise((async () => {
@@ -284,7 +286,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.props.onChangeItems(this.props.items
-          .concat(await this.props.findItem('after', this.props.items[this.props.items.length - 1].date, false).toPromise()));
+          .concat(await this.props.findItem('after', last.date, false).toPromise()));
 
         await this.afterViewChecked.first().toPromise();
 
@@ -301,7 +303,8 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   findBefore() {
-    if (this.props.items.length === 0) {
+    const first = this.props.items.first();
+    if (first === undefined) {
       this.findNew();
     } else {
       this._lock(() => Observable.fromPromise((async () => {
@@ -324,7 +327,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.props.onChangeItems(this.props.items
-          .concat(await this.props.findItem('before', this.props.items[0].date, false).toPromise()));
+          .concat(await this.props.findItem('before', first.date, false).toPromise()));
 
         await this.afterViewChecked.first().toPromise();
 
