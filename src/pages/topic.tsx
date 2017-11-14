@@ -51,7 +51,7 @@ export type TopicPageProps = ObjectOmit<_TopicPageProps, "user" | "updateUser">;
 export interface TopicPageState {
   snackMsg: null | string,
   topic: api.Topic | null,
-  reses: ResSeted[],
+  reses: Im.List<ResSeted>,
   isResWrite: boolean,
   isAutoScrollDialog: boolean,
   autoScrollSpeed: number,
@@ -66,7 +66,7 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
     this.state = {
       snackMsg: null,
       topic: null,
-      reses: [],
+      reses: Im.List(),
       isResWrite: false,
       isAutoScrollDialog: false,
       autoScrollSpeed: 15,
@@ -84,10 +84,11 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
       if (storageRes !== undefined) {
         res = storageRes.res;
       } else {
-        if (this.state.reses.length === 0) {
+        const first = this.state.reses.first();
+        if (first === undefined) {
           return;
         }
-        res = this.state.reses[0].id;
+        res = first.id;
       }
     }
     this.props.updateUser({
@@ -180,7 +181,8 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
                 topic: this.state.topic.id,
                 limit: this.limit
               })
-                .mergeMap(r => resSetedCreate.resSet(token, r));
+                .mergeMap(r => resSetedCreate.resSet(token, r))
+                .map(reses => Im.List(reses));
             }}
             findItem={(type, date, equal) => {
               if (this.state.topic === null) {
@@ -194,7 +196,8 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
                 date,
                 limit: this.limit
               })
-                .mergeMap(r => resSetedCreate.resSet(token, r));
+                .mergeMap(r => resSetedCreate.resSet(token, r))
+                .map(reses => Im.List(reses));
             }}
             width={10}
             debounceTime={500}
