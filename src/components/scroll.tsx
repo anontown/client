@@ -6,6 +6,7 @@ import {
   Subject
 } from "rxjs";
 import * as Im from "immutable";
+import { list } from "../utils";
 
 interface ListItemData {
   id: string,
@@ -230,6 +231,35 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
           this.el.scrollTop += this.props.autoScrollSpeed;
         }
       }));
+
+    this.subscriptions.push(this.props.scrollNewItem.subscribe(item => {
+      if (item !== null) {
+        this._lock(() => Observable.fromPromise((async () => {
+          this.props.onChangeItems(await this.props.findItem('before', item.date, true).toPromise());
+
+          await this.afterViewChecked.first().toPromise();
+
+          switch (this.props.newItemOrder) {
+            case 'top':
+              await this.toTop().toPromise();
+              break;
+            case 'bottom':
+              await this.toBottom().toPromise();
+              break;
+          }
+        })())).then(() => {
+          this.findAfter();
+        });
+      } else {
+        this.findNew();
+      }
+    }));
+    this.subscriptions.push(this.props.updateItem.subscribe(item => {
+      this.props.onChangeItems(list.update(this.props.items, item));
+    }));
+    this.subscriptions.push(this.props.newItem.subscribe(item => {
+      this.props.onChangeItems(this.props.items.push(item));
+    }));
   }
 
   afterViewChecked = new Subject<void>();
@@ -292,10 +322,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
         switch (this.props.newItemOrder) {
           case 'bottom':
-            await this.setBottomElement(ise);
+            await this.setBottomElement(ise).toPromise();
             break;
           case 'top':
-            await this.setTopElement(ise);
+            await this.setTopElement(ise).toPromise();
             break;
         }
       })()));
