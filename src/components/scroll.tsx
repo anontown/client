@@ -35,7 +35,7 @@ export interface ScrollProps<T extends ListItemData> {
   autoScrollSpeed: number;
   isAutoScroll: boolean;
   scrollNewItemChange: (item: T) => void;
-  scrollNewItem: Observable<T | null>,
+  scrollNewItem: Observable<string | null>,
   updateItem: Observable<T>,
   newItem: Observable<T>,
   dataToEl: (data: T) => JSX.Element
@@ -232,10 +232,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
       }));
 
-    this.subscriptions.push(this.props.scrollNewItem.subscribe(item => {
-      if (item !== null) {
+    this.subscriptions.push(this.props.scrollNewItem.subscribe(date => {
+      if (date !== null) {
         this._lock(() => Observable.fromPromise((async () => {
-          this.props.onChangeItems(await this.props.findItem('before', item.date, true).toPromise());
+          this.props.onChangeItems(await this.props.findItem('before', date, true).toPromise());
 
           await this.afterViewChecked.first().toPromise();
 

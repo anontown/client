@@ -72,6 +72,40 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
       autoScrollSpeed: 15,
       isAutoScroll: false,
     };
+
+    apiClient.findTopicOne({ id: this.props.match.params.id })
+      .subscribe(topic => {
+        this.setState({ topic });
+      }, () => {
+        this.setState({ snackMsg: "トピック取得に失敗" });
+      });
+
+    const user = this.props.user;
+    if (user !== null) {
+      const topicRead = user.storage.topicRead.get(this.props.match.params.id);
+      if (topicRead !== undefined) {
+        apiClient.findResOne(user.token, {
+          id: topicRead.res
+        }).subscribe(res => {
+          this.scrollNewItem.next(res.date);
+        }, () => {
+          this.scrollNewItem.next(null);
+        });
+      } else {
+        this.scrollNewItem.next(null);
+      }
+    } else {
+      this.scrollNewItem.next(null);
+    }
+
+    this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, { id: this.props.match.params.id })
+      .do(x => {
+        if (this.state.topic !== null) {
+          this.setState({ topic: { ...this.state.topic, resCount: x.count } });
+          this.storageSave(null);
+        }
+      })
+      .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map(reses => reses[0]));
   }
 
   storageSave(res: string | null) {
@@ -103,9 +137,9 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
     });
   }
 
-  scrollNewItem: Observable<ResSeted | null> = new Subject<ResSeted | null>();
-  updateItem: Observable<ResSeted> = new Subject<ResSeted>();
-  newItem: Observable<ResSeted> = new Subject<ResSeted>();
+  scrollNewItem = new Subject<string | null>();
+  updateItem = new Subject<ResSeted>();
+  newItem = Observable.empty<ResSeted>();
 
   render() {
     return <Page column={2}>
