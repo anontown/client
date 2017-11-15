@@ -5,39 +5,34 @@ import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
 import {
-  RouteComponentProps,
-  Link
+  RouteComponentProps
 } from "react-router-dom";
 import { updateUserData } from "../actions";
 import {
   Page,
   Snack,
-  TagsInput,
-  TopicListItem,
   TopicFavo,
   Scroll,
   Res,
   ResWrite,
-  ScrollListItem
+  TopicFork,
+  TopicData,
+  TopicEditor
 } from "../components";
 import {
   Paper,
-  RaisedButton,
-  TextField,
   IconButton,
   Dialog,
-  Slider
+  Slider,
+  Toggle
 } from "material-ui";
 import * as icons from "material-ui/svg-icons";
 import * as api from "@anontown/api-types";
 import {
-  Subscription,
-  Subject
+  Subject,
+  Observable
 } from "rxjs";
 import * as Im from "immutable";
-import { Toggle } from 'material-ui/Toggle';
-import { Observable } from 'rxjs/Observable';
-
 //ジェネリクス解除
 interface ResScroll { new(): Scroll<ResSeted> };
 const ResScroll = Scroll as ResScroll;
@@ -56,6 +51,9 @@ export interface TopicPageState {
   isAutoScrollDialog: boolean,
   autoScrollSpeed: number,
   isAutoScroll: boolean,
+  isDataDialog: boolean,
+  isForkDialog: boolean,
+  isEditDialog: boolean
 }
 
 class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
@@ -71,6 +69,9 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
       isAutoScrollDialog: false,
       autoScrollSpeed: 15,
       isAutoScroll: false,
+      isDataDialog: false,
+      isForkDialog: false,
+      isEditDialog: false
     };
 
     apiClient.findTopicOne({ id: this.props.match.params.id })
@@ -137,9 +138,32 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
     });
   }
 
+  favo() {
+    if (this.props.user === null || this.state.topic === null) {
+      return;
+    }
+    const storage = this.props.user.storage;
+    const tf = storage.topicFavo;
+    this.props.updateUser({
+      ...this.props.user,
+      storage: {
+        ...storage,
+        topicFavo: this.isFavo ? tf.delete(this.state.topic.id) : tf.add(this.state.topic.id)
+      }
+    });
+  }
+
   scrollNewItem = new Subject<string | null>();
   updateItem = new Subject<ResSeted>();
   newItem = Observable.empty<ResSeted>();
+
+  get isFavo() {
+    if (this.props.user === null || this.state.topic === null) {
+      return false;
+    }
+
+    return this.props.user.storage.topicFavo.has(this.state.topic.id);
+  }
 
   render() {
     return <Page column={2}>
@@ -153,6 +177,39 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
         onRequestClose={() => this.setState({ isAutoScrollDialog: false })}>
         <Toggle label="自動スクロール" toggled={this.state.isAutoScroll} onToggle={(_e, v) => this.setState({ isAutoScroll: v })} />
         <Slider max={30} value={this.state.autoScrollSpeed} onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
+      </Dialog>
+      <Dialog
+        title="詳細データ"
+        open={this.state.isDataDialog}
+        autoScrollBodyContent={true}
+        onRequestClose={() => this.setState({ isDataDialog: false })}>
+        {this.state.topic !== null
+          ? <TopicData topic={this.state.topic} />
+          : null}
+      </Dialog>
+      <Dialog
+        title="派生トピック"
+        open={this.state.isForkDialog}
+        autoScrollBodyContent={true}
+        onRequestClose={() => this.setState({ isForkDialog: false })}>
+        {this.state.topic !== null && this.state.topic.type === 'normal'
+          ? <TopicFork topic={this.state.topic} onCreate={topic => {
+            this.setState({ isForkDialog: false });
+            this.props.history.push(`/topic/${topic.id}`);
+          }} />
+          : null}
+      </Dialog>
+      <Dialog
+        title="編集"
+        open={this.state.isEditDialog}
+        autoScrollBodyContent={true}
+        onRequestClose={() => this.setState({ isEditDialog: false })}>
+        {this.state.topic !== null && this.state.topic.type === 'normal'
+          ? <TopicEditor topic={this.state.topic} onUpdate={topic => {
+            this.setState({ isEditDialog: false });
+            this.setState({ topic });
+          }} />
+          : null}
       </Dialog>
       {this.props.user !== null
         ? <aside>
@@ -188,7 +245,7 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
                 : null}
               {this.props.user !== null
                 ? <IconButton onClick={() => this.favo()}>
-                  {isFavo
+                  {this.isFavo
                     ? <icons.ToggleStar />
                     : <icons.ToggleStarBorder />}
                 </IconButton>
@@ -241,10 +298,12 @@ class _TopicPage extends React.Component<_TopicPageProps, TopicPageState> {
             scrollNewItem={this.scrollNewItem}
             updateItem={this.updateItem}
             newItem={this.newItem}
-            dataToEl={res => <Res />} />
+            dataToEl={res => <Res res={res}
+              isPop={false}
+              update={res => this.updateItem.next(res)} />} />
           {this.state.isResWrite
             ? <Paper>
-              <ResWrite />
+              <ResWrite topic={this.state.topic.id} reply={null} />
             </Paper>
             : null}
         </main >

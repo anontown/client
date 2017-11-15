@@ -15,6 +15,7 @@ export * from './profile';
 export * from './page';
 export * from './tag-favo';
 export * from './topic-favo';
+export * from './topic-data';
 export * from './tags-link';
 export * from './topic-favo';
 export * from './topic-editor';
