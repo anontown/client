@@ -1,3 +1,4 @@
+export * from './app';
 export * from './client-editor';
 export * from './client';
 export * from './color-picker';
