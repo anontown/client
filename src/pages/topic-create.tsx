@@ -6,7 +6,8 @@ import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
 import {
   RouteComponentProps,
-  Redirect
+  Redirect,
+  withRouter
 } from "react-router-dom";
 import {
   Page,
@@ -26,8 +27,9 @@ import * as api from "@anontown/api-types";
 import { AtError } from "@anontown/api-client";
 import { Observable } from "rxjs";
 
-type _TopicCreatePageProps = RouteComponentProps<{}> & { user: UserData | null };
-export type TopicCreatePageProps = ObjectOmit<_TopicCreatePageProps, "user">;
+interface TopicCreatePageProps extends RouteComponentProps<{}> {
+  user: UserData | null
+};
 
 export interface TopicCreatePageState {
   title: string,
@@ -39,8 +41,8 @@ export interface TopicCreatePageState {
   openDialog: boolean
 }
 
-class _TopicCreatePage extends React.Component<_TopicCreatePageProps, TopicCreatePageState> {
-  constructor(props: _TopicCreatePageProps) {
+export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
+  constructor(props: TopicCreatePageProps) {
     super(props);
     this.state = {
       title: '',
@@ -133,6 +135,4 @@ class _TopicCreatePage extends React.Component<_TopicCreatePageProps, TopicCreat
     });
 
   }
-}
-
-export const TopicCreatePage = connect((state: Store) => ({ user: state.user }))(_TopicCreatePage);
+}));

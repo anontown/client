@@ -7,10 +7,10 @@ import {
 import { Page } from "../components";
 import {
   RouteComponentProps,
-  Link
+  Link,
+  withRouter
 } from "react-router-dom";
 import { UserData } from "../models";
-import { ObjectOmit } from "typelevel-ts";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import {
@@ -18,13 +18,12 @@ import {
   TopicFavo
 } from "../components";
 
-type _HomePageProps = {
+interface HomePageProps extends RouteComponentProps<{}> {
   user: UserData | null
-} & RouteComponentProps<{}>;
+}
 
-export type HomPageProps = ObjectOmit<_HomePageProps, 'user'>;
 
-function _HomePage(props: _HomePageProps) {
+export const HomePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(function (props: HomePageProps) {
   return <Page column={1}>
     {props.user !== null
       ? <Tabs>
@@ -48,6 +47,4 @@ function _HomePage(props: _HomePageProps) {
         </ul>
       </Paper>}
   </Page>;
-}
-
-export const HomePage = connect((state: Store) => ({ user: state.user }))(_HomePage);
+}));

@@ -1,33 +1,33 @@
 import * as React from 'react';
-import { UserData } from "../models";
-import { ObjectOmit } from "typelevel-ts";
+import { UserData } from "../../models";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
-import { RouteComponentProps } from "react-router-dom";
+import { Store } from "../../reducers";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
 import {
   apiClient,
   list
-} from "../utils";
-import { Snack, Client, ClientEditor } from "../components";
+} from "../../utils";
+import { Snack, Client, ClientEditor } from "../../components";
 import {
   Paper
 } from "material-ui";
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 
-type _DevSettingPageProps = RouteComponentProps<{}> & {
+interface DevSettingPageProps extends RouteComponentProps<{}> {
   user: UserData | null
-};
-
-export type DevSettingPageProps = ObjectOmit<_DevSettingPageProps, 'user'>;
+}
 
 interface DevSettingPageState {
   clients: Im.List<api.Client>,
   snackMsg: string | null,
 }
 
-class _DevSettingPage extends React.Component<_DevSettingPageProps, DevSettingPageState> {
-  constructor(props: _DevSettingPageProps) {
+export const DevSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<DevSettingPageProps, DevSettingPageState> {
+  constructor(props: DevSettingPageProps) {
     super(props);
     this.state = {
       snackMsg: null,
@@ -60,6 +60,4 @@ class _DevSettingPage extends React.Component<_DevSettingPageProps, DevSettingPa
       </Paper>
       : <div>ログインして下さい。</div>;
   }
-}
-
-export const DevSettingPage = connect((state: Store) => ({ user: state.user }))(_DevSettingPage);
+}));

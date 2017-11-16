@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { UserData } from "../models";
-import { ObjectOmit } from "typelevel-ts";
+import { UserData } from "../../models";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
-import { RouteComponentProps } from "react-router-dom";
-import { apiClient } from "../utils";
-import { Snack } from "../components";
+import { Store } from "../../reducers";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
+import { apiClient } from "../../utils";
+import { Snack } from "../../components";
 import {
   Paper,
   IconButton
@@ -14,19 +16,17 @@ import * as api from "@anontown/api-types";
 import { ActionDelete } from 'material-ui/svg-icons';
 import * as Im from "immutable";
 
-type _AppsSettingPageProps = RouteComponentProps<{}> & {
+interface AppsSettingPageProps extends RouteComponentProps<{}> {
   user: UserData | null
-};
-
-export type AppsSettingPageProps = ObjectOmit<_AppsSettingPageProps, 'user'>;
+}
 
 interface AppsSettingPageState {
   clients: Im.List<api.Client>,
   snackMsg: string | null
 }
 
-class _AppsSettingPage extends React.Component<_AppsSettingPageProps, AppsSettingPageState> {
-  constructor(props: _AppsSettingPageProps) {
+export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
+  constructor(props: AppsSettingPageProps) {
     super(props);
     this.state = {
       snackMsg: null,
@@ -71,6 +71,4 @@ class _AppsSettingPage extends React.Component<_AppsSettingPageProps, AppsSettin
         this.setState({ snackMsg: '削除に失敗しました' });
       });
   }
-}
-
-export const AppsSettingPage = connect((state: Store) => ({ user: state.user }))(_AppsSettingPage);
+}));

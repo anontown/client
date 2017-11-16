@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { UserData } from "../models";
-import { ObjectOmit } from "typelevel-ts";
+import { UserData } from "../../models";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
-import { updateUserData } from "../actions";
-import { RouteComponentProps } from "react-router-dom";
-import { apiClient } from "../utils";
-import { Snack, Errors } from "../components";
+import { Store } from "../../reducers";
+import { updateUserData } from "../../actions";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
+import { apiClient } from "../../utils";
+import { Snack, Errors } from "../../components";
 import {
   Paper,
   TextField,
@@ -14,12 +16,10 @@ import {
 } from "material-ui";
 import { AtError } from "@anontown/api-client";
 
-type _AccountSettingPageProps = RouteComponentProps<{}> & {
+interface AccountSettingPageProps extends RouteComponentProps<{}> {
   user: UserData | null
   updateUser: (user: UserData | null) => void;
-};
-
-export type AccountSettingPageProps = ObjectOmit<_AccountSettingPageProps, 'user' | 'updateUser'>;
+}
 
 interface AccountSettingPageState {
   newPass: string,
@@ -29,8 +29,13 @@ interface AccountSettingPageState {
   snackMsg: string | null
 }
 
-class _AccountSettingPage extends React.Component<_AccountSettingPageProps, AccountSettingPageState> {
-  constructor(props: _AccountSettingPageProps) {
+export const AccountSettingPage = withRouter<{}>(connect(
+  (state: Store) => ({ user: state.user }),
+  dispatch => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
+  })
+)(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
+  constructor(props: AccountSettingPageProps) {
     super(props);
     this.state = {
       snackMsg: null,
@@ -89,11 +94,4 @@ class _AccountSettingPage extends React.Component<_AccountSettingPageProps, Acco
       </Paper>
       : <div>ログインして下さい。</div>;
   }
-}
-
-export const AccountSettingPage = connect(
-  (state: Store) => ({ user: state.user }),
-  dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
-  })
-)(_AccountSettingPage);
+}));

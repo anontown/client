@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { RouteComponentProps } from "react-router-dom";
-import { Page } from "../components";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { Page } from "../../components";
 import { Route, Switch, Link } from 'react-router-dom'
 import { AccountSettingPage } from './account-setting';
 import { DevSettingPage } from './dev-setting';
 import { AppsSettingPage } from './apps-setting';
 import { List, ListItem } from "material-ui";
 
-export type SettingsPageProps = RouteComponentProps<{}>;
+interface SettingsPageProps extends RouteComponentProps<{}> {
+
+}
 
 interface SettingsPageState {
 }
 
-export class SettingsPage extends React.Component<SettingsPageProps, SettingsPageState> {
+export const SettingsPage = withRouter<{}>(class extends React.Component<SettingsPageProps, SettingsPageState> {
   constructor(props: SettingsPageProps) {
     super(props);
     this.state = {
@@ -39,4 +41,4 @@ export class SettingsPage extends React.Component<SettingsPageProps, SettingsPag
       </Page>
     );
   }
-}
+});

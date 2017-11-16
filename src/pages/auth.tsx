@@ -1,34 +1,29 @@
 import * as React from 'react';
-import { RouteComponentProps } from "react-router-dom";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
 import { Page } from "../components";
-import { Route, Switch, Link } from 'react-router-dom'
-import { AccountSettingPage } from './account-setting';
-import { DevSettingPage } from './dev-setting';
-import { AppsSettingPage } from './apps-setting';
-import { List, ListItem } from "material-ui";
 import * as api from "@anontown/api-types";
 import { apiClient } from "../utils";
 import * as qs from "query-string";
 import { UserData } from "../models";
-import { ObjectOmit } from "typelevel-ts";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
 import { Snack } from "../components";
 import { RaisedButton } from 'material-ui';
 
-type _AuthPageProps = RouteComponentProps<{}> & {
+interface AuthPageProps extends RouteComponentProps<{}> {
   user: UserData | null
 };
-
-export type AuthPageProps = ObjectOmit<_AuthPageProps, 'user'>;
 
 interface AuthPageState {
   client: api.Client | null,
   snackMsg: string | null
 }
 
-class _AuthPage extends React.Component<_AuthPageProps, AuthPageState> {
-  constructor(props: _AuthPageProps) {
+export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<AuthPageProps, AuthPageState> {
+  constructor(props: AuthPageProps) {
     super(props);
     this.state = {
       client: null,
@@ -76,7 +71,4 @@ class _AuthPage extends React.Component<_AuthPageProps, AuthPageState> {
         });
     }
   }
-}
-
-
-export const AuthPage = connect((state: Store) => ({ user: state.user }))(_AuthPage);
+}));

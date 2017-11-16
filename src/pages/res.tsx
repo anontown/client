@@ -1,25 +1,31 @@
 import * as React from 'react';
 import { ResSeted } from '../models';
 import { UserData } from "../models";
-import { apiClient, resSetedCreate } from "../utils";
+import {
+  apiClient,
+  resSetedCreate
+} from "../utils";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
-import { ObjectOmit } from "typelevel-ts";
-import { RouteComponentProps } from "react-router-dom";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
 import { Snack, Res, Page } from "../components";
 import { Paper } from "material-ui";
 
 
-type _ResPageProps = RouteComponentProps<{ id: string }> & { user: UserData | null };
-export type ResPageProps = ObjectOmit<_ResPageProps, "user">;
+interface ResPageProps extends RouteComponentProps<{ id: string }> {
+  user: UserData | null
+}
 
 interface ResPageState {
   res: ResSeted | null
   snackMsg: null | string,
 }
 
-class _ResPage extends React.Component<_ResPageProps, ResPageState> {
-  constructor(props: _ResPageProps) {
+export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<ResPageProps, ResPageState> {
+  constructor(props: ResPageProps) {
     super(props);
     this.state = {
       res: null,
@@ -54,6 +60,4 @@ class _ResPage extends React.Component<_ResPageProps, ResPageState> {
       </Page>
     );
   }
-}
-
-export const ResPage = connect((state: Store) => ({ user: state.user }))(_ResPage);
+}));

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { ResSeted, UserData } from '../models';
+import {
+  ResSeted,
+  UserData
+} from '../models';
 import {
   apiClient,
   resSetedCreate,
@@ -7,8 +10,10 @@ import {
 } from "../utils";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
-import { ObjectOmit } from "typelevel-ts";
-import { RouteComponentProps } from "react-router-dom";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
 import {
   Snack,
   Res,
@@ -20,18 +25,19 @@ import {
 } from "material-ui";
 import * as Im from 'immutable';
 
-type _NotificationsPageProps = RouteComponentProps<{}> & { user: UserData | null };
-export type NotificationsPageProps = ObjectOmit<_NotificationsPageProps, "user">;
+interface NotificationsPageProps extends RouteComponentProps<{}> {
+  user: UserData | null
+}
 
 export interface NotificationsPageState {
   reses: Im.List<ResSeted>
   snackMsg: null | string,
 }
 
-class _NotificationsPage extends React.Component<_NotificationsPageProps, NotificationsPageState> {
+export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
   private limit = 50
 
-  constructor(props: _NotificationsPageProps) {
+  constructor(props: NotificationsPageProps) {
     super(props);
     this.state = {
       reses: Im.List(),
@@ -147,6 +153,4 @@ class _NotificationsPage extends React.Component<_NotificationsPageProps, Notifi
         });
     }
   }
-}
-
-export const NotificationsPage = connect((state: Store) => ({ user: state.user }))(_NotificationsPage);
+}));

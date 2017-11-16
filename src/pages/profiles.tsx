@@ -3,31 +3,32 @@ import { UserData } from "../models";
 import { apiClient, list } from "../utils";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
-import { ObjectOmit } from "typelevel-ts";
-import { RouteComponentProps } from "react-router-dom";
+import {
+  RouteComponentProps,
+  withRouter
+} from "react-router-dom";
 import {
   Snack,
-  Res,
   Page,
   ProfileEditor
 } from "../components";
 import {
-  Paper,
-  RaisedButton
+  Paper
 } from "material-ui";
 import * as Im from 'immutable';
 import * as api from "@anontown/api-types";
 
-type _ProfilesPageProps = RouteComponentProps<{}> & { user: UserData | null };
-export type ProfilesPageProps = ObjectOmit<_ProfilesPageProps, "user">;
+interface ProfilesPageProps extends RouteComponentProps<{}> {
+  user: UserData | null
+};
 
 export interface ProfilesPageState {
   profiles: Im.List<api.Profile>
   snackMsg: null | string,
 }
 
-class _ProfilesPage extends React.Component<_ProfilesPageProps, ProfilesPageState> {
-  constructor(props: _ProfilesPageProps) {
+export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
+  constructor(props: ProfilesPageProps) {
     super(props);
     this.state = {
       profiles: Im.List(),
@@ -81,6 +82,4 @@ class _ProfilesPage extends React.Component<_ProfilesPageProps, ProfilesPageStat
       profiles: this.state.profiles.push(profile)
     });
   }
-}
-
-export const ProfilesPage = connect((state: Store) => ({ user: state.user }))(_ProfilesPage);
+}));

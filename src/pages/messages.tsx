@@ -2,7 +2,6 @@ import * as React from 'react';
 import { UserData } from "../models";
 import { connect } from "react-redux";
 import { Store } from "../reducers";
-import { ObjectOmit } from "typelevel-ts";
 import { RouteComponentProps } from "react-router-dom";
 import {
   Snack,
@@ -16,19 +15,21 @@ import {
 import * as Im from 'immutable';
 import * as api from "@anontown/api-types";
 import { dateFormat, apiClient } from "../utils";
+import { withRouter } from 'react-router';
 
-type _MessagesPageProps = RouteComponentProps<{}> & { user: UserData | null };
-export type MessagesPageProps = ObjectOmit<_MessagesPageProps, "user">;
+interface MessagesPageProps extends RouteComponentProps<{}> {
+  user: UserData | null
+}
 
 interface MessagesPageState {
   msgs: Im.List<api.Msg>
   snackMsg: null | string,
 }
 
-class _MessagesPage extends React.Component<_MessagesPageProps, MessagesPageState> {
+export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<MessagesPageProps, MessagesPageState> {
   private limit = 50
 
-  constructor(props: _MessagesPageProps) {
+  constructor(props: MessagesPageProps) {
     super(props);
     this.state = {
       msgs: Im.List(),
@@ -135,6 +136,4 @@ class _MessagesPage extends React.Component<_MessagesPageProps, MessagesPageStat
         });
     }
   }
-}
-
-export const MessagesPage = connect((state: Store) => ({ user: state.user }))(_MessagesPage);
+}));
