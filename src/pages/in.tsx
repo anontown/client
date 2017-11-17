@@ -50,7 +50,7 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
       };
     }
 
-    public render() {
+    render() {
       return this.props.user !== null
         ? <Redirect to="/" />
         : <Paper>
@@ -83,7 +83,7 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
         </Paper>;
     }
 
-    public ok() {
+    ok() {
       (this.state.isLogin ? apiClient.findUserID({ sn: this.state.sn })
         : apiClient.createUser(this.state.recaptcha as string, //キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
           {

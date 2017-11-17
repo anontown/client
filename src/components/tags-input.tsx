@@ -29,7 +29,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
       });
   }
 
-  public render() {
+  render() {
     return [
       <Snack
         msg={this.state.snackMsg}

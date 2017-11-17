@@ -45,7 +45,7 @@ export const DevSettingPage = withRouter<{}>(connect((state: Store) => ({ user: 
     }
   }
 
-  public render() {
+  render() {
     return this.props.user !== null
       ? <Paper>
         <Snack

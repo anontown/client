@@ -36,7 +36,7 @@ class _TopicFavo extends React.Component<_TopicFavoProps, TopicFavoState> {
     this.update();
   }
 
-  public update() {
+  update() {
     if (this.props.user === null) {
       return;
     }
@@ -50,7 +50,7 @@ class _TopicFavo extends React.Component<_TopicFavoProps, TopicFavoState> {
       });
   }
 
-  public render() {
+  render() {
     return <div>
       <Snack
         msg={this.state.snackMsg}

@@ -41,7 +41,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
         });
     }
   }
-  public render() {
+  render() {
     return (
       <dl>
         <Snack

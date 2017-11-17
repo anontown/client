@@ -45,7 +45,7 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     }
   }
 
-  public render() {
+  render() {
     return (
       <Page column={1}>
         <Snack
@@ -71,13 +71,13 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     );
   }
 
-  public update(profile: api.Profile) {
+  update(profile: api.Profile) {
     this.setState({
       profiles: list.update(this.state.profiles, profile),
     });
   }
 
-  public add(profile: api.Profile) {
+  add(profile: api.Profile) {
     this.setState({
       profiles: this.state.profiles.push(profile),
     });

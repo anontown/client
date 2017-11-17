@@ -5,7 +5,7 @@ export class Command<T> {
               private readonly index: number) {
   }
 
-  public static fromValue<T>(val: T) {
+  static fromValue<T>(val: T) {
     return new Command(Im.List<T>([val]), 0);
   }
 
@@ -13,7 +13,7 @@ export class Command<T> {
     return this.history.get(this.index)!;
   }
 
-  public undo() {
+  undo() {
     if (this.index === 0) {
       return this;
     } else {
@@ -21,7 +21,7 @@ export class Command<T> {
     }
   }
 
-  public redo() {
+  redo() {
     if (this.index === this.history.size - 1) {
       return this;
     } else {
@@ -29,7 +29,7 @@ export class Command<T> {
     }
   }
 
-  public change(val: T) {
+  change(val: T) {
     return new Command(this.history.slice(0, this.index + 1).toList().push(val), this.index + 1);
   }
 }

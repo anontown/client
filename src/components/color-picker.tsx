@@ -19,7 +19,7 @@ export class ColorPicker extends React.Component<ColorPickerProps, ColorPickerSt
     };
   }
 
-  public render() {
+  render() {
     return (
       <div>
         <div style={{

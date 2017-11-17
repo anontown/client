@@ -69,7 +69,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     super(props);
   }
 
-  public getItemEl(id: string) {
+  getItemEl(id: string) {
     return new HTMLElementData(ReactDOM.findDOMNode(this.refs[`item-${id}`]) as HTMLElement);
   }
 
@@ -77,7 +77,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     return ReactDOM.findDOMNode(this.refs.list) as HTMLElement;
   }
 
-  public toTop() {
+  toTop() {
     return Observable
       .timer(0)
       .do(() => {
@@ -85,7 +85,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public toBottom() {
+  toBottom() {
     return Observable
       .timer(0)
       .do(() => {
@@ -93,14 +93,14 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public dataToListItem(data: T): ListItem<T> {
+  dataToListItem(data: T): ListItem<T> {
     return {
       data,
       el: this.props.dataToEl(data),
     };
   }
 
-  public setTopElement(item: ItemScrollData<T>) {
+  setTopElement(item: ItemScrollData<T>) {
     return Observable
       .timer(0)
       .do(() => {
@@ -108,7 +108,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public getTopElement() {
+  getTopElement() {
     return Observable
       .timer(0)
       .map(() => {
@@ -137,7 +137,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public setBottomElement(item: ItemScrollData<T>) {
+  setBottomElement(item: ItemScrollData<T>) {
     return Observable
       .timer(0)
       .do(() => {
@@ -145,7 +145,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public getBottomElement() {
+  getBottomElement() {
     return Observable
       .timer(0)
       .map(() => {
@@ -174,7 +174,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public render() {
+  render() {
     return (
       <div ref="list">
         {this.props.items.map((item) => <div ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
@@ -182,9 +182,9 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     );
   }
 
-  public subscriptions: Subscription[] = [];
+  subscriptions: Subscription[] = [];
 
-  public componentDidMount() {
+  componentDidMount() {
     this.subscriptions.push(Observable.fromEvent(this.el, "scroll")
       .map(() => this.el.scrollTop)
       .filter((top) => top <= this.props.width)
@@ -262,18 +262,18 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }));
   }
 
-  public afterViewChecked = new Subject<void>();
-  public componentDidUpdate() {
+  afterViewChecked = new Subject<void>();
+  componentDidUpdate() {
     this.afterViewChecked.next();
   }
 
-  public componentWillUnmount() {
+  componentWillUnmount() {
     this.subscriptions.forEach((x) => x.unsubscribe());
     this.afterViewChecked.complete();
   }
 
-  public _isLock = false;
-  public async _lock(call: () => Observable<void>) {
+  _isLock = false;
+  async _lock(call: () => Observable<void>) {
     if (this._isLock) {
       return;
     }
@@ -290,7 +290,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       });
   }
 
-  public findAfter() {
+  findAfter() {
     const last = this.props.items.last();
     if (last === undefined) {
       this.findNew();
@@ -332,7 +332,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }
   }
 
-  public findBefore() {
+  findBefore() {
     const first = this.props.items.first();
     if (first === undefined) {
       this.findNew();
@@ -373,7 +373,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }
   }
 
-  public findNew() {
+  findNew() {
     this._lock(() => Observable.fromPromise((async () => {
       this.props.onChangeItems(await this.props.findNewItem().toPromise());
 

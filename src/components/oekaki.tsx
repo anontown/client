@@ -42,7 +42,7 @@ interface OekakiState {
 }
 
 export class Oekaki extends React.Component<OekakiProps, OekakiState> {
-  public defaltMinRows = 5;
+  defaltMinRows = 5;
 
   constructor(props: OekakiProps) {
     super(props);
@@ -54,9 +54,9 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
     };
   }
 
-  public line: Line | null = null;
+  line: Line | null = null;
 
-  public penDown(x: number, y: number) {
+  penDown(x: number, y: number) {
     this.line = {
       color: this.state.color,
       fill: this.state.fill,
@@ -66,20 +66,20 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
     };
   }
 
-  public penUp() {
+  penUp() {
     if (this.line !== null) {
       this.setState({ value: this.state.value.change(this.state.value.value.push(this.line)) });
       this.line = null;
     }
   }
 
-  public penMove(x: number, y: number) {
+  penMove(x: number, y: number) {
     if (this.line !== null) {
       this.line.lines = this.line.lines.push({ x, y });
     }
   }
 
-  public toColorString(color: RGBColor): string {
+  toColorString(color: RGBColor): string {
     return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
   }
 
@@ -103,7 +103,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
     `;
   }
 
-  public render() {
+  render() {
     return (
       <div>
         <div>

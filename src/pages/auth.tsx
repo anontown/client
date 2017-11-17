@@ -42,7 +42,7 @@ export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.
     }
   }
 
-  public render() {
+  render() {
     return (
       <Page column={1}>
         <Snack
@@ -58,7 +58,7 @@ export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.
     );
   }
 
-  public ok() {
+  ok() {
     if (this.props.user !== null && this.state.client !== null) {
       const user = this.props.user;
       const client = this.state.client;

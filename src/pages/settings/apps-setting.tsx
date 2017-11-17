@@ -44,7 +44,7 @@ export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user:
     }
   }
 
-  public render() {
+  render() {
     return this.props.user !== null
       ? <div>
         <Snack
@@ -60,7 +60,7 @@ export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user:
       : <div>ログインして下さい。</div>;
   }
 
-  public del(client: api.Client) {
+  del(client: api.Client) {
     if (this.props.user === null) {
       return;
     }

@@ -37,7 +37,7 @@ class _TopicEditor extends React.Component<_TopicEditorProps, TopicEditorState> 
     };
   }
 
-  public render() {
+  render() {
     return this.props.user !== null
       ? <form onSubmit={() => this.submit()}>
         <Errors errors={this.state.errors} />
@@ -49,7 +49,7 @@ class _TopicEditor extends React.Component<_TopicEditorProps, TopicEditorState> 
       : <div>ログインして下さい</div>;
   }
 
-  public submit() {
+  submit() {
     if (this.props.user === null) {
       return;
     }

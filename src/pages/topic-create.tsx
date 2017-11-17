@@ -54,7 +54,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
     };
   }
 
-  public render() {
+  render() {
     return this.state.redirect === null
       ? <Page column={1}>
         {this.props.user !== null
@@ -102,7 +102,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
       : <Redirect to={`/topic/${this.state.redirect}`} />;
   }
 
-  public submit() {
+  submit() {
     if (this.state.type === "normal") {
       this.setState({ openDialog: true });
     } else {
@@ -110,7 +110,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
     }
   }
 
-  public create() {
+  create() {
     if (this.props.user === null) {
       return;
     }

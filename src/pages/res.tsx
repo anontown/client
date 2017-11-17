@@ -45,7 +45,7 @@ export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.u
       });
   }
 
-  public render() {
+  render() {
     return (
       <Page column={1}>
         <Paper>

@@ -28,7 +28,7 @@ class _Client extends React.Component<_ClientProps, ClientState> {
     };
   }
 
-  public render() {
+  render() {
     const clientEditor = this.state.edit
       ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} />
       : null;

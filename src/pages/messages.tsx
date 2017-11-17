@@ -39,7 +39,7 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     this.findNew();
   }
 
-  public render() {
+  render() {
     return (
       <Page column={1}>
         <Snack
@@ -69,7 +69,7 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     );
   }
 
-  public findNew() {
+  findNew() {
     if (this.props.user === null) {
       return;
     }
@@ -86,7 +86,7 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
       });
   }
 
-  public readNew() {
+  readNew() {
     if (this.props.user === null) {
       return;
     }
@@ -112,7 +112,7 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     }
   }
 
-  public readOld() {
+  readOld() {
     if (this.props.user === null) {
       return;
     }

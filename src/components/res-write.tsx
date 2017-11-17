@@ -39,7 +39,7 @@ class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
     };
   }
 
-  public onSubmit() {
+  onSubmit() {
     if (this.props.user === null) {
       return;
     }
@@ -65,7 +65,7 @@ class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
     });
   }
 
-  public render() {
+  render() {
     return this.props.user !== null
       ? <form onSubmit={() => this.onSubmit()} >
         <Errors errors={this.state.errors} />

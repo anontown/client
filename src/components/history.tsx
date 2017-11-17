@@ -41,7 +41,7 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
     };
   }
 
-  public render() {
+  render() {
     return (
       <div>
         <Snack
@@ -75,7 +75,7 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
     );
   }
 
-  public onHashClick() {
+  onHashClick() {
     if (this.state.hashReses === null) {
       apiClient.findResHash(this.props.user !== null ? this.props.user.token : null, {
         topic: this.props.history.topic,

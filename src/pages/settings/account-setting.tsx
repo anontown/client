@@ -56,7 +56,7 @@ export const AccountSettingPage = withRouter<{}>(connect(
     }
   }
 
-  public onSubmit() {
+  onSubmit() {
     if (this.props.user === null) {
       return;
     }
@@ -78,7 +78,7 @@ export const AccountSettingPage = withRouter<{}>(connect(
       });
   }
 
-  public render() {
+  render() {
     return this.props.user !== null
       ? <Paper>
         <Snack

@@ -34,7 +34,7 @@ class _ClientEditor extends React.Component<_ClientEditorProps, ClientEditorStat
     };
   }
 
-  public render() {
+  render() {
     return this.props.user !== null
       ? <form onSubmit={() => this.submit()}>
         <Errors errors={this.state.errors} />
@@ -45,7 +45,7 @@ class _ClientEditor extends React.Component<_ClientEditorProps, ClientEditorStat
       : <div>ログインして下さい</div>;
   }
 
-  public submit() {
+  submit() {
     if (this.props.user === null) {
       return;
     }

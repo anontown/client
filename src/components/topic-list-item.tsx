@@ -30,7 +30,7 @@ class _TopicListItem extends React.Component<_TopicListItemProps, TopicListItemS
     super(props);
   }
 
-  public render() {
+  render() {
     let newRes: number | null = null;
     if (this.props.user) {
       const topicData = this.props.user.storage.topicRead.get(this.props.topic.id);

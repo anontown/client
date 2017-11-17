@@ -20,7 +20,7 @@ export class Md extends React.Component<MdProps, MdState> {
     super(props);
   }
 
-  public render() {
+  render() {
     const node = mdParser.parse(this.props.body);
     return (
       <div>
@@ -38,7 +38,7 @@ export class Md extends React.Component<MdProps, MdState> {
     );
   }
 
-  public renderTable(node: mdParser.Table): JSX.Element {
+  renderTable(node: mdParser.Table): JSX.Element {
     const head = node.children[0];
 
     return (<table>
@@ -66,7 +66,7 @@ export class Md extends React.Component<MdProps, MdState> {
     </table >);
   }
 
-  public renderHeading(node: mdParser.Heading): JSX.Element {
+  renderHeading(node: mdParser.Heading): JSX.Element {
     switch (node.depth) {
       case 1:
         return (<h1>
@@ -95,7 +95,7 @@ export class Md extends React.Component<MdProps, MdState> {
     }
   }
 
-  public renderLink(node: mdParser.Link): JSX.Element {
+  renderLink(node: mdParser.Link): JSX.Element {
     const link = this.urlEnum(node.url);
     switch (link.type) {
       case "normal":
@@ -115,7 +115,7 @@ export class Md extends React.Component<MdProps, MdState> {
     }
   }
 
-  public urlEnum(url: string): URLType {
+  urlEnum(url: string): URLType {
     let reg: RegExpMatchArray | null;
     if (reg = url.match(/(youtube\.com\/watch\?v=|youtu\.be\/)([a-z0-9_]+)/i)) {
       return { type: "youtube", videoID: reg[2] };
@@ -142,7 +142,7 @@ export class Md extends React.Component<MdProps, MdState> {
     return { type: "normal", url };
   }
 
-  public renderNode(node: mdParser.MdNode): JSX.Element | string | null {
+  renderNode(node: mdParser.MdNode): JSX.Element | string | null {
     switch (node.type) {
       case "paragraph":
         return (<p>{node.children.map((c) => this.renderNode(c))}</p>);

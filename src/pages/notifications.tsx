@@ -47,7 +47,7 @@ export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ use
     this.findNew();
   }
 
-  public render() {
+  render() {
     return (
       <Page column={1}>
         <Snack
@@ -73,11 +73,11 @@ export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ use
     );
   }
 
-  public update(res: ResSeted) {
+  update(res: ResSeted) {
     this.setState({ reses: list.update(this.state.reses, res) });
   }
 
-  public findNew() {
+  findNew() {
     if (this.props.user === null) {
       return;
     }
@@ -96,7 +96,7 @@ export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ use
       });
   }
 
-  public readNew() {
+  readNew() {
     if (this.props.user === null) {
       return;
     }
@@ -125,7 +125,7 @@ export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ use
     }
   }
 
-  public readOld() {
+  readOld() {
     if (this.props.user === null) {
       return;
     }

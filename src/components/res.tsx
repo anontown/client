@@ -60,7 +60,7 @@ class _Res extends React.Component<_ResProps, ResState> {
     };
   }
 
-  public vote(token: api.Token, res$: Observable<api.Res>) {
+  vote(token: api.Token, res$: Observable<api.Res>) {
     res$.mergeMap((res) => resSetedCreate.resSet(token, [res]))
       .map((reses) => reses[0])
       .subscribe((res) => {
@@ -72,7 +72,7 @@ class _Res extends React.Component<_ResProps, ResState> {
       });
   }
 
-  public onUV() {
+  onUV() {
     const user = this.props.user;
     if (user === null) {
       return;
@@ -92,7 +92,7 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  public onDV() {
+  onDV() {
     const user = this.props.user;
     if (user === null) {
       return;
@@ -112,7 +112,7 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  public onHashClock() {
+  onHashClock() {
     const token = this.props.user !== null ? this.props.user.token : null;
     if (this.state.children === null) {
       apiClient.findResHash(token, {
@@ -130,7 +130,7 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  public onDeleteClick() {
+  onDeleteClick() {
     if (this.props.user === null) {
       return;
     }
@@ -148,7 +148,7 @@ class _Res extends React.Component<_ResProps, ResState> {
       });
   }
 
-  public onSendReplyClock() {
+  onSendReplyClock() {
     const token = this.props.user !== null ? this.props.user.token : null;
     if (this.state.children === null) {
       apiClient.findResOne(token, {
@@ -165,7 +165,7 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  public onReceiveReplyClock() {
+  onReceiveReplyClock() {
     const token = this.props.user !== null ? this.props.user.token : null;
     if (this.state.children === null) {
       apiClient.findResReply(token, {
@@ -183,13 +183,13 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  public updateChildren(res: ResSeted) {
+  updateChildren(res: ResSeted) {
     if (this.state.children !== null) {
       this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } });
     }
   }
 
-  public render(): JSX.Element {
+  render(): JSX.Element {
     const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
 
     return (

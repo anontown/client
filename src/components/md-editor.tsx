@@ -28,7 +28,7 @@ interface MdEditorState {
 }
 
 export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
-  public defaltMinRows = 5;
+  defaltMinRows = 5;
 
   constructor(props: MdEditorProps) {
     super(props);
@@ -39,7 +39,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
     };
   }
 
-  public render() {
+  render() {
     return (
       <div>
         <Dialog

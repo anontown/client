@@ -39,7 +39,7 @@ class _App extends React.Component<_AppProps, AppState> {
     };
   }
 
-  public render() {
+  render() {
     return (
       <div>
         <Toolbar style={{

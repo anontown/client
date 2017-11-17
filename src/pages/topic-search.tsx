@@ -58,9 +58,9 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
   (dispatch) => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
-    public limit = 100;
-    public subs: Subscription[] = [];
-    public formChange$ = new Subject<void>();
+    limit = 100;
+    subs: Subscription[] = [];
+    formChange$ = new Subject<void>();
 
     constructor(props: TopicSearchPageProps) {
       super(props);
@@ -97,11 +97,11 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
       this.update();
     }
 
-    public componentWillUnmount() {
+    componentWillUnmount() {
       this.subs.forEach((sub) => sub.unsubscribe());
     }
 
-    public update() {
+    update() {
       this.setState({
         topics: Im.List(),
         page: 0,
@@ -110,7 +110,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
       this.more();
     }
 
-    public more() {
+    more() {
       apiClient.findTopic({
         title: this.state.title,
         tags: this.state.tags,
@@ -129,7 +129,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         });
     }
 
-    public favo() {
+    favo() {
       if (this.props.user === null) {
         return;
       }
@@ -145,7 +145,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
       });
     }
 
-    public render() {
+    render() {
       return <Page column={1}>
         <Snack
           msg={this.state.snackMsg}

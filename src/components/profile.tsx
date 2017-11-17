@@ -14,7 +14,7 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
     super(props);
   }
 
-  public render() {
+  render() {
     return (
       <div>
         {this.props.profile.name}●{this.props.profile.sn}

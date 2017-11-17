@@ -11,7 +11,7 @@ export class Page extends React.Component<PageProps, PageState> {
   constructor(props: PageProps) {
     super(props);
   }
-  public render() {
+  render() {
     return (
       <div>
         {this.props.children}

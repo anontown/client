@@ -21,7 +21,7 @@ export const SettingsPage = withRouter<{}>(class extends React.Component<Setting
     };
   }
 
-  public render() {
+  render() {
     return (
       <Page column={2}>
         <aside>

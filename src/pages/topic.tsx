@@ -60,7 +60,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
   (dispatch) => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<TopicPageProps, TopicPageState> {
-    public limit = 50;
+    limit = 50;
 
     constructor(props: TopicPageProps) {
       super(props);
@@ -112,7 +112,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         .flatMap((x) => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map((reses) => reses[0]));
     }
 
-    public storageSave(res: string | null) {
+    storageSave(res: string | null) {
       if (this.props.user === null || this.state.topic === null) {
         return;
       }
@@ -141,7 +141,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       });
     }
 
-    public favo() {
+    favo() {
       if (this.props.user === null || this.state.topic === null) {
         return;
       }
@@ -156,9 +156,9 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       });
     }
 
-    public scrollNewItem = new Subject<string | null>();
-    public updateItem = new Subject<ResSeted>();
-    public newItem = Observable.empty<ResSeted>();
+    scrollNewItem = new Subject<string | null>();
+    updateItem = new Subject<ResSeted>();
+    newItem = Observable.empty<ResSeted>();
 
     get isFavo() {
       if (this.props.user === null || this.state.topic === null) {
@@ -168,7 +168,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       return this.props.user.storage.topicFavo.has(this.state.topic.id);
     }
 
-    public render() {
+    render() {
       return <Page column={2}>
         <Snack
           msg={this.state.snackMsg}

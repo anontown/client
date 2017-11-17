@@ -48,7 +48,7 @@ class _TopicFork extends React.Component<_TopicForkProps, TopicForkState> {
     });
   }
 
-  public render() {
+  render() {
     return <div>
       <Snack
         msg={this.state.snackMsg}
@@ -67,7 +67,7 @@ class _TopicFork extends React.Component<_TopicForkProps, TopicForkState> {
     </div>;
   }
 
-  public submit() {
+  submit() {
     if (this.props.user === null) {
       return;
     }
