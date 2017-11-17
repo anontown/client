@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack -p",
+    "lint": "tslint -c tslint.json 'src/**/*.ts{,x}'"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +26,7 @@
     "@types/redux-logger": "^3.0.4",
     "awesome-typescript-loader": "^3.2.3",
     "source-map-loader": "^0.2.1",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.1",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
