@@ -65,6 +65,10 @@ class HTMLElementData {
 }
 
 export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<T>, ScrollState> {
+  subscriptions: Subscription[] = [];
+  afterViewChecked = new Subject<void>();
+  _isLock = false;
+
   constructor(props: ScrollProps<T>) {
     super(props);
   }
@@ -112,17 +116,19 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     return Observable
       .timer(0)
       .map(() => {
-        //最短距離のアイテム
+        // 最短距離のアイテム
         const minItem = this.props.items
-          .map((item) => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
+          .map( item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
           .reduce<{
             item: ListItem<T>;
             el: HTMLElementData;
           } | null>((min, item) => {
             if (min === null) {
               return item;
-            } else if (Math.abs(min.el.raw.getBoundingClientRect().top + min.el.raw.getBoundingClientRect().height / 2) >
-              Math.abs(item.el.raw.getBoundingClientRect().top + item.el.raw.getBoundingClientRect().height / 2)) {
+            } else if (Math.abs(min.el.raw.getBoundingClientRect().top +
+              min.el.raw.getBoundingClientRect().height / 2) >
+              Math.abs(item.el.raw.getBoundingClientRect().top +
+                item.el.raw.getBoundingClientRect().height / 2)) {
               return item;
             } else {
               return min;
@@ -149,17 +155,21 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     return Observable
       .timer(0)
       .map(() => {
-        //最短距離のアイテム
+        // 最短距離のアイテム
         const minItem = this.props.items
-          .map((item) => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
+          .map( item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
           .reduce<{
             item: ListItem<T>;
             el: HTMLElementData;
           } | null>((min, item) => {
             if (min === null) {
               return item;
-            } else if (Math.abs(window.innerHeight - (min.el.raw.getBoundingClientRect().top + min.el.raw.getBoundingClientRect().height / 2)) >
-              Math.abs(window.innerHeight - (item.el.raw.getBoundingClientRect().top + item.el.raw.getBoundingClientRect().height / 2))) {
+            } else if (Math.abs(window.innerHeight -
+              (min.el.raw.getBoundingClientRect().top +
+                min.el.raw.getBoundingClientRect().height / 2)) >
+              Math.abs(window.innerHeight -
+                (item.el.raw.getBoundingClientRect().top +
+                  item.el.raw.getBoundingClientRect().height / 2))) {
               return item;
             } else {
               return min;
@@ -177,17 +187,15 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   render() {
     return (
       <div ref="list">
-        {this.props.items.map((item) => <div ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
+        {this.props.items.map( item => <div ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
       </div>
     );
   }
 
-  subscriptions: Subscription[] = [];
-
   componentDidMount() {
     this.subscriptions.push(Observable.fromEvent(this.el, "scroll")
       .map(() => this.el.scrollTop)
-      .filter((top) => top <= this.props.width)
+      .filter( top => top <= this.props.width)
       .debounceTime(this.props.debounceTime)
       .subscribe(() => {
         switch (this.props.newItemOrder) {
@@ -202,7 +210,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
     this.subscriptions.push(Observable.fromEvent(this.el, "scroll")
       .map(() => this.el.scrollTop + this.el.clientHeight)
-      .filter((bottom) => bottom >= this.el.scrollHeight - this.props.width)
+      .filter( bottom => bottom >= this.el.scrollHeight - this.props.width)
       .debounceTime(this.props.debounceTime)
       .subscribe(() => {
         switch (this.props.newItemOrder) {
@@ -218,7 +226,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.subscriptions.push(Observable.fromEvent(this.el, "scroll")
       .debounceTime(this.props.debounceTime)
       .mergeMap(() => this.props.newItemOrder === "top" ? this.getTopElement() : this.getBottomElement())
-      .subscribe((newItem) => {
+      .subscribe( newItem => {
         if (newItem !== null) {
           this.props.scrollNewItemChange(newItem.item.data);
         }
@@ -232,7 +240,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
       }));
 
-    this.subscriptions.push(this.props.scrollNewItem.subscribe((date) => {
+    this.subscriptions.push(this.props.scrollNewItem.subscribe( date => {
       if (date !== null) {
         this._lock(() => Observable.fromPromise((async () => {
           this.props.onChangeItems(await this.props.findItem("before", date, true).toPromise());
@@ -254,25 +262,23 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         this.findNew();
       }
     }));
-    this.subscriptions.push(this.props.updateItem.subscribe((item) => {
+    this.subscriptions.push(this.props.updateItem.subscribe( item => {
       this.props.onChangeItems(list.update(this.props.items, item));
     }));
-    this.subscriptions.push(this.props.newItem.subscribe((item) => {
+    this.subscriptions.push(this.props.newItem.subscribe( item => {
       this.props.onChangeItems(this.props.items.push(item));
     }));
   }
 
-  afterViewChecked = new Subject<void>();
   componentDidUpdate() {
     this.afterViewChecked.next();
   }
 
   componentWillUnmount() {
-    this.subscriptions.forEach((x) => x.unsubscribe());
+    this.subscriptions.forEach( x => x.unsubscribe());
     this.afterViewChecked.complete();
   }
 
-  _isLock = false;
   async _lock(call: () => Observable<void>) {
     if (this._isLock) {
       return;
@@ -280,8 +286,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
     this._isLock = true;
     call()
-      .subscribe(undefined,
-      (e) => {
+      .subscribe(undefined, e => {
         console.log(e);
         this._isLock = false;
       },

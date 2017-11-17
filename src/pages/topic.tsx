@@ -18,7 +18,6 @@ import {
   Observable,
   Subject,
 } from "rxjs";
-import { ObjectOmit } from "typelevel-ts";
 import { updateUserData } from "../actions";
 import {
   Page,
@@ -34,7 +33,7 @@ import {
 import { ResSeted, UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient, resSetedCreate } from "../utils";
-//ジェネリクス解除
+// ジェネリクス解除
 interface ResScroll { new(): Scroll<ResSeted>; }
 const ResScroll = Scroll as ResScroll;
 
@@ -56,11 +55,13 @@ export interface TopicPageState {
   isEditDialog: boolean;
 }
 
-export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
-  (dispatch) => ({
+export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }), dispatch => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<TopicPageProps, TopicPageState> {
     limit = 50;
+    scrollNewItem = new Subject<string | null>();
+    updateItem = new Subject<ResSeted>();
+    newItem = Observable.empty<ResSeted>();
 
     constructor(props: TopicPageProps) {
       super(props);
@@ -78,7 +79,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       };
 
       apiClient.findTopicOne({ id: this.props.match.params.id })
-        .subscribe((topic) => {
+        .subscribe( topic => {
           this.setState({ topic });
         }, () => {
           this.setState({ snackMsg: "トピック取得に失敗" });
@@ -90,7 +91,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         if (topicRead !== undefined) {
           apiClient.findResOne(user.token, {
             id: topicRead.res,
-          }).subscribe((res) => {
+          }).subscribe( res => {
             this.scrollNewItem.next(res.date);
           }, () => {
             this.scrollNewItem.next(null);
@@ -103,13 +104,13 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       }
 
       this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, { id: this.props.match.params.id })
-        .do((x) => {
+        .do( x => {
           if (this.state.topic !== null) {
             this.setState({ topic: { ...this.state.topic, resCount: x.count } });
             this.storageSave(null);
           }
         })
-        .flatMap((x) => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map((reses) => reses[0]));
+        .flatMap( x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map( reses => reses[0]));
     }
 
     storageSave(res: string | null) {
@@ -156,10 +157,6 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       });
     }
 
-    scrollNewItem = new Subject<string | null>();
-    updateItem = new Subject<ResSeted>();
-    newItem = Observable.empty<ResSeted>();
-
     get isFavo() {
       if (this.props.user === null || this.state.topic === null) {
         return false;
@@ -178,8 +175,14 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           open={this.state.isAutoScrollDialog}
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ isAutoScrollDialog: false })}>
-          <Toggle label="自動スクロール" toggled={this.state.isAutoScroll} onToggle={(_e, v) => this.setState({ isAutoScroll: v })} />
-          <Slider max={30} value={this.state.autoScrollSpeed} onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
+          <Toggle
+            label="自動スクロール"
+            toggled={this.state.isAutoScroll}
+            onToggle={(_e, v) => this.setState({ isAutoScroll: v })} />
+          <Slider
+            max={30}
+            value={this.state.autoScrollSpeed}
+            onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
         </Dialog>
         <Dialog
           title="詳細データ"
@@ -196,7 +199,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ isForkDialog: false })}>
           {this.state.topic !== null && this.state.topic.type === "normal"
-            ? <TopicFork topic={this.state.topic} onCreate={(topic) => {
+            ? <TopicFork topic={this.state.topic} onCreate={ topic => {
               this.setState({ isForkDialog: false });
               this.props.history.push(`/topic/${topic.id}`);
             }} />
@@ -208,7 +211,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ isEditDialog: false })}>
           {this.state.topic !== null && this.state.topic.type === "normal"
-            ? <TopicEditor topic={this.state.topic} onUpdate={(topic) => {
+            ? <TopicEditor topic={this.state.topic} onUpdate={ topic => {
               this.setState({ isEditDialog: false });
               this.setState({ topic });
             }} />
@@ -264,7 +267,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
               </div >
             </Paper>
             <ResScroll items={this.state.reses}
-              onChangeItems={(reses) => this.setState({ reses })}
+              onChangeItems={ reses => this.setState({ reses })}
               newItemOrder="bottom"
               findNewItem={() => {
                 if (this.state.topic === null) {
@@ -275,8 +278,8 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                   topic: this.state.topic.id,
                   limit: this.limit,
                 })
-                  .mergeMap((r) => resSetedCreate.resSet(token, r))
-                  .map((reses) => Im.List(reses));
+                  .mergeMap( r => resSetedCreate.resSet(token, r))
+                  .map( reses => Im.List(reses));
               }}
               findItem={(type, date, equal) => {
                 if (this.state.topic === null) {
@@ -290,20 +293,20 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                   date,
                   limit: this.limit,
                 })
-                  .mergeMap((r) => resSetedCreate.resSet(token, r))
-                  .map((reses) => Im.List(reses));
+                  .mergeMap( r => resSetedCreate.resSet(token, r))
+                  .map( reses => Im.List(reses));
               }}
               width={10}
               debounceTime={500}
               autoScrollSpeed={this.state.autoScrollSpeed}
               isAutoScroll={this.state.isAutoScroll}
-              scrollNewItemChange={(res) => this.storageSave(res.id)}
+              scrollNewItemChange={ res => this.storageSave(res.id)}
               scrollNewItem={this.scrollNewItem}
               updateItem={this.updateItem}
               newItem={this.newItem}
-              dataToEl={(res) => <Res res={res}
+              dataToEl={res => <Res res={res}
                 isPop={false}
-                update={(res) => this.updateItem.next(res)} />} />
+                update={newRes => this.updateItem.next(newRes)} />} />
             {this.state.isResWrite
               ? <Paper>
                 <ResWrite topic={this.state.topic.id} reply={null} />

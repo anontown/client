@@ -48,10 +48,10 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowOekaki: false })}>
           <Errors errors={this.state.oekakiErrors} />
-          <Oekaki size={{ x: 320, y: 240 }} onSubmit={(svg) => {
+          <Oekaki size={{ x: 320, y: 240 }} onSubmit={ svg => {
             const data = new Blob([svg], { type: "image/svg+xml" });
             imgur.upload(data)
-              .subscribe((url) => {
+              .subscribe( url => {
                 this.setState({ slowOekaki: false, oekakiErrors: undefined });
                 if (this.props.onChange) {
                   this.props.onChange(this.props.value + `![](${url})`);
@@ -67,20 +67,20 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowImage: false })}>
           <Errors errors={this.state.imageErrors} />
-          <IconButton type="file" onChange={(e) => {
+          <IconButton type="file" onChange={ e => {
             const target = e.target as HTMLInputElement;
             const files = target.files;
             if (files !== null) {
               Observable.of(...Array.from(files))
-                .map((file) => {
+                .map( file => {
                   const formData = new FormData();
                   formData.append("image", file);
                   return formData;
                 })
-                .mergeMap((form) => imgur.upload(form))
-                .map((url) => `![](${url})`)
+                .mergeMap( form => imgur.upload(form))
+                .map( url => `![](${url})`)
                 .reduce((tags, tag) => tags + tag + "\n", "")
-                .subscribe((tags) => {
+                .subscribe( tags => {
                   this.setState({ slowImage: false, oekakiErrors: undefined });
                   if (this.props.onChange) {
                     this.props.onChange(this.props.value + tags);
@@ -101,7 +101,10 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             <ContentCreate />
           </IconButton>
         </div>
-        <Toggle label="Preview" defaultToggled={this.state.preview} onToggle={(_e, v) => this.setState({ preview: v })} />
+        <Toggle
+          label="Preview"
+          defaultToggled={this.state.preview}
+          onToggle={(_e, v) => this.setState({ preview: v })} />
         <TextField multiLine={true}
           rows={this.props.minRows || this.defaltMinRows}
           rowsMax={this.props.maxRows}

@@ -30,8 +30,7 @@ interface AccountSettingPageState {
 }
 
 export const AccountSettingPage = withRouter<{}>(connect(
-  (state: Store) => ({ user: state.user }),
-  (dispatch) => ({
+  (state: Store) => ({ user: state.user }), dispatch => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }),
 )(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
@@ -48,7 +47,7 @@ export const AccountSettingPage = withRouter<{}>(connect(
     if (this.props.user !== null) {
       apiClient
         .findUserSN({ id: this.props.user.token.user })
-        .subscribe((sn) => {
+        .subscribe(sn => {
           this.setState({ sn });
         }, () => {
           this.setState({ snackMsg: "ユーザー情報取得に失敗しました。" });
@@ -66,12 +65,12 @@ export const AccountSettingPage = withRouter<{}>(connect(
       sn: this.state.sn,
     })
       .mergeMap(() => apiClient.createTokenMaster({ id: user.token.user, pass: this.state.newPass }))
-      .subscribe((token) => {
+      .subscribe(token => {
         this.props.updateUser({ ...user, token });
         this.setState({ errors: [] });
-      }, (error) => {
+      }, error => {
         if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map((e) => e.message) });
+          this.setState({ errors: error.errors.map(e => e.message) });
         } else {
           this.setState({ errors: ["エラーが発生しました"] });
         }
@@ -87,8 +86,14 @@ export const AccountSettingPage = withRouter<{}>(connect(
         <form onSubmit={() => this.onSubmit()}>
           <Errors errors={this.state.errors} />
           <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
-          <TextField floatingLabelText="新しいパスワード" value={this.state.newPass} onChange={(_e, v) => this.setState({ newPass: v })} />
-          <TextField floatingLabelText="現在のパスワード" value={this.state.oldPass} onChange={(_e, v) => this.setState({ oldPass: v })} />
+          <TextField
+            floatingLabelText="新しいパスワード"
+            value={this.state.newPass}
+            onChange={(_e, v) => this.setState({ newPass: v })} />
+          <TextField
+            floatingLabelText="現在のパスワード"
+            value={this.state.oldPass}
+            onChange={(_e, v) => this.setState({ oldPass: v })} />
           <RaisedButton type="submit" label="OK" />
         </form>
       </Paper>

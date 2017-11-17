@@ -26,7 +26,7 @@ interface StorageJSON4 {
 }
 
 interface StorageJSON5 {
-  //バグでtopicFavoが壊れたのでリセットする用
+  // バグでtopicFavoが壊れたのでリセットする用
   ver: "5";
   topicFavo: string[];
   boardFavo: string[];
@@ -65,7 +65,7 @@ export interface Storage {
 export function toStorage(json: StorageJSONLatest): Storage {
   return {
     topicFavo: Im.Set(json.topicFavo),
-    tagsFavo: Im.Set(json.tagsFavo.map((tags) => Im.Set(tags))),
+    tagsFavo: Im.Set(json.tagsFavo.map(tags => Im.Set(tags))),
     topicRead: Im.Map(json.topicRead),
   };
 }
@@ -74,7 +74,7 @@ export function toJSON(storage: Storage): StorageJSONLatest {
   return {
     ver: "6",
     topicFavo: storage.topicFavo.toArray(),
-    tagsFavo: storage.tagsFavo.map((tags) => tags.toArray()).toArray(),
+    tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
     topicRead: storage.topicRead.toObject(),
   };
 }
@@ -83,7 +83,7 @@ function convert1To2(val: StorageJSON1): StorageJSON2 {
   return {
     ver: "2",
     topicFav: val.topicFav,
-    topicRead: val.topicRead.map((x) => {
+    topicRead: val.topicRead.map(x => {
       return {
         topic: x.topic,
         res: x.res,
@@ -95,7 +95,7 @@ function convert1To2(val: StorageJSON1): StorageJSON2 {
 
 function convert2To3(val: StorageJSON2): StorageJSON3 {
   const read: { [key: string]: { res: string, count: number } } = {};
-  val.topicRead.forEach((x) => read[x.topic] = { res: x.res, count: x.count });
+  val.topicRead.forEach(x => read[x.topic] = { res: x.res, count: x.count });
   return {
     ver: "3",
     topicFavo: val.topicFav,
@@ -124,7 +124,7 @@ function convert4To5(val: StorageJSON4): StorageJSON5 {
 function convert5To6(val: StorageJSON5): StorageJSON6 {
   return {
     ver: "6",
-    tagsFavo: val.boardFavo.map((x) => x.split("/")),
+    tagsFavo: val.boardFavo.map(x => x.split("/")),
     topicFavo: [],
     topicRead: val.topicRead,
   };

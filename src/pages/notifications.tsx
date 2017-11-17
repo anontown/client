@@ -34,123 +34,124 @@ export interface NotificationsPageState {
   snackMsg: null | string;
 }
 
-export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
-  private limit = 50;
+export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<NotificationsPageProps, NotificationsPageState> {
+    private limit = 50;
 
-  constructor(props: NotificationsPageProps) {
-    super(props);
-    this.state = {
-      reses: Im.List(),
-      snackMsg: null,
-    };
+    constructor(props: NotificationsPageProps) {
+      super(props);
+      this.state = {
+        reses: Im.List(),
+        snackMsg: null,
+      };
 
-    this.findNew();
-  }
+      this.findNew();
+    }
 
-  render() {
-    return (
-      <Page column={1}>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.props.user !== null
-          ? <div>
-            <div>
-              <RaisedButton label="最新" onClick={() => this.readNew()} />
+    render() {
+      return (
+        <Page column={1}>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.props.user !== null
+            ? <div>
+              <div>
+                <RaisedButton label="最新" onClick={() => this.readNew()} />
+              </div>
+              <div>
+                {this.state.reses.map(r => <Res res={r} isPop={false} update={newRes => this.update(newRes)} />)}
+              </div>
+              <div>
+                <RaisedButton label="前" onClick={() => this.readOld()} />
+              </div>
             </div>
-            <div>
-              {this.state.reses.map((r) => <Res res={r} isPop={false} update={(r) => this.update(r)} />)}
-            </div>
-            <div>
-              <RaisedButton label="前" onClick={() => this.readOld()} />
-            </div>
-          </div>
-          : <Paper>
-            ログインしてください。
+            : <Paper>
+              ログインしてください。
     </Paper>
-        }
-      </Page>
-    );
-  }
-
-  update(res: ResSeted) {
-    this.setState({ reses: list.update(this.state.reses, res) });
-  }
-
-  findNew() {
-    if (this.props.user === null) {
-      return;
-    }
-    const token = this.props.user.token;
-
-    apiClient.findResNoticeNew(token,
-      {
-        limit: this.limit,
-      })
-      .mergeMap((reses) => resSetedCreate.resSet(token, reses))
-      .map((reses) => Im.List(reses))
-      .subscribe((reses) => {
-        this.setState({ reses });
-      }, () => {
-        this.setState({ snackMsg: "レス取得に失敗" });
-      });
-  }
-
-  readNew() {
-    if (this.props.user === null) {
-      return;
+          }
+        </Page>
+      );
     }
 
-    const token = this.props.user.token;
+    update(res: ResSeted) {
+      this.setState({ reses: list.update(this.state.reses, res) });
+    }
 
-    const first = this.state.reses.first();
-    if (first === undefined) {
-      this.findNew();
-    } else {
-      apiClient.findResNotice(token,
+    findNew() {
+      if (this.props.user === null) {
+        return;
+      }
+      const token = this.props.user.token;
+
+      apiClient.findResNoticeNew(token,
         {
-          type: "after",
-          equal: false,
-          date: first.date,
           limit: this.limit,
         })
-        .mergeMap((reses) => resSetedCreate.resSet(token, reses))
-        .map((reses) => Im.List(reses))
-        .map((reses) => reses.concat(this.state.reses))
-        .subscribe((reses) => {
+        .mergeMap(reses => resSetedCreate.resSet(token, reses))
+        .map(reses => Im.List(reses))
+        .subscribe(reses => {
           this.setState({ reses });
         }, () => {
           this.setState({ snackMsg: "レス取得に失敗" });
         });
     }
-  }
 
-  readOld() {
-    if (this.props.user === null) {
-      return;
+    readNew() {
+      if (this.props.user === null) {
+        return;
+      }
+
+      const token = this.props.user.token;
+
+      const first = this.state.reses.first();
+      if (first === undefined) {
+        this.findNew();
+      } else {
+        apiClient.findResNotice(token,
+          {
+            type: "after",
+            equal: false,
+            date: first.date,
+            limit: this.limit,
+          })
+          .mergeMap(reses => resSetedCreate.resSet(token, reses))
+          .map(reses => Im.List(reses))
+          .map(reses => reses.concat(this.state.reses))
+          .subscribe(reses => {
+            this.setState({ reses });
+          }, () => {
+            this.setState({ snackMsg: "レス取得に失敗" });
+          });
+      }
     }
 
-    const token = this.props.user.token;
+    readOld() {
+      if (this.props.user === null) {
+        return;
+      }
 
-    const last = this.state.reses.last();
+      const token = this.props.user.token;
 
-    if (last === undefined) {
-      this.findNew();
-    } else {
-      apiClient.findResNotice(token,
-        {
-          type: "before",
-          equal: false,
-          date: last.date,
-          limit: this.limit,
-        })
-        .mergeMap((reses) => resSetedCreate.resSet(token, reses))
-        .map((reses) => this.state.reses.concat(reses))
-        .subscribe((reses) => {
-          this.setState({ reses });
-        }, () => {
-          this.setState({ snackMsg: "レス取得に失敗" });
-        });
+      const last = this.state.reses.last();
+
+      if (last === undefined) {
+        this.findNew();
+      } else {
+        apiClient.findResNotice(token,
+          {
+            type: "before",
+            equal: false,
+            date: last.date,
+            limit: this.limit,
+          })
+          .mergeMap(reses => resSetedCreate.resSet(token, reses))
+          .map(reses => this.state.reses.concat(reses))
+          .subscribe(reses => {
+            this.setState({ reses });
+          }, () => {
+            this.setState({ snackMsg: "レス取得に失敗" });
+          });
+      }
     }
-  }
-}));
+  }));

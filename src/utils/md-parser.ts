@@ -1,9 +1,7 @@
-declare function require(path: string): any;
-
-const markdown = require("remark-parse");
-const unified = require("unified");
-const breaks = require("remark-breaks");
-const disable = require("remark-disable-tokenizers");
+import * as breaks from "remark-breaks";
+import * as disable from "remark-disable-tokenizers";
+import * as markdown from "remark-parse";
+import * as unified from "unified";
 
 export function parse(text: string): Root {
   return unified()
@@ -39,63 +37,63 @@ export type MdNode = Paragraph |
   Image |
   Text;
 
-interface IParent {
+interface ParentBase {
   children: MdNode[];
 }
 
-interface IText {
+interface TextBase {
   value: string;
 }
 
-export interface Root extends IParent {
+export interface Root extends ParentBase {
   type: "root";
 }
 
-export interface Paragraph extends IParent {
+export interface Paragraph extends ParentBase {
   type: "paragraph";
 }
 
-export interface Blockquote extends IParent {
+export interface Blockquote extends ParentBase {
   type: "blockquote";
 }
 
-export interface Heading extends IParent {
+export interface Heading extends ParentBase {
   type: "heading";
   depth: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-export interface Code extends IText {
+export interface Code extends TextBase {
   type: "code";
   lang: string | null;
 }
 
-export interface InlineCode extends IText {
+export interface InlineCode extends TextBase {
   type: "inlineCode";
 }
 
-export interface List extends IParent {
+export interface List extends ParentBase {
   type: "list";
   ordered: boolean;
   start: number | null;
   loose: boolean;
 }
 
-export interface ListItem extends IParent {
+export interface ListItem extends ParentBase {
   type: "listItem";
   loose: boolean;
   checked: boolean | null;
 }
 
-export interface Table extends IParent {
+export interface Table extends ParentBase {
   type: "table";
   align: Array<"left" | "right" | "center" | null>;
 }
 
-export interface TableRow extends IParent {
+export interface TableRow extends ParentBase {
   type: "tableRow";
 }
 
-export interface TableCell extends IParent {
+export interface TableCell extends ParentBase {
   type: "tableCell";
 }
 
@@ -107,19 +105,19 @@ export interface Break {
   type: "break";
 }
 
-export interface Emphasis extends IParent {
+export interface Emphasis extends ParentBase {
   type: "emphasis";
 }
 
-export interface Strong extends IParent {
+export interface Strong extends ParentBase {
   type: "strong";
 }
 
-export interface Delete extends IParent {
+export interface Delete extends ParentBase {
   type: "delete";
 }
 
-export interface Link extends IParent {
+export interface Link extends ParentBase {
   type: "link";
   title: string | null;
   url: string;
@@ -132,6 +130,6 @@ export interface Image {
   url: string;
 }
 
-export interface Text extends IText {
+export interface Text extends TextBase {
   type: "text";
 }

@@ -25,7 +25,8 @@ interface AppsSettingPageState {
   snackMsg: string | null;
 }
 
-export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
+export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
   constructor(props: AppsSettingPageProps) {
     super(props);
     this.state = {
@@ -36,7 +37,7 @@ export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user:
     if (this.props.user !== null) {
       apiClient
         .findTokenClientAll(this.props.user.token)
-        .subscribe((clients) => {
+        .subscribe( clients => {
           this.setState({ clients: Im.List(clients) });
         }, () => {
           this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
@@ -50,7 +51,7 @@ export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user:
         <Snack
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
-        {this.state.clients.map((c) => <Paper>
+        {this.state.clients.map( c => <Paper>
           {c.name}
           <IconButton type="button" onClick={() => this.del(c)} >
             <ActionDelete />
@@ -66,7 +67,7 @@ export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user:
     }
     apiClient.deleteTokenClient(this.props.user.token, { client: client.id })
       .subscribe(() => {
-        this.setState({ clients: this.state.clients.filter((c) => c.id !== client.id) });
+        this.setState({ clients: this.state.clients.filter( c => c.id !== client.id) });
       }, () => {
         this.setState({ snackMsg: "削除に失敗しました" });
       });

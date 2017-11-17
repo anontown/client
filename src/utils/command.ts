@@ -1,12 +1,13 @@
 import * as Im from "immutable";
 
 export class Command<T> {
-  constructor(private readonly history: Im.List<T>,
-              private readonly index: number) {
-  }
-
   static fromValue<T>(val: T) {
     return new Command(Im.List<T>([val]), 0);
+  }
+
+  constructor(
+    private readonly history: Im.List<T>,
+    private readonly index: number) {
   }
 
   get value(): T {

@@ -22,7 +22,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
     };
 
     apiClient.findTopicTags({ limit: 100 })
-      .subscribe((tags) => {
+      .subscribe( tags => {
         this.setState({ acTags: tags });
       }, () => {
         this.setState({ snackMsg: "タグ候補取得に失敗しました" });
@@ -36,13 +36,13 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
         onHide={() => this.setState({ snackMsg: null })} />,
       <TagInput placeholder="タグ"
         tags={this.props.value.map((v, i) => ({ text: v, id: i }))}
-        suggestions={this.state.acTags.map((x) => x.name)}
-        handleAddition={(tag) => {
+        suggestions={this.state.acTags.map( x => x.name)}
+        handleAddition={ tag => {
           if (this.props.onChange) {
             this.props.onChange([...this.props.value, tag]);
           }
         }}
-        handleDelete={(i) => {
+        handleDelete={ i => {
           if (this.props.onChange) {
             const tags = [...this.props.value];
             tags.splice(i, 1);

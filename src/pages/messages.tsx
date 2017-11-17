@@ -26,7 +26,8 @@ interface MessagesPageState {
   snackMsg: null | string;
 }
 
-export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<MessagesPageProps, MessagesPageState> {
+export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+(class extends React.Component<MessagesPageProps, MessagesPageState> {
   private limit = 50;
 
   constructor(props: MessagesPageProps) {
@@ -51,7 +52,7 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
               <RaisedButton label="最新" onClick={() => this.readNew()} />
             </div>
             <div>
-              {this.state.msgs.map((m) =>
+              {this.state.msgs.map( m =>
                 <Paper>
                   <div>{dateFormat.format(m.date)}</div>
                   <Md body={m.text} />
@@ -78,8 +79,8 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
       {
         limit: this.limit,
       })
-      .map((msgs) => Im.List(msgs))
-      .subscribe((msgs) => {
+      .map( msgs => Im.List(msgs))
+      .subscribe( msgs => {
         this.setState({ msgs });
       }, () => {
         this.setState({ snackMsg: "メッセージ取得に失敗" });
@@ -102,9 +103,9 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
           date: first.date,
           limit: this.limit,
         })
-        .map((msgs) => Im.List(msgs))
-        .map((msgs) => msgs.concat(this.state.msgs))
-        .subscribe((msgs) => {
+        .map( msgs => Im.List(msgs))
+        .map( msgs => msgs.concat(this.state.msgs))
+        .subscribe( msgs => {
           this.setState({ msgs });
         }, () => {
           this.setState({ snackMsg: "メッセージ取得に失敗" });
@@ -128,8 +129,8 @@ export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: st
           date: last.date,
           limit: this.limit,
         })
-        .map((msgs) => this.state.msgs.concat(msgs))
-        .subscribe((msgs) => {
+        .map( msgs => this.state.msgs.concat(msgs))
+        .subscribe( msgs => {
           this.setState({ msgs });
         }, () => {
           this.setState({ snackMsg: "メッセージ取得に失敗" });

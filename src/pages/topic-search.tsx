@@ -54,8 +54,7 @@ export interface TopicSearchPageState {
   formTags: string[];
 }
 
-export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
-  (dispatch) => ({
+export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }), dispatch => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
     limit = 100;
@@ -98,7 +97,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
     }
 
     componentWillUnmount() {
-      this.subs.forEach((sub) => sub.unsubscribe());
+      this.subs.forEach( sub => sub.unsubscribe());
     }
 
     update() {
@@ -118,7 +117,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         limit: this.limit,
         activeOnly: !this.state.dead,
       })
-        .subscribe((topics) => {
+        .subscribe( topics => {
           this.setState({
             count: topics.length,
             page: this.state.page + 1,
@@ -159,7 +158,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
             </IconButton>
             : null}
           <div>
-            <TagsInput value={this.state.formTags} onChange={(v) => {
+            <TagsInput value={this.state.formTags} onChange={ v => {
               this.setState({ formTags: v });
               this.formChange$.next();
             }} />
@@ -184,7 +183,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
           </IconButton>
         </div>
         <div>
-          {this.state.topics.map((t) => <TopicListItem topic={t} detail={true} />)}
+          {this.state.topics.map( t => <TopicListItem topic={t} detail={true} />)}
         </div>
         {this.state.count === this.limit
           ? <div>

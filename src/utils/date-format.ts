@@ -7,22 +7,22 @@ export function format(value: Date | string | number): string {
 
   const timespan = now.valueOf() - date.valueOf();
 
-  //一秒未満
+  // 一秒未満
   if (timespan < 1000) {
     return "現在";
   }
 
-  //一分未満
+  // 一分未満
   if (timespan < 60 * 1000) {
     return Math.floor(timespan / 1000) + "秒前";
   }
 
-  //一時間未満
+  // 一時間未満
   if (timespan < 60 * 60 * 1000) {
     return Math.floor(timespan / 1000 / 60) + "分前";
   }
 
-  //一日未満
+  // 一日未満
   if (timespan < 24 * 60 * 60 * 1000) {
     return Math.floor(timespan / 1000 / 60 / 60) + "時間前";
   }

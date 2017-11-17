@@ -22,53 +22,54 @@ interface AuthPageState {
   snackMsg: string | null;
 }
 
-export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<AuthPageProps, AuthPageState> {
-  constructor(props: AuthPageProps) {
-    super(props);
-    this.state = {
-      client: null,
-      snackMsg: null,
-    };
+export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<AuthPageProps, AuthPageState> {
+    constructor(props: AuthPageProps) {
+      super(props);
+      this.state = {
+        client: null,
+        snackMsg: null,
+      };
 
-    const id: string | undefined = qs.parse(this.props.location.search).client;
-    if (id !== undefined) {
-      apiClient.findClientOne(this.props.user !== null ? this.props.user.token : null, {
-        id,
-      }).subscribe((client) => {
-        this.setState({ client });
-      }, () => {
-        this.setState({ snackMsg: "クライアント取得に失敗しました。" });
-      });
-    }
-  }
-
-  render() {
-    return (
-      <Page column={1}>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.props.user !== null && this.state.client !== null ? <div>
-          認証しますか？
-        <RaisedButton type="button" label="OK" onClick={() => this.ok()} />
-        </div>
-          : this.props.user === null ? <div>ログインして下さい</div>
-            : null}
-      </Page>
-    );
-  }
-
-  ok() {
-    if (this.props.user !== null && this.state.client !== null) {
-      const user = this.props.user;
-      const client = this.state.client;
-      apiClient.createTokenGeneral(user.token, { client: client.id })
-        .mergeMap((token) => apiClient.createTokenReq(token))
-        .subscribe((req) => {
-          location.href = client.url + "?" + "id=" + req.token + "&key=" + encodeURI(req.key);
+      const id: string | undefined = qs.parse(this.props.location.search).client;
+      if (id !== undefined) {
+        apiClient.findClientOne(this.props.user !== null ? this.props.user.token : null, {
+          id,
+        }).subscribe(client => {
+          this.setState({ client });
         }, () => {
-          this.setState({ snackMsg: "認証に失敗しました。" });
+          this.setState({ snackMsg: "クライアント取得に失敗しました。" });
         });
+      }
     }
-  }
-}));
+
+    render() {
+      return (
+        <Page column={1}>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.props.user !== null && this.state.client !== null ? <div>
+            認証しますか？
+        <RaisedButton type="button" label="OK" onClick={() => this.ok()} />
+          </div>
+            : this.props.user === null ? <div>ログインして下さい</div>
+              : null}
+        </Page>
+      );
+    }
+
+    ok() {
+      if (this.props.user !== null && this.state.client !== null) {
+        const user = this.props.user;
+        const client = this.state.client;
+        apiClient.createTokenGeneral(user.token, { client: client.id })
+          .mergeMap(token => apiClient.createTokenReq(token))
+          .subscribe(req => {
+            location.href = client.url + "?" + "id=" + req.token + "&key=" + encodeURI(req.key);
+          }, () => {
+            this.setState({ snackMsg: "認証に失敗しました。" });
+          });
+      }
+    }
+  }));

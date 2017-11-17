@@ -43,6 +43,7 @@ interface OekakiState {
 
 export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   defaltMinRows = 5;
+  line: Line | null = null;
 
   constructor(props: OekakiProps) {
     super(props);
@@ -53,8 +54,6 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
       width: 1,
     };
   }
-
-  line: Line | null = null;
 
   penDown(x: number, y: number) {
     this.line = {
@@ -93,11 +92,11 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   xmlns="http://www.w3.org/2000/svg"
   baseProfile="full"
   version="1.1">
-  ${val.map((p) => `<path strokeLinecap="round"
+  ${val.map( p => `<path strokeLinecap="round"
         strokeWidth="${p.width}"
         stroke="${this.toColorString(p.color)}"
         fill="${p.fill ? this.toColorString(p.color) : "none"}"
-        d="${`M ${p.m.x} ${p.m.y} ` + p.lines.map((l) => `L ${l.x} ${l.y} `).join(" ")}"
+        d="${`M ${p.m.x} ${p.m.y} ` + p.lines.map( l => `L ${l.x} ${l.y} `).join(" ")}"
       />`)}
 </svg>
     `;
@@ -115,7 +114,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
             min={1}
             max={10}
             onChange={(_e, v) => this.setState({ width: v })} />
-          <ColorPicker color={this.state.color} onChange={(color) => this.setState({ color })} />
+          <ColorPicker color={this.state.color} onChange={ color => this.setState({ color })} />
           <Checkbox label="塗りつぶす"
             checked={this.state.fill}
             onCheck={(_e, v) => this.setState({ fill: v })} />
@@ -136,15 +135,15 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
         <img src={"data:image/svg+xml," + encodeURIComponent(this.svg)}
           width={this.props.size.x}
           height={this.props.size.y}
-          onMouseDown={(e) => this.penDown(e.clientX, e.clientY)}
+          onMouseDown={ e => this.penDown(e.clientX, e.clientY)}
           onMouseUp={() => this.penUp()}
-          onMouseMove={(e) => this.penMove(e.clientX, e.clientY)}
-          onTouchStart={(e) => {
+          onMouseMove={ e => this.penMove(e.clientX, e.clientY)}
+          onTouchStart={ e => {
             e.preventDefault();
             this.penDown(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
           }}
           onTouchEnd={() => this.penUp()}
-          onTouchMove={(e) => {
+          onTouchMove={ e => {
             e.preventDefault();
             this.penMove(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
           }}

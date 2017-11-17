@@ -9,14 +9,14 @@ import { Store } from "../reducers";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 
-interface _ClientEditorProps {
+interface UnconnectedClientEditorProps {
   client: api.Client | null;
   onUpdate?: (client: api.Client) => void;
   onAdd?: (client: api.Client) => void;
   user: UserData | null;
 }
 
-export type ClientEditorProps = ObjectOmit<_ClientEditorProps, "user">;
+export type ClientEditorProps = ObjectOmit<UnconnectedClientEditorProps, "user">;
 
 interface ClientEditorState {
   url: string;
@@ -24,67 +24,66 @@ interface ClientEditorState {
   errors: string[];
 }
 
-class _ClientEditor extends React.Component<_ClientEditorProps, ClientEditorState> {
-  constructor(props: _ClientEditorProps) {
-    super(props);
-    this.state = {
-      url: props.client !== null ? props.client.url : "",
-      name: props.client !== null ? props.client.name : "",
-      errors: [],
-    };
-  }
-
-  render() {
-    return this.props.user !== null
-      ? <form onSubmit={() => this.submit()}>
-        <Errors errors={this.state.errors} />
-        <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-        <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
-        <RaisedButton type="submit" label="OK" />
-      </form>
-      : <div>ログインして下さい</div>;
-  }
-
-  submit() {
-    if (this.props.user === null) {
-      return;
+export const ClientEditor = connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<UnconnectedClientEditorProps, ClientEditorState> {
+    constructor(props: UnconnectedClientEditorProps) {
+      super(props);
+      this.state = {
+        url: props.client !== null ? props.client.url : "",
+        name: props.client !== null ? props.client.name : "",
+        errors: [],
+      };
     }
 
-    if (this.props.client !== null) {
-      apiClient.updateClient(this.props.user.token, {
-        id: this.props.client.id,
-        name: this.state.name,
-        url: this.state.url,
-      }).subscribe((client) => {
-        if (this.props.onUpdate) {
-          this.props.onUpdate(client);
-        }
-        this.setState({ errors: [] });
-      }, (error) => {
-        if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map((e) => e.message) });
-        } else {
-          this.setState({ errors: ["エラーが発生しました"] });
-        }
-      });
-    } else {
-      apiClient.createClient(this.props.user.token, {
-        name: this.state.name,
-        url: this.state.url,
-      }).subscribe((client) => {
-        if (this.props.onAdd) {
-          this.props.onAdd(client);
-        }
-        this.setState({ errors: [] });
-      }, (error) => {
-        if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map((e) => e.message) });
-        } else {
-          this.setState({ errors: ["エラーが発生しました"] });
-        }
-      });
+    render() {
+      return this.props.user !== null
+        ? <form onSubmit={() => this.submit()}>
+          <Errors errors={this.state.errors} />
+          <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
+          <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
+          <RaisedButton type="submit" label="OK" />
+        </form>
+        : <div>ログインして下さい</div>;
     }
-  }
-}
 
-export const ClientEditor = connect((state: Store) => ({ user: state.user }))(_ClientEditor);
+    submit() {
+      if (this.props.user === null) {
+        return;
+      }
+
+      if (this.props.client !== null) {
+        apiClient.updateClient(this.props.user.token, {
+          id: this.props.client.id,
+          name: this.state.name,
+          url: this.state.url,
+        }).subscribe( client => {
+          if (this.props.onUpdate) {
+            this.props.onUpdate(client);
+          }
+          this.setState({ errors: [] });
+        }, error => {
+          if (error instanceof AtError) {
+            this.setState({ errors: error.errors.map( e => e.message) });
+          } else {
+            this.setState({ errors: ["エラーが発生しました"] });
+          }
+        });
+      } else {
+        apiClient.createClient(this.props.user.token, {
+          name: this.state.name,
+          url: this.state.url,
+        }).subscribe( client => {
+          if (this.props.onAdd) {
+            this.props.onAdd(client);
+          }
+          this.setState({ errors: [] });
+        }, error => {
+          if (error instanceof AtError) {
+            this.setState({ errors: error.errors.map( e => e.message) });
+          } else {
+            this.setState({ errors: ["エラーが発生しました"] });
+          }
+        });
+      }
+    }
+  });

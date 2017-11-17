@@ -27,14 +27,14 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
     };
     if (this.props.topic.type === "normal") {
       apiClient.findHistoryAll({ topic: this.props.topic.id })
-        .subscribe((histories) => {
+        .subscribe( histories => {
           this.setState({ histories });
         }, () => {
           this.setState({ snackMsg: "履歴取得に失敗しました" });
         });
     } else if (this.props.topic.type === "fork") {
       apiClient.findTopicOne({ id: this.props.topic.parent })
-        .subscribe((parent) => {
+        .subscribe( parent => {
           this.setState({ parent });
         }, () => {
           this.setState({ snackMsg: "履歴取得に失敗しました" });
@@ -77,7 +77,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
           ? [
             <dt>編集履歴</dt>,
             <dd>
-              {this.state.histories.map((h) => <History history={h} />)}
+              {this.state.histories.map( h => <History history={h} />)}
             </dd>,
           ]
           : null}

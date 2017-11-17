@@ -8,49 +8,48 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import { ClientEditor } from "./client-editor";
 
-interface _ClientProps {
+interface UnconnectedClientProps {
   client: api.Client;
   onUpdate?: (client: api.Client) => void;
   user: UserData | null;
 }
 
-export type ClientProps = ObjectOmit<_ClientProps, "user">;
+export type ClientProps = ObjectOmit<UnconnectedClientProps, "user">;
 
 interface ClientState {
   edit: boolean;
 }
 
-class _Client extends React.Component<_ClientProps, ClientState> {
-  constructor(props: _ClientProps) {
-    super(props);
-    this.state = {
-      edit: false,
-    };
-  }
+export const Client = connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<UnconnectedClientProps, ClientState> {
+    constructor(props: UnconnectedClientProps) {
+      super(props);
+      this.state = {
+        edit: false,
+      };
+    }
 
-  render() {
-    const clientEditor = this.state.edit
-      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} />
-      : null;
+    render() {
+      const clientEditor = this.state.edit
+        ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} />
+        : null;
 
-    const edit = this.props.user !== null && this.props.user.token.user === this.props.client.user
-      ? <div>
-        <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
-          <EditorModeEdit />
-        </IconButton>
-        {clientEditor}
-      </div >
-      : null;
+      const edit = this.props.user !== null && this.props.user.token.user === this.props.client.user
+        ? <div>
+          <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
+            <EditorModeEdit />
+          </IconButton>
+          {clientEditor}
+        </div >
+        : null;
 
-    return (
-      <Paper>
-        <h2>{this.props.client.name}</h2>
-        <span>{this.props.client.id}</span>
-        <span>{this.props.client.url}</span>
-        {edit}
-      </Paper>
-    );
-  }
-}
-
-export const Client = connect((state: Store) => ({ user: state.user }))(_Client);
+      return (
+        <Paper>
+          <h2>{this.props.client.name}</h2>
+          <span>{this.props.client.id}</span>
+          <span>{this.props.client.url}</span>
+          {edit}
+        </Paper>
+      );
+    }
+  });

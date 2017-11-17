@@ -10,7 +10,7 @@ interface ColorPickerState {
   display: boolean;
 }
 
-//http://casesandberg.github.io/react-color/
+// http://casesandberg.github.io/react-color/
 export class ColorPicker extends React.Component<ColorPickerProps, ColorPickerState> {
   constructor(props: ColorPickerProps) {
     super(props);
@@ -34,7 +34,8 @@ export class ColorPicker extends React.Component<ColorPickerProps, ColorPickerSt
             width: "36px",
             height: "14px",
             borderRadius: "2px",
-            background: `rgba(${this.props.color.r}, ${this.props.color.g}, ${this.props.color.b}, ${this.props.color.a})`,
+            background:
+              `rgba(${this.props.color.r}, ${this.props.color.g}, ${this.props.color.b}, ${this.props.color.a})`,
           }} />
         </div>
         {this.state.display ? <div style={{
@@ -48,7 +49,7 @@ export class ColorPicker extends React.Component<ColorPickerProps, ColorPickerSt
             bottom: "0px",
             left: "0px",
           }} onClick={() => this.setState({ display: false })} />
-          <SketchPicker color={this.props.color} onChange={(color) => {
+          <SketchPicker color={this.props.color} onChange={ color => {
             if (this.props.onChange) {
               this.props.onChange(color.rgb);
             }

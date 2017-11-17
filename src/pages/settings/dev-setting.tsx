@@ -26,38 +26,39 @@ interface DevSettingPageState {
   snackMsg: string | null;
 }
 
-export const DevSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<DevSettingPageProps, DevSettingPageState> {
-  constructor(props: DevSettingPageProps) {
-    super(props);
-    this.state = {
-      snackMsg: null,
-      clients: Im.List(),
-    };
+export const DevSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<DevSettingPageProps, DevSettingPageState> {
+    constructor(props: DevSettingPageProps) {
+      super(props);
+      this.state = {
+        snackMsg: null,
+        clients: Im.List(),
+      };
 
-    if (this.props.user !== null) {
-      apiClient
-        .findClientAll(this.props.user.token)
-        .subscribe((clients) => {
-          this.setState({ clients: Im.List(clients) });
-        }, () => {
-          this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
-        });
+      if (this.props.user !== null) {
+        apiClient
+          .findClientAll(this.props.user.token)
+          .subscribe(clients => {
+            this.setState({ clients: Im.List(clients) });
+          }, () => {
+            this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+          });
+      }
     }
-  }
 
-  render() {
-    return this.props.user !== null
-      ? <Paper>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.state.clients.map((c) => <Client
-          client={c}
-          onUpdate={(c) => this.setState({ clients: list.update(this.state.clients, c) })} />)}
-        <ClientEditor
-          client={null}
-          onAdd={(c) => this.setState({ clients: this.state.clients.push(c) })} />
-      </Paper>
-      : <div>ログインして下さい。</div>;
-  }
-}));
+    render() {
+      return this.props.user !== null
+        ? <Paper>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.state.clients.map(c => <Client
+            client={c}
+            onUpdate={newClient => this.setState({ clients: list.update(this.state.clients, newClient) })} />)}
+          <ClientEditor
+            client={null}
+            onAdd={c => this.setState({ clients: this.state.clients.push(c) })} />
+        </Paper>
+        : <div>ログインして下さい。</div>;
+    }
+  }));

@@ -17,12 +17,12 @@ import { Md } from "./md";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
 
-interface _HistoryProps {
+interface UnconnectedHistoryProps {
   history: api.History;
   user: UserData | null;
 }
 
-export type HistoryProps = ObjectOmit<_HistoryProps, "user">;
+export type HistoryProps = ObjectOmit<UnconnectedHistoryProps, "user">;
 
 interface HistoryState {
   detail: boolean;
@@ -30,65 +30,64 @@ interface HistoryState {
   snackMsg: null | string;
 }
 
-class _History extends React.Component<_HistoryProps, HistoryState> {
-  constructor(props: _HistoryProps) {
-    super(props);
+export const History = connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<UnconnectedHistoryProps, HistoryState> {
+    constructor(props: UnconnectedHistoryProps) {
+      super(props);
 
-    this.state = {
-      detail: false,
-      hashReses: null,
-      snackMsg: null,
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        <div>
-          <IconButton onClick={() => this.setState({ detail: !this.state.detail })}>
-            {this.state.detail ? <NavigationArrowDropUp /> : <NavigationArrowDropDown />}
-          </IconButton>
-          {dateFormat.format(this.props.history.date)}
-          <a onClick={() => this.onHashClick()} > HASH:{this.props.history.hash}</a>
-        </div>
-        {this.state.detail ?
-          <dl>
-            <dt>タイトル</dt>
-            <dd>{this.props.history.title}</dd>
-            <dt>カテゴリ</dt>
-            <dd><TagsLink tags={this.props.history.tags} /></dd >
-            <dt>本文</dt>
-            <dd>
-              <Md body={this.props.history.text} />
-            </dd >
-          </dl > : null
-        }
-        {
-          this.state.hashReses !== null
-            ? this.state.hashReses.map((res) => (<Res res={res} />))
-            : null
-        }
-      </div >
-    );
-  }
-
-  onHashClick() {
-    if (this.state.hashReses === null) {
-      apiClient.findResHash(this.props.user !== null ? this.props.user.token : null, {
-        topic: this.props.history.topic,
-        hash: this.props.history.hash,
-      }).subscribe((reses) => {
-        this.setState({ hashReses: reses });
-      }, () => {
-        this.setState({ snackMsg: "レスの取得に失敗しました" });
-      });
-    } else {
-      this.setState({ hashReses: null });
+      this.state = {
+        detail: false,
+        hashReses: null,
+        snackMsg: null,
+      };
     }
-  }
-}
 
-export const History = connect((state: Store) => ({ user: state.user }))(_History);
+    render() {
+      return (
+        <div>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          <div>
+            <IconButton onClick={() => this.setState({ detail: !this.state.detail })}>
+              {this.state.detail ? <NavigationArrowDropUp /> : <NavigationArrowDropDown />}
+            </IconButton>
+            {dateFormat.format(this.props.history.date)}
+            <a onClick={() => this.onHashClick()} > HASH:{this.props.history.hash}</a>
+          </div>
+          {this.state.detail ?
+            <dl>
+              <dt>タイトル</dt>
+              <dd>{this.props.history.title}</dd>
+              <dt>カテゴリ</dt>
+              <dd><TagsLink tags={this.props.history.tags} /></dd >
+              <dt>本文</dt>
+              <dd>
+                <Md body={this.props.history.text} />
+              </dd >
+            </dl > : null
+          }
+          {
+            this.state.hashReses !== null
+              ? this.state.hashReses.map( res => (<Res res={res} />))
+              : null
+          }
+        </div >
+      );
+    }
+
+    onHashClick() {
+      if (this.state.hashReses === null) {
+        apiClient.findResHash(this.props.user !== null ? this.props.user.token : null, {
+          topic: this.props.history.topic,
+          hash: this.props.history.hash,
+        }).subscribe( reses => {
+          this.setState({ hashReses: reses });
+        }, () => {
+          this.setState({ snackMsg: "レスの取得に失敗しました" });
+        });
+      } else {
+        this.setState({ hashReses: null });
+      }
+    }
+  });

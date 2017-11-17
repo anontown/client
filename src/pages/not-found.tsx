@@ -10,7 +10,7 @@ interface NotFoundProps extends RouteComponentProps<{}> {
 
 }
 
-export const NotFoundPage = withRouter<{}>(function(_props: NotFoundProps) {
+export const NotFoundPage = withRouter<{}>((_props: NotFoundProps) => {
   return <Page column={1}>
     <Paper>ページが見つかりません</Paper>
   </Page>;
