@@ -6,5 +6,4 @@ export type ResHistorySetedHistory = ObjectOverwrite<api.ResHistory, { history: 
 export type ResTopicSetedTopic = api.ResTopic & { topicObject: api.Topic };
 export type ResForkSetedTopic = ObjectOverwrite<api.ResFork, { fork: api.Topic }>;
 
-
 export type ResSeted = ResNormalSetedProfile | ResHistorySetedHistory | ResTopicSetedTopic | ResForkSetedTopic | api.ResDelete;

@@ -1,52 +1,52 @@
-import * as React from 'react';
-import { UserData } from "../models";
-import { ObjectOmit } from "typelevel-ts";
-import { connect } from "react-redux";
-import { Store } from "../reducers";
-import { updateUserData } from "../actions";
 import {
+  IconButton,
+  IconMenu,
+  MenuItem,
   Toolbar,
   ToolbarGroup,
   ToolbarTitle,
-  IconButton,
-  IconMenu,
-  MenuItem
 } from "material-ui";
-import {
-  Switch,
-  Route,
-  Link
-} from 'react-router-dom';
 import * as icons from "material-ui/svg-icons";
+import * as React from "react";
+import { connect } from "react-redux";
+import {
+  Link,
+  Route,
+  Switch,
+} from "react-router-dom";
+import { ObjectOmit } from "typelevel-ts";
+import { updateUserData } from "../actions";
+import { UserData } from "../models";
 import * as pages from "../pages";
+import { Store } from "../reducers";
 
 interface _AppProps {
-  user: UserData | null,
+  user: UserData | null;
   updateUser: (user: UserData | null) => void;
 }
 
 export type AppProps = ObjectOmit<_AppProps, "user" | "updateUser">;
 
 interface AppState {
-  showSideMenu: boolean
+  showSideMenu: boolean;
 }
 
 class _App extends React.Component<_AppProps, AppState> {
   constructor(props: _AppProps) {
     super(props);
     this.state = {
-      showSideMenu: false
+      showSideMenu: false,
     };
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <Toolbar style={{
           position: "fixed",
           top: "0px",
           left: "0px",
-          right: "0px"
+          right: "0px",
         }}>
           <ToolbarGroup firstChild={true}>
             <ToolbarTitle text="Anontown" />
@@ -75,7 +75,7 @@ class _App extends React.Component<_AppProps, AppState> {
                   <MenuItem primaryText="お知らせ" containerElement={<Link to="/messages" />} />,
                   <MenuItem primaryText="設定" containerElement={<Link to="/settings/account" />} />,
                   <MenuItem primaryText="プロフ管理" containerElement={<Link to="/profiles" />} />,
-                  <MenuItem primaryText="ログアウト" onClick={() => this.logout()} />
+                  <MenuItem primaryText="ログアウト" onClick={() => this.logout()} />,
                 ]
                 : <MenuItem primaryText="ログイン/登録" containerElement={<Link to="/in" />} />}
 
@@ -110,6 +110,6 @@ class _App extends React.Component<_AppProps, AppState> {
 }
 
 export const App = connect((state: Store) => ({ user: state.user }),
-  dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
+  (dispatch) => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(_App);

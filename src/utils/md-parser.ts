@@ -1,20 +1,20 @@
-declare function require(path: string): any
+declare function require(path: string): any;
 
-const markdown = require('remark-parse');
-const unified = require('unified');
-const breaks = require('remark-breaks');
-const disable = require('remark-disable-tokenizers');
+const markdown = require("remark-parse");
+const unified = require("unified");
+const breaks = require("remark-breaks");
+const disable = require("remark-disable-tokenizers");
 
 export function parse(text: string): Root {
   return unified()
     .use(markdown)
     .use(disable, {
       block: [
-        'html',
-        'footnote'
+        "html",
+        "footnote",
       ],
       inline: [
-      ]
+      ],
     })
     .use(breaks)
     .parse(text);
@@ -48,7 +48,7 @@ interface IText {
 }
 
 export interface Root extends IParent {
-  type: 'root';
+  type: "root";
 }
 
 export interface Paragraph extends IParent {
@@ -88,7 +88,7 @@ export interface ListItem extends IParent {
 
 export interface Table extends IParent {
   type: "table";
-  align: ("left" | "right" | "center" | null)[];
+  align: Array<"left" | "right" | "center" | null>;
 }
 
 export interface TableRow extends IParent {

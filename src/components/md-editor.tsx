@@ -1,16 +1,16 @@
-import * as React from 'react';
 import {
-  TextField,
+  Dialog,
   IconButton,
+  TextField,
   Toggle,
-  Dialog
-} from 'material-ui';
-import { ImageAddAPhoto, ContentCreate } from 'material-ui/svg-icons';
-import { Md } from './md';
-import { Errors } from './errors';
-import { Oekaki } from './oekaki';
-import { imgur } from "../utils";
+} from "material-ui";
+import { ContentCreate, ImageAddAPhoto } from "material-ui/svg-icons";
+import * as React from "react";
 import { Observable } from "rxjs";
+import { imgur } from "../utils";
+import { Errors } from "./errors";
+import { Md } from "./md";
+import { Oekaki } from "./oekaki";
 
 export interface MdEditorProps {
   value: string;
@@ -20,26 +20,26 @@ export interface MdEditorProps {
 }
 
 interface MdEditorState {
-  oekakiErrors?: string[],
-  imageErrors?: string[],
+  oekakiErrors?: string[];
+  imageErrors?: string[];
   preview: boolean;
   slowOekaki: boolean;
   slowImage: boolean;
 }
 
 export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
-  defaltMinRows = 5;
+  public defaltMinRows = 5;
 
   constructor(props: MdEditorProps) {
     super(props);
     this.state = {
       preview: false,
       slowOekaki: false,
-      slowImage: false
-    }
+      slowImage: false,
+    };
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <Dialog
@@ -48,16 +48,16 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowOekaki: false })}>
           <Errors errors={this.state.oekakiErrors} />
-          <Oekaki size={{ x: 320, y: 240 }} onSubmit={svg => {
-            let data = new Blob([svg], { type: 'image/svg+xml' });
+          <Oekaki size={{ x: 320, y: 240 }} onSubmit={(svg) => {
+            const data = new Blob([svg], { type: "image/svg+xml" });
             imgur.upload(data)
-              .subscribe(url => {
+              .subscribe((url) => {
                 this.setState({ slowOekaki: false, oekakiErrors: undefined });
                 if (this.props.onChange) {
                   this.props.onChange(this.props.value + `![](${url})`);
                 }
               }, () => {
-                this.setState({ oekakiErrors: ['アップロードに失敗しました'] });
+                this.setState({ oekakiErrors: ["アップロードに失敗しました"] });
               });
           }} />
         </Dialog>
@@ -67,26 +67,26 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowImage: false })}>
           <Errors errors={this.state.imageErrors} />
-          <IconButton type="file" onChange={e => {
-            let target = e.target as HTMLInputElement;
-            let files = target.files;
+          <IconButton type="file" onChange={(e) => {
+            const target = e.target as HTMLInputElement;
+            const files = target.files;
             if (files !== null) {
               Observable.of(...Array.from(files))
-                .map(file => {
-                  let formData = new FormData();
-                  formData.append('image', file);
+                .map((file) => {
+                  const formData = new FormData();
+                  formData.append("image", file);
                   return formData;
                 })
-                .mergeMap(form => imgur.upload(form))
-                .map(url => `![](${url})`)
+                .mergeMap((form) => imgur.upload(form))
+                .map((url) => `![](${url})`)
                 .reduce((tags, tag) => tags + tag + "\n", "")
-                .subscribe(tags => {
+                .subscribe((tags) => {
                   this.setState({ slowImage: false, oekakiErrors: undefined });
                   if (this.props.onChange) {
                     this.props.onChange(this.props.value + tags);
                   }
                 }, () => {
-                  this.setState({ imageErrors: ['アップロードに失敗しました'] });
+                  this.setState({ imageErrors: ["アップロードに失敗しました"] });
                 });
             }
           }}>
@@ -101,7 +101,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             <ContentCreate />
           </IconButton>
         </div>
-        <Toggle label='Preview' defaultToggled={this.state.preview} onToggle={(_e, v) => this.setState({ preview: v })} />
+        <Toggle label="Preview" defaultToggled={this.state.preview} onToggle={(_e, v) => this.setState({ preview: v })} />
         <TextField multiLine={true}
           rows={this.props.minRows || this.defaltMinRows}
           rowsMax={this.props.maxRows}

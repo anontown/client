@@ -10,6 +10,6 @@ export function userReducer(state = initState, action: Actions): UserStore {
     case "UPDATE_USER_DATA":
       return action.data;
     default:
-      return state
+      return state;
   }
 }

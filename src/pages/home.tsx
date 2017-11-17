@@ -1,29 +1,28 @@
-import * as React from "react";
 import {
   Paper,
   Tab,
-  Tabs
+  Tabs,
 } from "material-ui";
+import * as React from "react";
+import { connect } from "react-redux";
+import {
+  Link,
+  RouteComponentProps,
+  withRouter,
+} from "react-router-dom";
 import { Page } from "../components";
 import {
-  RouteComponentProps,
-  Link,
-  withRouter
-} from "react-router-dom";
-import { UserData } from "../models";
-import { connect } from "react-redux";
-import { Store } from "../reducers";
-import {
   TagFavo,
-  TopicFavo
+  TopicFavo,
 } from "../components";
+import { UserData } from "../models";
+import { Store } from "../reducers";
 
 interface HomePageProps extends RouteComponentProps<{}> {
-  user: UserData | null
+  user: UserData | null;
 }
 
-
-export const HomePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(function (props: HomePageProps) {
+export const HomePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(function(props: HomePageProps) {
   return <Page column={1}>
     {props.user !== null
       ? <Tabs>

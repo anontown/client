@@ -1,7 +1,7 @@
-import * as React from 'react';
 import {
-  Snackbar
-} from 'material-ui';
+  Snackbar,
+} from "material-ui";
+import * as React from "react";
 
 export function Snack(props: { msg: string | null, onHide?: () => void }) {
   return (<Snackbar
@@ -12,5 +12,5 @@ export function Snack(props: { msg: string | null, onHide?: () => void }) {
       if (props.onHide) {
         props.onHide();
       }
-    }} />)
+    }} />);
 }

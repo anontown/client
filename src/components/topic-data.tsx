@@ -1,18 +1,18 @@
-import * as React from 'react';
 import * as api from "@anontown/api-types";
-import { dateFormat, apiClient } from "../utils";
+import * as React from "react";
 import { Link } from "react-router-dom";
-import { TagsLink } from "./tags-link";
-import { Md } from "./md";
+import { apiClient, dateFormat } from "../utils";
 import { History } from "./history";
+import { Md } from "./md";
 import { Snack } from "./snack";
+import { TagsLink } from "./tags-link";
 
 export interface TopicDataProps {
   topic: api.Topic;
 }
 
 interface TopicDataState {
-  histories: api.History[] | null,
+  histories: api.History[] | null;
   parent: api.Topic | null;
   snackMsg: null | string;
 }
@@ -23,25 +23,25 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
     this.state = {
       histories: null,
       parent: null,
-      snackMsg: null
+      snackMsg: null,
     };
-    if (this.props.topic.type === 'normal') {
+    if (this.props.topic.type === "normal") {
       apiClient.findHistoryAll({ topic: this.props.topic.id })
-        .subscribe(histories => {
+        .subscribe((histories) => {
           this.setState({ histories });
         }, () => {
           this.setState({ snackMsg: "履歴取得に失敗しました" });
         });
-    } else if (this.props.topic.type === 'fork') {
+    } else if (this.props.topic.type === "fork") {
       apiClient.findTopicOne({ id: this.props.topic.parent })
-        .subscribe(parent => {
+        .subscribe((parent) => {
           this.setState({ parent });
         }, () => {
           this.setState({ snackMsg: "履歴取得に失敗しました" });
         });
     }
   }
-  render() {
+  public render() {
     return (
       <dl>
         <Snack
@@ -51,7 +51,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
         <dd>{dateFormat.format(this.props.topic.date)}</dd>
         <dt>更新</dt>
         <dd>{dateFormat.format(this.props.topic.update)}</dd>
-        {this.props.topic.type !== 'fork'
+        {this.props.topic.type !== "fork"
           ?
           [
             <dt>カテゴリ</dt>,
@@ -61,7 +61,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
             <dt>本文</dt>,
             <dd>
               <Md body={this.props.topic.text} />
-            </dd>
+            </dd>,
           ]
           : null
         }
@@ -70,15 +70,15 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
             <dt>派生元</dt>,
             <dd>
               <Link to={`/topic/${this.state.parent.id}`}>{this.state.parent.title}</Link>
-            </dd>
+            </dd>,
           ]
           : null}
         {this.state.histories !== null
           ? [
             <dt>編集履歴</dt>,
             <dd>
-              {this.state.histories.map(h => <History history={h} />)}
-            </dd>
+              {this.state.histories.map((h) => <History history={h} />)}
+            </dd>,
           ]
           : null}
       </dl>

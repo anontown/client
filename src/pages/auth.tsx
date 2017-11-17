@@ -1,25 +1,25 @@
-import * as React from 'react';
+import * as api from "@anontown/api-types";
+import { RaisedButton } from "material-ui";
+import * as qs from "query-string";
+import * as React from "react";
+import { connect } from "react-redux";
 import {
   RouteComponentProps,
-  withRouter
+  withRouter,
 } from "react-router-dom";
 import { Page } from "../components";
-import * as api from "@anontown/api-types";
-import { apiClient } from "../utils";
-import * as qs from "query-string";
-import { UserData } from "../models";
-import { connect } from "react-redux";
-import { Store } from "../reducers";
 import { Snack } from "../components";
-import { RaisedButton } from 'material-ui';
+import { UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient } from "../utils";
 
 interface AuthPageProps extends RouteComponentProps<{}> {
-  user: UserData | null
-};
+  user: UserData | null;
+}
 
 interface AuthPageState {
-  client: api.Client | null,
-  snackMsg: string | null
+  client: api.Client | null;
+  snackMsg: string | null;
 }
 
 export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<AuthPageProps, AuthPageState> {
@@ -30,19 +30,19 @@ export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.
       snackMsg: null,
     };
 
-    const id: string | undefined = qs.parse(this.props.location.search)["client"];
+    const id: string | undefined = qs.parse(this.props.location.search).client;
     if (id !== undefined) {
       apiClient.findClientOne(this.props.user !== null ? this.props.user.token : null, {
-        id
-      }).subscribe(client => {
+        id,
+      }).subscribe((client) => {
         this.setState({ client });
       }, () => {
-        this.setState({ snackMsg: 'クライアント取得に失敗しました。' });
-      })
+        this.setState({ snackMsg: "クライアント取得に失敗しました。" });
+      });
     }
   }
 
-  render() {
+  public render() {
     return (
       <Page column={1}>
         <Snack
@@ -58,16 +58,16 @@ export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.
     );
   }
 
-  ok() {
+  public ok() {
     if (this.props.user !== null && this.state.client !== null) {
       const user = this.props.user;
       const client = this.state.client;
       apiClient.createTokenGeneral(user.token, { client: client.id })
-        .mergeMap(token => apiClient.createTokenReq(token))
-        .subscribe(req => {
-          location.href = client.url + '?' + 'id=' + req.token + '&key=' + encodeURI(req.key)
+        .mergeMap((token) => apiClient.createTokenReq(token))
+        .subscribe((req) => {
+          location.href = client.url + "?" + "id=" + req.token + "&key=" + encodeURI(req.key);
         }, () => {
-          this.setState({ snackMsg: '認証に失敗しました。' });
+          this.setState({ snackMsg: "認証に失敗しました。" });
         });
     }
   }

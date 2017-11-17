@@ -1,56 +1,56 @@
-import * as React from 'react';
-import { UserData } from "../models";
-import { connect } from "react-redux";
-import { Store } from "../reducers";
+import { AtError } from "@anontown/api-client";
 import {
-  RouteComponentProps,
-  Redirect,
-  withRouter
-} from "react-router-dom";
-import { apiClient } from "../utils";
-import {
-  Errors
-} from "../components";
-import {
+  MenuItem,
   Paper,
-  TextField,
   RaisedButton,
   SelectField,
-  MenuItem
+  TextField,
 } from "material-ui";
+import * as React from "react";
 import * as Recaptcha from "react-google-recaptcha";
-import { Config } from "../env";
-import { AtError } from "@anontown/api-client";
+import { connect } from "react-redux";
+import {
+  Redirect,
+  RouteComponentProps,
+  withRouter,
+} from "react-router-dom";
 import { updateUserData } from "../actions";
+import {
+  Errors,
+} from "../components";
+import { Config } from "../env";
+import { UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient } from "../utils";
 
 interface InPageProps extends RouteComponentProps<{}> {
-  user: UserData | null,
-  updateUser: (user: UserData | null) => void
+  user: UserData | null;
+  updateUser: (user: UserData | null) => void;
 }
 
 interface InPageState {
-  sn: string,
-  pass: string,
-  isLogin: boolean,
-  errors?: string[],
-  recaptcha: string | null
+  sn: string;
+  pass: string;
+  isLogin: boolean;
+  errors?: string[];
+  recaptcha: string | null;
 }
 
 export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
-  dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
+  (dispatch) => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<InPageProps, InPageState> {
     constructor(props: InPageProps) {
       super(props);
       this.state = {
-        sn: '',
-        pass: '',
+        sn: "",
+        pass: "",
         isLogin: true,
-        recaptcha: null
+        recaptcha: null,
       };
     }
 
-    render() {
+    public render() {
       return this.props.user !== null
         ? <Redirect to="/" />
         : <Paper>
@@ -83,27 +83,27 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
         </Paper>;
     }
 
-    ok() {
+    public ok() {
       (this.state.isLogin ? apiClient.findUserID({ sn: this.state.sn })
-        : apiClient.createUser(this.state.recaptcha as string,//キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
+        : apiClient.createUser(this.state.recaptcha as string, //キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
           {
             sn: this.state.sn,
-            pass: this.state.pass
+            pass: this.state.pass,
           })
-          .map(user => user.id))
-        .mergeMap(id => apiClient.createTokenMaster({ id, pass: this.state.pass }))
-        .subscribe(token => {
+          .map((user) => user.id))
+        .mergeMap((id) => apiClient.createTokenMaster({ id, pass: this.state.pass }))
+        .subscribe((token) => {
           this.props.updateUser(login(token));
-        }, errors => {
-          let rc = this.refs['recaptcha'] as any;
+        }, (errors) => {
+          const rc = this.refs.recaptcha as any;
           if (rc) {
             rc.reset();
           }
 
           if (errors instanceof AtError) {
-            this.setState({ errors: errors.errors.map(e => e.message) });
+            this.setState({ errors: errors.errors.map((e) => e.message) });
           } else {
-            this.setState({ errors: ['ログインに失敗しました。'] });
+            this.setState({ errors: ["ログインに失敗しました。"] });
           }
         });
     }

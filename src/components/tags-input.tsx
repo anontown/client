@@ -1,17 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
+import { WithContext as TagInput } from "react-tag-input";
 import { apiClient } from "../utils";
 import { Snack } from "./snack";
-import { WithContext as TagInput } from 'react-tag-input';
 
 export interface TagsInputProps {
-  value: string[],
-  onChange?: (value: string[]) => void
+  value: string[];
+  onChange?: (value: string[]) => void;
 }
 
-
 interface TagsInputState {
-  acTags: { name: string, count: number }[],
-  snackMsg: null | string
+  acTags: Array<{ name: string, count: number }>;
+  snackMsg: null | string;
 }
 
 export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
@@ -19,37 +18,37 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
     super(props);
     this.state = {
       acTags: [],
-      snackMsg: null
-    }
+      snackMsg: null,
+    };
 
     apiClient.findTopicTags({ limit: 100 })
-      .subscribe(tags => {
+      .subscribe((tags) => {
         this.setState({ acTags: tags });
       }, () => {
-        this.setState({ snackMsg: "タグ候補取得に失敗しました" })
+        this.setState({ snackMsg: "タグ候補取得に失敗しました" });
       });
   }
 
-  render() {
+  public render() {
     return [
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />,
       <TagInput placeholder="タグ"
         tags={this.props.value.map((v, i) => ({ text: v, id: i }))}
-        suggestions={this.state.acTags.map(x => x.name)}
-        handleAddition={tag => {
+        suggestions={this.state.acTags.map((x) => x.name)}
+        handleAddition={(tag) => {
           if (this.props.onChange) {
-            this.props.onChange([...this.props.value, tag])
+            this.props.onChange([...this.props.value, tag]);
           }
         }}
-        handleDelete={i => {
+        handleDelete={(i) => {
           if (this.props.onChange) {
             const tags = [...this.props.value];
             tags.splice(i, 1);
-            this.props.onChange(tags)
+            this.props.onChange(tags);
           }
-        }} />
+        }} />,
     ];
   }
 }

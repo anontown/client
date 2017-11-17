@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Page } from "../../components";
-import { Route, Switch, Link } from 'react-router-dom'
-import { AccountSettingPage } from './account-setting';
-import { DevSettingPage } from './dev-setting';
-import { AppsSettingPage } from './apps-setting';
 import { List, ListItem } from "material-ui";
+import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
+import { Page } from "../../components";
+import { AccountSettingPage } from "./account-setting";
+import { AppsSettingPage } from "./apps-setting";
+import { DevSettingPage } from "./dev-setting";
 
 interface SettingsPageProps extends RouteComponentProps<{}> {
 
@@ -21,7 +21,7 @@ export const SettingsPage = withRouter<{}>(class extends React.Component<Setting
     };
   }
 
-  render() {
+  public render() {
     return (
       <Page column={2}>
         <aside>

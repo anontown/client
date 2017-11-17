@@ -1,66 +1,66 @@
-import * as React from 'react';
-import { UserData, ResSeted } from "../models";
-import { apiClient, resSetedCreate } from "../utils";
+import * as api from "@anontown/api-types";
+import * as Im from "immutable";
+import {
+  Dialog,
+  IconButton,
+  Paper,
+  Slider,
+  Toggle,
+} from "material-ui";
+import * as icons from "material-ui/svg-icons";
+import * as React from "react";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
-import { ObjectOmit } from "typelevel-ts";
 import {
   RouteComponentProps,
-  withRouter
+  withRouter,
 } from "react-router-dom";
+import {
+  Observable,
+  Subject,
+} from "rxjs";
+import { ObjectOmit } from "typelevel-ts";
 import { updateUserData } from "../actions";
 import {
   Page,
-  Snack,
-  TopicFavo,
-  Scroll,
   Res,
   ResWrite,
-  TopicFork,
+  Scroll,
+  Snack,
   TopicData,
-  TopicEditor
+  TopicEditor,
+  TopicFavo,
+  TopicFork,
 } from "../components";
-import {
-  Paper,
-  IconButton,
-  Dialog,
-  Slider,
-  Toggle
-} from "material-ui";
-import * as icons from "material-ui/svg-icons";
-import * as api from "@anontown/api-types";
-import {
-  Subject,
-  Observable
-} from "rxjs";
-import * as Im from "immutable";
+import { ResSeted, UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient, resSetedCreate } from "../utils";
 //ジェネリクス解除
-interface ResScroll { new(): Scroll<ResSeted> };
+interface ResScroll { new(): Scroll<ResSeted>; }
 const ResScroll = Scroll as ResScroll;
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
-  user: UserData | null,
+  user: UserData | null;
   updateUser: (user: UserData | null) => void;
 }
 
 export interface TopicPageState {
-  snackMsg: null | string,
-  topic: api.Topic | null,
-  reses: Im.List<ResSeted>,
-  isResWrite: boolean,
-  isAutoScrollDialog: boolean,
-  autoScrollSpeed: number,
-  isAutoScroll: boolean,
-  isDataDialog: boolean,
-  isForkDialog: boolean,
-  isEditDialog: boolean
+  snackMsg: null | string;
+  topic: api.Topic | null;
+  reses: Im.List<ResSeted>;
+  isResWrite: boolean;
+  isAutoScrollDialog: boolean;
+  autoScrollSpeed: number;
+  isAutoScroll: boolean;
+  isDataDialog: boolean;
+  isForkDialog: boolean;
+  isEditDialog: boolean;
 }
 
 export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
-  dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
+  (dispatch) => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<TopicPageProps, TopicPageState> {
-    limit = 50;
+    public limit = 50;
 
     constructor(props: TopicPageProps) {
       super(props);
@@ -74,11 +74,11 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         isAutoScroll: false,
         isDataDialog: false,
         isForkDialog: false,
-        isEditDialog: false
+        isEditDialog: false,
       };
 
       apiClient.findTopicOne({ id: this.props.match.params.id })
-        .subscribe(topic => {
+        .subscribe((topic) => {
           this.setState({ topic });
         }, () => {
           this.setState({ snackMsg: "トピック取得に失敗" });
@@ -89,8 +89,8 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         const topicRead = user.storage.topicRead.get(this.props.match.params.id);
         if (topicRead !== undefined) {
           apiClient.findResOne(user.token, {
-            id: topicRead.res
-          }).subscribe(res => {
+            id: topicRead.res,
+          }).subscribe((res) => {
             this.scrollNewItem.next(res.date);
           }, () => {
             this.scrollNewItem.next(null);
@@ -103,16 +103,16 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       }
 
       this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, { id: this.props.match.params.id })
-        .do(x => {
+        .do((x) => {
           if (this.state.topic !== null) {
             this.setState({ topic: { ...this.state.topic, resCount: x.count } });
             this.storageSave(null);
           }
         })
-        .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map(reses => reses[0]));
+        .flatMap((x) => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map((reses) => reses[0]));
     }
 
-    storageSave(res: string | null) {
+    public storageSave(res: string | null) {
       if (this.props.user === null || this.state.topic === null) {
         return;
       }
@@ -135,13 +135,13 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           ...storage,
           topicRead: storage.topicRead.set(this.state.topic.id, {
             res,
-            count: this.state.topic.resCount
-          })
-        }
+            count: this.state.topic.resCount,
+          }),
+        },
       });
     }
 
-    favo() {
+    public favo() {
       if (this.props.user === null || this.state.topic === null) {
         return;
       }
@@ -151,14 +151,14 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         ...this.props.user,
         storage: {
           ...storage,
-          topicFavo: this.isFavo ? tf.delete(this.state.topic.id) : tf.add(this.state.topic.id)
-        }
+          topicFavo: this.isFavo ? tf.delete(this.state.topic.id) : tf.add(this.state.topic.id),
+        },
       });
     }
 
-    scrollNewItem = new Subject<string | null>();
-    updateItem = new Subject<ResSeted>();
-    newItem = Observable.empty<ResSeted>();
+    public scrollNewItem = new Subject<string | null>();
+    public updateItem = new Subject<ResSeted>();
+    public newItem = Observable.empty<ResSeted>();
 
     get isFavo() {
       if (this.props.user === null || this.state.topic === null) {
@@ -168,7 +168,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       return this.props.user.storage.topicFavo.has(this.state.topic.id);
     }
 
-    render() {
+    public render() {
       return <Page column={2}>
         <Snack
           msg={this.state.snackMsg}
@@ -195,8 +195,8 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           open={this.state.isForkDialog}
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ isForkDialog: false })}>
-          {this.state.topic !== null && this.state.topic.type === 'normal'
-            ? <TopicFork topic={this.state.topic} onCreate={topic => {
+          {this.state.topic !== null && this.state.topic.type === "normal"
+            ? <TopicFork topic={this.state.topic} onCreate={(topic) => {
               this.setState({ isForkDialog: false });
               this.props.history.push(`/topic/${topic.id}`);
             }} />
@@ -207,8 +207,8 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           open={this.state.isEditDialog}
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ isEditDialog: false })}>
-          {this.state.topic !== null && this.state.topic.type === 'normal'
-            ? <TopicEditor topic={this.state.topic} onUpdate={topic => {
+          {this.state.topic !== null && this.state.topic.type === "normal"
+            ? <TopicEditor topic={this.state.topic} onUpdate={(topic) => {
               this.setState({ isEditDialog: false });
               this.setState({ topic });
             }} />
@@ -224,10 +224,10 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           ? <main>
             <Paper>
               <div>
-                {this.state.topic.type === 'fork'
+                {this.state.topic.type === "fork"
                   ? <icons.CommunicationCallSplit />
                   : null}
-                {this.state.topic.type === 'one'
+                {this.state.topic.type === "one"
                   ? <icons.ImageLooksOne />
                   : null}
                 {this.state.topic.title}
@@ -236,12 +236,12 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                 <IconButton onClick={() => this.setState({ isDataDialog: true })}>
                   <icons.HardwareKeyboardArrowDown />
                 </IconButton>
-                {this.state.topic.type === 'normal'
+                {this.state.topic.type === "normal"
                   ? <IconButton onClick={() => this.setState({ isForkDialog: true })}>
                     <icons.CommunicationCallSplit />
                   </IconButton>
                   : null}
-                {this.state.topic.type === 'normal' && this.props.user !== null
+                {this.state.topic.type === "normal" && this.props.user !== null
                   ? <IconButton onClick={() => this.setState({ isEditDialog: true })}>
                     <icons.ActionSettings />
                   </IconButton>
@@ -264,7 +264,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
               </div >
             </Paper>
             <ResScroll items={this.state.reses}
-              onChangeItems={reses => this.setState({ reses: reses })}
+              onChangeItems={(reses) => this.setState({ reses })}
               newItemOrder="bottom"
               findNewItem={() => {
                 if (this.state.topic === null) {
@@ -273,10 +273,10 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                 const token = this.props.user !== null ? this.props.user.token : null;
                 return apiClient.findResNew(token, {
                   topic: this.state.topic.id,
-                  limit: this.limit
+                  limit: this.limit,
                 })
-                  .mergeMap(r => resSetedCreate.resSet(token, r))
-                  .map(reses => Im.List(reses));
+                  .mergeMap((r) => resSetedCreate.resSet(token, r))
+                  .map((reses) => Im.List(reses));
               }}
               findItem={(type, date, equal) => {
                 if (this.state.topic === null) {
@@ -285,25 +285,25 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                 const token = this.props.user !== null ? this.props.user.token : null;
                 return apiClient.findRes(token, {
                   topic: this.state.topic.id,
-                  type: type,
-                  equal: equal,
+                  type,
+                  equal,
                   date,
-                  limit: this.limit
+                  limit: this.limit,
                 })
-                  .mergeMap(r => resSetedCreate.resSet(token, r))
-                  .map(reses => Im.List(reses));
+                  .mergeMap((r) => resSetedCreate.resSet(token, r))
+                  .map((reses) => Im.List(reses));
               }}
               width={10}
               debounceTime={500}
               autoScrollSpeed={this.state.autoScrollSpeed}
               isAutoScroll={this.state.isAutoScroll}
-              scrollNewItemChange={res => this.storageSave(res.id)}
+              scrollNewItemChange={(res) => this.storageSave(res.id)}
               scrollNewItem={this.scrollNewItem}
               updateItem={this.updateItem}
               newItem={this.newItem}
-              dataToEl={res => <Res res={res}
+              dataToEl={(res) => <Res res={res}
                 isPop={false}
-                update={res => this.updateItem.next(res)} />} />
+                update={(res) => this.updateItem.next(res)} />} />
             {this.state.isResWrite
               ? <Paper>
                 <ResWrite topic={this.state.topic.id} reply={null} />

@@ -1,84 +1,84 @@
-import * as React from 'react';
-import { UserData } from "../../models";
-import { connect } from "react-redux";
-import { Store } from "../../reducers";
-import { updateUserData } from "../../actions";
-import {
-  RouteComponentProps,
-  withRouter
-} from "react-router-dom";
-import { apiClient } from "../../utils";
-import { Snack, Errors } from "../../components";
+import { AtError } from "@anontown/api-client";
 import {
   Paper,
+  RaisedButton,
   TextField,
-  RaisedButton
 } from "material-ui";
-import { AtError } from "@anontown/api-client";
+import * as React from "react";
+import { connect } from "react-redux";
+import {
+  RouteComponentProps,
+  withRouter,
+} from "react-router-dom";
+import { updateUserData } from "../../actions";
+import { Errors, Snack } from "../../components";
+import { UserData } from "../../models";
+import { Store } from "../../reducers";
+import { apiClient } from "../../utils";
 
 interface AccountSettingPageProps extends RouteComponentProps<{}> {
-  user: UserData | null
+  user: UserData | null;
   updateUser: (user: UserData | null) => void;
 }
 
 interface AccountSettingPageState {
-  newPass: string,
-  oldPass: string,
-  sn: string,
-  errors: string[],
-  snackMsg: string | null
+  newPass: string;
+  oldPass: string;
+  sn: string;
+  errors: string[];
+  snackMsg: string | null;
 }
 
 export const AccountSettingPage = withRouter<{}>(connect(
   (state: Store) => ({ user: state.user }),
-  dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
-  })
+  (dispatch) => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
+  }),
 )(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
   constructor(props: AccountSettingPageProps) {
     super(props);
     this.state = {
       snackMsg: null,
-      newPass: '',
-      oldPass: '',
-      sn: '',
-      errors: []
+      newPass: "",
+      oldPass: "",
+      sn: "",
+      errors: [],
     };
 
     if (this.props.user !== null) {
       apiClient
         .findUserSN({ id: this.props.user.token.user })
-        .subscribe(sn => {
+        .subscribe((sn) => {
           this.setState({ sn });
         }, () => {
-          this.setState({ snackMsg: "ユーザー情報取得に失敗しました。" })
+          this.setState({ snackMsg: "ユーザー情報取得に失敗しました。" });
         });
     }
   }
 
-  onSubmit() {
+  public onSubmit() {
     if (this.props.user === null) {
       return;
     }
     const user = this.props.user;
     apiClient.updateUser({ id: user.token.user, pass: this.state.oldPass }, {
       pass: this.state.newPass,
-      sn: this.state.sn
+      sn: this.state.sn,
     })
       .mergeMap(() => apiClient.createTokenMaster({ id: user.token.user, pass: this.state.newPass }))
-      .subscribe(token => {
+      .subscribe((token) => {
         this.props.updateUser({ ...user, token });
         this.setState({ errors: [] });
-      }, error => {
+      }, (error) => {
         if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map(e => e.message) });
+          this.setState({ errors: error.errors.map((e) => e.message) });
         } else {
-          this.setState({ errors: ['エラーが発生しました'] });
+          this.setState({ errors: ["エラーが発生しました"] });
         }
       });
   }
 
-  render() {
+  public render() {
     return this.props.user !== null
       ? <Paper>
         <Snack

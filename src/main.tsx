@@ -1,15 +1,15 @@
 import "core-js";
-import * as ReactDOM from 'react-dom';
+import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { applyMiddleware, createStore } from "redux";
+import { logger } from "redux-logger";
 import { App } from "./components/app";
-import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import { logger } from 'redux-logger'
-import { Provider } from 'react-redux';
-import { reducer } from './reducers';
-import { createStore, applyMiddleware } from 'redux';
+import { reducer } from "./reducers";
 
 const store = createStore(reducer, applyMiddleware(logger));
 
@@ -23,5 +23,5 @@ ReactDOM.render(
       </MuiThemeProvider>
     </Provider>
   </BrowserRouter>,
-  document.querySelector('#root')
+  document.querySelector("#root"),
 );

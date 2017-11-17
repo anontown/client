@@ -1,21 +1,21 @@
-import * as React from 'react';
-import * as api from '@anontown/api-types'
-import { TextField, Checkbox, SelectField, MenuItem, IconButton } from 'material-ui';
-import { NavigationArrowForward } from 'material-ui/svg-icons';
-import { Errors } from './errors';
-import { MdEditor } from './md-editor';
-import { UserData } from "../models";
-import { apiClient } from "../utils";
 import { AtError } from "@anontown/api-client";
+import * as api from "@anontown/api-types";
+import { Checkbox, IconButton, MenuItem, SelectField, TextField } from "material-ui";
+import { NavigationArrowForward } from "material-ui/svg-icons";
+import * as React from "react";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
+import { UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient } from "../utils";
+import { Errors } from "./errors";
+import { MdEditor } from "./md-editor";
 
 interface _ResWriteProps {
   onSubmit?: (value: api.Res) => void;
   topic: string;
   reply: string | null;
-  user: UserData | null
+  user: UserData | null;
 }
 
 export type ResWriteProps = ObjectOmit<_ResWriteProps, "user">;
@@ -32,14 +32,14 @@ class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
   constructor(props: _ResWriteProps) {
     super(props);
     this.state = {
-      body: '',
-      name: '',
+      body: "",
+      name: "",
       profile: null,
-      age: true
+      age: true,
     };
   }
 
-  onSubmit() {
+  public onSubmit() {
     if (this.props.user === null) {
       return;
     }
@@ -50,22 +50,22 @@ class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
       text: this.state.body,
       reply: this.props.reply,
       profile: this.state.profile,
-      age: this.state.age
-    }).subscribe(res => {
+      age: this.state.age,
+    }).subscribe((res) => {
       if (this.props.onSubmit) {
         this.props.onSubmit(res);
       }
       this.setState({ errors: [] });
-    }, error => {
+    }, (error) => {
       if (error instanceof AtError) {
-        this.setState({ errors: error.errors.map(e => e.message) })
+        this.setState({ errors: error.errors.map((e) => e.message) });
       } else {
-        this.setState({ errors: ['エラーが発生しました'] })
+        this.setState({ errors: ["エラーが発生しました"] });
       }
     });
   }
 
-  render() {
+  public render() {
     return this.props.user !== null
       ? <form onSubmit={() => this.onSubmit()} >
         <Errors errors={this.state.errors} />
@@ -73,10 +73,10 @@ class _ResWrite extends React.Component<_ResWriteProps, ResWriteState> {
         <Checkbox label="age" checked={this.state.age} onCheck={(_e, v) => this.setState({ age: v })} />
         <SelectField floatingLabelText="プロフ" value={null} onChange={(_e, _i, v) => this.setState({ profile: v })}>
           <MenuItem value={null} primaryText="なし" />
-          {this.props.user.profiles.map(p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
+          {this.props.user.profiles.map((p) => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
         </SelectField>
         <MdEditor value={this.state.body}
-          onChange={v => this.setState({ body: v })}
+          onChange={(v) => this.setState({ body: v })}
           maxRows={5}
           minRows={1} />
         <IconButton type="submit">

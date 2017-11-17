@@ -1,25 +1,25 @@
-import * as React from 'react';
-import * as api from '@anontown/api-types';
+import * as api from "@anontown/api-types";
 import {
-  IconButton
-} from 'material-ui';
+  IconButton,
+} from "material-ui";
 import {
+  NavigationArrowDropDown,
   NavigationArrowDropUp,
-  NavigationArrowDropDown
-} from 'material-ui/svg-icons';
-import { dateFormat } from '../utils';
-import { Md } from './md';
-import { UserData } from "../models";
-import { apiClient } from "../utils";
-import { Snack } from "./snack";
+} from "material-ui/svg-icons";
+import * as React from "react";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
 import { ObjectOmit } from "typelevel-ts";
+import { UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient } from "../utils";
+import { dateFormat } from "../utils";
+import { Md } from "./md";
+import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
 
 interface _HistoryProps {
-  history: api.History,
-  user: UserData | null
+  history: api.History;
+  user: UserData | null;
 }
 
 export type HistoryProps = ObjectOmit<_HistoryProps, "user">;
@@ -27,7 +27,7 @@ export type HistoryProps = ObjectOmit<_HistoryProps, "user">;
 interface HistoryState {
   detail: boolean;
   hashReses: api.Res[] | null;
-  snackMsg: null | string
+  snackMsg: null | string;
 }
 
 class _History extends React.Component<_HistoryProps, HistoryState> {
@@ -37,11 +37,11 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
     this.state = {
       detail: false,
       hashReses: null,
-      snackMsg: null
+      snackMsg: null,
     };
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <Snack
@@ -68,22 +68,22 @@ class _History extends React.Component<_HistoryProps, HistoryState> {
         }
         {
           this.state.hashReses !== null
-            ? this.state.hashReses.map(res => (<Res res={res} />))
+            ? this.state.hashReses.map((res) => (<Res res={res} />))
             : null
         }
       </div >
     );
   }
 
-  onHashClick() {
+  public onHashClick() {
     if (this.state.hashReses === null) {
       apiClient.findResHash(this.props.user !== null ? this.props.user.token : null, {
         topic: this.props.history.topic,
-        hash: this.props.history.hash
-      }).subscribe(reses => {
+        hash: this.props.history.hash,
+      }).subscribe((reses) => {
         this.setState({ hashReses: reses });
       }, () => {
-        this.setState({ snackMsg: "レスの取得に失敗しました" })
+        this.setState({ snackMsg: "レスの取得に失敗しました" });
       });
     } else {
       this.setState({ hashReses: null });

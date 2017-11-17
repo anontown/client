@@ -1,135 +1,135 @@
-import * as React from 'react';
-import { UserData } from "../models";
-import { apiClient } from "../utils";
-import { connect } from "react-redux";
-import { Store } from "../reducers";
+import * as api from "@anontown/api-types";
+import * as Im from "immutable";
 import {
+  IconButton,
+  Paper,
+  RaisedButton,
+  TextField,
+} from "material-ui";
+import { Checkbox } from "material-ui/Checkbox";
+import {
+  EditorModeEdit,
+  NavigationRefresh,
+  ToggleStar,
+  ToggleStarBorder,
+} from "material-ui/svg-icons";
+import * as qs from "query-string";
+import * as React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import {
+  Link,
   RouteComponentProps,
-  Link
 } from "react-router-dom";
+import {
+  Subject,
+  Subscription,
+} from "rxjs";
 import { updateUserData } from "../actions";
 import {
   Page,
   Snack,
   TagsInput,
-  TopicListItem
+  TopicListItem,
 } from "../components";
-import {
-  Paper,
-  RaisedButton,
-  TextField,
-  IconButton
-} from "material-ui";
-import {
-  ToggleStarBorder,
-  ToggleStar,
-  EditorModeEdit,
-  NavigationRefresh
-} from "material-ui/svg-icons";
-import * as api from "@anontown/api-types";
-import {
-  Subscription,
-  Subject
-} from "rxjs";
-import * as Im from "immutable";
-import * as qs from "query-string";
-import { Checkbox } from 'material-ui/Checkbox';
-import { withRouter } from 'react-router';
+import { UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient } from "../utils";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
-  user: UserData | null,
+  user: UserData | null;
   updateUser: (user: UserData | null) => void;
-};
+}
 
 export interface TopicSearchPageState {
-  snackMsg: null | string,
-  topics: Im.List<api.Topic>,
-  count: number,
-  tags: string[],
-  title: string,
-  page: number,
-  dead: boolean,
-  formTitle: string,
-  formDead: boolean,
-  formTags: string[]
+  snackMsg: null | string;
+  topics: Im.List<api.Topic>;
+  count: number;
+  tags: string[];
+  title: string;
+  page: number;
+  dead: boolean;
+  formTitle: string;
+  formDead: boolean;
+  formTags: string[];
 }
 
 export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
-  dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)) }
+  (dispatch) => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
-    limit = 100;
-    subs: Subscription[] = [];
-    formChange$ = new Subject<void>();
+    public limit = 100;
+    public subs: Subscription[] = [];
+    public formChange$ = new Subject<void>();
 
     constructor(props: TopicSearchPageProps) {
       super(props);
       const query: { [key: string]: string } = qs.parse(this.props.location.search);
-      const title = query['title'] || '';
-      const tags = query['tags'] ? query['tags'].split(',') : [];
-      const dead = query['dead'] === 'true';
+      const title = query.title || "";
+      const tags = query.tags ? query.tags.split(",") : [];
+      const dead = query.dead === "true";
       this.state = {
         snackMsg: null,
         topics: Im.List(),
         count: 0,
-        tags: tags,
-        title: title,
+        tags,
+        title,
         page: 0,
-        dead: dead,
+        dead,
         formTitle: title,
         formDead: dead,
-        formTags: tags
+        formTags: tags,
       };
 
       this.subs.push(this.formChange$
         .debounceTime(500)
         .subscribe(() => {
           this.props.history.push({
-            pathname: '/topic/search',
+            pathname: "/topic/search",
             search: qs.stringify({
               title: this.state.formTitle,
               dead: this.state.formDead.toString(),
-              tags: this.state.formTags.join(','),
-            })
+              tags: this.state.formTags.join(","),
+            }),
           });
         }));
 
       this.update();
     }
 
-    componentWillUnmount() {
-      this.subs.forEach(sub => sub.unsubscribe());
+    public componentWillUnmount() {
+      this.subs.forEach((sub) => sub.unsubscribe());
     }
 
-    update() {
+    public update() {
       this.setState({
         topics: Im.List(),
         page: 0,
-        count: 0
-      })
+        count: 0,
+      });
       this.more();
     }
 
-    more() {
+    public more() {
       apiClient.findTopic({
         title: this.state.title,
         tags: this.state.tags,
         skip: this.state.page * this.limit,
         limit: this.limit,
-        activeOnly: !this.state.dead
+        activeOnly: !this.state.dead,
       })
-        .subscribe(topics => {
+        .subscribe((topics) => {
           this.setState({
             count: topics.length,
             page: this.state.page + 1,
-            topics: this.state.topics.concat(topics)
-          })
+            topics: this.state.topics.concat(topics),
+          });
         }, () => {
-          this.setState({ snackMsg: 'トピック取得に失敗しました。' })
+          this.setState({ snackMsg: "トピック取得に失敗しました。" });
         });
     }
 
-    favo() {
+    public favo() {
       if (this.props.user === null) {
         return;
       }
@@ -140,12 +140,12 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         ...this.props.user,
         storage: {
           ...storage,
-          tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags)
-        }
+          tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
+        },
       });
     }
 
-    render() {
+    public render() {
       return <Page column={1}>
         <Snack
           msg={this.state.snackMsg}
@@ -159,7 +159,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
             </IconButton>
             : null}
           <div>
-            <TagsInput value={this.state.formTags} onChange={v => {
+            <TagsInput value={this.state.formTags} onChange={(v) => {
               this.setState({ formTags: v });
               this.formChange$.next();
             }} />
@@ -184,7 +184,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
           </IconButton>
         </div>
         <div>
-          {this.state.topics.map(t => <TopicListItem topic={t} detail={true} />)}
+          {this.state.topics.map((t) => <TopicListItem topic={t} detail={true} />)}
         </div>
         {this.state.count === this.limit
           ? <div>

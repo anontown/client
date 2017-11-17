@@ -1,54 +1,52 @@
-import * as React from 'react';
-import * as api from '@anontown/api-types'
+import * as api from "@anontown/api-types";
+import * as Im from "immutable";
 import {
+  Badge,
+  Dialog,
+  IconButton,
   IconMenu,
   MenuItem,
-  IconButton,
   Paper,
-  Badge,
-  Dialog
-} from 'material-ui';
+} from "material-ui";
 import {
-  NavigationMoreVert,
-  HardwareKeyboardArrowUp,
-  HardwareKeyboardArrowDown,
+  ContentReply,
   ContentSend,
-  ContentReply
-} from 'material-ui/svg-icons';
-import { Md } from './md';
-import { ResSeted } from '../models';
-import { Link } from 'react-router-dom';
-import { ResWrite } from './res-write';
+  HardwareKeyboardArrowDown,
+  HardwareKeyboardArrowUp,
+  NavigationMoreVert,
+} from "material-ui/svg-icons";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Observable } from "rxjs";
+import { ObjectOmit } from "typelevel-ts";
+import { ResSeted } from "../models";
 import { UserData } from "../models";
+import { Store } from "../reducers";
 import {
   apiClient,
+  list,
   resSetedCreate,
-  list
 } from "../utils";
-import { connect } from "react-redux";
-import { Store } from "../reducers";
-import { ObjectOmit } from "typelevel-ts";
-import { Snack } from "./snack";
-import { Observable } from "rxjs";
+import { Md } from "./md";
 import { Profile } from "./profile";
-import * as Im from "immutable";
-
+import { ResWrite } from "./res-write";
+import { Snack } from "./snack";
 
 interface _ResProps {
-  res: ResSeted,
-  user: UserData | null,
-  isPop: boolean,
-  update?: (res: ResSeted) => void
+  res: ResSeted;
+  user: UserData | null;
+  isPop: boolean;
+  update?: (res: ResSeted) => void;
 }
 
 export type ResProps = ObjectOmit<_ResProps, "user">;
 
-
 interface ResState {
-  isReply: boolean,
-  children: { reses: Im.List<ResSeted>, msg: string | null } | null,
-  snackMsg: null | string,
-  slowProfile: boolean
+  isReply: boolean;
+  children: { reses: Im.List<ResSeted>, msg: string | null } | null;
+  snackMsg: null | string;
+  slowProfile: boolean;
 }
 
 class _Res extends React.Component<_ResProps, ResState> {
@@ -58,90 +56,90 @@ class _Res extends React.Component<_ResProps, ResState> {
       isReply: false,
       children: null,
       snackMsg: null,
-      slowProfile: false
+      slowProfile: false,
     };
   }
 
-  vote(token: api.Token, res$: Observable<api.Res>) {
-    res$.mergeMap(res => resSetedCreate.resSet(token, [res]))
-      .map(reses => reses[0])
-      .subscribe(res => {
+  public vote(token: api.Token, res$: Observable<api.Res>) {
+    res$.mergeMap((res) => resSetedCreate.resSet(token, [res]))
+      .map((reses) => reses[0])
+      .subscribe((res) => {
         if (this.props.update) {
           this.props.update(res);
         }
       }, () => {
-        this.setState({ snackMsg: "投票に失敗しました" })
+        this.setState({ snackMsg: "投票に失敗しました" });
       });
   }
 
-  onUV() {
+  public onUV() {
     const user = this.props.user;
     if (user === null) {
       return;
     }
 
     switch (this.props.res.voteFlag) {
-      case 'uv':
+      case "uv":
         this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
         break;
-      case 'dv':
+      case "dv":
         this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
           .mergeMap(() => apiClient.uvRes(user.token, { id: this.props.res.id })));
         break;
-      case 'not':
+      case "not":
         this.vote(user.token, apiClient.uvRes(user.token, { id: this.props.res.id }));
         break;
     }
   }
 
-  onDV() {
+  public onDV() {
     const user = this.props.user;
     if (user === null) {
       return;
     }
 
     switch (this.props.res.voteFlag) {
-      case 'dv':
+      case "dv":
         this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
         break;
-      case 'uv':
+      case "uv":
         this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
           .mergeMap(() => apiClient.dvRes(user.token, { id: this.props.res.id })));
         break;
-      case 'not':
+      case "not":
         this.vote(user.token, apiClient.dvRes(user.token, { id: this.props.res.id }));
         break;
     }
   }
 
-  onHashClock() {
+  public onHashClock() {
     const token = this.props.user !== null ? this.props.user.token : null;
     if (this.state.children === null) {
       apiClient.findResHash(token, {
         topic: this.props.res.topic,
-        hash: this.props.res.hash
+        hash: this.props.res.hash,
       })
-        .mergeMap(reses => resSetedCreate.resSet(token, reses))
-        .subscribe(reses => {
-          this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } })
+        .mergeMap((reses) => resSetedCreate.resSet(token, reses))
+        .subscribe((reses) => {
+          this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } });
         }, () => {
-          this.setState({ snackMsg: "レス取得に失敗しました" })
+          this.setState({ snackMsg: "レス取得に失敗しました" });
         });
     } else {
       this.setState({ children: null });
     }
   }
 
-  onDeleteClick() {
+  public onDeleteClick() {
     if (this.props.user === null) {
       return;
     }
     const user = this.props.user;
 
     apiClient.delRes(user.token, { id: this.props.res.id })
-      .mergeMap(res => resSetedCreate.resSet(user.token, [res]))
-      .map(reses => reses[0])
-      .subscribe(res => {
+      .mergeMap((res) => resSetedCreate.resSet(user.token, [res]))
+      .map((reses) => reses[0])
+      .subscribe((res) => {
         if (this.props.update) {
           this.props.update(res);
         }
@@ -150,15 +148,15 @@ class _Res extends React.Component<_ResProps, ResState> {
       });
   }
 
-  onSendReplyClock() {
+  public onSendReplyClock() {
     const token = this.props.user !== null ? this.props.user.token : null;
     if (this.state.children === null) {
       apiClient.findResOne(token, {
-        id: this.props.res.id
+        id: this.props.res.id,
       })
-        .mergeMap(res => resSetedCreate.resSet(token, [res]))
-        .subscribe(reses => {
-          this.setState({ children: { reses: Im.List(reses), msg: null } })
+        .mergeMap((res) => resSetedCreate.resSet(token, [res]))
+        .subscribe((reses) => {
+          this.setState({ children: { reses: Im.List(reses), msg: null } });
         }, () => {
           this.setState({ snackMsg: "レス取得に失敗しました" });
         });
@@ -167,16 +165,16 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  onReceiveReplyClock() {
+  public onReceiveReplyClock() {
     const token = this.props.user !== null ? this.props.user.token : null;
     if (this.state.children === null) {
       apiClient.findResReply(token, {
         topic: this.props.res.topic,
-        reply: this.props.res.id
+        reply: this.props.res.id,
       })
-        .mergeMap(reses => resSetedCreate.resSet(token, reses))
-        .subscribe(reses => {
-          this.setState({ children: { reses: Im.List(reses), msg: null } })
+        .mergeMap((reses) => resSetedCreate.resSet(token, reses))
+        .subscribe((reses) => {
+          this.setState({ children: { reses: Im.List(reses), msg: null } });
         }, () => {
           this.setState({ snackMsg: "レス取得に失敗しました" });
         });
@@ -185,14 +183,14 @@ class _Res extends React.Component<_ResProps, ResState> {
     }
   }
 
-  updateChildren(res: ResSeted) {
+  public updateChildren(res: ResSeted) {
     if (this.state.children !== null) {
-      this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } })
+      this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } });
     }
   }
 
-  render(): JSX.Element {
-    let isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
+  public render(): JSX.Element {
+    const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
 
     return (
       <Paper>
@@ -220,23 +218,23 @@ class _Res extends React.Component<_ResProps, ResState> {
         <div>
           <div>
             <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
-              {this.props.res.type === 'normal'
-                ? <span>{this.props.res.name || '名無しさん'}</span>
+              {this.props.res.type === "normal"
+                ? <span>{this.props.res.name || "名無しさん"}</span>
                 : null}
-              {this.props.res.type === 'history'
+              {this.props.res.type === "history"
                 ? <span>トピックデータ</span>
                 : null}
-              {this.props.res.type === 'topic'
+              {this.props.res.type === "topic"
                 ? <span>トピ主</span>
                 : null}
-              {this.props.res.type === 'fork'
+              {this.props.res.type === "fork"
                 ? <span>派生トピック</span>
                 : null}
-              {this.props.res.type === 'delete'
+              {this.props.res.type === "delete"
                 ? <span>削除</span>
                 : null}
             </a>
-            {this.props.res.type === 'normal' && this.props.res.profile !== null
+            {this.props.res.type === "normal" && this.props.res.profile !== null
               ? <a onClick={() => this.setState({ slowProfile: true })}>●{this.props.res.profile.sn}</a>
               : null}
             <Link to={`/res/${this.props.res.id}`}></Link>
@@ -247,9 +245,9 @@ class _Res extends React.Component<_ResProps, ResState> {
           </span>
               <IconMenu
                 iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
-                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'left', vertical: 'top' }}>
-                {isSelf && this.props.res.type === 'normal'
+                anchorOrigin={{ horizontal: "left", vertical: "top" }}
+                targetOrigin={{ horizontal: "left", vertical: "top" }}>
+                {isSelf && this.props.res.type === "normal"
                   ? <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
                   : null}
               </IconMenu>
@@ -257,7 +255,7 @@ class _Res extends React.Component<_ResProps, ResState> {
           </div>
           <div>
             <span>
-              {this.props.res.type === 'normal' && this.props.res.reply !== null
+              {this.props.res.type === "normal" && this.props.res.reply !== null
                 ? <IconButton onClick={() => this.onSendReplyClock()}>
                   <ContentSend />
                 </IconButton>
@@ -270,12 +268,12 @@ class _Res extends React.Component<_ResProps, ResState> {
                 </Badge>
                 : null}
             </span>
-            {this.props.res.type === 'normal' ? <Md body={this.props.res.text} />
-              : this.props.res.type === 'history' ? <Md body={this.props.res.history.text} />
-                : this.props.res.type === 'topic' && this.props.res.topicObject.type === 'one' ? <Md body={this.props.res.topicObject.text} />
+            {this.props.res.type === "normal" ? <Md body={this.props.res.text} />
+              : this.props.res.type === "history" ? <Md body={this.props.res.history.text} />
+                : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ? <Md body={this.props.res.topicObject.text} />
                   : null}
             {
-              this.props.res.type === 'topic' && this.props.res.topicObject.type === 'fork'
+              this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
                 ? <div>
                   <p>
                     派生トピックが建ちました。
@@ -284,16 +282,16 @@ class _Res extends React.Component<_ResProps, ResState> {
                 : null
             }
 
-            {this.props.res.type === 'fork'
+            {this.props.res.type === "fork"
               ? <div><p>派生トピック:<Link to={`/topic/${this.props.res.fork.id}`}>{this.props.res.fork.title}</Link></p></div>
               : null}
 
-            {this.props.res.type === 'delete'
+            {this.props.res.type === "delete"
               ? <div>
                 <p>
-                  {this.props.res.flag === 'self'
-                    ? '投稿者により削除されました。'
-                    : '管理人により削除されました。'}
+                  {this.props.res.flag === "self"
+                    ? "投稿者により削除されました。"
+                    : "管理人により削除されました。"}
                 </p>
               </div>
               : null}
@@ -311,7 +309,7 @@ class _Res extends React.Component<_ResProps, ResState> {
                   <strong>{this.state.children.msg}</strong>
                 </Paper>
                 : null}
-              {this.state.children.reses.map(r => <Res res={r} update={res => this.updateChildren(res)} isPop={true} />)}
+              {this.state.children.reses.map((r) => <Res res={r} update={(res) => this.updateChildren(res)} isPop={true} />)}
             </div>
             : null
           }

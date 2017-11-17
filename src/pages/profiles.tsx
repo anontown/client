@@ -1,30 +1,30 @@
-import * as React from 'react';
-import { UserData } from "../models";
-import { apiClient, list } from "../utils";
+import * as api from "@anontown/api-types";
+import * as Im from "immutable";
+import {
+  Paper,
+} from "material-ui";
+import * as React from "react";
 import { connect } from "react-redux";
-import { Store } from "../reducers";
 import {
   RouteComponentProps,
-  withRouter
+  withRouter,
 } from "react-router-dom";
 import {
-  Snack,
   Page,
-  ProfileEditor
+  ProfileEditor,
+  Snack,
 } from "../components";
-import {
-  Paper
-} from "material-ui";
-import * as Im from 'immutable';
-import * as api from "@anontown/api-types";
+import { UserData } from "../models";
+import { Store } from "../reducers";
+import { apiClient, list } from "../utils";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
-  user: UserData | null
-};
+  user: UserData | null;
+}
 
 export interface ProfilesPageState {
-  profiles: Im.List<api.Profile>
-  snackMsg: null | string,
+  profiles: Im.List<api.Profile>;
+  snackMsg: null | string;
 }
 
 export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
@@ -32,20 +32,20 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     super(props);
     this.state = {
       profiles: Im.List(),
-      snackMsg: null
+      snackMsg: null,
     };
 
     if (this.props.user !== null) {
       apiClient.findProfileAll(this.props.user.token)
-        .subscribe(profiles => {
+        .subscribe((profiles) => {
           this.setState({ profiles: Im.List(profiles) });
         }, () => {
-          this.setState({ snackMsg: 'プロフィール取得に失敗' });
+          this.setState({ snackMsg: "プロフィール取得に失敗" });
         });
     }
   }
 
-  render() {
+  public render() {
     return (
       <Page column={1}>
         <Snack
@@ -55,12 +55,12 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
           ? <div>
             <ProfileEditor
               profile={null}
-              onAdd={p => this.add(p)} />
+              onAdd={(p) => this.add(p)} />
             <div>
-              {this.state.profiles.map(p =>
+              {this.state.profiles.map((p) =>
                 <ProfileEditor
                   profile={p}
-                  onUpdate={p => this.update(p)} />)}
+                  onUpdate={(p) => this.update(p)} />)}
             </div>
           </div>
           : <Paper>
@@ -71,15 +71,15 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
     );
   }
 
-  update(profile: api.Profile) {
+  public update(profile: api.Profile) {
     this.setState({
-      profiles: list.update(this.state.profiles, profile)
+      profiles: list.update(this.state.profiles, profile),
     });
   }
 
-  add(profile: api.Profile) {
+  public add(profile: api.Profile) {
     this.setState({
-      profiles: this.state.profiles.push(profile)
+      profiles: this.state.profiles.push(profile),
     });
   }
 }));
