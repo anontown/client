@@ -41,6 +41,7 @@
     "material-ui": "^0.19.1",
     "query-string": "^5.0.1",
     "react": "^16.0.0",
+    "react-async-script": "^0.9.1",
     "react-color": "^2.13.8",
     "react-dom": "^16.0.0",
     "react-google-recaptcha": "^0.9.7",

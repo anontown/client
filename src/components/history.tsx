@@ -9,13 +9,22 @@ import {
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
-import { UserData } from "../models";
+import {
+  UserData,
+  ResSeted,
+} from "../models";
 import { Store } from "../reducers";
-import { apiClient } from "../utils";
-import { dateFormat } from "../utils";
+import {
+  apiClient,
+  list,
+  dateFormat,
+  resSetedCreate,
+} from "../utils";
 import { Md } from "./md";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
+import * as Im from "immutable";
+import { Res } from "./res";
 
 interface UnconnectedHistoryProps {
   history: api.History;
@@ -26,7 +35,7 @@ export type HistoryProps = ObjectOmit<UnconnectedHistoryProps, "user">;
 
 interface HistoryState {
   detail: boolean;
-  hashReses: api.Res[] | null;
+  hashReses: Im.List<ResSeted>;
   snackMsg: null | string;
 }
 
@@ -37,7 +46,7 @@ export const History = connect((state: Store) => ({ user: state.user }))
 
       this.state = {
         detail: false,
-        hashReses: null,
+        hashReses: Im.List(),
         snackMsg: null,
       };
     }
@@ -68,8 +77,11 @@ export const History = connect((state: Store) => ({ user: state.user }))
             </dl > : null
           }
           {
-            this.state.hashReses !== null
-              ? this.state.hashReses.map( res => (<Res res={res} />))
+            !this.state.hashReses.isEmpty()
+              ? this.state.hashReses.map(res => <Res
+                res={res}
+                isPop={false}
+                update={newRes => this.setState({ hashReses: list.update(this.state.hashReses, newRes) })} />)
               : null
           }
         </div >
@@ -78,16 +90,20 @@ export const History = connect((state: Store) => ({ user: state.user }))
 
     onHashClick() {
       if (this.state.hashReses === null) {
-        apiClient.findResHash(this.props.user !== null ? this.props.user.token : null, {
+        const token = this.props.user !== null ? this.props.user.token : null;
+        apiClient.findResHash(token, {
           topic: this.props.history.topic,
           hash: this.props.history.hash,
-        }).subscribe( reses => {
-          this.setState({ hashReses: reses });
-        }, () => {
-          this.setState({ snackMsg: "レスの取得に失敗しました" });
-        });
+        })
+          .mergeMap(reses => resSetedCreate.resSet(token, reses))
+          .map(reses => Im.List(reses))
+          .subscribe(reses => {
+            this.setState({ hashReses: reses });
+          }, () => {
+            this.setState({ snackMsg: "レスの取得に失敗しました" });
+          });
       } else {
-        this.setState({ hashReses: null });
+        this.setState({ hashReses: Im.List() });
       }
     }
   });
