@@ -33,8 +33,8 @@
     "webpack-dev-server": "^2.7.1"
   },
   "dependencies": {
-    "@anontown/api-client": "0.0.0",
-    "@anontown/api-types": "0.0.0",
+    "@anontown/api-client": "^1.0.6",
+    "@anontown/api-types": "^1.1.1",
     "core-js": "^2.5.1",
     "crypto-js": "^3.1.9-1",
     "immutable": "^4.0.0-rc.3",
