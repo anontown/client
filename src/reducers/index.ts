@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import { Actions } from "../actions";
 import {
   userReducer,
   UserStore,
@@ -9,8 +8,10 @@ export interface Store {
   user: UserStore;
 }
 
-export const reducer = combineReducers<Store, Actions>({
-  user: userReducer,
+export const reducer = combineReducers<Store>({
+  // とりあえず通らないので
+  // redux v4なら通るけど他のライブラリとの相性的な問題が
+  user: userReducer as any,
 });
 
 export {
