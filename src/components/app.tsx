@@ -90,7 +90,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
                 : <MenuItem primaryText="ログイン/登録" containerElement={<Link to="/in" />} />}
 
             </IconMenu>
-            <IconButton containerElement={<a mat-menu-item
+            <IconButton containerElement={<a
               href="https://document.anontown.com/"
               target="_blank" />}>
               <icons.ActionBook />
