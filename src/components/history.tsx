@@ -1,4 +1,5 @@
 import * as api from "@anontown/api-types";
+import * as Im from "immutable";
 import {
   IconButton,
 } from "material-ui";
@@ -10,21 +11,20 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
 import {
-  UserData,
   ResSeted,
+  UserData,
 } from "../models";
 import { Store } from "../reducers";
 import {
   apiClient,
-  list,
   dateFormat,
+  list,
   resSetedCreate,
 } from "../utils";
 import { Md } from "./md";
+import { Res } from "./res";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
-import * as Im from "immutable";
-import { Res } from "./res";
 
 interface UnconnectedHistoryProps {
   history: api.History;

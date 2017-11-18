@@ -21,7 +21,10 @@ import {
 import { Config } from "../env";
 import { UserData } from "../models";
 import { Store } from "../reducers";
-import { apiClient } from "../utils";
+import {
+  apiClient,
+  createUserData,
+} from "../utils";
 
 interface InPageProps extends RouteComponentProps<{}> {
   user: UserData | null;
@@ -91,8 +94,9 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
         })
         .map(user => user.id))
       .mergeMap(id => apiClient.createTokenMaster({ id, pass: this.state.pass }))
-      .subscribe(token => {
-        this.props.updateUser(login(token));
+      .mergeMap(token => createUserData(token))
+      .subscribe(userData => {
+        this.props.updateUser(userData);
       }, errors => {
         const rc = this.refs.recaptcha as any;
         if (rc) {
