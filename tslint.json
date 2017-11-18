@@ -1,5 +1,4 @@
 {
-    "defaultSeverity": "error",
     "extends": [
         "tslint:recommended"
     ],
@@ -26,7 +25,13 @@
         ],
         "max-classes-per-file": false,
         "no-empty-interface": false,
-        "no-console": false
+        "no-console": false,
+        "await-promise": true,
+        "indent": [
+            true,
+            "spaces",
+            2
+        ]
     },
     "rulesDirectory": []
 }

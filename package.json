@@ -6,8 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack -p",
-    "lint": "tslint -c tslint.json 'src/**/*.ts{,x}'",
-    "lint:fix": "tslint -c tslint.json 'src/**/*.ts{,x}' --fix"
+    "lint": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}'",
+    "lint:fix": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}' --fix"
   },
   "author": "",
   "license": "ISC",
