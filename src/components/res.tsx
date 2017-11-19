@@ -62,9 +62,9 @@ export const Res = connect((state: Store) => ({ user: state.user }))
     }
 
     vote(token: api.Token, res$: Observable<api.Res>) {
-      res$.mergeMap( res => resSetedCreate.resSet(token, [res]))
-        .map( reses => reses[0])
-        .subscribe( res => {
+      res$.mergeMap(res => resSetedCreate.resSet(token, [res]))
+        .map(reses => reses[0])
+        .subscribe(res => {
           if (this.props.update) {
             this.props.update(res);
           }
@@ -120,8 +120,8 @@ export const Res = connect((state: Store) => ({ user: state.user }))
           topic: this.props.res.topic,
           hash: this.props.res.hash,
         })
-          .mergeMap( reses => resSetedCreate.resSet(token, reses))
-          .subscribe( reses => {
+          .mergeMap(reses => resSetedCreate.resSet(token, reses))
+          .subscribe(reses => {
             this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } });
           }, () => {
             this.setState({ snackMsg: "レス取得に失敗しました" });
@@ -138,9 +138,9 @@ export const Res = connect((state: Store) => ({ user: state.user }))
       const user = this.props.user;
 
       apiClient.delRes(user.token, { id: this.props.res.id })
-        .mergeMap( res => resSetedCreate.resSet(user.token, [res]))
-        .map( reses => reses[0])
-        .subscribe( res => {
+        .mergeMap(res => resSetedCreate.resSet(user.token, [res]))
+        .map(reses => reses[0])
+        .subscribe(res => {
           if (this.props.update) {
             this.props.update(res);
           }
@@ -155,8 +155,8 @@ export const Res = connect((state: Store) => ({ user: state.user }))
         apiClient.findResOne(token, {
           id: this.props.res.id,
         })
-          .mergeMap( res => resSetedCreate.resSet(token, [res]))
-          .subscribe( reses => {
+          .mergeMap(res => resSetedCreate.resSet(token, [res]))
+          .subscribe(reses => {
             this.setState({ children: { reses: Im.List(reses), msg: null } });
           }, () => {
             this.setState({ snackMsg: "レス取得に失敗しました" });
@@ -173,8 +173,8 @@ export const Res = connect((state: Store) => ({ user: state.user }))
           topic: this.props.res.topic,
           reply: this.props.res.id,
         })
-          .mergeMap( reses => resSetedCreate.resSet(token, reses))
-          .subscribe( reses => {
+          .mergeMap(reses => resSetedCreate.resSet(token, reses))
+          .subscribe(reses => {
             this.setState({ children: { reses: Im.List(reses), msg: null } });
           }, () => {
             this.setState({ snackMsg: "レス取得に失敗しました" });
@@ -244,14 +244,14 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                 <span>
                   {this.props.res.uv - this.props.res.dv}ポイント
           </span>
-                <IconMenu
-                  iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
-                  anchorOrigin={{ horizontal: "left", vertical: "top" }}
-                  targetOrigin={{ horizontal: "left", vertical: "top" }}>
-                  {isSelf && this.props.res.type === "normal"
-                    ? <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
-                    : null}
-                </IconMenu>
+                {isSelf && this.props.res.type === "normal"
+                  ? <IconMenu
+                    iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
+                    anchorOrigin={{ horizontal: "left", vertical: "top" }}
+                    targetOrigin={{ horizontal: "left", vertical: "top" }}>
+                    <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
+                  </IconMenu>
+                  : null}
               </span>
             </div>
             <div>
@@ -317,7 +317,9 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                     <strong>{this.state.children.msg}</strong>
                   </Paper>
                   : null}
-                {this.state.children.reses.map(r => <Res res={r}
+                {this.state.children.reses.map(r => <Res
+                  key={r.id}
+                  res={r}
                   update={res => this.updateChildren(res)}
                   isPop={true} />)}
               </div>

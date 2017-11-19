@@ -21,6 +21,9 @@ interface MdState {
 export class Md extends React.Component<MdProps, MdState> {
   constructor(props: MdProps) {
     super(props);
+    this.state = {
+      youtube: null
+    }
   }
 
   render() {
@@ -36,7 +39,7 @@ export class Md extends React.Component<MdProps, MdState> {
             ? <YouTube videoId={this.state.youtube} />
             : null}
         </Dialog>
-        {node.children.map( x => this.renderNode(x))}
+        {node.children.map(x => this.renderNode(x))}
       </div>
     );
   }
@@ -50,7 +53,7 @@ export class Md extends React.Component<MdProps, MdState> {
           {head.type === "tableRow"
             ? head.children.map((cell, index) =>
               <th style={{ textAlign: node.align[index] }}>{cell.type === "tableCell"
-                ? cell.children.map( x => this.renderNode(x))
+                ? cell.children.map(x => this.renderNode(x))
                 : null}</th>)
             : null}
         </tr>
@@ -58,10 +61,10 @@ export class Md extends React.Component<MdProps, MdState> {
       <tbody>
         {node.children
           .filter((_, i) => i !== 0)
-          .map( row => row.type === "tableRow"
+          .map(row => row.type === "tableRow"
             ? <tr>
               {row.children.map((cell, index) => cell.type === "tableCell"
-                ? <td style={{ textAlign: node.align[index] }}>{cell.children.map( x => this.renderNode(x))}</td>
+                ? <td style={{ textAlign: node.align[index] }}>{cell.children.map(x => this.renderNode(x))}</td>
                 : null)}
             </tr>
             : null)}
@@ -73,27 +76,27 @@ export class Md extends React.Component<MdProps, MdState> {
     switch (node.depth) {
       case 1:
         return (<h1>
-          {node.children.map( c => this.renderNode(c))}
+          {node.children.map(c => this.renderNode(c))}
         </h1>);
       case 2:
         return (<h2>
-          {node.children.map( c => this.renderNode(c))}
+          {node.children.map(c => this.renderNode(c))}
         </h2>);
       case 3:
         return (<h3>
-          {node.children.map( c => this.renderNode(c))}
+          {node.children.map(c => this.renderNode(c))}
         </h3>);
       case 4:
         return (<h4>
-          {node.children.map( c => this.renderNode(c))}
+          {node.children.map(c => this.renderNode(c))}
         </h4>);
       case 5:
         return (<h5>
-          {node.children.map( c => this.renderNode(c))}
+          {node.children.map(c => this.renderNode(c))}
         </h5>);
       case 6:
         return (<h6>
-          {node.children.map( c => this.renderNode(c))}
+          {node.children.map(c => this.renderNode(c))}
         </h6>);
     }
   }
@@ -104,7 +107,7 @@ export class Md extends React.Component<MdProps, MdState> {
       case "normal":
         return <a href={node.url}
           target="_blank"
-          title={node.title || undefined}>{node.children.map( c => this.renderNode(c))}</a>;
+          title={node.title || undefined}>{node.children.map(c => this.renderNode(c))}</a>;
       case "image":
         return <img
           src={camo.getCamoUrl(node.url)}
@@ -114,7 +117,7 @@ export class Md extends React.Component<MdProps, MdState> {
           title={node.title || undefined}
           onClick={() => this.setState({ youtube: link.videoID })} />;
       case "router":
-        return <Link to={link.path}>{node.children.map( c => this.renderNode(c))}</Link>;
+        return <Link to={link.path}>{node.children.map(c => this.renderNode(c))}</Link>;
     }
   }
 
@@ -148,9 +151,9 @@ export class Md extends React.Component<MdProps, MdState> {
   renderNode(node: mdParser.MdNode): JSX.Element | string | null {
     switch (node.type) {
       case "paragraph":
-        return (<p>{node.children.map( c => this.renderNode(c))}</p>);
+        return (<p>{node.children.map(c => this.renderNode(c))}</p>);
       case "blockquote":
-        return (<blockquote>{node.children.map( c => this.renderNode(c))}</blockquote>);
+        return (<blockquote>{node.children.map(c => this.renderNode(c))}</blockquote>);
       case "heading":
         return this.renderHeading(node);
       case "code":
@@ -161,12 +164,12 @@ export class Md extends React.Component<MdProps, MdState> {
         return (<code>{node.value}</code>);
       case "list":
         if (node.ordered) {
-          return (<ol>{node.children.map( c => this.renderNode(c))}</ol>);
+          return (<ol>{node.children.map(c => this.renderNode(c))}</ol>);
         } else {
-          return (<ul>{node.children.map( c => this.renderNode(c))}</ul>);
+          return (<ul>{node.children.map(c => this.renderNode(c))}</ul>);
         }
       case "listItem":
-        return (<li>{node.children.map( c => this.renderNode(c))}</li>);
+        return (<li>{node.children.map(c => this.renderNode(c))}</li>);
       case "table":
         return this.renderTable(node);
       case "thematicBreak":
@@ -174,11 +177,11 @@ export class Md extends React.Component<MdProps, MdState> {
       case "break":
         return <br />;
       case "emphasis":
-        return (<em>{node.children.map( c => this.renderNode(c))}</em>);
+        return (<em>{node.children.map(c => this.renderNode(c))}</em>);
       case "strong":
-        return (<strong>{node.children.map( c => this.renderNode(c))}</strong>);
+        return (<strong>{node.children.map(c => this.renderNode(c))}</strong>);
       case "delete":
-        return (<del>{node.children.map( c => this.renderNode(c))}</del>);
+        return (<del>{node.children.map(c => this.renderNode(c))}</del>);
       case "link":
         return this.renderLink(node);
       case "image":
