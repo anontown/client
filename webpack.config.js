@@ -1,7 +1,10 @@
 const webpack = require("webpack");
 
 module.exports = {
-    entry: './src/main.tsx',
+    entry: [
+        './src/main.tsx',
+        './src/main.scss'
+    ],
     output: {
         filename: "bundle.js",
         path: __dirname + "/dist",
@@ -16,9 +19,30 @@ module.exports = {
         })
     ],
     module: {
-        rules: [
-            { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+        loaders: [
+            {
+                test: /\.tsx?$/,
+                loader: "awesome-typescript-loader"
+            },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader?modules"
+                    },
+                    {
+                        loader: "sass-loader"
+                    }
+                ]
+            }
         ]
     },
     devServer: {

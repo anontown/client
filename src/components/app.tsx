@@ -19,6 +19,7 @@ import { updateUserData } from "../actions";
 import { UserData } from "../models";
 import * as pages from "../pages";
 import { Store } from "../reducers";
+import * as style from "./app.scss";
 
 interface UnconnectedAppProps {
   user: UserData | null;
@@ -52,12 +53,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
   render() {
     return (
       <div>
-        <Toolbar style={{
-          position: "fixed",
-          top: "0px",
-          left: "0px",
-          right: "0px",
-        }}>
+        <Toolbar className={style.toolbar}>
           <ToolbarGroup firstChild={true}>
             <ToolbarTitle text="Anontown" />
           </ToolbarGroup>
@@ -100,21 +96,23 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
             </IconButton>
           </ToolbarGroup>
         </Toolbar>
-        <Switch>
-          <Route exact path="/" component={pages.HomePage} />
-          <Route path="/res/:id" component={pages.ResPage} />
-          <Route path="/topic/search" component={pages.TopicSearchPage} />
-          <Route path="/topic/create" component={pages.TopicCreatePage} />
-          <Route path="/topic/:id" component={pages.TopicPage} />
-          <Route path="/profiles" component={pages.ProfilesPage} />
-          <Route path="/notifications" component={pages.NotificationsPage} />
-          <Route path="/messages" component={pages.MessagesPage} />
-          <Route path="/in" component={pages.InPage} />
-          <Route path="/auth" component={pages.AuthPage} />
-          <Route path="/settings" component={pages.SettingsPage} />
-          <Route component={pages.NotFoundPage} />
-        </Switch>
-      </div >
+        <div className={style.main}>
+          <Switch>
+            <Route exact path="/" component={pages.HomePage} />
+            <Route path="/res/:id" component={pages.ResPage} />
+            <Route path="/topic/search" component={pages.TopicSearchPage} />
+            <Route path="/topic/create" component={pages.TopicCreatePage} />
+            <Route path="/topic/:id" component={pages.TopicPage} />
+            <Route path="/profiles" component={pages.ProfilesPage} />
+            <Route path="/notifications" component={pages.NotificationsPage} />
+            <Route path="/messages" component={pages.MessagesPage} />
+            <Route path="/in" component={pages.InPage} />
+            <Route path="/auth" component={pages.AuthPage} />
+            <Route path="/settings" component={pages.SettingsPage} />
+            <Route component={pages.NotFoundPage} />
+          </Switch>
+        </div>
+      </div>
     );
   }
 });
