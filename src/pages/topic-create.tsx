@@ -25,6 +25,7 @@ import {
 import { UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient } from "../utils";
+import * as Im from "immutable";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserData | null;
@@ -32,7 +33,7 @@ interface TopicCreatePageProps extends RouteComponentProps<{}> {
 
 export interface TopicCreatePageState {
   title: string;
-  tags: string[];
+  tags: Im.Set<string>;
   text: string;
   type: api.TopicType;
   errors?: string[];
@@ -46,7 +47,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
       super(props);
       this.state = {
         title: "",
-        tags: [],
+        tags: Im.Set(),
         text: "",
         type: "one",
         redirect: null,
@@ -122,7 +123,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
       }
       const params = {
         title: this.state.title,
-        tags: this.state.tags,
+        tags: this.state.tags.toArray(),
         text: this.state.text,
       };
 

@@ -10,6 +10,7 @@ import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
+import * as Im from "immutable";
 
 interface UnconnectedTopicEditorProps {
   topic: api.TopicNormal;
@@ -22,7 +23,7 @@ export type TopicEditorProps = ObjectOmit<UnconnectedTopicEditorProps, "user">;
 interface TopicEditorState {
   errors: string[];
   title: string;
-  tags: string[];
+  tags: Im.Set<string>;
   text: string;
 }
 
@@ -33,7 +34,7 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
       this.state = {
         errors: [],
         title: this.props.topic.title,
-        tags: this.props.topic.tags,
+        tags: Im.Set(this.props.topic.tags),
         text: this.props.topic.text,
       };
     }
@@ -46,8 +47,8 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
             floatingLabelText="タイトル"
             value={this.state.title}
             onChange={(_e, v) => this.setState({ title: v })} />
-          <TagsInput value={this.state.tags} onChange={ v => this.setState({ tags: v })} />
-          <MdEditor value={this.state.text} onChange={ v => this.setState({ text: v })} />
+          <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
+          <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
           <RaisedButton type="submit" label="OK" />
         </form>
         : <div>ログインして下さい</div>;
@@ -62,15 +63,15 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
         id: this.props.topic.id,
         title: this.state.title,
         text: this.state.text,
-        tags: this.state.tags,
-      }).subscribe( topic => {
+        tags: this.state.tags.toArray(),
+      }).subscribe(topic => {
         if (this.props.onUpdate) {
           this.props.onUpdate(topic);
         }
         this.setState({ errors: [] });
       }, error => {
         if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map( e => e.message) });
+          this.setState({ errors: error.errors.map(e => e.message) });
         } else {
           this.setState({ errors: ["エラーが発生しました"] });
         }

@@ -49,7 +49,7 @@ export interface TopicSearchPageState {
   dead: boolean;
   formTitle: string;
   formDead: boolean;
-  formTags: string[];
+  formTags: Im.Set<string>;
   count: number;
 }
 
@@ -75,7 +75,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
       dead,
       formTitle: title,
       formDead: dead,
-      formTags: tags,
+      formTags: Im.Set(tags),
       count: 0,
     };
 
@@ -93,7 +93,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         this.setState({
           title: this.state.formTitle,
           dead: this.state.formDead,
-          tags: this.state.formTags,
+          tags: this.state.formTags.toArray(),
         }, () => {
           this.update();
         });
