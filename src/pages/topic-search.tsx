@@ -44,14 +44,13 @@ interface TopicSearchPageProps extends RouteComponentProps<{}> {
 export interface TopicSearchPageState {
   snackMsg: null | string;
   topics: Im.List<api.Topic>;
-  count: number;
   tags: string[];
   title: string;
-  page: number;
   dead: boolean;
   formTitle: string;
   formDead: boolean;
   formTags: string[];
+  count: number;
 }
 
 export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }), dispatch => ({
@@ -60,6 +59,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
   limit = 100;
   subs: Subscription[] = [];
   formChange$ = new Subject<void>();
+  page = 0;
 
   constructor(props: TopicSearchPageProps) {
     super(props);
@@ -70,14 +70,13 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
     this.state = {
       snackMsg: null,
       topics: Im.List(),
-      count: 0,
       tags,
       title,
-      page: 0,
       dead,
       formTitle: title,
       formDead: dead,
       formTags: tags,
+      count: 0,
     };
 
     this.subs.push(this.formChange$
@@ -91,6 +90,13 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
             tags: this.state.formTags.join(","),
           }),
         });
+        this.setState({
+          title: this.state.formTitle,
+          dead: this.state.formDead,
+          tags: this.state.formTags,
+        }, () => {
+          this.update();
+        });
       }));
 
     this.more();
@@ -103,9 +109,9 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
   update() {
     this.setState({
       topics: Im.List(),
-      page: 0,
       count: 0,
     });
+    this.page = 0;
     this.more();
   }
 
@@ -113,16 +119,16 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
     apiClient.findTopic({
       title: this.state.title,
       tags: this.state.tags,
-      skip: this.state.page * this.limit,
+      skip: this.page * this.limit,
       limit: this.limit,
       activeOnly: !this.state.dead,
     })
       .subscribe(topics => {
         this.setState({
           count: topics.length,
-          page: this.state.page + 1,
           topics: this.state.topics.concat(topics),
         });
+        this.page++;
       }, () => {
         this.setState({ snackMsg: "トピック取得に失敗しました。" });
       });
