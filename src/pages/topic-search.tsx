@@ -5,8 +5,8 @@ import {
   Paper,
   RaisedButton,
   TextField,
+  Checkbox,
 } from "material-ui";
-import { Checkbox } from "material-ui/Checkbox";
 import {
   EditorModeEdit,
   NavigationRefresh,
@@ -93,7 +93,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         });
       }));
 
-    this.update();
+    this.more();
   }
 
   componentWillUnmount() {
