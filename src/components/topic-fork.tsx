@@ -1,6 +1,6 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
-import { Button, TextField } from "material-ui";
+import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -42,7 +42,7 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
         skip: 0,
         limit: 100,
         activeOnly: false,
-      }).subscribe(topics => {
+      }).subscribe( topics => {
         this.setState({ children: topics });
       }, () => {
         this.setState({ snackMsg: "トピック取得に失敗" });
@@ -58,15 +58,15 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
           ? <form onSubmit={() => this.submit()}>
             <Errors errors={this.state.errors} />
             <TextField
-              label="タイトル"
+              floatingLabelText="タイトル"
               value={this.state.title}
-              onChange={e => this.setState({ title: e.target.value })} />
-            <Button raised type="submit">新規作成</Button>
+              onChange={(_e, v) => this.setState({ title: v })} />
+            <RaisedButton type="submit" label="新規作成" />
           </form>
           : null}
         <hr />
         <div>
-          {this.state.children.map(t => <TopicListItem topic={t} detail={false} />)}
+          {this.state.children.map( t => <TopicListItem topic={t} detail={false} />)}
         </div>
       </div>;
     }
@@ -79,14 +79,14 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
       apiClient.createTopicFork(this.props.user.token, {
         title: this.state.title,
         parent: this.props.topic.id,
-      }).subscribe(topic => {
+      }).subscribe( topic => {
         if (this.props.onCreate) {
           this.props.onCreate(topic);
         }
         this.setState({ errors: [] });
       }, error => {
         if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map(e => e.message) });
+          this.setState({ errors: error.errors.map( e => e.message) });
         } else {
           this.setState({ errors: ["エラーが発生しました"] });
         }
