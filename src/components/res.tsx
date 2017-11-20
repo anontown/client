@@ -4,17 +4,11 @@ import {
   Badge,
   Dialog,
   IconButton,
-  IconMenu,
   MenuItem,
   Paper,
 } from "material-ui";
-import {
-  ContentReply,
-  ContentSend,
-  HardwareKeyboardArrowDown,
-  HardwareKeyboardArrowUp,
-  NavigationMoreVert,
-} from "material-ui/svg-icons";
+import { IconMenu } from "../components";
+import * as icons from "material-ui-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -202,7 +196,6 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             ? <Dialog
               title="プロフィール"
               open={this.state.slowProfile}
-              autoScrollBodyContent={true}
               onRequestClose={() => this.setState({ slowProfile: false })}>
               <Profile profile={this.props.res.profile} />
               }} />
@@ -210,10 +203,10 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             : null}
           <div>
             <IconButton onClick={() => this.onUV()} disabled={isSelf || this.props.user === null}>
-              <HardwareKeyboardArrowUp />
+              <icons.KeyboardArrowUp />
             </IconButton>
             <IconButton onClick={() => this.onDV()} disabled={isSelf || this.props.user === null}>
-              <HardwareKeyboardArrowDown />
+              <icons.KeyboardArrowDown />
             </IconButton>
           </div>
           <div>
@@ -246,11 +239,11 @@ export const Res = connect((state: Store) => ({ user: state.user }))
           </span>
                 {isSelf && this.props.res.type === "normal"
                   ? <IconMenu
-                    iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
-                    anchorOrigin={{ horizontal: "left", vertical: "top" }}
-                    targetOrigin={{ horizontal: "left", vertical: "top" }}>
-                    <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
-                  </IconMenu>
+                    icon={<icons.MoreVert />}
+                    createMenu={onClick => <MenuItem onClick={() => {
+                      this.onDeleteClick();
+                      onClick();
+                    }}>削除</MenuItem>} />
                   : null}
               </span>
             </div>
@@ -258,13 +251,13 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               <span>
                 {this.props.res.type === "normal" && this.props.res.reply !== null
                   ? <IconButton onClick={() => this.onSendReplyClock()}>
-                    <ContentSend />
+                    <icons.Send />
                   </IconButton>
                   : null}
                 {this.props.res.replyCount !== 0
                   ? <Badge badgeContent={this.props.res.replyCount}>
                     <IconButton onClick={() => this.onReceiveReplyClock()}>
-                      <ContentReply />
+                      <icons.Replay />
                     </IconButton>
                   </Badge>
                   : null}
