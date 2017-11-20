@@ -3,7 +3,7 @@ import {
   IconButton,
   Paper,
 } from "material-ui";
-import { NavigationRefresh } from "material-ui/svg-icons";
+import * as icons from "material-ui-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -57,7 +57,7 @@ export const TopicFavo = connect((state: Store) => ({ user: state.user }))
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
         <IconButton onClick={() => this.update()} >
-          <NavigationRefresh />
+          <icons.Refresh />
         </IconButton>
         {this.props.user !== null
           ? this.state.topicFavo !== null
