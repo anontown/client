@@ -1,6 +1,6 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
-import { RaisedButton, TextField } from "material-ui";
+import { Button, TextField } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -44,12 +44,11 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
         ? <form onSubmit={() => this.submit()}>
           <Errors errors={this.state.errors} />
           <TextField
-            floatingLabelText="タイトル"
             value={this.state.title}
-            onChange={(_e, v) => this.setState({ title: v })} />
+            onChange={e => this.setState({ title: e.target.value })}>タイトル</TextField>
           <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
           <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
-          <RaisedButton type="submit" label="OK" />
+          <Button raised type="submit">OK</Button>
         </form>
         : <div>ログインして下さい</div>;
     }
