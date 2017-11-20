@@ -1,7 +1,4 @@
 import "core-js";
-import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -16,11 +13,7 @@ const store = createStore(reducer, applyMiddleware(logger));
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <Switch>
-          <Route path="/" component={App} />
-        </Switch>
-      </MuiThemeProvider>
+      <App />
     </Provider>
   </BrowserRouter>,
   document.querySelector("#root"),

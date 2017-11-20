@@ -1,16 +1,14 @@
 import {
   IconButton,
-  IconMenu,
   MenuItem,
-  Toolbar,
-  ToolbarGroup,
-  ToolbarTitle,
+  Toolbar
 } from "material-ui";
-import * as icons from "material-ui/svg-icons";
+import { IconMenu } from "./icon-menu";
+import * as icons from "material-ui-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
-  Link,
+  NavLink,
   Route,
   Switch,
 } from "react-router-dom";
@@ -20,6 +18,24 @@ import { UserData } from "../models";
 import * as pages from "../pages";
 import { Store } from "../reducers";
 import * as style from "./app.scss";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+} from "material-ui";
+import {
+  red,
+  green,
+  blue
+} from 'material-ui/colors';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+    secondary: blue
+  },
+  error: red,
+  type: 'dark'
+});
 
 interface UnconnectedAppProps {
   user: UserData | null;
@@ -51,50 +67,52 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
   }
 
   render() {
-    return (
+    return <MuiThemeProvider theme={theme}>
       <div>
         <Toolbar className={style.toolbar}>
-          <ToolbarGroup firstChild={true}>
-            <ToolbarTitle text="Anontown" />
-          </ToolbarGroup>
-          <ToolbarGroup>
-            <IconButton containerElement={<Link to="/" />}>
-              <icons.ActionHome />
+          <NavLink to="/" >
+            <IconButton>
+              <icons.Home />
             </IconButton>
-            <IconButton containerElement={<Link to="/topic/search" />}>
-              <icons.ActionSearch />
+          </NavLink>
+          <NavLink to="/topic/search">
+            <IconButton>
+              <icons.Search />
             </IconButton>
-            {this.props.user !== null
-              ? <IconButton containerElement={<Link to="/notifications" />}>
-                <icons.NotificationAdb />
+          </NavLink>
+          {this.props.user !== null
+            ? <NavLink to="/notifications">
+              <IconButton>
+                <icons.Notifications />
               </IconButton>
-              : null}
-            <IconMenu
-              iconButtonElement={
-                <IconButton touch={true}>
-                  <icons.ActionVerifiedUser />
-                </IconButton>
-              }>
-              {this.props.user !== null
+            </NavLink>
+            : null}
+          <IconMenu
+            icon={<icons.VerifiedUser />}
+            createMenu={onClick =>
+              this.props.user !== null
                 ? [
-                  <MenuItem primaryText="プロフ管理" containerElement={<Link to="/profiles" />} />,
-                  <MenuItem primaryText="お知らせ" containerElement={<Link to="/messages" />} />,
-                  <MenuItem primaryText="設定" containerElement={<Link to="/settings/account" />} />,
-                  <MenuItem primaryText="プロフ管理" containerElement={<Link to="/profiles" />} />,
-                  <MenuItem primaryText="ログアウト" onClick={() => this.logout()} />,
+                  <NavLink to="/profiles"><MenuItem onClick={onClick}>プロフ管理</MenuItem></NavLink>,
+                  <NavLink to="/messages"><MenuItem onClick={onClick} >お知らせ</MenuItem></NavLink>,
+                  <NavLink to="/settings/account"><MenuItem onClick={onClick}  >設定</MenuItem></NavLink>,
+                  <NavLink to="/profiles"><MenuItem onClick={onClick}  >プロフ管理</MenuItem></NavLink>,
+                  <MenuItem onClick={() => {
+                    this.logout();
+                    onClick();
+                  }} >ログアウト</MenuItem>,
                 ]
-                : <MenuItem primaryText="ログイン/登録" containerElement={<Link to="/in" />} />}
-
-            </IconMenu>
-            <IconButton containerElement={<a
-              href="https://document.anontown.com/"
-              target="_blank" />}>
-              <icons.ActionBook />
+                : <NavLink to="/in"><MenuItem onClick={onClick}>ログイン/登録</MenuItem></NavLink>}
+          />
+          <a
+            href="https://document.anontown.com/"
+            target="_blank">
+            <IconButton>
+              <icons.Book />
             </IconButton>
-            <IconButton onClick={() => this.changeTheme()}>
-              <icons.ActionInvertColors />
-            </IconButton>
-          </ToolbarGroup>
+          </a>
+          <IconButton onClick={() => this.changeTheme()}>
+            <icons.InvertColors />
+          </IconButton>
         </Toolbar>
         <div className={style.main}>
           <Switch>
@@ -113,6 +131,6 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
           </Switch>
         </div>
       </div>
-    );
+    </MuiThemeProvider>;
   }
 });
