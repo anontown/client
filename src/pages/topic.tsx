@@ -4,10 +4,10 @@ import {
   Dialog,
   IconButton,
   Paper,
-  Switch,
-  FormControlLabel
+  Slider,
+  Toggle,
 } from "material-ui";
-import * as icons from "material-ui-icons";
+import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -174,19 +174,21 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       <Dialog
         title="自動スクロール"
         open={this.state.isAutoScrollDialog}
+        autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ isAutoScrollDialog: false })}>
-        <FormControlLabel label="自動スクロール" control={<Switch
-          checked={this.state.isAutoScroll}
-          onChange={(_e, v) => this.setState({ isAutoScroll: v })} />} />
-        <input
-          type="range"
+        <Toggle
+          label="自動スクロール"
+          toggled={this.state.isAutoScroll}
+          onToggle={(_e, v) => this.setState({ isAutoScroll: v })} />
+        <Slider
           max={30}
           value={this.state.autoScrollSpeed}
-          onChange={e => this.setState({ autoScrollSpeed: +e.target.value })} />
+          onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
       </Dialog>
       <Dialog
         title="詳細データ"
         open={this.state.isDataDialog}
+        autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ isDataDialog: false })}>
         {this.state.topic !== null
           ? <TopicData topic={this.state.topic} />
@@ -195,6 +197,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       <Dialog
         title="派生トピック"
         open={this.state.isForkDialog}
+        autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ isForkDialog: false })}>
         {this.state.topic !== null && this.state.topic.type === "normal"
           ? <TopicFork topic={this.state.topic} onCreate={topic => {
@@ -206,6 +209,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       <Dialog
         title="編集"
         open={this.state.isEditDialog}
+        autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ isEditDialog: false })}>
         {this.state.topic !== null && this.state.topic.type === "normal"
           ? <TopicEditor topic={this.state.topic} onUpdate={topic => {
@@ -225,40 +229,40 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           <Paper>
             <div>
               {this.state.topic.type === "fork"
-                ? <icons.CallSplit />
+                ? <icons.CommunicationCallSplit />
                 : null}
               {this.state.topic.type === "one"
-                ? <icons.LooksOne />
+                ? <icons.ImageLooksOne />
                 : null}
               {this.state.topic.title}
             </div>
             <div>
               <IconButton onClick={() => this.setState({ isDataDialog: true })}>
-                <icons.KeyboardArrowDown />
+                <icons.HardwareKeyboardArrowDown />
               </IconButton>
               {this.state.topic.type === "normal"
                 ? <IconButton onClick={() => this.setState({ isForkDialog: true })}>
-                  <icons.CallSplit />
+                  <icons.CommunicationCallSplit />
                 </IconButton>
                 : null}
               {this.state.topic.type === "normal" && this.props.user !== null
                 ? <IconButton onClick={() => this.setState({ isEditDialog: true })}>
-                  <icons.Settings />
+                  <icons.ActionSettings />
                 </IconButton>
                 : null}
               {this.props.user !== null
                 ? <IconButton onClick={() => this.favo()}>
                   {this.isFavo
-                    ? <icons.Star />
-                    : <icons.StarBorder />}
+                    ? <icons.ToggleStar />
+                    : <icons.ToggleStarBorder />}
                 </IconButton>
                 : null}
               <IconButton onClick={() => this.setState({ isAutoScrollDialog: true })}>
-                <icons.PlayCircleOutline />
+                <icons.AvPlayCircleOutline />
               </IconButton>
               {this.props.user !== null && this.state.topic.active
                 ? <IconButton onClick={() => this.setState({ isResWrite: !this.state.isResWrite })}>
-                  <icons.Create />
+                  <icons.ContentCreate />
                 </IconButton>
                 : null}
             </div >
