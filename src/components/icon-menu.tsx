@@ -1,6 +1,5 @@
-import React from 'react';
+import * as React from 'react';
 import {
-  MenuItem,
   Menu,
   IconButton
 } from 'material-ui';
@@ -24,7 +23,7 @@ export class IconMenu extends React.Component<IconMenuProps, IconMenuState> {
     };
   }
 
-  handleClick = event => {
+  handleClick = (event: any) => {
     this.setState({ open: true, anchorEl: event.currentTarget });
   };
 
