@@ -4,9 +4,11 @@ import {
   Dialog,
   MenuItem,
   Paper,
-  RaisedButton,
-  SelectField,
+  Button,
+  Select,
   TextField,
+  DialogActions,
+  FormControlLabel
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -63,41 +65,40 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
               <Dialog
                 title="確認"
                 open={this.state.openDialog}
-                autoScrollBodyContent={true}
-                onRequestClose={() => this.setState({ openDialog: false })}
-                actions={[
-                  <RaisedButton label={"はい"} onClick={() => {
-                    this.setState({ openDialog: false });
-                    this.create();
-                  }} />,
-                  <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
-                ]}>
+                onRequestClose={() => this.setState({ openDialog: false })}>
                 ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
                 本当に建てますか？
+                <DialogActions>
+                <Button raised onClick={() => {
+                    this.setState({ openDialog: false });
+                    this.create();
+                  }}>はい</Button>
+                  <Button raised
+                    onClick={() => this.setState({ openDialog: false })}>いいえ</Button>
+                  </DialogActions>
             </Dialog>
               <form onSubmit={() => this.submit()}>
                 <Errors errors={this.state.errors} />
                 <div>
-                  <SelectField
-                    floatingLabelText="種類"
+                  <FormControlLabel label="種類" control={<Select
                     value={this.state.type}
-                    onChange={(_e, _i, v) => this.setState({ type: v })}>
-                    <MenuItem value="one" primaryText="単発" />
-                    <MenuItem value="normal" primaryText="通常" />
-                  </SelectField>
+                    onChange={e => this.setState({ type: e.target.value as api.TopicType })}>
+                    <MenuItem value="one">単発</MenuItem>
+                    <MenuItem value="normal">通常</MenuItem>
+                  </Select>}/>
                 </div>
                 <div>
                   <TextField
-                    floatingLabelText="タイトル"
+                    label="タイトル"
                     value={this.state.title}
-                    onChange={(_e, v) => this.setState({ title: v })} />
+                    onChange={e => this.setState({ title: e.target.value })} />
                 </div>
                 <div>
                   <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
                 </div>
                 <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
                 <div>
-                  <RaisedButton type="submit" label="トピック作成" />
+                  <Button raised type="submit">トピック作成</Button>
                 </div>
               </form>
             </Paper>
