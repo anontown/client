@@ -23,4 +23,3 @@ export * from "./topic-editor";
 export * from "./topic-fork";
 export * from "./tags-input";
 export * from "./scroll";
-export * from "./icon-menu";
