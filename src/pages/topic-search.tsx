@@ -3,23 +3,19 @@ import * as Im from "immutable";
 import {
   IconButton,
   Paper,
-  RaisedButton,
+  Button,
   TextField,
   Checkbox,
+  FormControlLabel
 } from "material-ui";
-import {
-  EditorModeEdit,
-  NavigationRefresh,
-  ToggleStar,
-  ToggleStarBorder,
-} from "material-ui/svg-icons";
+import * as icons from "material-ui-icons";
 import * as qs from "query-string";
 import * as React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import {
-  Link,
   RouteComponentProps,
+  NavLink
 } from "react-router-dom";
 import {
   Subject,
@@ -159,8 +155,8 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         {this.props.user !== null
           ? <IconButton onClick={() => this.favo()}>
             {this.props.user.storage.tagsFavo.has(Im.Set(this.state.tags))
-              ? <ToggleStar />
-              : <ToggleStarBorder />}
+              ? <icons.Star />
+              : <icons.StarBorder />}
           </IconButton>
           : null}
         <div>
@@ -168,24 +164,28 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
             this.setState({ formTags: v });
             this.formChange$.next();
           }} />
-          <TextField floatingLabelText="タイトル" value={this.state.formTitle} onChange={(_e, v) => {
-            this.setState({ formTitle: v });
+          <TextField label="タイトル" value={this.state.formTitle} onChange={e => {
+            this.setState({ formTitle: e.target.value });
             this.formChange$.next();
           }} />
-          <Checkbox label="過去ログも" checked={this.state.formDead} onCheck={(_e, v) => {
-            this.setState({ formDead: v });
-            this.formChange$.next();
-          }} />
+          <FormControlLabel label="過去ログも" control={<Checkbox
+            checked={this.state.formDead}
+            onChange={(_e, v) => {
+              this.setState({ formDead: v });
+              this.formChange$.next();
+            }} />} />
         </div>
       </Paper >
       <div>
         {this.props.user !== null
-          ? <IconButton containerElement={<Link to="/topic/create" />}>
-            <EditorModeEdit />
-          </IconButton>
+          ? <NavLink to="/topic/create">
+            <IconButton>
+              <icons.ModeEdit />
+            </IconButton>
+          </NavLink>
           : null}
         <IconButton onClick={() => this.update()}>
-          <NavigationRefresh />
+          <icons.Refresh />
         </IconButton>
       </div>
       <div>
@@ -193,7 +193,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
       </div>
       {this.state.count === this.limit
         ? <div>
-          <RaisedButton onClick={() => this.more()} label="もっと" />
+          <Button raised onClick={() => this.more()}>もっと</Button>
         </div>
         : null}
     </Page>;
