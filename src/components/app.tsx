@@ -24,6 +24,8 @@ import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
+const muiTheme = getMuiTheme(darkBaseTheme);
+
 interface UnconnectedAppProps {
   user: UserData | null;
   updateUser: (user: UserData | null) => void;
@@ -55,7 +57,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
 
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <Switch>
           <div>
             <Toolbar className={style.toolbar}>
