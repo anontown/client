@@ -34,7 +34,6 @@ interface UnconnectedAppProps {
 export type AppProps = ObjectOmit<UnconnectedAppProps, "user" | "updateUser">;
 
 interface AppState {
-  showSideMenu: boolean;
 }
 
 export const App = connect((state: Store) => ({ user: state.user }), dispatch => ({
@@ -42,9 +41,6 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
 }))(class extends React.Component<UnconnectedAppProps, AppState> {
   constructor(props: UnconnectedAppProps) {
     super(props);
-    this.state = {
-      showSideMenu: false,
-    };
   }
 
   changeTheme() {
