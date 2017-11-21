@@ -23,21 +23,17 @@ export const SettingsPage = withRouter<{}>(class extends React.Component<Setting
 
   render() {
     return (
-      <Page column={2}>
-        <aside>
-          <List>
-            <ListItem><Link to="/settings/account">アカウント設定</Link></ListItem>
-            <ListItem><Link to="/settings/apps">連携アプリ</Link></ListItem>
-            <ListItem><Link to="/settings/dev">開発者向け</Link></ListItem>
-          </List>
-        </aside>
-        <main>
-          <Switch>
-            <Route path="/settings/account" component={AccountSettingPage} />
-            <Route path="/settings/apps" component={AppsSettingPage} />
-            <Route path="/settings/dev" component={DevSettingPage} />
-          </Switch>
-        </main>
+      <Page
+        sidebar={<List>
+          <ListItem><Link to="/settings/account">アカウント設定</Link></ListItem>
+          <ListItem><Link to="/settings/apps">連携アプリ</Link></ListItem>
+          <ListItem><Link to="/settings/dev">開発者向け</Link></ListItem>
+        </List>}>
+        <Switch>
+          <Route path="/settings/account" component={AccountSettingPage} />
+          <Route path="/settings/apps" component={AppsSettingPage} />
+          <Route path="/settings/dev" component={DevSettingPage} />
+        </Switch>
       </Page>
     );
   }

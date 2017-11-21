@@ -48,7 +48,7 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
 
     render() {
       return (
-        <Page column={1}>
+        <Page>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />

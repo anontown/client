@@ -27,114 +27,114 @@ interface MessagesPageState {
 }
 
 export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
-(class extends React.Component<MessagesPageProps, MessagesPageState> {
-  private limit = 50;
+  (class extends React.Component<MessagesPageProps, MessagesPageState> {
+    private limit = 50;
 
-  constructor(props: MessagesPageProps) {
-    super(props);
-    this.state = {
-      msgs: Im.List(),
-      snackMsg: null,
-    };
+    constructor(props: MessagesPageProps) {
+      super(props);
+      this.state = {
+        msgs: Im.List(),
+        snackMsg: null,
+      };
 
-    this.findNew();
-  }
+      this.findNew();
+    }
 
-  render() {
-    return (
-      <Page column={1}>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.props.user !== null
-          ? <div>
-            <div>
-              <RaisedButton label="最新" onClick={() => this.readNew()} />
+    render() {
+      return (
+        <Page>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.props.user !== null
+            ? <div>
+              <div>
+                <RaisedButton label="最新" onClick={() => this.readNew()} />
+              </div>
+              <div>
+                {this.state.msgs.map(m =>
+                  <Paper>
+                    <div>{dateFormat.format(m.date)}</div>
+                    <Md body={m.text} />
+                  </Paper>)}
+              </div>
+              <div>
+                <RaisedButton label="前" onClick={() => this.readOld()} />
+              </div>
             </div>
-            <div>
-              {this.state.msgs.map( m =>
-                <Paper>
-                  <div>{dateFormat.format(m.date)}</div>
-                  <Md body={m.text} />
-                </Paper>)}
-            </div>
-            <div>
-              <RaisedButton label="前" onClick={() => this.readOld()} />
-            </div>
-          </div>
-          : <Paper>
-            ログインしてください。
+            : <Paper>
+              ログインしてください。
     </Paper>
-        }
-      </Page>
-    );
-  }
-
-  findNew() {
-    if (this.props.user === null) {
-      return;
+          }
+        </Page>
+      );
     }
 
-    apiClient.findMsgNew(this.props.user.token,
-      {
-        limit: this.limit,
-      })
-      .map( msgs => Im.List(msgs))
-      .subscribe( msgs => {
-        this.setState({ msgs });
-      }, () => {
-        this.setState({ snackMsg: "メッセージ取得に失敗" });
-      });
-  }
+    findNew() {
+      if (this.props.user === null) {
+        return;
+      }
 
-  readNew() {
-    if (this.props.user === null) {
-      return;
-    }
-
-    const first = this.state.msgs.first();
-    if (first === undefined) {
-      this.findNew();
-    } else {
-      apiClient.findMsg(this.props.user.token,
+      apiClient.findMsgNew(this.props.user.token,
         {
-          type: "after",
-          equal: false,
-          date: first.date,
           limit: this.limit,
         })
-        .map( msgs => Im.List(msgs))
-        .map( msgs => msgs.concat(this.state.msgs))
-        .subscribe( msgs => {
+        .map(msgs => Im.List(msgs))
+        .subscribe(msgs => {
           this.setState({ msgs });
         }, () => {
           this.setState({ snackMsg: "メッセージ取得に失敗" });
         });
     }
-  }
 
-  readOld() {
-    if (this.props.user === null) {
-      return;
-    }
-    const last = this.state.msgs.last();
+    readNew() {
+      if (this.props.user === null) {
+        return;
+      }
 
-    if (last === undefined) {
-      this.findNew();
-    } else {
-      apiClient.findMsg(this.props.user.token,
-        {
-          type: "before",
-          equal: false,
-          date: last.date,
-          limit: this.limit,
-        })
-        .map( msgs => this.state.msgs.concat(msgs))
-        .subscribe( msgs => {
-          this.setState({ msgs });
-        }, () => {
-          this.setState({ snackMsg: "メッセージ取得に失敗" });
-        });
+      const first = this.state.msgs.first();
+      if (first === undefined) {
+        this.findNew();
+      } else {
+        apiClient.findMsg(this.props.user.token,
+          {
+            type: "after",
+            equal: false,
+            date: first.date,
+            limit: this.limit,
+          })
+          .map(msgs => Im.List(msgs))
+          .map(msgs => msgs.concat(this.state.msgs))
+          .subscribe(msgs => {
+            this.setState({ msgs });
+          }, () => {
+            this.setState({ snackMsg: "メッセージ取得に失敗" });
+          });
+      }
     }
-  }
-}));
+
+    readOld() {
+      if (this.props.user === null) {
+        return;
+      }
+      const last = this.state.msgs.last();
+
+      if (last === undefined) {
+        this.findNew();
+      } else {
+        apiClient.findMsg(this.props.user.token,
+          {
+            type: "before",
+            equal: false,
+            date: last.date,
+            limit: this.limit,
+          })
+          .map(msgs => this.state.msgs.concat(msgs))
+          .subscribe(msgs => {
+            this.setState({ msgs });
+          }, () => {
+            this.setState({ snackMsg: "メッセージ取得に失敗" });
+          });
+      }
+    }
+  }));

@@ -24,7 +24,7 @@ interface HomePageProps extends RouteComponentProps<{}> {
 
 export const HomePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
   ((props: HomePageProps) => {
-    return <Page column={1}>
+    return <Page>
       {props.user !== null
         ? <Tabs>
           <Tab label="トピック">

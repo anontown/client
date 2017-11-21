@@ -1,0 +1,15 @@
+.two{
+  display: flex;
+  @media screen and (max-width: 767px) {
+      &>aside {
+          display: none;
+      }
+  }
+  &>aside {
+      width: 30vw;
+  }
+
+  &>main {
+      flex: 1;
+  }
+}

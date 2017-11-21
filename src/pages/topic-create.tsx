@@ -57,7 +57,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
 
     render() {
       return this.state.redirect === null
-        ? <Page column={1}>
+        ? <Page>
           {this.props.user !== null
             ? <Paper>
               <Dialog

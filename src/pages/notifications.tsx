@@ -50,7 +50,7 @@ export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ use
 
     render() {
       return (
-        <Page column={1}>
+        <Page>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />

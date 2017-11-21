@@ -167,7 +167,10 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
   }
 
   render() {
-    return <Page column={2}>
+    return <Page
+      sidebar={this.props.user !== null
+        ? <TopicFavo detail={false} />
+        : undefined}>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
@@ -218,14 +221,8 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           }} />
           : null}
       </Dialog>
-      {this.props.user !== null
-        ? <aside>
-          <TopicFavo detail={false} />
-        </aside>
-        : null
-      }
       {this.state.topic !== null
-        ? <main>
+        ? <div>
           <Paper>
             <div>
               {this.state.topic.type === "fork"
@@ -314,7 +311,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
               <ResWrite topic={this.state.topic.id} reply={null} />
             </Paper>
             : null}
-        </main>
+        </div>
         : null
       }
     </Page>;

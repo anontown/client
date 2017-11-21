@@ -48,7 +48,7 @@ export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.u
 
     render() {
       return (
-        <Page column={1}>
+        <Page>
           <Paper>
             <Snack
               msg={this.state.snackMsg}

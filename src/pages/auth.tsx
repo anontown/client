@@ -45,7 +45,7 @@ export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.
 
     render() {
       return (
-        <Page column={1}>
+        <Page>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />

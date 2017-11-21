@@ -151,7 +151,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
   }
 
   render() {
-    return <Page column={1}>
+    return <Page>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />

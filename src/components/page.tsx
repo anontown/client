@@ -1,7 +1,8 @@
 import * as React from "react";
+import * as style from "./page.scss";
 
 export interface PageProps {
-  column: 1 | 2;
+  sidebar?: React.ReactNode
 }
 
 interface PageState {
@@ -13,8 +14,15 @@ export class Page extends React.Component<PageProps, PageState> {
   }
   render() {
     return (
-      <div>
-        {this.props.children}
+      <div className={this.props.sidebar !== undefined ? style.two : undefined}>
+        {this.props.sidebar !== undefined
+          ? <aside>
+            {this.props.sidebar}
+          </aside>
+          : null}
+        <main>
+          {this.props.children}
+        </main>
       </div>
     );
   }

@@ -17,6 +17,7 @@ import {
 import { updateUserData } from "../actions";
 import {
   Errors,
+  Page
 } from "../components";
 import { Config } from "../env";
 import { UserData } from "../models";
@@ -53,36 +54,38 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
   }
 
   render() {
-    return this.props.user !== null
-      ? <Redirect to="/" />
-      : <Paper>
-        <form onSubmit={() => this.ok()}>
-          <Errors errors={this.state.errors} />
-          <TextField
-            floatingLabelText="ID"
-            value={this.state.sn}
-            onChange={(_e, v) => this.setState({ sn: v })} />
-          <TextField
-            floatingLabelText="パスワード"
-            value={this.state.pass}
-            onChange={(_e, v) => this.setState({ pass: v })}
-            type="password" />
-          <SelectField floatingLabelText="ログイン/登録"
-            value={this.state.isLogin}
-            onChange={(_e, _i, v) => this.setState({ isLogin: v })}>
-            <MenuItem value={true} primaryText="ログイン" />
-            <MenuItem value={false} primaryText="登録" />
-          </SelectField>
-          {!this.state.isLogin
-            ? <Recaptcha
-              siteKey={Config.recaptcha.siteKey}
-              ref="recaptcha"
-              onChange={(v: string) => this.setState({ recaptcha: v })} />
-            : null}
+    return <Page>
+      {this.props.user !== null
+        ? <Redirect to="/" />
+        : <Paper>
+          <form onSubmit={() => this.ok()}>
+            <Errors errors={this.state.errors} />
+            <TextField
+              floatingLabelText="ID"
+              value={this.state.sn}
+              onChange={(_e, v) => this.setState({ sn: v })} />
+            <TextField
+              floatingLabelText="パスワード"
+              value={this.state.pass}
+              onChange={(_e, v) => this.setState({ pass: v })}
+              type="password" />
+            <SelectField floatingLabelText="ログイン/登録"
+              value={this.state.isLogin}
+              onChange={(_e, _i, v) => this.setState({ isLogin: v })}>
+              <MenuItem value={true} primaryText="ログイン" />
+              <MenuItem value={false} primaryText="登録" />
+            </SelectField>
+            {!this.state.isLogin
+              ? <Recaptcha
+                siteKey={Config.recaptcha.siteKey}
+                ref="recaptcha"
+                onChange={(v: string) => this.setState({ recaptcha: v })} />
+              : null}
 
-          <RaisedButton type="submit" label="OK" />
-        </form>
-      </Paper>;
+            <RaisedButton type="submit" label="OK" />
+          </form>
+        </Paper>}
+    </Page>;
   }
 
   ok() {
