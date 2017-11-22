@@ -42,7 +42,7 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
         skip: 0,
         limit: 100,
         activeOnly: false,
-      }).subscribe( topics => {
+      }).subscribe(topics => {
         this.setState({ children: topics });
       }, () => {
         this.setState({ snackMsg: "トピック取得に失敗" });
@@ -66,7 +66,10 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
           : null}
         <hr />
         <div>
-          {this.state.children.map( t => <TopicListItem topic={t} detail={false} />)}
+          {this.state.children.map(t => <TopicListItem
+            topic={t}
+            key={t.id}
+            detail={false} />)}
         </div>
       </div>;
     }
@@ -79,14 +82,14 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
       apiClient.createTopicFork(this.props.user.token, {
         title: this.state.title,
         parent: this.props.topic.id,
-      }).subscribe( topic => {
+      }).subscribe(topic => {
         if (this.props.onCreate) {
           this.props.onCreate(topic);
         }
         this.setState({ errors: [] });
       }, error => {
         if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map( e => e.message) });
+          this.setState({ errors: error.errors.map(e => e.message) });
         } else {
           this.setState({ errors: ["エラーが発生しました"] });
         }
