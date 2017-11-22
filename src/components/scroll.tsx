@@ -292,7 +292,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this._isLock = true;
     call()
       .subscribe(undefined, e => {
-        console.log(e);
+        console.error(e);
         this._isLock = false;
       },
       () => {
