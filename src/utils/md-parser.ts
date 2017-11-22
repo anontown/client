@@ -1,19 +1,10 @@
 import * as breaks from "remark-breaks";
-import * as disable from "remark-disable-tokenizers";
 import * as markdown from "remark-parse";
 import * as unified from "unified";
 
 export function parse(text: string): Root {
   return unified()
     .use(markdown)
-    .use(disable, {
-      block: [
-        "html",
-        "footnote",
-      ],
-      inline: [
-      ],
-    })
     .use(breaks)
     .parse(text);
 }
