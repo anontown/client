@@ -1,11 +1,11 @@
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
+  Checkbox,
   IconButton,
   Paper,
   RaisedButton,
   TextField,
-  Checkbox,
 } from "material-ui";
 import {
   EditorModeEdit,

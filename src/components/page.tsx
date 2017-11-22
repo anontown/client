@@ -2,7 +2,7 @@ import * as React from "react";
 import * as style from "./page.scss";
 
 export interface PageProps {
-  sidebar?: React.ReactNode
+  sidebar?: React.ReactNode;
 }
 
 interface PageState {

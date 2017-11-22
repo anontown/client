@@ -21,15 +21,15 @@ export function Md(props: MdProps) {
 }
 
 interface MdYouTubeProps {
-  title?: string,
-  videoID: string
+  title?: string;
+  videoID: string;
 }
 
-class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }>{
+class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
   constructor(props: MdYouTubeProps) {
     super(props);
     this.state = {
-      slow: false
+      slow: false,
     };
   }
 
@@ -46,8 +46,8 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }>{
         {this.state.slow
           ? <YouTube videoId={this.props.videoID} />
           : null}
-      </Dialog>
-    ]
+      </Dialog>,
+    ];
   }
 }
 
@@ -85,7 +85,7 @@ function MdLink(props: { node: mdParser.Link }) {
       return React.createElement("a", {
         href: props.node.url,
         target: "_blank",
-        title: props.node.title || undefined
+        title: props.node.title || undefined,
       }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
       return <img
@@ -95,7 +95,7 @@ function MdLink(props: { node: mdParser.Link }) {
       return <MdYouTube videoID={link.videoID} title={props.node.title || undefined} />;
     case "router":
       return React.createElement(Link, {
-        to: link.path
+        to: link.path,
       }, ...props.node.children.map(c => <MdNode node={c} />));
   }
 }
@@ -114,8 +114,8 @@ function MdTable(props: { node: mdParser.Table }) {
         ? head.children.map((cell, index) =>
           React.createElement("th", {
             style: {
-              textAlign: props.node.align[index]
-            }
+              textAlign: props.node.align[index],
+            },
           }, ...cell.type === "tableCell"
             ? cell.children.map(c => <MdNode node={c} />)
             : []))
@@ -127,15 +127,15 @@ function MdTable(props: { node: mdParser.Table }) {
         ? React.createElement("tr", {}, ...row.children.map((cell, index) => cell.type === "tableCell"
           ? React.createElement("td", {
             style: {
-              textAlign: props.node.align[index]
-            }
+              textAlign: props.node.align[index],
+            },
           }, ...cell.children.map(c => <MdNode node={c} />))
           : []))
         : []))}
   </table>;
 }
 
-class MdNode extends React.Component<{ node: mdParser.MdNode }, {}>{
+class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
   render(): React.ReactNode {
     switch (this.props.node.type) {
       case "paragraph":

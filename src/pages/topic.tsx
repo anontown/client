@@ -16,8 +16,8 @@ import {
 } from "react-router-dom";
 import {
   Observable,
+  ReplaySubject,
   Subject,
-  ReplaySubject
 } from "rxjs";
 import { updateUserData } from "../actions";
 import {
@@ -262,7 +262,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                   <icons.ContentCreate />
                 </IconButton>
                 : null}
-            </div >
+            </div>
           </Paper>
           <ResScroll items={this.state.reses}
             onChangeItems={reses => this.setState({ reses })}

@@ -1,5 +1,6 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
+import * as Im from "immutable";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -10,7 +11,6 @@ import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
-import * as Im from "immutable";
 
 interface UnconnectedTopicEditorProps {
   topic: api.TopicNormal;

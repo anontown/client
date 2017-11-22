@@ -1,5 +1,6 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
+import * as Im from "immutable";
 import {
   Dialog,
   MenuItem,
@@ -25,7 +26,6 @@ import {
 import { UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient } from "../utils";
-import * as Im from "immutable";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserData | null;

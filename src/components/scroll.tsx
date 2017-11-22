@@ -5,8 +5,8 @@ import {
   Observable,
   Subscription,
 } from "rxjs";
-import { list } from "../utils";
 import { setTimeout } from "timers";
+import { list } from "../utils";
 
 interface ListItemData {
   id: string;
@@ -40,7 +40,7 @@ export interface ScrollProps<T extends ListItemData> {
   newItem: Observable<T>;
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
-  className?:string;
+  className?: string;
 }
 
 interface ScrollState {

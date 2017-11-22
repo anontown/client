@@ -6,6 +6,9 @@ import {
   ToolbarGroup,
   ToolbarTitle,
 } from "material-ui";
+import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -19,9 +22,6 @@ import { updateUserData } from "../actions";
 import { UserData } from "../models";
 import * as pages from "../pages";
 import { Store } from "../reducers";
-import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 const muiTheme = getMuiTheme(darkBaseTheme);
 
@@ -43,7 +43,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
   }
 
   changeTheme() {
-
+    // TODO: こんどやる
   }
 
   logout() {
@@ -106,7 +106,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
           </Toolbar>
           <div style={{
             height: "calc(100vh - 56px)",
-            overflow: "auto"
+            overflow: "auto",
           }}>
             <Switch>
               <Route exact path="/" component={pages.HomePage} />

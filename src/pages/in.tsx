@@ -17,7 +17,7 @@ import {
 import { updateUserData } from "../actions";
 import {
   Errors,
-  Page
+  Page,
 } from "../components";
 import { Config } from "../env";
 import { UserData } from "../models";

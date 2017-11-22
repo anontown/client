@@ -1,11 +1,11 @@
-import * as React from "react";
-import { apiClient } from "../utils";
-import { Snack } from "./snack";
 import * as Im from "immutable";
 import {
   AutoComplete,
-  MenuItem
+  MenuItem,
 } from "material-ui";
+import * as React from "react";
+import { apiClient } from "../utils";
+import { Snack } from "./snack";
 import * as style from "./tags-input.scss";
 
 export interface TagsInputProps {
@@ -14,7 +14,7 @@ export interface TagsInputProps {
 }
 
 interface TagsInputState {
-  acTags: { name: string, count: number }[];
+  acTags: Array<{ name: string, count: number }>;
   snackMsg: null | string;
   inputValue: string;
 }
@@ -25,7 +25,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
     this.state = {
       acTags: [],
       snackMsg: null,
-      inputValue: '',
+      inputValue: "",
     };
 
     apiClient.findTopicTags({ limit: 100 })
@@ -42,7 +42,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
       if (this.props.onChange !== undefined) {
         this.props.onChange(this.props.value.add(this.state.inputValue));
       }
-      this.setState({ inputValue: '' });
+      this.setState({ inputValue: "" });
     }
   }
 
@@ -56,7 +56,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
         {this.props.value.map(t => <span key={t} className={style.tag}>
           <span className={style.tagButton} onClick={() => {
             if (this.props.onChange !== undefined) {
-              this.props.onChange(this.props.value.remove(t))
+              this.props.onChange(this.props.value.remove(t));
             }
           }}>×</span>
           {t}
@@ -70,7 +70,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           value: <MenuItem
             primaryText={t.name}
             secondaryText={t.count.toString()}
-          />
+          />,
         }))}
         filter={(text, key) => key.toLowerCase().indexOf(text.toLowerCase()) !== -1}
         searchText={this.state.inputValue}
@@ -85,7 +85,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
         }}
         onNewRequest={() => this.addTag()}
         listStyle={{
-          maxHeight: '30vh'
+          maxHeight: "30vh",
         }}
       />,
     ];
