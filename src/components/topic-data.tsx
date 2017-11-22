@@ -27,14 +27,14 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
     };
     if (this.props.topic.type === "normal") {
       apiClient.findHistoryAll({ topic: this.props.topic.id })
-        .subscribe( histories => {
+        .subscribe(histories => {
           this.setState({ histories });
         }, () => {
           this.setState({ snackMsg: "履歴取得に失敗しました" });
         });
     } else if (this.props.topic.type === "fork") {
       apiClient.findTopicOne({ id: this.props.topic.parent })
-        .subscribe( parent => {
+        .subscribe(parent => {
           this.setState({ parent });
         }, () => {
           this.setState({ snackMsg: "履歴取得に失敗しました" });
@@ -53,33 +53,34 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
         <dd>{dateFormat.format(this.props.topic.update)}</dd>
         {this.props.topic.type !== "fork"
           ?
-          [
-            <dt>カテゴリ</dt>,
+          <div>
+            <dt>カテゴリ</dt>
             <dd>
               <TagsLink tags={this.props.topic.tags} />
-            </dd>,
-            <dt>本文</dt>,
+            </dd>
+            <dt>本文</dt>
             <dd>
               <Md body={this.props.topic.text} />
-            </dd>,
-          ]
+            </dd>
+          </div>
           : null
         }
         {this.state.parent !== null
-          ? [
-            <dt>派生元</dt>,
+          ? <div>
+            <dt>派生元</dt>
             <dd>
               <Link to={`/topic/${this.state.parent.id}`}>{this.state.parent.title}</Link>
-            </dd>,
-          ]
+            </dd>
+
+          </div>
           : null}
         {this.state.histories !== null
-          ? [
-            <dt>編集履歴</dt>,
+          ? <div>
+            <dt>編集履歴</dt>
             <dd>
-              {this.state.histories.map( h => <History key={h.id} history={h} />)}
-            </dd>,
-          ]
+              {this.state.histories.map(h => <History key={h.id} history={h} />)}
+            </dd>
+          </div>
           : null}
       </dl>
     );
