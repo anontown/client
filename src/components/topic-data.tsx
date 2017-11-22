@@ -77,7 +77,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
           ? [
             <dt>編集履歴</dt>,
             <dd>
-              {this.state.histories.map( h => <History history={h} />)}
+              {this.state.histories.map( h => <History key={h.id} history={h} />)}
             </dd>,
           ]
           : null}
