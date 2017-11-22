@@ -27,6 +27,7 @@ import {
   apiClient,
   list,
   resSetedCreate,
+  dateFormat
 } from "../utils";
 import { Md } from "./md";
 import { Profile } from "./profile";
@@ -235,6 +236,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   ? <span>削除</span>
                   : null}
               </a>
+              {dateFormat.format(this.props.res.date)}
               {this.props.res.type === "normal" && this.props.res.profile !== null
                 ? <a onClick={() => this.setState({ slowProfile: true })}>●{this.props.res.profile.sn}</a>
                 : null}
