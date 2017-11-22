@@ -16,7 +16,8 @@ export interface MdProps {
 
 export function Md(props: MdProps) {
   const node = mdParser.parse(props.body);
-  return <div>{node.children.map(c => <MdNode node={c} />)}</div>;
+  return React.createElement("div", {},
+    ...node.children.map(c => <MdNode node={c} />));
 }
 
 interface MdYouTubeProps {
@@ -81,9 +82,11 @@ function MdLink(props: { node: mdParser.Link }) {
   const link = urlEnum(props.node.url);
   switch (link.type) {
     case "normal":
-      return <a href={props.node.url}
-        target="_blank"
-        title={props.node.title || undefined}>{props.node.children.map(c => <MdNode node={c} />)}</a>;
+      return React.createElement("a", {
+        href: props.node.url,
+        target: "_blank",
+        title: props.node.title || undefined
+      }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
       return <img
         src={camo.getCamoUrl(props.node.url)}
@@ -91,37 +94,15 @@ function MdLink(props: { node: mdParser.Link }) {
     case "youtube":
       return <MdYouTube videoID={link.videoID} title={props.node.title || undefined} />;
     case "router":
-      return <Link to={link.path}>{props.node.children.map(c => <MdNode node={c} />)}</Link>;
+      return React.createElement(Link, {
+        to: link.path
+      }, ...props.node.children.map(c => <MdNode node={c} />));
   }
 }
 
 function MdHeading(props: { node: mdParser.Heading }) {
-  switch (props.node.depth) {
-    case 1:
-      return <h1>
-        {props.node.children.map(c => <MdNode node={c} />)}
-      </h1>;
-    case 2:
-      return <h2>
-        {props.node.children.map(c => <MdNode node={c} />)}
-      </h2>;
-    case 3:
-      return <h3>
-        {props.node.children.map(c => <MdNode node={c} />)}
-      </h3>;
-    case 4:
-      return <h4>
-        {props.node.children.map(c => <MdNode node={c} />)}
-      </h4>;
-    case 5:
-      return <h5>
-        {props.node.children.map(c => <MdNode node={c} />)}
-      </h5>;
-    case 6:
-      return <h6>
-        {props.node.children.map(c => <MdNode node={c} />)}
-      </h6>;
-  }
+  return React.createElement(`h${props.node.depth}`, {},
+    ...props.node.children.map(c => <MdNode node={c} />));
 }
 
 function MdTable(props: { node: mdParser.Table }) {
@@ -129,26 +110,28 @@ function MdTable(props: { node: mdParser.Table }) {
 
   return <table>
     <thead>
-      <tr>
-        {head.type === "tableRow"
-          ? head.children.map((cell, index) =>
-            <th style={{ textAlign: props.node.align[index] }}>{cell.type === "tableCell"
-              ? cell.children.map(c => <MdNode node={c} />)
-              : null}</th>)
-          : null}
-      </tr>
+      {React.createElement("tr", {}, ...head.type === "tableRow"
+        ? head.children.map((cell, index) =>
+          React.createElement("th", {
+            style: {
+              textAlign: props.node.align[index]
+            }
+          }, ...cell.type === "tableCell"
+            ? cell.children.map(c => <MdNode node={c} />)
+            : []))
+        : [])}
     </thead>
-    <tbody>
-      {props.node.children
-        .filter((_, i) => i !== 0)
-        .map(row => row.type === "tableRow"
-          ? <tr>
-            {row.children.map((cell, index) => cell.type === "tableCell"
-              ? <td style={{ textAlign: props.node.align[index] }}>{cell.children.map(c => <MdNode node={c} />)}</td>
-              : null)}
-          </tr>
-          : null)}
-    </tbody >
+    {React.createElement("tbody", {}, ...props.node.children
+      .filter((_, i) => i !== 0)
+      .map(row => row.type === "tableRow"
+        ? React.createElement("tr", {}, ...row.children.map((cell, index) => cell.type === "tableCell"
+          ? React.createElement("td", {
+            style: {
+              textAlign: props.node.align[index]
+            }
+          }, ...cell.children.map(c => <MdNode node={c} />))
+          : []))
+        : []))}
   </table>;
 }
 
@@ -156,9 +139,11 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}>{
   render(): React.ReactNode {
     switch (this.props.node.type) {
       case "paragraph":
-        return <p>{this.props.node.children.map(c => <MdNode node={c} />)}</p>;
+        return React.createElement("p", {}
+          , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "blockquote":
-        return <blockquote>{this.props.node.children.map(c => <MdNode node={c} />)}</blockquote>;
+        return React.createElement("blockquote", {}
+          , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "heading":
         return <MdHeading node={this.props.node} />;
       case "code":
@@ -169,12 +154,15 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}>{
         return <code>{this.props.node.value}</code>;
       case "list":
         if (this.props.node.ordered) {
-          return <ol>{this.props.node.children.map(c => <MdNode node={c} />)}</ol>;
+          return React.createElement("ol", {}
+            , ...this.props.node.children.map(c => <MdNode node={c} />));
         } else {
-          return <ul>{this.props.node.children.map(c => <MdNode node={c} />)}</ul>;
+          return React.createElement("ul", {}
+            , ...this.props.node.children.map(c => <MdNode node={c} />));
         }
       case "listItem":
-        return <li>{this.props.node.children.map(c => <MdNode node={c} />)}</li>;
+        return React.createElement("li", {}
+          , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "table":
         return <MdTable node={this.props.node} />;
       case "thematicBreak":
@@ -182,11 +170,14 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}>{
       case "break":
         return <br />;
       case "emphasis":
-        return <em>{this.props.node.children.map(c => <MdNode node={c} />)}</em>;
+        return React.createElement("em", {}
+          , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "strong":
-        return <strong>{this.props.node.children.map(c => <MdNode node={c} />)}</strong>;
+        return React.createElement("strong", {}
+          , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "delete":
-        return <del>{this.props.node.children.map(c => <MdNode node={c} />)}</del>;
+        return React.createElement("del", {}
+          , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "link":
         return <MdLink node={this.props.node} />;
       case "image":
