@@ -11,6 +11,10 @@ import { Observable } from "rxjs";
 import { apiClient } from "./api-client";
 
 export function resForkSet(reses: api.ResFork[]): Observable<ResForkSetedTopic[]> {
+  if (reses.length === 0) {
+    return Observable.of([]);
+  }
+
   return apiClient
     .findTopicIn({ ids: Array.from(new Set(reses.map(r => r.fork))) })
     .map(topics => new Map(topics.map<[string, api.Topic]>(t => [t.id, t])))
@@ -18,6 +22,10 @@ export function resForkSet(reses: api.ResFork[]): Observable<ResForkSetedTopic[]
 }
 
 export function resHistorySet(reses: api.ResHistory[]): Observable<ResHistorySetedHistory[]> {
+  if (reses.length === 0) {
+    return Observable.of([]);
+  }
+
   return apiClient
     .findHistoryIn({ ids: Array.from(new Set(reses.map(r => r.history))) })
     .map(hs => new Map(hs.map<[string, api.History]>(h => [h.id, h])))
@@ -25,6 +33,10 @@ export function resHistorySet(reses: api.ResHistory[]): Observable<ResHistorySet
 }
 
 export function resTopicSet(reses: api.ResTopic[]): Observable<ResTopicSetedTopic[]> {
+  if (reses.length === 0) {
+    return Observable.of([]);
+  }
+
   return apiClient
     .findTopicIn({ ids: Array.from(new Set(reses.map(r => r.topic))) })
     .map(ts => new Map(ts.map<[string, api.Topic]>(t => [t.id, t])))
@@ -32,6 +44,14 @@ export function resTopicSet(reses: api.ResTopic[]): Observable<ResTopicSetedTopi
 }
 
 export function resNormalSet(token: api.Token | null, reses: api.ResNormal[]): Observable<ResNormalSetedProfile[]> {
+  if (reses.length === 0) {
+    return Observable.of([]);
+  }
+
+  if (reses.every(r => r.profile === null)) {
+    return Observable.of(reses as ResNormalSetedProfile[]);
+  }
+
   return apiClient
     .findProfileIn(token, {
       ids: Array.from(new Set(reses.map(r => r.profile).filter<string>((p): p is string => p !== null))),
