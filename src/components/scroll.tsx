@@ -186,7 +186,14 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   render() {
     return <div ref="list">
-      {this.props.items.map(item => <div key={item.id} ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
+      {this.props.items
+        .filter((x, i, self) => self.findIndex(y => x.id === y.id) === i)
+        .sort((a, b) => this.props.newItemOrder === "top"
+          ? new Date(b.date).valueOf() - new Date(a.date).valueOf()
+          : new Date(a.date).valueOf() - new Date(b.date).valueOf())
+        .map(item => <div
+          key={item.id}
+          ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
     </div>;
   }
 
