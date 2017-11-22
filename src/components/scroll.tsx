@@ -247,7 +247,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
     this.subscriptions.push(this.props.scrollNewItem.subscribe(date => {
       if (date !== null) {
-        this._lock(() => Observable.fromPromise((async () => {
+        this._lock(async () => {
           this.props.onChangeItems(await this.props.findItem("before", date, true).toPromise());
 
           await this.afterViewChecked.first().toPromise();
@@ -260,7 +260,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
               await this.toBottom().toPromise();
               break;
           }
-        })())).then(() => {
+        }).then(() => {
           this.findAfter();
         });
       } else {
@@ -284,20 +284,18 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.afterViewChecked.complete();
   }
 
-  async _lock(call: () => Observable<void>) {
+  async _lock(call: () => Promise<void>) {
     if (this._isLock) {
       return;
     }
 
     this._isLock = true;
-    call()
-      .subscribe(undefined, e => {
-        console.error(e);
-        this._isLock = false;
-      },
-      () => {
-        this._isLock = false;
-      });
+    try {
+      await call();
+    } catch (e) {
+      console.error(e);
+    }
+    this._isLock = false;
   }
 
   findAfter() {
@@ -305,7 +303,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     if (last === undefined) {
       this.findNew();
     } else {
-      this._lock(() => Observable.fromPromise((async () => {
+      this._lock(async () => {
         let ise: {
           y: number;
           item: ListItem<T>;
@@ -338,7 +336,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
             await this.setTopElement(ise).toPromise();
             break;
         }
-      })()));
+      });
     }
   }
 
@@ -347,7 +345,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     if (first === undefined) {
       this.findNew();
     } else {
-      this._lock(() => Observable.fromPromise((async () => {
+      this._lock(async () => {
         let ise: {
           y: number;
           item: ListItem<T>;
@@ -379,12 +377,12 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
             await this.setBottomElement(ise).toPromise();
             break;
         }
-      })()));
+      });
     }
   }
 
   findNew() {
-    this._lock(() => Observable.fromPromise((async () => {
+    this._lock(async () => {
       this.props.onChangeItems(await this.props.findNewItem().toPromise());
 
       await this.afterViewChecked.first().toPromise();
@@ -397,6 +395,6 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
           await this.toTop().toPromise();
           break;
       }
-    })()));
+    });
   }
 }
