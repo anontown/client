@@ -3,10 +3,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {
   Observable,
-  Subject,
   Subscription,
 } from "rxjs";
 import { list } from "../utils";
+import { setTimeout } from "timers";
 
 interface ListItemData {
   id: string;
@@ -39,6 +39,8 @@ export interface ScrollProps<T extends ListItemData> {
   updateItem: Observable<T>;
   newItem: Observable<T>;
   dataToEl: (data: T) => JSX.Element;
+  style?: React.CSSProperties;
+  className?:string;
 }
 
 interface ScrollState {
@@ -64,9 +66,16 @@ class HTMLElementData {
   }
 }
 
+function sleep(ms: number) {
+  return new Promise<void>(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
 export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<T>, ScrollState> {
   subscriptions: Subscription[] = [];
-  afterViewChecked = new Subject<void>();
   _isLock = false;
 
   constructor(props: ScrollProps<T>) {
@@ -81,20 +90,14 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     return ReactDOM.findDOMNode(this.refs.list) as HTMLElement;
   }
 
-  toTop() {
-    return Observable
-      .timer(0)
-      .do(() => {
-        this.el.scrollTop = 0;
-      });
+  async toTop() {
+    await sleep(0);
+    this.el.scrollTop = 0;
   }
 
-  toBottom() {
-    return Observable
-      .timer(0)
-      .do(() => {
-        this.el.scrollTop = this.el.scrollHeight;
-      });
+  async toBottom() {
+    await sleep(0);
+    this.el.scrollTop = this.el.scrollHeight;
   }
 
   dataToListItem(data: T): ListItem<T> {
@@ -104,88 +107,76 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     };
   }
 
-  setTopElement(item: ItemScrollData<T>) {
-    return Observable
-      .timer(0)
-      .do(() => {
-        this.el.scrollTop += (item.el.raw.offsetTop + item.el.raw.offsetHeight / 2) - item.y;
-      });
+  async setTopElement(item: ItemScrollData<T>) {
+    await sleep(0);
+    this.el.scrollTop += (item.el.raw.offsetTop + item.el.raw.offsetHeight / 2) - item.y;
   }
 
-  getTopElement() {
-    return Observable
-      .timer(0)
-      .map(() => {
-        // 最短距離のアイテム
-        const minItem = this.props.items
-          .map(item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
-          .reduce<{
-            item: ListItem<T>;
-            el: HTMLElementData;
-          } | null>((min, item) => {
-            if (min === null) {
-              return item;
-            } else if (Math.abs(min.el.raw.getBoundingClientRect().top +
-              min.el.raw.getBoundingClientRect().height / 2) >
-              Math.abs(item.el.raw.getBoundingClientRect().top +
-                item.el.raw.getBoundingClientRect().height / 2)) {
-              return item;
-            } else {
-              return min;
-            }
-          }, null);
-
-        if (minItem !== null) {
-          return { ...minItem, y: minItem.el.raw.offsetTop + minItem.el.raw.offsetHeight / 2 };
+  async getTopElement() {
+    sleep(0);
+    // 最短距離のアイテム
+    const minItem = this.props.items
+      .map(item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
+      .reduce<{
+        item: ListItem<T>;
+        el: HTMLElementData;
+      } | null>((min, item) => {
+        if (min === null) {
+          return item;
+        } else if (Math.abs(min.el.raw.getBoundingClientRect().top +
+          min.el.raw.getBoundingClientRect().height / 2) >
+          Math.abs(item.el.raw.getBoundingClientRect().top +
+            item.el.raw.getBoundingClientRect().height / 2)) {
+          return item;
         } else {
-          return null;
+          return min;
         }
-      });
+      }, null);
+
+    if (minItem !== null) {
+      return { ...minItem, y: minItem.el.raw.offsetTop + minItem.el.raw.offsetHeight / 2 };
+    } else {
+      return null;
+    }
   }
 
-  setBottomElement(item: ItemScrollData<T>) {
-    return Observable
-      .timer(0)
-      .do(() => {
-        this.el.scrollTop += (item.el.raw.offsetTop + item.el.raw.offsetHeight / 2) - item.y;
-      });
+  async setBottomElement(item: ItemScrollData<T>) {
+    await sleep(0);
+    this.el.scrollTop += (item.el.raw.offsetTop + item.el.raw.offsetHeight / 2) - item.y;
   }
 
-  getBottomElement() {
-    return Observable
-      .timer(0)
-      .map(() => {
-        // 最短距離のアイテム
-        const minItem = this.props.items
-          .map(item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
-          .reduce<{
-            item: ListItem<T>;
-            el: HTMLElementData;
-          } | null>((min, item) => {
-            if (min === null) {
-              return item;
-            } else if (Math.abs(window.innerHeight -
-              (min.el.raw.getBoundingClientRect().top +
-                min.el.raw.getBoundingClientRect().height / 2)) >
-              Math.abs(window.innerHeight -
-                (item.el.raw.getBoundingClientRect().top +
-                  item.el.raw.getBoundingClientRect().height / 2))) {
-              return item;
-            } else {
-              return min;
-            }
-          }, null);
-
-        if (minItem !== null) {
-          return { ...minItem, y: minItem.el.raw.offsetTop + minItem.el.raw.offsetHeight / 2 };
+  async getBottomElement() {
+    await sleep(0);
+    // 最短距離のアイテム
+    const minItem = this.props.items
+      .map(item => ({ item: this.dataToListItem(item), el: this.getItemEl(item.id) }))
+      .reduce<{
+        item: ListItem<T>;
+        el: HTMLElementData;
+      } | null>((min, item) => {
+        if (min === null) {
+          return item;
+        } else if (Math.abs(window.innerHeight -
+          (min.el.raw.getBoundingClientRect().top +
+            min.el.raw.getBoundingClientRect().height / 2)) >
+          Math.abs(window.innerHeight -
+            (item.el.raw.getBoundingClientRect().top +
+              item.el.raw.getBoundingClientRect().height / 2))) {
+          return item;
         } else {
-          return null;
+          return min;
         }
-      });
+      }, null);
+
+    if (minItem !== null) {
+      return { ...minItem, y: minItem.el.raw.offsetTop + minItem.el.raw.offsetHeight / 2 };
+    } else {
+      return null;
+    }
   }
 
   render() {
-    return <div ref="list">
+    return <div className={this.props.className} style={this.props.style} ref="list">
       {this.props.items
         .filter((x, i, self) => self.findIndex(y => x.id === y.id) === i)
         .sort((a, b) => this.props.newItemOrder === "top"
@@ -248,16 +239,13 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.subscriptions.push(this.props.scrollNewItem.subscribe(date => {
       if (date !== null) {
         this._lock(async () => {
-          this.props.onChangeItems(await this.props.findItem("before", date, true).toPromise());
-
-          await this.afterViewChecked.first().toPromise();
-
+          this.props.onChangeItems(await this.props.findItem("before", date, true).first().toPromise());
           switch (this.props.newItemOrder) {
             case "top":
-              await this.toTop().toPromise();
+              await this.toTop();
               break;
             case "bottom":
-              await this.toBottom().toPromise();
+              await this.toBottom();
               break;
           }
         }).then(() => {
@@ -275,13 +263,8 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }));
   }
 
-  componentDidUpdate() {
-    this.afterViewChecked.next();
-  }
-
   componentWillUnmount() {
     this.subscriptions.forEach(x => x.unsubscribe());
-    this.afterViewChecked.complete();
   }
 
   async _lock(call: () => Promise<void>) {
@@ -312,10 +295,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
         switch (this.props.newItemOrder) {
           case "bottom":
-            ise = await this.getBottomElement().toPromise();
+            ise = await this.getBottomElement();
             break;
           case "top":
-            ise = await this.getTopElement().toPromise();
+            ise = await this.getTopElement();
             break;
         }
 
@@ -324,16 +307,14 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.props.onChangeItems(this.props.items
-          .concat(await this.props.findItem("after", last.date, false).toPromise()));
-
-        await this.afterViewChecked.first().toPromise();
+          .concat(await this.props.findItem("after", last.date, false).first().toPromise()));
 
         switch (this.props.newItemOrder) {
           case "bottom":
-            await this.setBottomElement(ise).toPromise();
+            await this.setBottomElement(ise);
             break;
           case "top":
-            await this.setTopElement(ise).toPromise();
+            await this.setTopElement(ise);
             break;
         }
       });
@@ -353,10 +334,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         } | null = null;
         switch (this.props.newItemOrder) {
           case "bottom":
-            ise = await this.getTopElement().toPromise();
+            ise = await this.getTopElement();
             break;
           case "top":
-            ise = await this.getBottomElement().toPromise();
+            ise = await this.getBottomElement();
             break;
         }
 
@@ -365,16 +346,13 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.props.onChangeItems(this.props.items
-          .concat(await this.props.findItem("before", first.date, false).toPromise()));
-
-        await this.afterViewChecked.first().toPromise();
-
+          .concat(await this.props.findItem("before", first.date, false).first().toPromise()));
         switch (this.props.newItemOrder) {
           case "bottom":
-            await this.setTopElement(ise).toPromise();
+            await this.setTopElement(ise);
             break;
           case "top":
-            await this.setBottomElement(ise).toPromise();
+            await this.setBottomElement(ise);
             break;
         }
       });
@@ -383,16 +361,13 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   findNew() {
     this._lock(async () => {
-      this.props.onChangeItems(await this.props.findNewItem().toPromise());
-
-      await this.afterViewChecked.first().toPromise();
-
+      this.props.onChangeItems(await this.props.findNewItem().first().toPromise());
       switch (this.props.newItemOrder) {
         case "bottom":
-          await this.toBottom().toPromise();
+          await this.toBottom();
           break;
         case "top":
-          await this.toTop().toPromise();
+          await this.toTop();
           break;
       }
     });
