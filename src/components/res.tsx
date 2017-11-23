@@ -33,6 +33,8 @@ import { Md } from "./md";
 import { Profile } from "./profile";
 import { ResWrite } from "./res-write";
 import { Snack } from "./snack";
+import * as style from "./res.scss";
+
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -195,7 +197,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
       const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
 
       return (
-        <Paper>
+        <Paper className={style.container}>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
@@ -207,9 +209,9 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               onRequestClose={() => this.setState({ slowProfile: false })}>
               <Profile profile={this.props.res.profile} />
               }} />
-          </Dialog>
+              </Dialog>
             : null}
-          <div>
+          <div className={style.vote}>
             <IconButton onClick={() => this.onUV()} disabled={isSelf || this.props.user === null}>
               <HardwareKeyboardArrowUp />
             </IconButton>
@@ -217,7 +219,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               <HardwareKeyboardArrowDown />
             </IconButton>
           </div>
-          <div>
+          <div className={style.main}>
             <div>
               <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
                 {this.props.res.type === "normal"
@@ -245,7 +247,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               <span>
                 <span>
                   {this.props.res.uv - this.props.res.dv}ポイント
-          </span>
+                </span>
                 {isSelf && this.props.res.type === "normal"
                   ? <IconMenu
                     iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
@@ -278,16 +280,13 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ?
                     <Md body={this.props.res.topicObject.text} />
                     : null}
-              {
-                this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
-                  ? <div>
-                    <p>
-                      派生トピックが建ちました。
-            </p>
-                  </div>
-                  : null
-              }
-
+              {this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
+                ? <div>
+                  <p>
+                    派生トピックが建ちました。
+                    </p>
+                </div>
+                : null}
               {this.props.res.type === "fork"
                 ? <div>
                   <p>
@@ -325,8 +324,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   update={res => this.updateChildren(res)}
                   isPop={true} />)}
               </div>
-              : null
-            }
+              : null}
           </div>
         </Paper>
       );
