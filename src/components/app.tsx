@@ -22,6 +22,7 @@ import { updateUserData } from "../actions";
 import { UserData } from "../models";
 import * as pages from "../pages";
 import { Store } from "../reducers";
+import * as style from "./app.scss";
 
 const muiTheme = getMuiTheme(darkBaseTheme);
 
@@ -53,15 +54,8 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div style={{
-          position: "absolute",
-          top: "0",
-          right: "0",
-          left: "0",
-          bottom: "0",
-          backgroundColor: "black",
-        }}>
-          <Toolbar>
+        <div className={style.container}>
+          <Toolbar className={style.header}>
             <ToolbarGroup firstChild={true}>
               <ToolbarTitle text="Anontown" />
             </ToolbarGroup>
@@ -104,10 +98,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
               </IconButton>
             </ToolbarGroup>
           </Toolbar>
-          <div style={{
-            height: "calc(100vh - 56px)",
-            overflow: "auto",
-          }}>
+          <div className={style.main}>
             <Switch>
               <Route exact path="/" component={pages.HomePage} />
               <Route path="/res/:id" component={pages.ResPage} />
@@ -124,7 +115,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
             </Switch>
           </div>
         </div>
-      </MuiThemeProvider>
+      </MuiThemeProvider >
     );
   }
 });

@@ -13,3 +13,8 @@
       flex: 1;
   }
 }
+
+.mainScroll{
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}

@@ -34,6 +34,8 @@ import {
 import { ResSeted, UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient, resSetedCreate } from "../utils";
+import * as style from "./topic.scss";
+
 // ジェネリクス解除
 interface ResScroll { new(): Scroll<ResSeted>; }
 const ResScroll = Scroll as ResScroll;
@@ -168,6 +170,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
 
   render() {
     return <Page
+      disableScroll={true}
       sidebar={this.props.user !== null
         ? <TopicFavo detail={false} />
         : undefined}>
@@ -222,9 +225,9 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
           : null}
       </Dialog>
       {this.state.topic !== null
-        ? <div>
+        ? <div className={style.main}>
           <Paper>
-            <div>
+            <div className={style.subject}>
               {this.state.topic.type === "fork"
                 ? <icons.CommunicationCallSplit />
                 : null}
@@ -264,7 +267,9 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                 : null}
             </div>
           </Paper>
-          <ResScroll items={this.state.reses}
+          <ResScroll
+            className={style.reses}
+            items={this.state.reses}
             onChangeItems={reses => this.setState({ reses })}
             newItemOrder="bottom"
             findNewItem={() => {
