@@ -100,6 +100,12 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.el.scrollTop = this.el.scrollHeight;
   }
 
+  onChangeItems(items: Im.List<T>) {
+    this.props.onChangeItems(items
+      .filter((x, i, self) => self.findIndex(y => x.id === y.id) === i)
+      .sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf()));
+  }
+
   dataToListItem(data: T): ListItem<T> {
     return {
       data,
@@ -177,11 +183,9 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   render() {
     return <div className={this.props.className} style={this.props.style} ref="list">
-      {this.props.items
-        .filter((x, i, self) => self.findIndex(y => x.id === y.id) === i)
-        .sort((a, b) => this.props.newItemOrder === "top"
-          ? new Date(b.date).valueOf() - new Date(a.date).valueOf()
-          : new Date(a.date).valueOf() - new Date(b.date).valueOf())
+      {(this.props.newItemOrder === "top"
+        ? this.props.items.reverse()
+        : this.props.items)
         .map(item => <div
           key={item.id}
           ref={`item-${item.id}`}>{this.props.dataToEl(item)}</div>)}
@@ -239,7 +243,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.subscriptions.push(this.props.scrollNewItem.subscribe(date => {
       if (date !== null) {
         this._lock(async () => {
-          this.props.onChangeItems(await this.props.findItem("before", date, true).first().toPromise());
+          this.onChangeItems(await this.props.findItem("before", date, true).first().toPromise());
           switch (this.props.newItemOrder) {
             case "top":
               await this.toTop();
@@ -256,10 +260,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       }
     }));
     this.subscriptions.push(this.props.updateItem.subscribe(item => {
-      this.props.onChangeItems(list.update(this.props.items, item));
+      this.onChangeItems(list.update(this.props.items, item));
     }));
     this.subscriptions.push(this.props.newItem.subscribe(item => {
-      this.props.onChangeItems(this.props.items.push(item));
+      this.onChangeItems(this.props.items.push(item));
     }));
   }
 
@@ -306,7 +310,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
           return;
         }
 
-        this.props.onChangeItems(this.props.items
+        this.onChangeItems(this.props.items
           .concat(await this.props.findItem("after", last.date, false).first().toPromise()));
 
         switch (this.props.newItemOrder) {
@@ -345,7 +349,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
           return;
         }
 
-        this.props.onChangeItems(this.props.items
+        this.onChangeItems(this.props.items
           .concat(await this.props.findItem("before", first.date, false).first().toPromise()));
         switch (this.props.newItemOrder) {
           case "bottom":
@@ -361,7 +365,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   findNew() {
     this._lock(async () => {
-      this.props.onChangeItems(await this.props.findNewItem().first().toPromise());
+      this.onChangeItems(await this.props.findNewItem().first().toPromise());
       switch (this.props.newItemOrder) {
         case "bottom":
           await this.toBottom();
