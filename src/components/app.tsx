@@ -74,7 +74,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
               <IconMenu
                 iconButtonElement={
                   <IconButton touch={true}>
-                    <icons.ActionVerifiedUser />
+                    <icons.SocialPeople />
                   </IconButton>
                 }>
                 {this.props.user !== null
