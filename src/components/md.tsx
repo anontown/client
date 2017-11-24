@@ -1,9 +1,9 @@
 import { Dialog } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import YouTube from "react-youtube";
 import { Config } from "../env";
 import { camo, mdParser } from "../utils";
+import * as style from "./md.scss";
 
 type URLType = { type: "normal", url: string } |
   { type: "router", path: string } |
@@ -46,10 +46,13 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
         open={this.state.slow}
         autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ slow: false })}>
-        {this.state.slow
-          ? <YouTube videoId={this.props.videoID} />
-          : null}
-      </Dialog>,
+        <div className={style.youtube}>
+          <iframe
+            src={`https://www.youtube.com/embed/${this.props.videoID}`}
+            frameBorder="0">
+          </iframe>
+        </div>
+      </Dialog>
     ];
   }
 }
