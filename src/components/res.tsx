@@ -32,9 +32,8 @@ import {
 import { Md } from "./md";
 import { Profile } from "./profile";
 import { ResWrite } from "./res-write";
-import { Snack } from "./snack";
 import * as style from "./res.scss";
-
+import { Snack } from "./snack";
 
 interface UnconnectedResProps {
   res: ResSeted;

@@ -52,7 +52,7 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
             frameBorder="0">
           </iframe>
         </div>
-      </Dialog>
+      </Dialog>,
     ];
   }
 }
