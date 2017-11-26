@@ -55,13 +55,13 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
         {this.props.user !== null
-          ? <form onSubmit={() => this.submit()}>
+          ? <form>
             <Errors errors={this.state.errors} />
             <TextField
               floatingLabelText="タイトル"
               value={this.state.title}
               onChange={(_e, v) => this.setState({ title: v })} />
-            <RaisedButton type="submit" label="新規作成" />
+            <RaisedButton onClick={() => this.submit()} label="新規作成" />
           </form>
           : null}
         <hr />

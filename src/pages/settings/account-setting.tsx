@@ -83,7 +83,7 @@ export const AccountSettingPage = withRouter<{}>(connect(
         <Snack
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
-        <form onSubmit={() => this.onSubmit()}>
+        <form>
           <Errors errors={this.state.errors} />
           <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
           <TextField
@@ -94,7 +94,7 @@ export const AccountSettingPage = withRouter<{}>(connect(
             floatingLabelText="現在のパスワード"
             value={this.state.oldPass}
             onChange={(_e, v) => this.setState({ oldPass: v })} />
-          <RaisedButton type="submit" label="OK" />
+          <RaisedButton onClick={() => this.onSubmit()} label="OK" />
         </form>
       </Paper>
       : <div>ログインして下さい。</div>;

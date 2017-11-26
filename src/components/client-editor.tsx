@@ -37,11 +37,11 @@ export const ClientEditor = connect((state: Store) => ({ user: state.user }))
 
     render() {
       return this.props.user !== null
-        ? <form onSubmit={() => this.submit()}>
+        ? <form>
           <Errors errors={this.state.errors} />
           <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
           <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
-          <RaisedButton type="submit" label="OK" />
+          <RaisedButton onClick={() => this.submit()} label="OK" />
         </form>
         : <div>ログインして下さい</div>;
     }
@@ -56,14 +56,14 @@ export const ClientEditor = connect((state: Store) => ({ user: state.user }))
           id: this.props.client.id,
           name: this.state.name,
           url: this.state.url,
-        }).subscribe( client => {
+        }).subscribe(client => {
           if (this.props.onUpdate) {
             this.props.onUpdate(client);
           }
           this.setState({ errors: [] });
         }, error => {
           if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map( e => e.message) });
+            this.setState({ errors: error.errors.map(e => e.message) });
           } else {
             this.setState({ errors: ["エラーが発生しました"] });
           }
@@ -72,14 +72,14 @@ export const ClientEditor = connect((state: Store) => ({ user: state.user }))
         apiClient.createClient(this.props.user.token, {
           name: this.state.name,
           url: this.state.url,
-        }).subscribe( client => {
+        }).subscribe(client => {
           if (this.props.onAdd) {
             this.props.onAdd(client);
           }
           this.setState({ errors: [] });
         }, error => {
           if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map( e => e.message) });
+            this.setState({ errors: error.errors.map(e => e.message) });
           } else {
             this.setState({ errors: ["エラーが発生しました"] });
           }

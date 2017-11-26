@@ -52,14 +52,14 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
         reply: this.props.reply,
         profile: this.state.profile,
         age: this.state.age,
-      }).subscribe( res => {
+      }).subscribe(res => {
         if (this.props.onSubmit) {
           this.props.onSubmit(res);
         }
         this.setState({ errors: [] });
       }, error => {
         if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map( e => e.message) });
+          this.setState({ errors: error.errors.map(e => e.message) });
         } else {
           this.setState({ errors: ["エラーが発生しました"] });
         }
@@ -68,19 +68,19 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
 
     render() {
       return this.props.user !== null
-        ? <form onSubmit={() => this.onSubmit()} >
+        ? <form>
           <Errors errors={this.state.errors} />
           <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
           <Checkbox label="age" checked={this.state.age} onCheck={(_e, v) => this.setState({ age: v })} />
           <SelectField floatingLabelText="プロフ" value={null} onChange={(_e, _i, v) => this.setState({ profile: v })}>
             <MenuItem value={null} primaryText="なし" />
-            {this.props.user.profiles.map( p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
+            {this.props.user.profiles.map(p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
           </SelectField>
           <MdEditor value={this.state.body}
-            onChange={ v => this.setState({ body: v })}
+            onChange={v => this.setState({ body: v })}
             maxRows={5}
             minRows={1} />
-          <IconButton type="submit">
+          <IconButton onClick={() => this.onSubmit()}>
             <NavigationArrowForward />
           </IconButton>
         </form>

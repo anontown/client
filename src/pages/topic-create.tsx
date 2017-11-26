@@ -75,7 +75,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
                 ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
                 本当に建てますか？
             </Dialog>
-              <form onSubmit={() => this.submit()}>
+              <form>
                 <Errors errors={this.state.errors} />
                 <div>
                   <SelectField
@@ -97,7 +97,7 @@ export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user:
                 </div>
                 <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
                 <div>
-                  <RaisedButton type="submit" label="トピック作成" />
+                  <RaisedButton onClick={() => this.submit()} label="トピック作成" />
                 </div>
               </form>
             </Paper>

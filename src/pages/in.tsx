@@ -58,7 +58,7 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
       {this.props.user !== null
         ? <Redirect to="/" />
         : <Paper>
-          <form onSubmit={() => this.ok()}>
+          <form>
             <Errors errors={this.state.errors} />
             <TextField
               floatingLabelText="ID"
@@ -82,7 +82,7 @@ export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.us
                 onChange={(v: string) => this.setState({ recaptcha: v })} />
               : null}
 
-            <RaisedButton type="submit" label="OK" />
+            <RaisedButton label="OK" onClick={() => this.ok()} />
           </form>
         </Paper>}
     </Page>;

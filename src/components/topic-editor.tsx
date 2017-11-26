@@ -41,7 +41,7 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
 
     render() {
       return this.props.user !== null
-        ? <form onSubmit={() => this.submit()}>
+        ? <form>
           <Errors errors={this.state.errors} />
           <TextField
             floatingLabelText="タイトル"
@@ -49,7 +49,7 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
             onChange={(_e, v) => this.setState({ title: v })} />
           <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
           <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
-          <RaisedButton type="submit" label="OK" />
+          <RaisedButton onClick={() => this.submit()} label="OK" />
         </form>
         : <div>ログインして下さい</div>;
     }
