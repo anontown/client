@@ -43,8 +43,8 @@ export const TopicFavo = connect((state: Store) => ({ user: state.user }))
       }
       apiClient
         .findTopicIn({ ids: this.props.user.storage.topicFavo.toArray() })
-        .map( topics => topics.sort((a, b) => a.update > b.update ? -1 : a.update < b.update ? 1 : 0))
-        .subscribe( topics => {
+        .map(topics => topics.sort((a, b) => a.update > b.update ? -1 : a.update < b.update ? 1 : 0))
+        .subscribe(topics => {
           this.setState({ topicFavo: topics });
         }, () => {
           this.setState({ snackMsg: "トピック取得に失敗しました" });
@@ -62,7 +62,10 @@ export const TopicFavo = connect((state: Store) => ({ user: state.user }))
         {this.props.user !== null
           ? this.state.topicFavo !== null
             ? this.state.topicFavo.length !== 0 ?
-              this.state.topicFavo.map( topic => <TopicListItem topic={topic} detail={this.props.detail} />)
+              this.state.topicFavo.map(topic => <TopicListItem
+                key={topic.id}
+                topic={topic}
+                detail={this.props.detail} />)
               : <Paper>
                 お気に入りトピックがありません。
         <br />

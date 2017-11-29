@@ -27,8 +27,8 @@ export const TagFavo = connect((state: Store) => ({ user: state.user }))
     render() {
       return this.props.user !== null
         ? this.props.user.storage.tagsFavo.size !== 0 ?
-          this.props.user.storage.tagsFavo.map( tags =>
-            <Paper>
+          this.props.user.storage.tagsFavo.map(tags =>
+            <Paper key={tags.join(",")}>
               <TagsLink tags={tags.toArray()} />
             </Paper>).toArray()
           : <Paper>
