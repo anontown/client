@@ -7,8 +7,10 @@ import { applyMiddleware, createStore } from "redux";
 import { logger } from "redux-logger";
 import { App } from "./components/app";
 import { reducer } from "./reducers";
+import { epics } from "./epics";
+import { createEpicMiddleware } from 'redux-observable';
 
-const store = createStore(reducer, applyMiddleware(logger));
+const store = createStore(reducer, applyMiddleware(logger, createEpicMiddleware(epics)));
 
 ReactDOM.render(
   <BrowserRouter>
