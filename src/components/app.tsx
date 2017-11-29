@@ -79,13 +79,30 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
                 }>
                 {this.props.user !== null
                   ? [
-                    <MenuItem primaryText="プロフ管理" containerElement={<Link to="/profiles" />} />,
-                    <MenuItem primaryText="お知らせ" containerElement={<Link to="/messages" />} />,
-                    <MenuItem primaryText="設定" containerElement={<Link to="/settings/account" />} />,
-                    <MenuItem primaryText="プロフ管理" containerElement={<Link to="/profiles" />} />,
-                    <MenuItem primaryText="ログアウト" onClick={() => this.logout()} />,
+                    <MenuItem
+                      key="1"
+                      primaryText="プロフ管理"
+                      containerElement={<Link to="/profiles" />} />,
+                    <MenuItem
+                      key="2"
+                      primaryText="お知らせ"
+                      containerElement={<Link to="/messages" />} />,
+                    <MenuItem
+                      key="3"
+                      primaryText="設定"
+                      containerElement={<Link to="/settings/account" />} />,
+                    <MenuItem
+                      key="4"
+                      primaryText="プロフ管理"
+                      containerElement={<Link to="/profiles" />} />,
+                    <MenuItem
+                      key="5"
+                      primaryText="ログアウト"
+                      onClick={() => this.logout()} />,
                   ]
-                  : <MenuItem primaryText="ログイン/登録" containerElement={<Link to="/in" />} />}
+                  : <MenuItem
+                    primaryText="ログイン/登録"
+                    containerElement={<Link to="/in" />} />}
 
               </IconMenu>
               <IconButton containerElement={<a
