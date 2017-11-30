@@ -13,16 +13,16 @@ import { apiClient } from "../utils";
 
 export function load(auth: api.TokenMaster) {
   return apiClient.listTokenStorage(auth)
-    .map( storageNames => [...verArray, "main"].find( ver => storageNames.indexOf(ver) !== -1))
-    .mergeMap( name => {
+    .map(storageNames => [...verArray, "main"].find(ver => storageNames.indexOf(ver) !== -1))
+    .mergeMap(name => {
       if (name !== undefined) {
         return apiClient.getTokenStorage(auth, { name })
-          .map( jsonStr => JSON.parse(jsonStr) as StorageJSON);
+          .map(jsonStr => JSON.parse(jsonStr) as StorageJSON);
       } else {
         return Observable.of(initStorage);
       }
     })
-    .map( json => toStorage(convert(json)));
+    .map(json => toStorage(convert(json)));
 }
 
 export function save(auth: api.TokenMaster, storage: Storage) {
