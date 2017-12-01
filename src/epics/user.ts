@@ -3,7 +3,6 @@ import {
   ActionsObservable
 } from 'redux-observable'
 import { Actions } from "../actions";
-import { Store } from "../reducers";
 import { Observable } from 'rxjs';
 import {
   storageAPI

@@ -29,7 +29,6 @@ import {
 } from "../utils";
 import { TokenMaster } from "@anontown/api-client";
 import { Observable } from "rxjs";
-import { throttle } from "rxjs/operator/throttle";
 
 const muiTheme = getMuiTheme(darkBaseTheme);
 
