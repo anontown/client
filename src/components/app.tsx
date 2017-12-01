@@ -97,7 +97,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
                 </IconButton>
                 {this.props.user !== null
                   ? <IconButton containerElement={<Link to="/notifications" />}>
-                    <icons.NotificationAdb />
+                    <icons.SocialNotifications />
                   </IconButton>
                   : null}
                 <IconMenu
