@@ -137,7 +137,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
                 <IconButton containerElement={<a
                   href="https://document.anontown.com/"
                   target="_blank" />}>
-                  <icons.ActionBook />
+                  <icons.ActionHelp />
                 </IconButton>
                 <IconButton onClick={() => this.changeTheme()}>
                   <icons.ActionInvertColors />
