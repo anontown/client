@@ -88,10 +88,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
                   this.setState({ imageErrors: ["アップロードに失敗しました"] });
                 });
             }
-          }}>
-            {//<ImageAddAPhoto />
-            }
-          </input>
+          }} />
         </Dialog>
         <div>
           <IconButton onClick={() => this.setState({ slowImage: true })}>
