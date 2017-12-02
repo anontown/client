@@ -60,6 +60,7 @@ export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: st
               <div>
                 {this.state.profiles.map(p =>
                   <ProfileEditor
+                    key={p.id}
                     profile={p}
                     onUpdate={newProfile => this.update(newProfile)} />)}
               </div>
