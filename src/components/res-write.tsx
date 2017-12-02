@@ -74,7 +74,11 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
           <Checkbox label="age" checked={this.state.age} onCheck={(_e, v) => this.setState({ age: v })} />
           <SelectField floatingLabelText="プロフ" value={null} onChange={(_e, _i, v) => this.setState({ profile: v })}>
             <MenuItem value={null} primaryText="なし" />
-            {this.props.user.profiles.map(p => <MenuItem value={p.id} primaryText={`●${p.sn} ${p.name}`} />)}
+            {this.props.user.profiles.map(p =>
+              <MenuItem
+                key={p.id}
+                value={p.id}
+                primaryText={`●${p.sn} ${p.name}`} />)}
           </SelectField>
           <MdEditor value={this.state.body}
             onChange={v => this.setState({ body: v })}
