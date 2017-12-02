@@ -106,6 +106,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           toggled={this.state.preview}
           onToggle={(_e, v) => this.setState({ preview: v })} />
         <TextField
+          name="text"
           multiLine={true}
           rows={this.props.minRows || this.defaltMinRows}
           rowsMax={this.props.maxRows}
