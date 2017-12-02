@@ -48,8 +48,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowOekaki: false })}>
           <Errors errors={this.state.oekakiErrors} />
-          <Oekaki size={{ x: 320, y: 240 }} onSubmit={svg => {
-            const data = new Blob([svg], { type: "image/svg+xml" });
+          <Oekaki size={{ x: 320, y: 240 }} onSubmit={data => {
             imgur.upload(data)
               .subscribe(url => {
                 this.setState({ slowOekaki: false, oekakiErrors: undefined });
@@ -67,7 +66,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowImage: false })}>
           <Errors errors={this.state.imageErrors} />
-          <IconButton type="file" onChange={e => {
+          <input type="file" onChange={e => {
             const target = e.target as HTMLInputElement;
             const files = target.files;
             if (files !== null) {
@@ -90,8 +89,9 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
                 });
             }
           }}>
-            <ImageAddAPhoto />
-          </IconButton>
+            {//<ImageAddAPhoto />
+            }
+          </input>
         </Dialog>
         <div>
           <IconButton onClick={() => this.setState({ slowImage: true })}>

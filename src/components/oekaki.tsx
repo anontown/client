@@ -13,6 +13,7 @@ import * as React from "react";
 import { RGBColor } from "react-color";
 import { Command } from "../utils";
 import { ColorPicker } from "./color-picker";
+import * as ReactDOM from "react-dom";
 
 export interface Vec2d {
   x: number;
@@ -30,7 +31,7 @@ export interface Line {
 export type Value = Command<Im.List<Line>>;
 
 export interface OekakiProps {
-  onSubmit?: (svg: string) => void;
+  onSubmit: (data: FormData) => void;
   size: Vec2d;
 }
 
@@ -39,11 +40,11 @@ interface OekakiState {
   color: RGBColor;
   fill: boolean;
   width: number;
+  line: Line | null;
 }
 
 export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   defaltMinRows = 5;
-  line: Line | null = null;
 
   constructor(props: OekakiProps) {
     super(props);
@@ -52,52 +53,71 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
       color: { r: 0, g: 0, b: 0 },
       fill: false,
       width: 1,
+      line: null
     };
   }
 
-  penDown(x: number, y: number) {
-    this.line = {
-      color: this.state.color,
-      fill: this.state.fill,
-      width: this.state.width,
-      m: { x, y },
-      lines: Im.List(),
-    };
+  getPoint(cx: number, cy: number): [number, number] {
+    const rect = ReactDOM.findDOMNode(this.refs['img']).getBoundingClientRect();
+    return [cx - rect.left, cy - rect.top];
   }
 
-  penUp() {
-    if (this.line !== null) {
-      this.setState({ value: this.state.value.change(this.state.value.value.push(this.line)) });
-      this.line = null;
+  penDown(cx: number, cy: number) {
+    const [x, y] = this.getPoint(cx, cy);
+    if (this.state.line === null) {
+      this.setState({
+        line: {
+          color: this.state.color,
+          fill: this.state.fill,
+          width: this.state.width,
+          m: { x, y },
+          lines: Im.List(),
+        }
+      });
     }
   }
 
-  penMove(x: number, y: number) {
-    if (this.line !== null) {
-      this.line.lines = this.line.lines.push({ x, y });
+  penUp() {
+    if (this.state.line !== null) {
+      this.setState({
+        value: this.state.value.change(this.state.value.value.push(this.state.line)),
+        line: null
+      });
+    }
+  }
+
+  penMove(cx: number, cy: number) {
+    const [x, y] = this.getPoint(cx, cy);
+    if (this.state.line !== null) {
+      this.setState({
+        line: {
+          ...this.state.line,
+          lines: this.state.line.lines.push({ x, y })
+        }
+      });
     }
   }
 
   toColorString(color: RGBColor): string {
-    return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
+    return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a || "1"})`;
   }
 
   get svg(): string {
-    const val = this.state.value.value;
+    const val = this.state.line !== null
+      ? this.state.value.value.push(this.state.line)
+      : this.state.value.value;
 
     return `
-<?xml version="1.0" encoding="utf-8"?>
 <svg width="${this.props.size.x}px"
   height="${this.props.size.y}px"
-  xmlns="http://www.w3.org/2000/svg"
-  baseProfile="full"
-  version="1.1">
-  ${val.map( p => `<path strokeLinecap="round"
-        strokeWidth="${p.width}"
+  xmlns="http://www.w3.org/2000/svg">
+  ${val.map(p => `
+      <g stroke-linecap="round"
+        stroke-width="${p.width}"
         stroke="${this.toColorString(p.color)}"
-        fill="${p.fill ? this.toColorString(p.color) : "none"}"
-        d="${`M ${p.m.x} ${p.m.y} ` + p.lines.map( l => `L ${l.x} ${l.y} `).join(" ")}"
-      />`)}
+        fill="${p.fill ? this.toColorString(p.color) : "none"}">
+        <path d="${`M ${p.m.x} ${p.m.y} ` + p.lines.map(l => `L ${l.x} ${l.y}`).join(" ")}"/>
+      </g>`).join("\n")}
 </svg>
     `;
   }
@@ -114,7 +134,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
             min={1}
             max={10}
             onChange={(_e, v) => this.setState({ width: v })} />
-          <ColorPicker color={this.state.color} onChange={ color => this.setState({ color })} />
+          <ColorPicker color={this.state.color} onChange={color => this.setState({ color })} />
           <Checkbox label="塗りつぶす"
             checked={this.state.fill}
             onCheck={(_e, v) => this.setState({ fill: v })} />
@@ -125,25 +145,55 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
             <ContentRedo />
           </IconButton >
           <IconButton onClick={() => {
-            if (this.props.onSubmit) {
-              this.props.onSubmit(this.svg);
+            //svg to blob
+            const img = ReactDOM.findDOMNode(this.refs['img']) as HTMLImageElement;
+            const canvas = document.createElement('canvas');
+            canvas.setAttribute("width", this.props.size.x.toString());
+            canvas.setAttribute("height", this.props.size.y.toString());
+            const ctx = canvas.getContext('2d');
+            if (ctx !== null) {
+              ctx.drawImage(img, 0, 0, this.props.size.x, this.props.size.y);
+              canvas.toBlob(blob => {
+                if (blob !== null) {
+                  const data = new FormData();
+                  data.append("image", blob, "oekaki.png");
+                  this.props.onSubmit(data);
+                }
+              });
             }
           }} >
             <FileFileUpload />
           </IconButton >
         </div >
-        <img src={"data:image/svg+xml," + encodeURIComponent(this.svg)}
+        <img
+          ref="img"
+          style={{
+            border: "solid 5px #888"
+          }}
+          src={"data:image/svg+xml," + encodeURIComponent(this.svg)}
           width={this.props.size.x}
           height={this.props.size.y}
-          onMouseDown={ e => this.penDown(e.clientX, e.clientY)}
-          onMouseUp={() => this.penUp()}
-          onMouseMove={ e => this.penMove(e.clientX, e.clientY)}
-          onTouchStart={ e => {
+          onMouseDown={e => {
+            e.preventDefault();
+            this.penDown(e.clientX, e.clientY);
+          }}
+          onMouseUp={e => {
+            e.preventDefault();
+            this.penUp();
+          }}
+          onMouseMove={e => {
+            e.preventDefault();
+            this.penMove(e.clientX, e.clientY);
+          }}
+          onTouchStart={e => {
             e.preventDefault();
             this.penDown(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
           }}
-          onTouchEnd={() => this.penUp()}
-          onTouchMove={ e => {
+          onTouchEnd={e => {
+            e.preventDefault();
+            this.penUp();
+          }}
+          onTouchMove={e => {
             e.preventDefault();
             this.penMove(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
           }}
