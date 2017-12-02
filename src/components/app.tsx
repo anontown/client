@@ -122,10 +122,6 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
                         containerElement={<Link to="/settings/account" />} />,
                       <MenuItem
                         key="4"
-                        primaryText="プロフ管理"
-                        containerElement={<Link to="/profiles" />} />,
-                      <MenuItem
-                        key="5"
                         primaryText="ログアウト"
                         onClick={() => this.logout()} />,
                     ]
