@@ -1,11 +1,11 @@
 import {
+  ActionsObservable,
   combineEpics,
-  ActionsObservable
-} from 'redux-observable'
+} from "redux-observable";
+import { Observable } from "rxjs";
 import { Actions } from "../actions";
-import { Observable } from 'rxjs';
 import {
-  storageAPI
+  storageAPI,
 } from "../utils";
 
 function updateUserData(action$: ActionsObservable<Actions>): Observable<Actions> {
@@ -13,7 +13,7 @@ function updateUserData(action$: ActionsObservable<Actions>): Observable<Actions
     .ofType("UPDATE_USER_DATA")
     .debounceTime(5000)
     .mergeMap(action => {
-      let { data } = action;
+      const { data } = action;
       if (data !== null) {
         localStorage.setItem("token", JSON.stringify({
           id: data.token.id,

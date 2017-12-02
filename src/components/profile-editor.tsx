@@ -1,6 +1,6 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
-import { RaisedButton, TextField, Paper } from "material-ui";
+import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -43,9 +43,17 @@ export const ProfileEditor = connect((state: Store) => ({ user: state.user }))
         ? <Paper>
           <form>
             <Errors errors={this.state.errors} />
-            <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
-            <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-            <MdEditor value={this.state.body} onChange={v => this.setState({ body: v })} />
+            <TextField
+              floatingLabelText="ID"
+              value={this.state.sn}
+              onChange={(_e, v) => this.setState({ sn: v })} />
+            <TextField
+              floatingLabelText="名前"
+              value={this.state.name}
+              onChange={(_e, v) => this.setState({ name: v })} />
+            <MdEditor
+              value={this.state.body}
+              onChange={v => this.setState({ body: v })} />
             <RaisedButton onClick={() => this.submit()} label="OK" />
           </form>
         </Paper>

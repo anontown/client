@@ -11,9 +11,9 @@ import {
 } from "material-ui/svg-icons";
 import * as React from "react";
 import { RGBColor } from "react-color";
+import * as ReactDOM from "react-dom";
 import { Command } from "../utils";
 import { ColorPicker } from "./color-picker";
-import * as ReactDOM from "react-dom";
 
 export interface Vec2d {
   x: number;
@@ -53,12 +53,12 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
       color: { r: 0, g: 0, b: 0 },
       fill: false,
       width: 1,
-      line: null
+      line: null,
     };
   }
 
   getPoint(cx: number, cy: number): [number, number] {
-    const rect = ReactDOM.findDOMNode(this.refs['img']).getBoundingClientRect();
+    const rect = ReactDOM.findDOMNode(this.refs.img).getBoundingClientRect();
     return [cx - rect.left, cy - rect.top];
   }
 
@@ -72,7 +72,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
           width: this.state.width,
           m: { x, y },
           lines: Im.List(),
-        }
+        },
       });
     }
   }
@@ -81,7 +81,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
     if (this.state.line !== null) {
       this.setState({
         value: this.state.value.change(this.state.value.value.push(this.state.line)),
-        line: null
+        line: null,
       });
     }
   }
@@ -92,8 +92,8 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
       this.setState({
         line: {
           ...this.state.line,
-          lines: this.state.line.lines.push({ x, y })
-        }
+          lines: this.state.line.lines.push({ x, y }),
+        },
       });
     }
   }
@@ -145,12 +145,12 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
             <ContentRedo />
           </IconButton >
           <IconButton onClick={() => {
-            //svg to blob
-            const img = ReactDOM.findDOMNode(this.refs['img']) as HTMLImageElement;
-            const canvas = document.createElement('canvas');
+            // svg to formdata
+            const img = ReactDOM.findDOMNode(this.refs.img) as HTMLImageElement;
+            const canvas = document.createElement("canvas");
             canvas.setAttribute("width", this.props.size.x.toString());
             canvas.setAttribute("height", this.props.size.y.toString());
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext("2d");
             if (ctx !== null) {
               ctx.drawImage(img, 0, 0, this.props.size.x, this.props.size.y);
               canvas.toBlob(blob => {
@@ -168,7 +168,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
         <img
           ref="img"
           style={{
-            border: "solid 5px #888"
+            border: "solid 5px #888",
           }}
           src={"data:image/svg+xml," + encodeURIComponent(this.svg)}
           width={this.props.size.x}

@@ -1,3 +1,4 @@
+import { TokenMaster } from "@anontown/api-client";
 import {
   IconButton,
   IconMenu,
@@ -17,18 +18,17 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
+import { Observable } from "rxjs";
 import { ObjectOmit } from "typelevel-ts";
 import { updateUserData } from "../actions";
 import { UserData } from "../models";
 import * as pages from "../pages";
 import { Store } from "../reducers";
-import * as style from "./app.scss";
 import {
+  apiClient,
   createUserData,
-  apiClient
 } from "../utils";
-import { TokenMaster } from "@anontown/api-client";
-import { Observable } from "rxjs";
+import * as style from "./app.scss";
 
 const muiTheme = getMuiTheme(darkBaseTheme);
 
@@ -40,7 +40,7 @@ interface UnconnectedAppProps {
 export type AppProps = ObjectOmit<UnconnectedAppProps, "user" | "updateUser">;
 
 interface AppState {
-  isInit: boolean
+  isInit: boolean;
 }
 
 export const App = connect((state: Store) => ({ user: state.user }), dispatch => ({
@@ -49,7 +49,7 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
   constructor(props: UnconnectedAppProps) {
     super(props);
     this.state = {
-      isInit: false
+      isInit: false,
     };
 
     Observable.of(localStorage.getItem("token"))

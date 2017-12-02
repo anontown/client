@@ -5,10 +5,10 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { applyMiddleware, createStore } from "redux";
 import { logger } from "redux-logger";
+import { createEpicMiddleware } from "redux-observable";
 import { App } from "./components/app";
-import { reducer } from "./reducers";
 import { epics } from "./epics";
-import { createEpicMiddleware } from 'redux-observable';
+import { reducer } from "./reducers";
 
 const store = createStore(reducer, applyMiddleware(logger, createEpicMiddleware(epics)));
 
