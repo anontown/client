@@ -17,6 +17,7 @@ export interface MdEditorProps {
   maxRows?: number;
   minRows?: number;
   onChange?: (newValue: string) => void;
+  fullWidth?: boolean
 }
 
 interface MdEditorState {
@@ -106,13 +107,14 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           name="text"
           multiLine={true}
           rows={this.props.minRows || this.defaltMinRows}
-          rowsMax={this.props.maxRows}
+          rowsMax={this.props.maxRows || this.defaltMinRows}
           value={this.props.value}
           onChange={(_, v) => {
             if (this.props.onChange) {
               this.props.onChange(v);
             }
-          }} />
+          }}
+          fullWidth={this.props.fullWidth} />
         {this.state.preview
           ? <Md body={this.props.value} />
           : null}
