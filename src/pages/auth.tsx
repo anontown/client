@@ -31,8 +31,8 @@ export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.
         snackMsg: null,
       };
 
-      const id: string | undefined = qs.parse(this.props.location.search).client;
-      if (id !== undefined) {
+      const id: string | string[] | undefined = qs.parse(this.props.location.search).client;
+      if (typeof id === "string") {
         apiClient.findClientOne(this.props.user !== null ? this.props.user.token : null, {
           id,
         }).subscribe(client => {

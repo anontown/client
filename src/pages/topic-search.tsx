@@ -35,6 +35,7 @@ import {
 import { UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient } from "../utils";
+import { isArray } from "util";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserData | null;
@@ -63,10 +64,18 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
 
   constructor(props: TopicSearchPageProps) {
     super(props);
-    const query: { [key: string]: string } = qs.parse(this.props.location.search);
-    const title = query.title || "";
-    const tags = query.tags ? query.tags.split(",") : [];
+    const query: { [key: string]: string | string[] | undefined } = qs.parse(this.props.location.search);
+
+    const qTitle = query.title;
+    const title = typeof qTitle === "string" ? qTitle : "";
+
+    const qTags = query.tags;
+    const tags = isArray(qTags) ? qTags
+      : typeof qTags === "string" ? [qTags]
+        : [];
+
     const dead = query.dead === "true";
+
     this.state = {
       snackMsg: null,
       topics: Im.List(),
@@ -87,7 +96,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
           search: qs.stringify({
             title: this.state.formTitle,
             dead: this.state.formDead.toString(),
-            tags: this.state.formTags.join(","),
+            tags: this.state.formTags.toArray(),
           }),
         });
         this.setState({
