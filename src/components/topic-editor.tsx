@@ -44,11 +44,18 @@ export const TopicEditor = connect((state: Store) => ({ user: state.user }))
         ? <form>
           <Errors errors={this.state.errors} />
           <TextField
+            fullWidth
             floatingLabelText="タイトル"
             value={this.state.title}
             onChange={(_e, v) => this.setState({ title: v })} />
-          <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
-          <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
+          <TagsInput
+            value={this.state.tags}
+            onChange={v => this.setState({ tags: v })}
+            fullWidth />
+          <MdEditor
+            fullWidth
+            value={this.state.text}
+            onChange={v => this.setState({ text: v })} />
           <RaisedButton onClick={() => this.submit()} label="OK" />
         </form>
         : <div>ログインして下さい</div>;

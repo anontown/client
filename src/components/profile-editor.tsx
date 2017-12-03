@@ -44,14 +44,17 @@ export const ProfileEditor = connect((state: Store) => ({ user: state.user }))
           <form>
             <Errors errors={this.state.errors} />
             <TextField
+              fullWidth
               floatingLabelText="ID"
               value={this.state.sn}
               onChange={(_e, v) => this.setState({ sn: v })} />
             <TextField
+              fullWidth
               floatingLabelText="名前"
               value={this.state.name}
               onChange={(_e, v) => this.setState({ name: v })} />
             <MdEditor
+              fullWidth
               value={this.state.body}
               onChange={v => this.setState({ body: v })} />
             <RaisedButton onClick={() => this.submit()} label="OK" />

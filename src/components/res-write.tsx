@@ -70,9 +70,14 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
       return this.props.user !== null
         ? <form>
           <Errors errors={this.state.errors} />
-          <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-          <Checkbox label="age" checked={this.state.age} onCheck={(_e, v) => this.setState({ age: v })} />
-          <SelectField floatingLabelText="プロフ" value={null} onChange={(_e, _i, v) => this.setState({ profile: v })}>
+          <TextField
+            floatingLabelText="名前"
+            value={this.state.name}
+            onChange={(_e, v) => this.setState({ name: v })} />
+          <SelectField
+            floatingLabelText="プロフ"
+            value={null}
+            onChange={(_e, _i, v) => this.setState({ profile: v })}>
             <MenuItem value={null} primaryText="なし" />
             {this.props.user.profiles.map(p =>
               <MenuItem
@@ -80,10 +85,15 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
                 value={p.id}
                 primaryText={`●${p.sn} ${p.name}`} />)}
           </SelectField>
+          <Checkbox
+            label="age"
+            checked={this.state.age}
+            onCheck={(_e, v) => this.setState({ age: v })} />
           <MdEditor value={this.state.body}
             onChange={v => this.setState({ body: v })}
             maxRows={5}
-            minRows={1} />
+            minRows={1}
+            fullWidth />
           <IconButton onClick={() => this.onSubmit()}>
             <NavigationArrowForward />
           </IconButton>

@@ -164,20 +164,27 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
           </IconButton>
           : null}
         <div>
-          <TagsInput value={this.state.formTags} onChange={v => {
-            this.setState({ formTags: v });
-            this.formChange$.next();
-          }} />
-          <TextField floatingLabelText="タイトル" value={this.state.formTitle} onChange={(_e, v) => {
-            this.setState({ formTitle: v });
-            this.formChange$.next();
-          }} />
+          <TagsInput
+            fullWidth
+            value={this.state.formTags}
+            onChange={v => {
+              this.setState({ formTags: v });
+              this.formChange$.next();
+            }} />
+          <TextField
+            fullWidth
+            floatingLabelText="タイトル"
+            value={this.state.formTitle}
+            onChange={(_e, v) => {
+              this.setState({ formTitle: v });
+              this.formChange$.next();
+            }} />
           <Checkbox label="過去ログも" checked={this.state.formDead} onCheck={(_e, v) => {
             this.setState({ formDead: v });
             this.formChange$.next();
           }} />
         </div>
-      </Paper >
+      </Paper>
       <div>
         {this.props.user !== null
           ? <IconButton containerElement={<Link to="/topic/create" />}>
