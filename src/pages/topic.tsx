@@ -65,32 +65,30 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
   scrollNewItem = new ReplaySubject<string | null>(1);
   updateItem = new Subject<ResSeted>();
   newItem = Observable.empty<ResSeted>();
+  initState: TopicPageState = {
+    snackMsg: null,
+    topic: null,
+    reses: Im.List(),
+    isResWrite: false,
+    isAutoScrollDialog: false,
+    autoScrollSpeed: 15,
+    isAutoScroll: false,
+    isDataDialog: false,
+    isForkDialog: false,
+    isEditDialog: false,
+  };
 
-  constructor(props: TopicPageProps) {
-    super(props);
-    this.state = {
-      snackMsg: null,
-      topic: null,
-      reses: Im.List(),
-      isResWrite: false,
-      isAutoScrollDialog: false,
-      autoScrollSpeed: 15,
-      isAutoScroll: false,
-      isDataDialog: false,
-      isForkDialog: false,
-      isEditDialog: false,
-    };
-
-    apiClient.findTopicOne({ id: this.props.match.params.id })
+  init(props: TopicPageProps) {
+    apiClient.findTopicOne({ id: props.match.params.id })
       .subscribe(topic => {
         this.setState({ topic });
       }, () => {
         this.setState({ snackMsg: "トピック取得に失敗" });
       });
 
-    const user = this.props.user;
+    const user = props.user;
     if (user !== null) {
-      const topicRead = user.storage.topicRead.get(this.props.match.params.id);
+      const topicRead = user.storage.topicRead.get(props.match.params.id);
       if (topicRead !== undefined) {
         apiClient.findResOne(user.token, {
           id: topicRead.res,
@@ -106,7 +104,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       this.scrollNewItem.next(null);
     }
 
-    this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, { id: this.props.match.params.id })
+    this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, { id: props.match.params.id })
       .do(x => {
         if (this.state.topic !== null) {
           this.setState({ topic: { ...this.state.topic, resCount: x.count } });
@@ -114,6 +112,20 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         }
       })
       .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map(reses => reses[0]));
+  }
+
+  constructor(props: TopicPageProps) {
+    super(props);
+    this.state = this.initState;
+    this.init(props);
+  }
+
+  componentWillReceiveProps(nextProps: TopicPageProps) {
+    if (this.props.match.params.id !== nextProps.match.params.id) {
+      this.setState(this.initState, () => {
+        this.init(nextProps);
+      });
+    }
   }
 
   storageSave(res: string | null) {
