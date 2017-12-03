@@ -112,17 +112,19 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
   }
 
   componentWillReceiveProps(nextProps: TopicSearchPageProps) {
-    const query = this.parseQuery(nextProps);
-    this.setState({
-      title: query.title,
-      dead: query.dead,
-      tags: query.tags,
-      formTitle: query.title,
-      formDead: query.dead,
-      formTags: Im.Set(query.tags),
-    }, () => {
-      this.update();
-    });
+    if (this.props.location.search !== nextProps.location.search) {
+      const query = this.parseQuery(nextProps);
+      this.setState({
+        title: query.title,
+        dead: query.dead,
+        tags: query.tags,
+        formTitle: query.title,
+        formDead: query.dead,
+        formTags: Im.Set(query.tags),
+      }, () => {
+        this.update();
+      });
+    }
   }
 
   componentWillUnmount() {
