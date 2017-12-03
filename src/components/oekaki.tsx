@@ -12,7 +12,10 @@ import {
 import * as React from "react";
 import { RGBColor } from "react-color";
 import * as ReactDOM from "react-dom";
-import { Command } from "../utils";
+import {
+  Command,
+  toColorString
+} from "../utils";
 import { ColorPicker } from "./color-picker";
 
 export interface Vec2d {
@@ -98,10 +101,6 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
     }
   }
 
-  toColorString(color: RGBColor): string {
-    return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a || "1"})`;
-  }
-
   get svg(): string {
     const val = this.state.line !== null
       ? this.state.value.value.push(this.state.line)
@@ -114,8 +113,8 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   ${val.map(p => `
       <g stroke-linecap="round"
         stroke-width="${p.width}"
-        stroke="${this.toColorString(p.color)}"
-        fill="${p.fill ? this.toColorString(p.color) : "none"}">
+        stroke="${toColorString(p.color)}"
+        fill="${p.fill ? toColorString(p.color) : "none"}">
         <path d="${`M ${p.m.x} ${p.m.y} ` + p.lines.map(l => `L ${l.x} ${l.y}`).join(" ")}"/>
       </g>`).join("\n")}
 </svg>
