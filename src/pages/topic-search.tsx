@@ -64,27 +64,18 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
 
   constructor(props: TopicSearchPageProps) {
     super(props);
-    const query: { [key: string]: string | string[] | undefined } = qs.parse(this.props.location.search);
 
-    const qTitle = query.title;
-    const title = typeof qTitle === "string" ? qTitle : "";
-
-    const qTags = query.tags;
-    const tags = isArray(qTags) ? qTags
-      : typeof qTags === "string" ? [qTags]
-        : [];
-
-    const dead = query.dead === "true";
+    const query = this.parseQuery(props);
 
     this.state = {
       snackMsg: null,
       topics: Im.List(),
-      tags,
-      title,
-      dead,
-      formTitle: title,
-      formDead: dead,
-      formTags: Im.Set(tags),
+      tags: query.tags,
+      title: query.title,
+      dead: query.dead,
+      formTitle: query.title,
+      formDead: query.dead,
+      formTags: Im.Set(query.tags),
       count: 0,
     };
 
@@ -99,16 +90,39 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
             tags: this.state.formTags.toArray(),
           }),
         });
-        this.setState({
-          title: this.state.formTitle,
-          dead: this.state.formDead,
-          tags: this.state.formTags.toArray(),
-        }, () => {
-          this.update();
-        });
       }));
 
     this.more();
+  }
+
+  parseQuery(props: TopicSearchPageProps) {
+    const query: { [key: string]: string | string[] | undefined } = qs.parse(props.location.search);
+
+    const qTitle = query.title;
+    const title = typeof qTitle === "string" ? qTitle : "";
+
+    const qTags = query.tags;
+    const tags = isArray(qTags) ? qTags
+      : typeof qTags === "string" ? [qTags]
+        : [];
+
+    const dead = query.dead === "true";
+
+    return { title, tags, dead };
+  }
+
+  componentWillReceiveProps(nextProps: TopicSearchPageProps) {
+    const query = this.parseQuery(nextProps);
+    this.setState({
+      title: query.title,
+      dead: query.dead,
+      tags: query.tags,
+      formTitle: query.title,
+      formDead: query.dead,
+      formTags: Im.Set(query.tags),
+    }, () => {
+      this.update();
+    });
   }
 
   componentWillUnmount() {
