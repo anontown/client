@@ -11,6 +11,7 @@ import * as style from "./tags-input.scss";
 export interface TagsInputProps {
   value: Im.Set<string>;
   onChange?: (value: Im.Set<string>) => void;
+  fullWidth?: boolean
 }
 
 interface TagsInputState {
@@ -63,6 +64,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
         </span>).toArray()}
       </div>,
       <AutoComplete
+        fullWidth={this.props.fullWidth}
         key="input"
         floatingLabelText="タグ"
         dataSource={this.state.acTags.map(t => ({
