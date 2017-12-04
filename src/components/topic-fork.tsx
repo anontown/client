@@ -32,7 +32,7 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
       super(props);
       this.state = {
         errors: [],
-        title: this.props.topic.title,
+        title: "",
         children: [],
         snackMsg: null,
       };
