@@ -5,7 +5,7 @@ import {
   IconButton,
   IconMenu,
   MenuItem,
-  Paper,
+  Paper
 } from "material-ui";
 import * as icons from "material-ui/svg-icons";
 import * as React from "react";
@@ -186,6 +186,16 @@ export const Res = connect((state: Store) => ({ user: state.user }))
     }
 
     render(): JSX.Element {
+      const smallIcon = {
+        width: 18,
+        height: 18,
+      };
+      const small = {
+        width: 36,
+        height: 36,
+        padding: 8,
+      };
+
       const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
 
       return (
@@ -253,13 +263,19 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             <div>
               <span>
                 {this.props.res.type === "normal" && this.props.res.reply !== null
-                  ? <IconButton onClick={() => this.onSendReplyClock()}>
+                  ? <IconButton
+                    onClick={() => this.onSendReplyClock()}
+                    style={small}
+                    iconStyle={smallIcon}>
                     <icons.ContentSend />
                   </IconButton>
                   : null}
                 {this.props.res.replyCount !== 0
                   ? <span>
-                    <IconButton onClick={() => this.onReceiveReplyClock()}>
+                    <IconButton
+                      onClick={() => this.onReceiveReplyClock()}
+                      style={small}
+                      iconStyle={smallIcon}>
                       <icons.ContentReply />
                     </IconButton>
                     {this.props.res.replyCount}
