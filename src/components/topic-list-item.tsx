@@ -1,5 +1,5 @@
 import * as api from "@anontown/api-types";
-import { Badge, Paper } from "material-ui";
+import { Paper } from "material-ui";
 import {
   AvFiberNew,
   AvNotInterested,
@@ -46,7 +46,7 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
             {!this.props.topic.active ? <AvNotInterested /> : null}
             {this.props.topic.type === "one" ? <ImageLooksOne /> : null}
             {this.props.topic.type === "fork" ? <CommunicationCallSplit /> : null}
-            {newRes !== null && newRes !== 0 ? <Badge badgeContent={newRes}><AvFiberNew /></Badge> : null}
+            {newRes !== null && newRes !== 0 ? <AvFiberNew /> : null}
             <Link to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
           </div >
           {this.props.detail
@@ -61,8 +61,8 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
                 作成 {dateFormat.format(this.props.topic.date)} 更新 {dateFormat.format(this.props.topic.update)}
               </div>
               <div>
-                総レス数 {this.props.topic.resCount}
-              </div >
+                総レス数 {this.props.topic.resCount} {newRes !== null && newRes !== 0 ? <span>新着 {newRes}</span> : null}
+              </div>
             </div >
             : null
           }

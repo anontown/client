@@ -1,20 +1,13 @@
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
-  Badge,
   Dialog,
   IconButton,
   IconMenu,
   MenuItem,
   Paper,
 } from "material-ui";
-import {
-  ContentReply,
-  ContentSend,
-  HardwareKeyboardArrowDown,
-  HardwareKeyboardArrowUp,
-  NavigationMoreVert,
-} from "material-ui/svg-icons";
+import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -212,10 +205,10 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             : null}
           <div className={style.vote}>
             <IconButton onClick={() => this.onUV()} disabled={isSelf || this.props.user === null}>
-              <HardwareKeyboardArrowUp />
+              <icons.HardwareKeyboardArrowUp />
             </IconButton>
             <IconButton onClick={() => this.onDV()} disabled={isSelf || this.props.user === null}>
-              <HardwareKeyboardArrowDown />
+              <icons.HardwareKeyboardArrowDown />
             </IconButton>
           </div>
           <div className={style.main}>
@@ -249,7 +242,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                 </span>
                 {isSelf && this.props.res.type === "normal"
                   ? <IconMenu
-                    iconButtonElement={<IconButton><NavigationMoreVert /></IconButton>}
+                    iconButtonElement={<IconButton><icons.NavigationMoreVert /></IconButton>}
                     anchorOrigin={{ horizontal: "left", vertical: "top" }}
                     targetOrigin={{ horizontal: "left", vertical: "top" }}>
                     <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
@@ -261,15 +254,16 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               <span>
                 {this.props.res.type === "normal" && this.props.res.reply !== null
                   ? <IconButton onClick={() => this.onSendReplyClock()}>
-                    <ContentSend />
+                    <icons.ContentSend />
                   </IconButton>
                   : null}
                 {this.props.res.replyCount !== 0
-                  ? <Badge badgeContent={this.props.res.replyCount}>
+                  ? <span>
                     <IconButton onClick={() => this.onReceiveReplyClock()}>
-                      <ContentReply />
+                      <icons.ContentReply />
                     </IconButton>
-                  </Badge>
+                    {this.props.res.replyCount}
+                  </span>
                   : null}
               </span>
               {this.props.res.type === "normal" ?
