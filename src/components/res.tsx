@@ -210,7 +210,6 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               autoScrollBodyContent={true}
               onRequestClose={() => this.setState({ slowProfile: false })}>
               <Profile profile={this.props.res.profile} />
-              }} />
               </Dialog>
             : null}
           <div className={style.vote}>
