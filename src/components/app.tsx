@@ -6,6 +6,7 @@ import {
   Toolbar,
   ToolbarGroup,
   ToolbarTitle,
+  Dialog
 } from "material-ui";
 import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -17,9 +18,10 @@ import {
   Link,
   Route,
   Switch,
+  withRouter,
+  RouteComponentProps
 } from "react-router-dom";
 import { Observable } from "rxjs";
-import { ObjectOmit } from "typelevel-ts";
 import { updateUserData } from "../actions";
 import { UserData } from "../models";
 import * as pages from "../pages";
@@ -32,27 +34,37 @@ import * as style from "./app.scss";
 
 const muiTheme = getMuiTheme(darkBaseTheme);
 
-interface UnconnectedAppProps {
+interface AppProps extends RouteComponentProps<{}> {
   user: UserData | null;
   updateUser: (user: UserData | null) => void;
 }
-
-export type AppProps = ObjectOmit<UnconnectedAppProps, "user" | "updateUser">;
 
 interface AppState {
   isInit: boolean;
 }
 
-export const App = connect((state: Store) => ({ user: state.user }), dispatch => ({
-  updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
-}))(class extends React.Component<UnconnectedAppProps, AppState> {
-  constructor(props: UnconnectedAppProps) {
-    super(props);
-    this.state = {
-      isInit: false,
-    };
+const withModal = <P extends {}>(Page: React.ComponentType<P>) => {
+  return withRouter<P>((props: P & RouteComponentProps<{}>) => {
+    return <Dialog
+      open={true}
+      autoScrollBodyContent={true}
+      onRequestClose={() => {
+        props.history.goBack();
+      }}>
+      <Page {...props} />
+    </Dialog>
+  })
+};
 
-    Observable.of(localStorage.getItem("token"))
+export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
+  dispatch => ({
+    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
+  }))
+  (class extends React.Component<AppProps, AppState> {
+    previousLocation = this.props.location;
+
+    componentWillMount(){
+      Observable.of(localStorage.getItem("token"))
       .map(tokenStr => {
         if (tokenStr !== null) {
           return { ...JSON.parse(tokenStr), type: "master" } as TokenMaster;
@@ -69,96 +81,121 @@ export const App = connect((state: Store) => ({ user: state.user }), dispatch =>
         this.props.updateUser(null);
         this.setState({ isInit: true });
       });
-  }
+    }
 
-  changeTheme() {
-    // TODO: こんどやる
-  }
+    componentWillUpdate(nextProps: AppProps) {
+      const { location } = this.props
+      if (
+        nextProps.history.action !== 'POP' &&
+        (!location.state || !location.state.modal)
+      ) {
+        this.previousLocation = this.props.location
+      }
+    }
 
-  logout() {
-    this.props.updateUser(null);
-  }
+    constructor(props: AppProps) {
+      super(props);
+      this.state = {
+        isInit: false,
+      };
+    }
 
-  render() {
-    return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        {this.state.isInit
-          ? <div className={style.container}>
-            <Toolbar className={style.header}>
-              <ToolbarGroup firstChild={true}>
-                <ToolbarTitle text="Anontown" />
-              </ToolbarGroup>
-              <ToolbarGroup>
-                <IconButton containerElement={<Link to="/" />}>
-                  <icons.ActionHome />
-                </IconButton>
-                <IconButton containerElement={<Link to="/topic/search" />}>
-                  <icons.ActionSearch />
-                </IconButton>
-                {this.props.user !== null
-                  ? <IconButton containerElement={<Link to="/notifications" />}>
-                    <icons.SocialNotifications />
+    changeTheme() {
+      // TODO: こんどやる
+    }
+
+    logout() {
+      this.props.updateUser(null);
+    }
+
+    render() {
+      const { location } = this.props
+      const isModal = !!(
+        location.state &&
+        location.state.modal &&
+        this.previousLocation !== location
+      );
+
+      return (
+        <MuiThemeProvider muiTheme={muiTheme}>
+          {this.state.isInit
+            ? <div className={style.container}>
+              <Toolbar className={style.header}>
+                <ToolbarGroup firstChild={true}>
+                  <ToolbarTitle text="Anontown" />
+                </ToolbarGroup>
+                <ToolbarGroup>
+                  <IconButton containerElement={<Link to="/" />}>
+                    <icons.ActionHome />
                   </IconButton>
-                  : null}
-                <IconMenu
-                  iconButtonElement={
-                    <IconButton touch={true}>
-                      <icons.SocialPeople />
-                    </IconButton>
-                  }>
+                  <IconButton containerElement={<Link to="/topic/search" />}>
+                    <icons.ActionSearch />
+                  </IconButton>
                   {this.props.user !== null
-                    ? [
-                      <MenuItem
-                        key="1"
-                        primaryText="プロフ管理"
-                        containerElement={<Link to="/profiles" />} />,
-                      <MenuItem
-                        key="2"
-                        primaryText="お知らせ"
-                        containerElement={<Link to="/messages" />} />,
-                      <MenuItem
-                        key="3"
-                        primaryText="設定"
-                        containerElement={<Link to="/settings/account" />} />,
-                      <MenuItem
-                        key="4"
-                        primaryText="ログアウト"
-                        onClick={() => this.logout()} />,
-                    ]
-                    : <MenuItem
-                      primaryText="ログイン/登録"
-                      containerElement={<Link to="/in" />} />}
+                    ? <IconButton containerElement={<Link to="/notifications" />}>
+                      <icons.SocialNotifications />
+                    </IconButton>
+                    : null}
+                  <IconMenu
+                    iconButtonElement={
+                      <IconButton touch={true}>
+                        <icons.SocialPeople />
+                      </IconButton>
+                    }>
+                    {this.props.user !== null
+                      ? [
+                        <MenuItem
+                          key="1"
+                          primaryText="プロフ管理"
+                          containerElement={<Link to="/profiles" />} />,
+                        <MenuItem
+                          key="2"
+                          primaryText="お知らせ"
+                          containerElement={<Link to="/messages" />} />,
+                        <MenuItem
+                          key="3"
+                          primaryText="設定"
+                          containerElement={<Link to="/settings/account" />} />,
+                        <MenuItem
+                          key="4"
+                          primaryText="ログアウト"
+                          onClick={() => this.logout()} />,
+                      ]
+                      : <MenuItem
+                        primaryText="ログイン/登録"
+                        containerElement={<Link to="/in" />} />}
 
-                </IconMenu>
-                <IconButton containerElement={<a
-                  href="https://document.anontown.com/"
-                  target="_blank" />}>
-                  <icons.ActionHelp />
-                </IconButton>
-                <IconButton onClick={() => this.changeTheme()}>
-                  <icons.ActionInvertColors />
-                </IconButton>
-              </ToolbarGroup>
-            </Toolbar>
-            <div className={style.main}>
-              <Switch>
-                <Route exact path="/" component={pages.HomePage} />
-                <Route path="/res/:id" component={pages.ResPage} />
-                <Route path="/topic/search" component={pages.TopicSearchPage} />
-                <Route path="/topic/create" component={pages.TopicCreatePage} />
-                <Route path="/topic/:id" component={pages.TopicPage} />
-                <Route path="/profiles" component={pages.ProfilesPage} />
-                <Route path="/notifications" component={pages.NotificationsPage} />
-                <Route path="/messages" component={pages.MessagesPage} />
-                <Route path="/in" component={pages.InPage} />
-                <Route path="/auth" component={pages.AuthPage} />
-                <Route path="/settings" component={pages.SettingsPage} />
-                <Route component={pages.NotFoundPage} />
-              </Switch>
+                  </IconMenu>
+                  <IconButton containerElement={<a
+                    href="https://document.anontown.com/"
+                    target="_blank" />}>
+                    <icons.ActionHelp />
+                  </IconButton>
+                  <IconButton onClick={() => this.changeTheme()}>
+                    <icons.ActionInvertColors />
+                  </IconButton>
+                </ToolbarGroup>
+              </Toolbar>
+              <div className={style.main}>
+                <Switch location={isModal ? this.previousLocation : location}>
+                  <Route exact path="/" component={pages.HomePage} />
+                  <Route path="/res/:id" component={pages.ResPage} />
+                  <Route path="/topic/search" component={pages.TopicSearchPage} />
+                  <Route path="/topic/create" component={pages.TopicCreatePage} />
+                  <Route path="/topic/:id" component={pages.TopicPage} />
+                  <Route path="/profiles" component={pages.ProfilesPage} />
+                  <Route path="/notifications" component={pages.NotificationsPage} />
+                  <Route path="/messages" component={pages.MessagesPage} />
+                  <Route path="/in" component={pages.InPage} />
+                  <Route path="/auth" component={pages.AuthPage} />
+                  <Route path="/settings" component={pages.SettingsPage} />
+                  <Route component={pages.NotFoundPage} />
+                </Switch>
+                {isModal ? <Route path='/res/:id' component={withModal(pages.ResPage)} /> : null}
+              </div>
             </div>
-          </div>
-          : null}
-      </MuiThemeProvider >
-    );
-  }
-});
+            : null}
+        </MuiThemeProvider>
+      );
+    }
+  }));

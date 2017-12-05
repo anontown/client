@@ -240,11 +240,13 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   ? <span>削除</span>
                   : null}
               </a>
-              {dateFormat.format(this.props.res.date)}
               {this.props.res.type === "normal" && this.props.res.profile !== null
                 ? <a onClick={() => this.setState({ slowProfile: true })}>●{this.props.res.profile.sn}</a>
                 : null}
-              <Link to={`/res/${this.props.res.id}`}></Link>
+              <Link to={{
+                pathname: `/res/${this.props.res.id}`,
+                state: { modal: true }
+              }}>{dateFormat.format(this.props.res.date)}</Link>
               <a onClick={() => this.onHashClock()}>HASH:{this.props.res.hash.substr(0, 6)}</a>
               <span>
                 <span>
