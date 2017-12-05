@@ -12,3 +12,4 @@ export * from "./res";
 export * from "./topic-create";
 export * from "./topic-search";
 export * from "./topic";
+export * from "./profile";

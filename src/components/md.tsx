@@ -16,7 +16,11 @@ export interface MdProps {
 
 export function Md(props: MdProps) {
   const node = mdParser.parse(props.body);
-  return React.createElement("div", {},
+  return React.createElement("div", {
+    style: {
+      padding: "2px"
+    }
+  },
     ...node.children.map(c => <MdNode node={c} />));
 }
 

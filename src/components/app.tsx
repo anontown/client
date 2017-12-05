@@ -63,24 +63,24 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
   (class extends React.Component<AppProps, AppState> {
     previousLocation = this.props.location;
 
-    componentWillMount(){
+    componentWillMount() {
       Observable.of(localStorage.getItem("token"))
-      .map(tokenStr => {
-        if (tokenStr !== null) {
-          return { ...JSON.parse(tokenStr), type: "master" } as TokenMaster;
-        } else {
-          throw Error();
-        }
-      })
-      .mergeMap(token => apiClient.findTokenOne(token))
-      .mergeMap(token => createUserData(token))
-      .subscribe(data => {
-        this.props.updateUser(data);
-        this.setState({ isInit: true });
-      }, () => {
-        this.props.updateUser(null);
-        this.setState({ isInit: true });
-      });
+        .map(tokenStr => {
+          if (tokenStr !== null) {
+            return { ...JSON.parse(tokenStr), type: "master" } as TokenMaster;
+          } else {
+            throw Error();
+          }
+        })
+        .mergeMap(token => apiClient.findTokenOne(token))
+        .mergeMap(token => createUserData(token))
+        .subscribe(data => {
+          this.props.updateUser(data);
+          this.setState({ isInit: true });
+        }, () => {
+          this.props.updateUser(null);
+          this.setState({ isInit: true });
+        });
     }
 
     componentWillUpdate(nextProps: AppProps) {
@@ -189,9 +189,11 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
                   <Route path="/in" component={pages.InPage} />
                   <Route path="/auth" component={pages.AuthPage} />
                   <Route path="/settings" component={pages.SettingsPage} />
+                  <Route path='/profile/:id' component={pages.ProfilePage} />
                   <Route component={pages.NotFoundPage} />
                 </Switch>
                 {isModal ? <Route path='/res/:id' component={withModal(pages.ResPage)} /> : null}
+                {isModal ? <Route path='/profile/:id' component={withModal(pages.ProfilePage)} /> : null}
               </div>
             </div>
             : null}

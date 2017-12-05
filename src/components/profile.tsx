@@ -1,6 +1,7 @@
 import * as api from "@anontown/api-types";
 import * as React from "react";
 import { Md } from "./md";
+import { Paper } from "material-ui";
 
 export interface ProfileProps {
   profile: api.Profile;
@@ -16,11 +17,11 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
 
   render() {
     return (
-      <div>
+      <Paper>
         {this.props.profile.name}●{this.props.profile.sn}
         <hr />
         <Md body={this.props.profile.text} />
-      </div>
+      </Paper>
     );
   }
 }

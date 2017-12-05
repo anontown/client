@@ -1,7 +1,6 @@
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
-  Dialog,
   IconButton,
   IconMenu,
   MenuItem,
@@ -23,7 +22,6 @@ import {
   resSetedCreate,
 } from "../utils";
 import { Md } from "./md";
-import { Profile } from "./profile";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
@@ -41,7 +39,6 @@ interface ResState {
   isReply: boolean;
   children: { reses: Im.List<ResSeted>, msg: string | null } | null;
   snackMsg: null | string;
-  slowProfile: boolean;
 }
 
 export const Res = connect((state: Store) => ({ user: state.user }))
@@ -52,7 +49,6 @@ export const Res = connect((state: Store) => ({ user: state.user }))
         isReply: false,
         children: null,
         snackMsg: null,
-        slowProfile: false,
       };
     }
 
@@ -203,15 +199,6 @@ export const Res = connect((state: Store) => ({ user: state.user }))
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
-          {this.props.res.type === "normal" && this.props.res.profile !== null
-            ? <Dialog
-              title="プロフィール"
-              open={this.state.slowProfile}
-              autoScrollBodyContent={true}
-              onRequestClose={() => this.setState({ slowProfile: false })}>
-              <Profile profile={this.props.res.profile} />
-              </Dialog>
-            : null}
           <div className={style.vote}>
             <IconButton onClick={() => this.onUV()} disabled={isSelf || this.props.user === null}>
               <icons.HardwareKeyboardArrowUp />
@@ -240,7 +227,12 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   : null}
               </a>
               {this.props.res.type === "normal" && this.props.res.profile !== null
-                ? <a onClick={() => this.setState({ slowProfile: true })}>●{this.props.res.profile.sn}</a>
+                ? <Link to={{
+                  pathname: `/profile/${this.props.res.profile.id}`,
+                  state: {
+                    modal: true
+                  }
+                }}>●{this.props.res.profile.sn}</Link>
                 : null}
               <Link to={{
                 pathname: `/res/${this.props.res.id}`,
