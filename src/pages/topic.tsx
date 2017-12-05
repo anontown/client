@@ -81,7 +81,9 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
   init(props: TopicPageProps) {
     apiClient.findTopicOne({ id: props.match.params.id })
       .subscribe(topic => {
-        this.setState({ topic });
+        this.setState({ topic }, () => {
+          this.storageSave(null);
+        });
       }, () => {
         this.setState({ snackMsg: "トピック取得に失敗" });
       });
