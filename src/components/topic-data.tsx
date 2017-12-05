@@ -6,6 +6,7 @@ import { History } from "./history";
 import { Md } from "./md";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
+import { Paper } from "material-ui";
 
 export interface TopicDataProps {
   topic: api.Topic;
@@ -42,7 +43,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
     }
   }
   render() {
-    return (
+    return <Paper zDepth={0}>
       <dl>
         <Snack
           msg={this.state.snackMsg}
@@ -83,6 +84,6 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
           </div>
           : null}
       </dl>
-    );
+    </Paper>;
   }
 }
