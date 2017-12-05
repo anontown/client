@@ -1,4 +1,3 @@
-import { Paper } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -46,14 +45,12 @@ export const ProfilePage = withRouter<{}>(connect((state: Store) => ({ user: sta
     render() {
       return (
         <Page>
-          <Paper>
-            <Snack
-              msg={this.state.snackMsg}
-              onHide={() => this.setState({ snackMsg: null })} />
-            {this.state.profile !== null
-              ? <Profile profile={this.state.profile} />
-              : null}
-          </Paper>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.state.profile !== null
+            ? <Profile profile={this.state.profile} />
+            : null}
         </Page>
       );
     }
