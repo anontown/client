@@ -19,7 +19,8 @@ export function Md(props: MdProps) {
   return React.createElement("div", {
     style: {
       padding: "2px"
-    }
+    },
+    className: style.md
   },
     ...node.children.map(c => <MdNode node={c} />));
 }
