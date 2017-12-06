@@ -6,12 +6,12 @@ import {
   Toolbar,
   ToolbarGroup,
   ToolbarTitle,
-  Dialog
+  Dialog,
 } from "material-ui";
 import {
   lightBaseTheme,
   getMuiTheme,
-  MuiThemeProvider
+  MuiThemeProvider,
 } from "material-ui/styles";
 import * as icons from "material-ui/svg-icons";
 import * as React from "react";
