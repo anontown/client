@@ -1,11 +1,4 @@
 import * as api from "@anontown/api-types";
-import { Paper } from "material-ui";
-import {
-  AvFiberNew,
-  AvNotInterested,
-  CommunicationCallSplit,
-  ImageLooksOne,
-} from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -14,6 +7,7 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
+import { Card } from "reactstrap";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;
@@ -41,12 +35,12 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
       }
 
       return (
-        <Paper>
+        <Card>
           <div>
-            {!this.props.topic.active ? <AvNotInterested /> : null}
-            {this.props.topic.type === "one" ? <ImageLooksOne /> : null}
-            {this.props.topic.type === "fork" ? <CommunicationCallSplit /> : null}
-            {newRes !== null && newRes !== 0 ? <AvFiberNew /> : null}
+            {!this.props.topic.active ? <span className="fa fa-times" /> : null}
+            {this.props.topic.type === "one" ? <span className="fa fa-comment" /> : null}
+            {this.props.topic.type === "fork" ? <span className="fa fa-code-fork" /> : null}
+            {newRes !== null && newRes !== 0 ? <span className="fa fa-exclamation" /> : null}
             <Link to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
           </div >
           {this.props.detail
@@ -66,7 +60,7 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
             </div >
             : null
           }
-        </Paper >
+        </Card>
       );
     }
   });
