@@ -8,9 +8,11 @@ import {
   ToolbarTitle,
   Dialog
 } from "material-ui";
-import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import {
+  lightBaseTheme,
+  getMuiTheme,
+  MuiThemeProvider
+} from "material-ui/styles";
 import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -32,7 +34,7 @@ import {
 } from "../utils";
 import * as style from "./app.scss";
 
-const muiTheme = getMuiTheme(darkBaseTheme);
+const muiTheme = getMuiTheme(lightBaseTheme);
 
 interface AppProps extends RouteComponentProps<{}> {
   user: UserData | null;
@@ -96,12 +98,8 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
     constructor(props: AppProps) {
       super(props);
       this.state = {
-        isInit: false,
+        isInit: false
       };
-    }
-
-    changeTheme() {
-      // TODO: こんどやる
     }
 
     logout() {
@@ -170,9 +168,6 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
                     href="https://document.anontown.com/"
                     target="_blank" />}>
                     <icons.ActionHelp />
-                  </IconButton>
-                  <IconButton onClick={() => this.changeTheme()}>
-                    <icons.ActionInvertColors />
                   </IconButton>
                 </ToolbarGroup>
               </Toolbar>
