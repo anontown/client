@@ -1,4 +1,27 @@
-:global body{
-  margin: 0px;
-  overflow: hidden;
+:global {
+  body{
+    margin: 0px;
+    overflow: hidden;
+  }
+
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1em;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    text-transform: none;
+  
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  
+    -moz-osx-font-smoothing: grayscale;
+  
+    font-feature-settings: 'liga';
+
+    vertical-align:middle;
+  }
 }

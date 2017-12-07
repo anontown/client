@@ -37,10 +37,10 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
       return (
         <Card>
           <div>
-            {!this.props.topic.active ? <span className="fa fa-times" /> : null}
-            {this.props.topic.type === "one" ? <span className="fa fa-comment" /> : null}
-            {this.props.topic.type === "fork" ? <span className="fa fa-code-fork" /> : null}
-            {newRes !== null && newRes !== 0 ? <span className="fa fa-exclamation" /> : null}
+            {!this.props.topic.active ? <i className="material-icons">not_interested</i> : null}
+            {this.props.topic.type === "one" ? <i className="material-icons">looks_one</i> : null}
+            {this.props.topic.type === "fork" ? <i className="material-icons">call_split</i> : null}
+            {newRes !== null && newRes !== 0 ? <i className="material-icons">fiber_new</i> : null}
             <Link to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
           </div >
           {this.props.detail
