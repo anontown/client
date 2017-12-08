@@ -325,7 +325,6 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
               <Paper>
                 <Res
                   res={res}
-                  isPop={false}
                   update={newRes => this.updateItem.next(newRes)} />
               </Paper>} />
           {this.state.isResWrite

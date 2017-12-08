@@ -64,7 +64,6 @@ export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ use
                   <Res
                     key={r.id}
                     res={r}
-                    isPop={false}
                     update={newRes => this.update(newRes)} />
                 </Paper>)}
               </div>

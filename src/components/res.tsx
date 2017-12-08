@@ -29,7 +29,6 @@ import { Snack } from "./snack";
 interface UnconnectedResProps {
   res: ResSeted;
   user: UserData | null;
-  isPop: boolean;
   update?: (res: ResSeted) => void;
 }
 
@@ -332,8 +331,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                     <Res
                       key={r.id}
                       res={r}
-                      update={res => this.updateChildren(res)}
-                      isPop={true} />
+                      update={res => this.updateChildren(res)} />
                   </Paper>)}
               </div>
               : null}

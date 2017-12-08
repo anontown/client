@@ -83,7 +83,6 @@ export const History = connect((state: Store) => ({ user: state.user }))
                 <Paper>
                   <Res
                     res={res}
-                    isPop={false}
                     update={newRes => this.setState({ hashReses: list.update(this.state.hashReses, newRes) })} />
                 </Paper>)
               : null

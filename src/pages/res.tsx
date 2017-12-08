@@ -54,7 +54,7 @@ export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.u
             onHide={() => this.setState({ snackMsg: null })} />
           {this.state.res !== null
             ? <Paper>
-              <Res res={this.state.res} isPop={false} update={res => this.setState({ res })} />
+              <Res res={this.state.res} update={res => this.setState({ res })} />
             </Paper>
             : null}
         </Page>
