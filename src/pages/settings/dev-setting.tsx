@@ -52,7 +52,7 @@ export const DevSettingPage = withRouter<{}>(connect((state: Store) => ({ user: 
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
-          {this.state.clients.map(c => <Client
+          {this.state.clients.map(c => <ClientEditor
             client={c}
             onUpdate={newClient => this.setState({ clients: list.update(this.state.clients, newClient) })} />)}
           <ClientEditor
