@@ -1,3 +1,23 @@
+html{
+  font-size: 16px;
+  a{
+    text-decoration: none;
+    color:#0275d8;
+    &:link {
+
+    }
+    &:visited {
+
+    }
+    &:hover { 
+      text-decoration:underline;
+    }
+    &:active { 
+      
+    }
+  }
+}
+
 body{
   margin: 0px;
   overflow: hidden;
