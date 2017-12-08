@@ -7,7 +7,7 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
-import * as bs from "react-bootstrap";
+import { Card } from "reactstrap";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;
@@ -35,7 +35,7 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
       }
 
       return (
-        <bs.Panel>
+        <Card>
           <div>
             {!this.props.topic.active ? <i className="material-icons">not_interested</i> : null}
             {this.props.topic.type === "one" ? <i className="material-icons">looks_one</i> : null}
@@ -60,7 +60,7 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
             </div >
             : null
           }
-        </bs.Panel>
+        </Card>
       );
     }
   });
