@@ -209,11 +209,12 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               <icons.HardwareKeyboardArrowDown />
             </IconButton>
           </div>
-          <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
-            #
-          </a>
           <div className={style.main}>
             <div>
+              <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
+                #
+              </a>
+              &nbsp;
               {this.props.res.type === "normal"
                 ? <span>{this.props.res.name || "名無しさん"}</span>
                 : null}
@@ -237,11 +238,14 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   }
                 }}>●{this.props.res.profile.sn}</Link>
                 : null}
+              &nbsp;
               <Link to={{
                 pathname: `/res/${this.props.res.id}`,
                 state: { modal: true }
               }}>{dateFormat.format(this.props.res.date)}</Link>
+              &nbsp;
               <a onClick={() => this.onHashClock()}>HASH:{this.props.res.hash.substr(0, 6)}</a>
+              &nbsp;
               <span>
                 <span>
                   {this.props.res.uv - this.props.res.dv}ポイント
