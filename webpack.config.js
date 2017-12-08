@@ -3,7 +3,7 @@ const webpack = require("webpack");
 module.exports = {
     entry: [
         './src/main.tsx',
-        './src/main.scss'
+        './src/main.scss?g'
     ],
     output: {
         filename: "bundle.js",
@@ -30,13 +30,27 @@ module.exports = {
                 loader: "source-map-loader"
             },
             {
-                test: /\.scss$/,
+                test: /\.s?css$/,
                 use: [
                     {
                         loader: "style-loader"
                     },
                     {
                         loader: "css-loader?modules"
+                    },
+                    {
+                        loader: "sass-loader"
+                    }
+                ]
+            },
+            {
+                test: /\.s?css\?g$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader"
                     },
                     {
                         loader: "sass-loader"
