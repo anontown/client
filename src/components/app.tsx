@@ -22,7 +22,8 @@ import {
   createUserData,
 } from "../utils";
 import * as style from "./app.scss";
-import * as Modal from "react-modal";
+import * as bs from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 const muiTheme = getMuiTheme(lightBaseTheme);
 
 interface AppProps extends RouteComponentProps<{}> {
@@ -36,13 +37,15 @@ interface AppState {
 
 const withModal = <P extends {}>(Page: React.ComponentType<P>) => {
   return withRouter<P>((props: P & RouteComponentProps<{}>) => {
-    return <Modal
-      isOpen={true}
-      onRequestClose={() => {
+    return <bs.Modal
+      show={true}
+      onHide={() => {
         props.history.goBack();
       }}>
-      <Page {...props} />
-    </Modal>
+      <bs.ModalBody>
+        <Page {...props} />
+      </bs.ModalBody>
+    </bs.Modal>
   })
 };
 
@@ -105,7 +108,7 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
       return <MuiThemeProvider muiTheme={muiTheme}>
         {this.state.isInit
           ? <div className={style.container}>
-            <div className={style.header}>
+            <bs.Navbar className={style.header}>
               <bs.Nav>
                 <LinkContainer to="/" >
                   <bs.NavItem>
@@ -164,7 +167,7 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
                   <i className="material-icons">help</i>
                 </bs.NavItem>
               </bs.Nav>
-            </div>
+            </bs.Navbar>
             <div className={style.main}>
               <Switch location={isModal ? this.previousLocation : location}>
                 <Route exact path="/" component={pages.HomePage} />
