@@ -12,6 +12,7 @@ import {
   apiClient,
   resSetedCreate,
 } from "../utils";
+import { Paper } from "material-ui";
 
 interface ResPageProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;
@@ -52,7 +53,9 @@ export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.u
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
           {this.state.res !== null
-            ? <Res res={this.state.res} isPop={false} update={res => this.setState({ res })} />
+            ? <Paper>
+              <Res res={this.state.res} isPop={false} update={res => this.setState({ res })} />
+            </Paper>
             : null}
         </Page>
       );

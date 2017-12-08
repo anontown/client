@@ -1,5 +1,4 @@
 import * as api from "@anontown/api-types";
-import { Paper } from "material-ui";
 import {
   AvFiberNew,
   AvNotInterested,
@@ -41,7 +40,7 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
       }
 
       return (
-        <Paper>
+        <div>
           <div>
             {!this.props.topic.active ? <AvNotInterested /> : null}
             {this.props.topic.type === "one" ? <ImageLooksOne /> : null}
@@ -66,7 +65,7 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
             </div >
             : null
           }
-        </Paper >
+        </div>
       );
     }
   });

@@ -59,20 +59,22 @@ export const TopicFavo = connect((state: Store) => ({ user: state.user }))
         <IconButton onClick={() => this.update()} >
           <NavigationRefresh />
         </IconButton>
-        {this.props.user !== null
-          ? this.state.topicFavo !== null
-            ? this.state.topicFavo.length !== 0 ?
-              this.state.topicFavo.map(topic => <TopicListItem
-                key={topic.id}
-                topic={topic}
-                detail={this.props.detail} />)
-              : <Paper>
-                お気に入りトピックがありません。
-        <br />
-                <Link to="/topic/search">トピック一覧</Link>
-              </Paper>
-            : null
-          : <div>ログインしないと表示出来ません</div>}
+        <Paper>
+          {this.props.user !== null
+            ? this.state.topicFavo !== null
+              ? this.state.topicFavo.length !== 0 ?
+                this.state.topicFavo.map(topic => <TopicListItem
+                  key={topic.id}
+                  topic={topic}
+                  detail={this.props.detail} />)
+                : <div>
+                  お気に入りトピックがありません。
+                <br />
+                  <Link to="/topic/search">トピック一覧</Link>
+                </div>
+              : null
+            : <div>ログインしないと表示出来ません</div>}
+        </Paper>
       </div>;
     }
   });

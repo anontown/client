@@ -197,7 +197,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
       const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
 
       return (
-        <Paper className={style.container}>
+        <div className={style.container}>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
@@ -327,15 +327,18 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                     <strong>{this.state.children.msg}</strong>
                   </Paper>
                   : null}
-                {this.state.children.reses.map(r => <Res
-                  key={r.id}
-                  res={r}
-                  update={res => this.updateChildren(res)}
-                  isPop={true} />)}
+                {this.state.children.reses.map(r =>
+                  <Paper>
+                    <Res
+                      key={r.id}
+                      res={r}
+                      update={res => this.updateChildren(res)}
+                      isPop={true} />
+                  </Paper>)}
               </div>
               : null}
           </div>
-        </Paper>
+        </div>
       );
     }
   });

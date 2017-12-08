@@ -9,7 +9,10 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Client, ClientEditor, Snack } from "../../components";
+import {
+  ClientEditor,
+  Snack
+} from "../../components";
 import { UserData } from "../../models";
 import { Store } from "../../reducers";
 import {

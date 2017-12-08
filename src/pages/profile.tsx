@@ -11,6 +11,7 @@ import {
   apiClient,
 } from "../utils";
 import * as api from "@anontown/api-types";
+import { Paper } from "material-ui";
 
 interface ProfilePageProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;
@@ -49,7 +50,9 @@ export const ProfilePage = withRouter<{}>(connect((state: Store) => ({ user: sta
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
           {this.state.profile !== null
-            ? <Profile profile={this.state.profile} />
+            ? <Paper>
+              <Profile profile={this.state.profile} />
+            </Paper>
             : null}
         </Page>
       );

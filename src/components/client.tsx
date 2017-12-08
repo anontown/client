@@ -1,5 +1,5 @@
 import * as api from "@anontown/api-types";
-import { IconButton, Paper } from "material-ui";
+import { IconButton } from "material-ui";
 import { EditorModeEdit } from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -44,12 +44,12 @@ export const Client = connect((state: Store) => ({ user: state.user }))
         : null;
 
       return (
-        <Paper>
+        <div>
           <h2>{this.props.client.name}</h2>
           <span>{this.props.client.id}</span>
           <span>{this.props.client.url}</span>
           {edit}
-        </Paper>
+        </div>
       );
     }
   });

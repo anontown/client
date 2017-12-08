@@ -1,6 +1,10 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
-import { RaisedButton, TextField } from "material-ui";
+import {
+  RaisedButton,
+  TextField,
+  Paper
+} from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -66,10 +70,12 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
           : null}
         <hr />
         <div>
-          {this.state.children.map(t => <TopicListItem
-            topic={t}
-            key={t.id}
-            detail={false} />)}
+          {this.state.children.map(t => <Paper>
+            <TopicListItem
+              topic={t}
+              key={t.id}
+              detail={false} />
+          </Paper>)}
         </div>
       </div>;
     }

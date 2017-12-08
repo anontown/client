@@ -211,7 +211,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ isDataDialog: false })}>
         {this.state.topic !== null
-          ? <TopicData topic={this.state.topic} />
+          ? <Paper><TopicData topic={this.state.topic} /></Paper>
           : null}
       </Dialog>
       <Dialog
@@ -321,10 +321,13 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
             scrollNewItem={this.scrollNewItem}
             updateItem={this.updateItem}
             newItem={this.newItem}
-            dataToEl={res => <Res
-              res={res}
-              isPop={false}
-              update={newRes => this.updateItem.next(newRes)} />} />
+            dataToEl={res =>
+              <Paper>
+                <Res
+                  res={res}
+                  isPop={false}
+                  update={newRes => this.updateItem.next(newRes)} />
+              </Paper>} />
           {this.state.isResWrite
             ? <Paper>
               <ResWrite topic={this.state.topic.id} reply={null} />

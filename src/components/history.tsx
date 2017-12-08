@@ -2,6 +2,7 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   IconButton,
+  Paper
 } from "material-ui";
 import {
   NavigationArrowDropDown,
@@ -78,10 +79,13 @@ export const History = connect((state: Store) => ({ user: state.user }))
           }
           {
             !this.state.hashReses.isEmpty()
-              ? this.state.hashReses.map(res => <Res
-                res={res}
-                isPop={false}
-                update={newRes => this.setState({ hashReses: list.update(this.state.hashReses, newRes) })} />)
+              ? this.state.hashReses.map(res =>
+                <Paper>
+                  <Res
+                    res={res}
+                    isPop={false}
+                    update={newRes => this.setState({ hashReses: list.update(this.state.hashReses, newRes) })} />
+                </Paper>)
               : null
           }
         </div >

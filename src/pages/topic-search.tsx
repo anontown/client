@@ -221,7 +221,11 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         </IconButton>
       </div>
       <div>
-        {this.state.topics.map(t => <TopicListItem key={t.id} topic={t} detail={true} />)}
+        {this.state.topics.map(t =>
+          <Paper>
+            <TopicListItem key={t.id} topic={t} detail={true} />
+          </Paper>
+        )}
       </div>
       {this.state.count === this.limit
         ? <div>
