@@ -25,17 +25,19 @@ export const TagFavo = connect((state: Store) => ({ user: state.user }))
     }
 
     render() {
-      return this.props.user !== null
-        ? this.props.user.storage.tagsFavo.size !== 0 ?
-          this.props.user.storage.tagsFavo.map(tags =>
-            <Paper key={tags.join(",")}>
-              <TagsLink tags={tags.toArray()} />
-            </Paper>).toArray()
-          : <Paper>
-            お気に入りタグがありません。
-          <br />
-            <Link to="/topic/search">検索</Link>
-          </Paper>
-        : <div>ログインしないと表示出来ません</div>;
+      return <Paper>
+        {this.props.user !== null
+          ? this.props.user.storage.tagsFavo.size !== 0 ?
+            this.props.user.storage.tagsFavo.map(tags =>
+              <div key={tags.join(",")}>
+                <TagsLink tags={tags.toArray()} />
+              </div>).toArray()
+            : <div>
+              お気に入りタグがありません。
+              <br />
+              <Link to="/topic/search">検索</Link>
+            </div>
+          : <div>ログインしないと表示出来ません</div>}
+      </Paper>;
     }
   });
