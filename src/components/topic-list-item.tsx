@@ -13,6 +13,7 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
+import * as style from "./topic-list-item.scss";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;
@@ -40,19 +41,19 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
       }
 
       return (
-        <div>
+        <div className={style.container}>
           <div>
             {!this.props.topic.active ? <AvNotInterested /> : null}
             {this.props.topic.type === "one" ? <ImageLooksOne /> : null}
             {this.props.topic.type === "fork" ? <CommunicationCallSplit /> : null}
             {newRes !== null && newRes !== 0 ? <AvFiberNew /> : null}
-            <Link to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
+            <Link className={style.title} to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
           </div >
           {this.props.detail
             ? <div>
               {this.props.topic.type !== "fork"
                 ? <div>
-                  <TagsLink tags={this.props.topic.tags} />
+                  <TagsLink tags={this.props.topic.tags} mini />
                 </div >
                 : <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>}
 
