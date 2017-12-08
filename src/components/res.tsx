@@ -209,25 +209,26 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               <icons.HardwareKeyboardArrowDown />
             </IconButton>
           </div>
+          <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
+            #
+          </a>
           <div className={style.main}>
             <div>
-              <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
-                {this.props.res.type === "normal"
-                  ? <span>{this.props.res.name || "名無しさん"}</span>
-                  : null}
-                {this.props.res.type === "history"
-                  ? <span>トピックデータ</span>
-                  : null}
-                {this.props.res.type === "topic"
-                  ? <span>トピ主</span>
-                  : null}
-                {this.props.res.type === "fork"
-                  ? <span>派生トピック</span>
-                  : null}
-                {this.props.res.type === "delete"
-                  ? <span>削除</span>
-                  : null}
-              </a>
+              {this.props.res.type === "normal"
+                ? <span>{this.props.res.name || "名無しさん"}</span>
+                : null}
+              {this.props.res.type === "history"
+                ? <span>トピックデータ</span>
+                : null}
+              {this.props.res.type === "topic"
+                ? <span>トピ主</span>
+                : null}
+              {this.props.res.type === "fork"
+                ? <span>派生トピック</span>
+                : null}
+              {this.props.res.type === "delete"
+                ? <span>削除</span>
+                : null}
               {this.props.res.type === "normal" && this.props.res.profile !== null
                 ? <Link to={{
                   pathname: `/profile/${this.props.res.profile.id}`,
