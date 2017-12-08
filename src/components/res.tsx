@@ -141,19 +141,21 @@ export const Res = connect((state: Store) => ({ user: state.user }))
     }
 
     onSendReplyClock() {
-      const token = this.props.user !== null ? this.props.user.token : null;
-      if (this.state.children === null) {
-        apiClient.findResOne(token, {
-          id: this.props.res.id,
-        })
-          .mergeMap(res => resSetedCreate.resSet(token, [res]))
-          .subscribe(reses => {
-            this.setState({ children: { reses: Im.List(reses), msg: null } });
-          }, () => {
-            this.setState({ snackMsg: "レス取得に失敗しました" });
-          });
-      } else {
-        this.setState({ children: null });
+      if (this.props.res.type === "normal" && this.props.res.reply !== null) {
+        const token = this.props.user !== null ? this.props.user.token : null;
+        if (this.state.children === null) {
+          apiClient.findResOne(token, {
+            id: this.props.res.reply,
+          })
+            .mergeMap(res => resSetedCreate.resSet(token, [res]))
+            .subscribe(reses => {
+              this.setState({ children: { reses: Im.List(reses), msg: null } });
+            }, () => {
+              this.setState({ snackMsg: "レス取得に失敗しました" });
+            });
+        } else {
+          this.setState({ children: null });
+        }
       }
     }
 
