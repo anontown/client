@@ -18,6 +18,7 @@ export interface MdEditorProps {
   minRows?: number;
   onChange?: (newValue: string) => void;
   fullWidth?: boolean;
+  onKeyPress?: React.KeyboardEventHandler<{}>
 }
 
 interface MdEditorState {
@@ -114,6 +115,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
               this.props.onChange(v);
             }
           }}
+          onKeyPress={this.props.onKeyPress}
           fullWidth={this.props.fullWidth} />
         {this.state.preview
           ? <Md body={this.props.value} />
