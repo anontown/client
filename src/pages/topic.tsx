@@ -240,7 +240,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
       </Dialog>
       {this.state.topic !== null
         ? <div className={style.main}>
-          <Paper>
+          <Paper className={style.header}>
             <div className={style.subject}>
               {this.state.topic.type === "fork"
                 ? <icons.CommunicationCallSplit />
@@ -328,7 +328,7 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
                   update={newRes => this.updateItem.next(newRes)} />
               </Paper>} />
           {this.state.isResWrite
-            ? <Paper>
+            ? <Paper className={style.resWrite}>
               <ResWrite topic={this.state.topic.id} reply={null} />
             </Paper>
             : null}
