@@ -1,6 +1,5 @@
 import { TokenMaster } from "@anontown/api-client";
 import {
-  Dialog,
   IconButton,
   IconMenu,
   MenuItem,
@@ -31,6 +30,7 @@ import { Store } from "../reducers";
 import {
   apiClient,
   createUserData,
+  withModal
 } from "../utils";
 import * as style from "./app.scss";
 
@@ -44,19 +44,6 @@ interface AppProps extends RouteComponentProps<{}> {
 interface AppState {
   isInit: boolean;
 }
-
-const withModal = <P extends {}>(Page: React.ComponentType<P>) => {
-  return withRouter<P>((props: P & RouteComponentProps<{}>) => {
-    return <Dialog
-      open={true}
-      autoScrollBodyContent={true}
-      onRequestClose={() => {
-        props.history.goBack();
-      }}>
-      <Page {...props} />
-    </Dialog>;
-  });
-};
 
 export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
   dispatch => ({
