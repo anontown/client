@@ -4,7 +4,7 @@ import {
   IconButton,
   IconMenu,
   MenuItem,
-  Paper
+  Paper,
 } from "material-ui";
 import * as icons from "material-ui/svg-icons";
 import * as React from "react";
@@ -233,14 +233,14 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                 ? <Link to={{
                   pathname: `/profile/${this.props.res.profile.id}`,
                   state: {
-                    modal: true
-                  }
+                    modal: true,
+                  },
                 }}>●{this.props.res.profile.sn}</Link>
                 : null}
               &nbsp;
               <Link to={{
                 pathname: `/res/${this.props.res.id}`,
-                state: { modal: true }
+                state: { modal: true },
               }}>{dateFormat.format(this.props.res.date)}</Link>
               &nbsp;
               <a onClick={() => this.onHashClock()}>HASH:{this.props.res.hash.substr(0, 6)}</a>

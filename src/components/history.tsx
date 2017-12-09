@@ -2,7 +2,7 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   IconButton,
-  Paper
+  Paper,
 } from "material-ui";
 import {
   NavigationArrowDropDown,

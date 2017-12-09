@@ -17,7 +17,7 @@ export interface MdEditorProps {
   maxRows?: number;
   minRows?: number;
   onChange?: (newValue: string) => void;
-  fullWidth?: boolean
+  fullWidth?: boolean;
 }
 
 interface MdEditorState {

@@ -1,9 +1,9 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import {
+  Paper,
   RaisedButton,
   TextField,
-  Paper
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";

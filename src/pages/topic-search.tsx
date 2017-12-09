@@ -25,6 +25,7 @@ import {
   Subject,
   Subscription,
 } from "rxjs";
+import { isArray } from "util";
 import { updateUserData } from "../actions";
 import {
   Page,
@@ -35,7 +36,6 @@ import {
 import { UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient } from "../utils";
-import { isArray } from "util";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserData | null;
@@ -224,7 +224,7 @@ export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user:
         {this.state.topics.map(t =>
           <Paper>
             <TopicListItem key={t.id} topic={t} detail={true} />
-          </Paper>
+          </Paper>,
         )}
       </div>
       {this.state.count === this.limit

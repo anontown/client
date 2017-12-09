@@ -1,16 +1,16 @@
 import { TokenMaster } from "@anontown/api-client";
 import {
+  Dialog,
   IconButton,
   IconMenu,
   MenuItem,
   Toolbar,
   ToolbarGroup,
   ToolbarTitle,
-  Dialog,
 } from "material-ui";
 import {
-  lightBaseTheme,
   getMuiTheme,
+  lightBaseTheme,
   MuiThemeProvider,
 } from "material-ui/styles";
 import * as icons from "material-ui/svg-icons";
@@ -19,9 +19,9 @@ import { connect } from "react-redux";
 import {
   Link,
   Route,
+  RouteComponentProps,
   Switch,
   withRouter,
-  RouteComponentProps
 } from "react-router-dom";
 import { Observable } from "rxjs";
 import { updateUserData } from "../actions";
@@ -54,8 +54,8 @@ const withModal = <P extends {}>(Page: React.ComponentType<P>) => {
         props.history.goBack();
       }}>
       <Page {...props} />
-    </Dialog>
-  })
+    </Dialog>;
+  });
 };
 
 export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
@@ -64,6 +64,13 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
   }))
   (class extends React.Component<AppProps, AppState> {
     previousLocation = this.props.location;
+
+    constructor(props: AppProps) {
+      super(props);
+      this.state = {
+        isInit: false,
+      };
+    }
 
     componentWillMount() {
       Observable.of(localStorage.getItem("token"))
@@ -86,20 +93,13 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
     }
 
     componentWillUpdate(nextProps: AppProps) {
-      const { location } = this.props
+      const { location } = this.props;
       if (
-        nextProps.history.action !== 'POP' &&
+        nextProps.history.action !== "POP" &&
         (!location.state || !location.state.modal)
       ) {
-        this.previousLocation = this.props.location
+        this.previousLocation = this.props.location;
       }
-    }
-
-    constructor(props: AppProps) {
-      super(props);
-      this.state = {
-        isInit: false
-      };
     }
 
     logout() {
@@ -107,7 +107,7 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
     }
 
     render() {
-      const { location } = this.props
+      const { location } = this.props;
       const isModal = !!(
         location.state &&
         location.state.modal &&
@@ -184,11 +184,11 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
                   <Route path="/in" component={pages.InPage} />
                   <Route path="/auth" component={pages.AuthPage} />
                   <Route path="/settings" component={pages.SettingsPage} />
-                  <Route path='/profile/:id' component={pages.ProfilePage} />
+                  <Route path="/profile/:id" component={pages.ProfilePage} />
                   <Route component={pages.NotFoundPage} />
                 </Switch>
-                {isModal ? <Route path='/res/:id' component={withModal(pages.ResPage)} /> : null}
-                {isModal ? <Route path='/profile/:id' component={withModal(pages.ProfilePage)} /> : null}
+                {isModal ? <Route path="/res/:id" component={withModal(pages.ResPage)} /> : null}
+                {isModal ? <Route path="/profile/:id" component={withModal(pages.ProfilePage)} /> : null}
               </div>
             </div>
             : null}

@@ -78,6 +78,12 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
     isEditDialog: false,
   };
 
+  constructor(props: TopicPageProps) {
+    super(props);
+    this.state = this.initState;
+    this.init(props);
+  }
+
   init(props: TopicPageProps) {
     apiClient.findTopicOne({ id: props.match.params.id })
       .subscribe(topic => {
@@ -114,12 +120,6 @@ export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state
         }
       })
       .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map(reses => reses[0]));
-  }
-
-  constructor(props: TopicPageProps) {
-    super(props);
-    this.state = this.initState;
-    this.init(props);
   }
 
   componentWillReceiveProps(nextProps: TopicPageProps) {

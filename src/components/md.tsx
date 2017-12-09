@@ -18,9 +18,9 @@ export function Md(props: MdProps) {
   const node = mdParser.parse(props.body);
   return React.createElement("div", {
     style: {
-      padding: "2px"
+      padding: "2px",
     },
-    className: style.md
+    className: style.md,
   },
     ...node.children.map(c => <MdNode node={c} />));
 }

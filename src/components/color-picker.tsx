@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
   RGBColor,
-  SketchPicker
+  SketchPicker,
 } from "react-color";
 import { toColorString } from "../utils";
 

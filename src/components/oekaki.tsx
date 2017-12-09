@@ -14,7 +14,7 @@ import { RGBColor } from "react-color";
 import * as ReactDOM from "react-dom";
 import {
   Command,
-  toColorString
+  toColorString,
 } from "../utils";
 import { ColorPicker } from "./color-picker";
 

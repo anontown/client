@@ -1,3 +1,4 @@
+import { Paper } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -12,7 +13,6 @@ import {
   apiClient,
   resSetedCreate,
 } from "../utils";
-import { Paper } from "material-ui";
 
 interface ResPageProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;

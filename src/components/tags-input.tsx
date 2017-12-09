@@ -11,7 +11,7 @@ import * as style from "./tags-input.scss";
 export interface TagsInputProps {
   value: Im.Set<string>;
   onChange?: (value: Im.Set<string>) => void;
-  fullWidth?: boolean
+  fullWidth?: boolean;
 }
 
 interface TagsInputState {

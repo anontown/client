@@ -1,3 +1,5 @@
+import * as api from "@anontown/api-types";
+import { Paper } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -10,8 +12,6 @@ import { Store } from "../reducers";
 import {
   apiClient,
 } from "../utils";
-import * as api from "@anontown/api-types";
-import { Paper } from "material-ui";
 
 interface ProfilePageProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;

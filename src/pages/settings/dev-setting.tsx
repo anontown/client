@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import {
   ClientEditor,
-  Snack
+  Snack,
 } from "../../components";
 import { UserData } from "../../models";
 import { Store } from "../../reducers";
