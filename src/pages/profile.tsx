@@ -11,20 +11,21 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import {
   apiClient,
+  withModal
 } from "../utils";
 
-interface ProfilePageProps extends RouteComponentProps<{ id: string }> {
+interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;
 }
 
-interface ProfilePageState {
+interface ProfileBaseState {
   profile: api.Profile | null;
   snackMsg: null | string;
 }
 
-export const ProfilePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
-  (class extends React.Component<ProfilePageProps, ProfilePageState> {
-    constructor(props: ProfilePageProps) {
+const ProfileBase = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<ProfileBaseProps, ProfileBaseState> {
+    constructor(props: ProfileBaseProps) {
       super(props);
       this.state = {
         profile: null,
@@ -44,17 +45,21 @@ export const ProfilePage = withRouter<{}>(connect((state: Store) => ({ user: sta
     }
 
     render() {
-      return (
-        <Page>
-          <Snack
-            msg={this.state.snackMsg}
-            onHide={() => this.setState({ snackMsg: null })} />
-          {this.state.profile !== null
-            ? <Paper>
-              <Profile profile={this.state.profile} />
-            </Paper>
-            : null}
-        </Page>
-      );
+      return <div>
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        {this.state.profile !== null
+          ? <Paper>
+            <Profile profile={this.state.profile} />
+          </Paper>
+          : null}
+      </div>;
     }
   }));
+
+export function ProfilePage() {
+  return <Page><ProfileBase /></Page>;
+}
+
+export const ProfileModal = withModal(ProfileBase);

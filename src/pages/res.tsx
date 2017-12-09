@@ -12,20 +12,21 @@ import { Store } from "../reducers";
 import {
   apiClient,
   resSetedCreate,
+  withModal
 } from "../utils";
 
-interface ResPageProps extends RouteComponentProps<{ id: string }> {
+interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;
 }
 
-interface ResPageState {
+interface ResBaseState {
   res: ResSeted | null;
   snackMsg: null | string;
 }
 
-export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
-  (class extends React.Component<ResPageProps, ResPageState> {
-    constructor(props: ResPageProps) {
+const ResBase = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<ResBaseProps, ResBaseState> {
+    constructor(props: ResBaseProps) {
       super(props);
       this.state = {
         res: null,
@@ -47,17 +48,21 @@ export const ResPage = withRouter<{}>(connect((state: Store) => ({ user: state.u
     }
 
     render() {
-      return (
-        <Page>
-          <Snack
-            msg={this.state.snackMsg}
-            onHide={() => this.setState({ snackMsg: null })} />
-          {this.state.res !== null
-            ? <Paper>
-              <Res res={this.state.res} update={res => this.setState({ res })} />
-            </Paper>
-            : null}
-        </Page>
-      );
+      return <div>
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        {this.state.res !== null
+          ? <Paper>
+            <Res res={this.state.res} update={res => this.setState({ res })} />
+          </Paper>
+          : null}
+      </div>;
     }
   }));
+
+export function ResPage() {
+  return <Page><ResBase /></Page>;
+}
+
+export const ResModal = withModal(ResBase);

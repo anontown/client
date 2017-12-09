@@ -29,8 +29,7 @@ import * as pages from "../pages";
 import { Store } from "../reducers";
 import {
   apiClient,
-  createUserData,
-  withModal
+  createUserData
 } from "../utils";
 import * as style from "./app.scss";
 
@@ -174,8 +173,8 @@ export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user 
                   <Route path="/profile/:id" component={pages.ProfilePage} />
                   <Route component={pages.NotFoundPage} />
                 </Switch>
-                {isModal ? <Route path="/res/:id" component={withModal(pages.ResPage)} /> : null}
-                {isModal ? <Route path="/profile/:id" component={withModal(pages.ProfilePage)} /> : null}
+                {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
+                {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
               </div>
             </div>
             : null}
