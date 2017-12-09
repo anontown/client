@@ -93,6 +93,12 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
             onChange={v => this.setState({ body: v })}
             maxRows={5}
             minRows={1}
+            onKeyPress={e => {
+              if (e.shiftKey && e.charCode === 13) {
+                e.preventDefault();
+                this.onSubmit();
+              }
+            }}
             fullWidth />
           <IconButton onClick={() => this.onSubmit()}>
             <NavigationArrowForward />
