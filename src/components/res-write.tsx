@@ -56,7 +56,7 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
         if (this.props.onSubmit) {
           this.props.onSubmit(res);
         }
-        this.setState({ errors: [] });
+        this.setState({ errors: [], body: "" });
       }, error => {
         if (error instanceof AtError) {
           this.setState({ errors: error.errors.map(e => e.message) });
