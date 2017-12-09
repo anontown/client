@@ -110,6 +110,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           rows={this.props.minRows || this.defaltMinRows}
           rowsMax={this.props.maxRows || this.defaltMinRows}
           value={this.props.value}
+          style={{ backgroundColor: "#fff" }}
           onChange={(_, v) => {
             if (this.props.onChange) {
               this.props.onChange(v);
@@ -118,7 +119,9 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           onKeyPress={this.props.onKeyPress}
           fullWidth={this.props.fullWidth} />
         {this.state.preview
-          ? <Md body={this.props.value} />
+          ? <div style={{ backgroundColor: "#fff" }}>
+            <Md body={this.props.value} />
+          </div>
           : null}
       </div>
     );
