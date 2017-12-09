@@ -201,11 +201,17 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
           <div className={style.vote}>
-            <IconButton onClick={() => this.onUV()} disabled={isSelf || this.props.user === null}>
-              <icons.HardwareKeyboardArrowUp />
+            <IconButton
+              onClick={() => this.onUV()}
+              disabled={isSelf || this.props.user === null}>
+              <icons.HardwareKeyboardArrowUp
+                color={this.props.res.voteFlag === "uv" ? "orange" : undefined} />
             </IconButton>
-            <IconButton onClick={() => this.onDV()} disabled={isSelf || this.props.user === null}>
-              <icons.HardwareKeyboardArrowDown />
+            <IconButton
+              onClick={() => this.onDV()}
+              disabled={isSelf || this.props.user === null}>
+              <icons.HardwareKeyboardArrowDown
+                color={this.props.res.voteFlag === "dv" ? "orange" : undefined} />
             </IconButton>
           </div>
           <div className={style.main}>
