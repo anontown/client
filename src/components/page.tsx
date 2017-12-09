@@ -19,7 +19,9 @@ export class Page extends React.Component<PageProps, PageState> {
         height: "100%",
       }} className={this.props.sidebar !== undefined ? style.two : undefined}>
         {this.props.sidebar !== undefined
-          ? <aside>
+          ? <aside style={{
+            height: "100%",
+          }}>
             {this.props.sidebar}
           </aside>
           : null}
