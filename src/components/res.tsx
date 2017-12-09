@@ -25,6 +25,7 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
+import * as classNames from "classnames";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -215,7 +216,10 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             </IconButton>
           </div>
           <div className={style.main}>
-            <div>
+            <div className={classNames(style.header, {
+              [style.self]: isSelf,
+              [style.reply]: this.props.res.type === 'normal' && this.props.res.isReply && !isSelf
+            })}>
               <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
                 #
               </a>
