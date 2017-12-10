@@ -1,11 +1,13 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
-import { Checkbox,
-   IconButton,
-    MenuItem,
-     SelectField,
-      TextField,
-    FontIcon } from "material-ui";
+import {
+  Checkbox,
+  IconButton,
+  MenuItem,
+  SelectField,
+  TextField,
+  FontIcon
+} from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -80,7 +82,7 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
             onChange={(_e, v) => this.setState({ name: v })} />
           <SelectField
             floatingLabelText="プロフ"
-            value={null}
+            value={this.state.profile}
             onChange={(_e, _i, v) => this.setState({ profile: v })}>
             <MenuItem value={null} primaryText="なし" />
             {this.props.user.profiles.map(p =>
