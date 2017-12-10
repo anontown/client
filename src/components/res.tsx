@@ -225,8 +225,11 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               #
               </a>
             &nbsp;
-              {this.props.res.type === "normal"
-              ? <span>{this.props.res.name || "名無しさん"}</span>
+              {this.props.res.type === "normal" && this.props.res.name !== null
+              ? <span>{this.props.res.name}</span>
+              : null}
+            {this.props.res.type === "normal" && this.props.res.name === null && this.props.res.profile === null
+              ? <span>名無しさん</span>
               : null}
             {this.props.res.type === "history"
               ? <span>トピックデータ</span>
