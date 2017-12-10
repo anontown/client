@@ -29,7 +29,7 @@ interface DevSettingPageState {
   snackMsg: string | null;
 }
 
-export const DevSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const DevSettingPage = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<DevSettingPageProps, DevSettingPageState> {
     constructor(props: DevSettingPageProps) {
       super(props);

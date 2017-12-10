@@ -34,7 +34,7 @@ export interface NotificationsPageState {
   snackMsg: null | string;
 }
 
-export const NotificationsPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const NotificationsPage = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<NotificationsPageProps, NotificationsPageState> {
     private limit = 50;
 

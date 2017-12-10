@@ -27,7 +27,7 @@ export interface ProfilesPageState {
   snackMsg: null | string;
 }
 
-export const ProfilesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const ProfilesPage = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<ProfilesPageProps, ProfilesPageState> {
     constructor(props: ProfilesPageProps) {
       super(props);

@@ -26,7 +26,7 @@ interface MessagesPageState {
   snackMsg: null | string;
 }
 
-export const MessagesPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const MessagesPage = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<MessagesPageProps, MessagesPageState> {
     private limit = 50;
 

@@ -22,7 +22,7 @@ interface HomePageProps extends RouteComponentProps<{}> {
   user: UserData | null;
 }
 
-export const HomePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const HomePage = withRouter(connect((state: Store) => ({ user: state.user }))
   ((props: HomePageProps) => {
     return <Page>
       {props.user !== null

@@ -24,7 +24,7 @@ interface ResBaseState {
   snackMsg: null | string;
 }
 
-const ResBase = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+const ResBase = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<ResBaseProps, ResBaseState> {
     constructor(props: ResBaseProps) {
       super(props);

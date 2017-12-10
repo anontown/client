@@ -22,7 +22,7 @@ interface AuthPageState {
   snackMsg: string | null;
 }
 
-export const AuthPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const AuthPage = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<AuthPageProps, AuthPageState> {
     constructor(props: AuthPageProps) {
       super(props);

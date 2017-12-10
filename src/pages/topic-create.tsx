@@ -41,7 +41,7 @@ export interface TopicCreatePageState {
   openDialog: boolean;
 }
 
-export const TopicCreatePage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+export const TopicCreatePage = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
     constructor(props: TopicCreatePageProps) {
       super(props);

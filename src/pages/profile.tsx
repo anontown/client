@@ -23,7 +23,7 @@ interface ProfileBaseState {
   snackMsg: null | string;
 }
 
-const ProfileBase = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
+const ProfileBase = withRouter(connect((state: Store) => ({ user: state.user }))
   (class extends React.Component<ProfileBaseProps, ProfileBaseState> {
     constructor(props: ProfileBaseProps) {
       super(props);

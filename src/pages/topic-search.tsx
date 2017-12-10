@@ -54,7 +54,7 @@ export interface TopicSearchPageState {
   count: number;
 }
 
-export const TopicSearchPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }), dispatch => ({
+export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
   updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
 }))(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
   limit = 100;

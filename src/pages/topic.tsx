@@ -58,7 +58,7 @@ export interface TopicPageState {
   isEditDialog: boolean;
 }
 
-export const TopicPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }), dispatch => ({
+export const TopicPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
   updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
 }))(class extends React.Component<TopicPageProps, TopicPageState> {
   limit = 50;

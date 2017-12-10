@@ -25,51 +25,51 @@ interface AppsSettingPageState {
   snackMsg: string | null;
 }
 
-export const AppsSettingPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }))
-(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
-  constructor(props: AppsSettingPageProps) {
-    super(props);
-    this.state = {
-      snackMsg: null,
-      clients: Im.List(),
-    };
+export const AppsSettingPage = withRouter(connect((state: Store) => ({ user: state.user }))
+  (class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
+    constructor(props: AppsSettingPageProps) {
+      super(props);
+      this.state = {
+        snackMsg: null,
+        clients: Im.List(),
+      };
 
-    if (this.props.user !== null) {
-      apiClient
-        .findTokenClientAll(this.props.user.token)
-        .subscribe( clients => {
-          this.setState({ clients: Im.List(clients) });
+      if (this.props.user !== null) {
+        apiClient
+          .findTokenClientAll(this.props.user.token)
+          .subscribe(clients => {
+            this.setState({ clients: Im.List(clients) });
+          }, () => {
+            this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+          });
+      }
+    }
+
+    render() {
+      return this.props.user !== null
+        ? <div>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          {this.state.clients.map(c => <Paper>
+            {c.name}
+            <IconButton type="button" onClick={() => this.del(c)} >
+              <ActionDelete />
+            </IconButton>
+          </Paper>)}
+        </div>
+        : <div>ログインして下さい。</div>;
+    }
+
+    del(client: api.Client) {
+      if (this.props.user === null) {
+        return;
+      }
+      apiClient.deleteTokenClient(this.props.user.token, { client: client.id })
+        .subscribe(() => {
+          this.setState({ clients: this.state.clients.filter(c => c.id !== client.id) });
         }, () => {
-          this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+          this.setState({ snackMsg: "削除に失敗しました" });
         });
     }
-  }
-
-  render() {
-    return this.props.user !== null
-      ? <div>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.state.clients.map( c => <Paper>
-          {c.name}
-          <IconButton type="button" onClick={() => this.del(c)} >
-            <ActionDelete />
-          </IconButton>
-        </Paper>)}
-      </div>
-      : <div>ログインして下さい。</div>;
-  }
-
-  del(client: api.Client) {
-    if (this.props.user === null) {
-      return;
-    }
-    apiClient.deleteTokenClient(this.props.user.token, { client: client.id })
-      .subscribe(() => {
-        this.setState({ clients: this.state.clients.filter( c => c.id !== client.id) });
-      }, () => {
-        this.setState({ snackMsg: "削除に失敗しました" });
-      });
-  }
-}));
+  }));

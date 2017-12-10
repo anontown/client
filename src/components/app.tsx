@@ -44,7 +44,7 @@ interface AppState {
   isInit: boolean;
 }
 
-export const App = withRouter<{}>(connect((state: Store) => ({ user: state.user }),
+export const App = withRouter(connect((state: Store) => ({ user: state.user }),
   dispatch => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }))

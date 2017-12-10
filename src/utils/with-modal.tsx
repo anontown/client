@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 export const withModal = <P extends {}>(Page: React.ComponentType<P>) => {
-  return withRouter<P>((props: P & RouteComponentProps<{}>) => {
+  return withRouter((props: P & RouteComponentProps<{}>) => {
     return <Dialog
       open={true}
       autoScrollBodyContent={true}

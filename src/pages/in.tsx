@@ -40,7 +40,7 @@ interface InPageState {
   recaptcha: string | null;
 }
 
-export const InPage = withRouter<{}>(connect((state: Store) => ({ user: state.user }), dispatch => ({
+export const InPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
   updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
 }))(class extends React.Component<InPageProps, InPageState> {
   constructor(props: InPageProps) {

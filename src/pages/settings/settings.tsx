@@ -14,7 +14,7 @@ interface SettingsPageProps extends RouteComponentProps<{}> {
 interface SettingsPageState {
 }
 
-export const SettingsPage = withRouter<{}>(class extends React.Component<SettingsPageProps, SettingsPageState> {
+export const SettingsPage = withRouter(class extends React.Component<SettingsPageProps, SettingsPageState> {
   constructor(props: SettingsPageProps) {
     super(props);
     this.state = {

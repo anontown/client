@@ -29,7 +29,7 @@ interface AccountSettingPageState {
   snackMsg: string | null;
 }
 
-export const AccountSettingPage = withRouter<{}>(connect(
+export const AccountSettingPage = withRouter(connect(
   (state: Store) => ({ user: state.user }), dispatch => ({
     updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
   }),
