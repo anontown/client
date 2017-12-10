@@ -3,7 +3,7 @@ const webpack = require("webpack");
 module.exports = {
     entry: [
         './src/main.tsx',
-        './src/main.scss?g'
+        './src/global.scss'
     ],
     output: {
         filename: "bundle.js",
@@ -37,20 +37,6 @@ module.exports = {
                     },
                     {
                         loader: "css-loader?modules"
-                    },
-                    {
-                        loader: "sass-loader"
-                    }
-                ]
-            },
-            {
-                test: /\.s?css\?g$/,
-                use: [
-                    {
-                        loader: "style-loader"
-                    },
-                    {
-                        loader: "css-loader"
                     },
                     {
                         loader: "sass-loader"
