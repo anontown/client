@@ -41,26 +41,44 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
     };
   }
 
+  upload(datas: FormData[]) {
+    Observable.of(...datas)
+      .mergeMap(form => imgur.upload(form))
+      .map(url => `![](${url})`)
+      .reduce((tags, tag) => tags + tag + "\n", "")
+      .subscribe(tags => {
+        this.setState({ slowImage: false, oekakiErrors: undefined });
+        if (this.props.onChange) {
+          this.props.onChange(this.props.value + tags);
+        }
+      }, () => {
+        this.setState({ imageErrors: ["アップロードに失敗しました"] });
+      });
+  }
+
   render() {
     return (
-      <div>
+      <div onPaste={e => {
+        const items = e.clipboardData.items;
+        console.log(Array.from(items).map(x => x.type));
+        const datas = Array.from(items)
+          .filter(x => x.type.indexOf('image') !== -1)
+          .map(x => x.getAsFile())
+          .filter<File>((x): x is File => x !== null)
+          .map(x => {
+            const data = new FormData();
+            data.append("image", x, "image.png");
+            return data;
+          });
+        this.upload(datas);
+      }}>
         <Dialog
           title="お絵かき"
           open={this.state.slowOekaki}
           autoScrollBodyContent={true}
           onRequestClose={() => this.setState({ slowOekaki: false })}>
           <Errors errors={this.state.oekakiErrors} />
-          <Oekaki size={{ x: 320, y: 240 }} onSubmit={data => {
-            imgur.upload(data)
-              .subscribe(url => {
-                this.setState({ slowOekaki: false, oekakiErrors: undefined });
-                if (this.props.onChange) {
-                  this.props.onChange(this.props.value + `![](${url})`);
-                }
-              }, () => {
-                this.setState({ oekakiErrors: ["アップロードに失敗しました"] });
-              });
-          }} />
+          <Oekaki size={{ x: 320, y: 240 }} onSubmit={data => this.upload([data])} />
         </Dialog>
         <Dialog
           title="画像アップロード"
@@ -72,23 +90,13 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             const target = e.target as HTMLInputElement;
             const files = target.files;
             if (files !== null) {
-              Observable.of(...Array.from(files))
+              const datas = Array.from(files)
                 .map(file => {
                   const formData = new FormData();
                   formData.append("image", file);
                   return formData;
-                })
-                .mergeMap(form => imgur.upload(form))
-                .map(url => `![](${url})`)
-                .reduce((tags, tag) => tags + tag + "\n", "")
-                .subscribe(tags => {
-                  this.setState({ slowImage: false, oekakiErrors: undefined });
-                  if (this.props.onChange) {
-                    this.props.onChange(this.props.value + tags);
-                  }
-                }, () => {
-                  this.setState({ imageErrors: ["アップロードに失敗しました"] });
                 });
+              this.upload(datas);
             }
           }} />
         </Dialog>
