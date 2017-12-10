@@ -1,0 +1,23 @@
+@mixin dialog() {
+  // https://qiita.com/shitake/items/213ba948729f39d133fa
+
+  // 勝手にflexbox化
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  // position:fixed時の配置情報をリセット
+  padding-top: 0px !important;
+  transform: initial !important;
+}
+
+.dialog{
+  @include dialog();
+}
+
+.dialogContent{
+  @include dialog();
+  width: 75vw !important;
+  &>div{
+    width: 100% !important;
+  }
+}

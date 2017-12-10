@@ -9,6 +9,11 @@ import { createEpicMiddleware } from "redux-observable";
 import { App } from "./components/app";
 import { epics } from "./epics";
 import { reducer } from "./reducers";
+import { Dialog } from "material-ui";
+import * as dialogStyle from "./dialog.scss";
+
+(Dialog as any).defaultProps.className = dialogStyle.dialog;
+(Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;
 
 const store = createStore(reducer, applyMiddleware(logger, createEpicMiddleware(epics)));
 
