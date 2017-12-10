@@ -196,159 +196,158 @@ export const Res = connect((state: Store) => ({ user: state.user }))
 
       const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
 
-      return (
-        <div className={style.container}>
-          <Snack
-            msg={this.state.snackMsg}
-            onHide={() => this.setState({ snackMsg: null })} />
-          <div className={style.vote}>
-            <IconButton
-              onClick={() => this.onUV()}
-              disabled={isSelf || this.props.user === null}>
-              <FontIcon
-                className="material-icons"
-                color={this.props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
-            </IconButton>
-            <IconButton
-              onClick={() => this.onDV()}
-              disabled={isSelf || this.props.user === null}>
-              <FontIcon
-                className="material-icons"
-                color={this.props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
-            </IconButton>
-          </div>
-          <div className={style.main}>
-            <div className={classNames(style.header, {
-              [style.self]: isSelf,
-              [style.reply]: this.props.res.type === 'normal' && this.props.res.isReply && !isSelf
-            })}>
-              <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
-                #
+      return <div className={style.container}>
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        <div className={style.vote}>
+          <IconButton
+            onClick={() => this.onUV()}
+            disabled={isSelf || this.props.user === null}>
+            <FontIcon
+              className="material-icons"
+              color={this.props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
+          </IconButton>
+          <IconButton
+            onClick={() => this.onDV()}
+            disabled={isSelf || this.props.user === null}>
+            <FontIcon
+              className="material-icons"
+              color={this.props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
+          </IconButton>
+        </div>
+        <div className={style.main}>
+          <div className={classNames(style.header, {
+            [style.self]: isSelf,
+            [style.reply]: this.props.res.type === 'normal' && this.props.res.isReply && !isSelf
+          })}>
+            <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
+              #
               </a>
-              &nbsp;
+            &nbsp;
               {this.props.res.type === "normal"
-                ? <span>{this.props.res.name || "名無しさん"}</span>
-                : null}
-              {this.props.res.type === "history"
-                ? <span>トピックデータ</span>
-                : null}
-              {this.props.res.type === "topic"
-                ? <span>トピ主</span>
-                : null}
-              {this.props.res.type === "fork"
-                ? <span>派生トピック</span>
-                : null}
-              {this.props.res.type === "delete"
-                ? <span>削除</span>
-                : null}
-              {this.props.res.type === "normal" && this.props.res.profile !== null
-                ? <Link to={{
-                  pathname: `/profile/${this.props.res.profile.id}`,
-                  state: {
-                    modal: true,
-                  },
-                }}>●{this.props.res.profile.sn}</Link>
-                : null}
-              &nbsp;
+              ? <span>{this.props.res.name || "名無しさん"}</span>
+              : null}
+            {this.props.res.type === "history"
+              ? <span>トピックデータ</span>
+              : null}
+            {this.props.res.type === "topic"
+              ? <span>トピ主</span>
+              : null}
+            {this.props.res.type === "fork"
+              ? <span>派生トピック</span>
+              : null}
+            {this.props.res.type === "delete"
+              ? <span>削除</span>
+              : null}
+            {this.props.res.type === "normal" && this.props.res.profile !== null
+              ? <Link to={{
+                pathname: `/profile/${this.props.res.profile.id}`,
+                state: {
+                  modal: true,
+                },
+              }}>●{this.props.res.profile.sn}</Link>
+              : null}
+            &nbsp;
               <Link to={{
-                pathname: `/res/${this.props.res.id}`,
-                state: { modal: true },
-              }}>{dateFormat.format(this.props.res.date)}</Link>
-              &nbsp;
+              pathname: `/res/${this.props.res.id}`,
+              state: { modal: true },
+            }}>{dateFormat.format(this.props.res.date)}</Link>
+            &nbsp;
               <a onClick={() => this.onHashClock()}>HASH:{this.props.res.hash.substr(0, 6)}</a>
-              &nbsp;
-              <span>
-                <span>
-                  {this.props.res.uv - this.props.res.dv}ポイント
-                </span>
-                {isSelf && this.props.res.type === "normal"
-                  ? <IconMenu
-                    iconButtonElement={<IconButton><FontIcon className="material-icons">more_vert</FontIcon></IconButton>}
-                    anchorOrigin={{ horizontal: "left", vertical: "top" }}
-                    targetOrigin={{ horizontal: "left", vertical: "top" }}>
-                    <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
-                  </IconMenu>
-                  : null}
-              </span>
-            </div>
-            <div>
-              <span>
-                {this.props.res.type === "normal" && this.props.res.reply !== null
-                  ? <IconButton
-                    onClick={() => this.onSendReplyClock()}
+            &nbsp;
+            <span>
+              {this.props.res.uv - this.props.res.dv}ポイント
+            </span>
+            {isSelf && this.props.res.type === "normal"
+              ? <IconMenu
+                iconStyle={{ fontSize: "10px" }}
+                iconButtonElement={<IconButton style={{ width: '16px', height: '16px', padding: '0px' }}>
+                  <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
+                </IconButton>}
+                anchorOrigin={{ horizontal: "left", vertical: "top" }}
+                targetOrigin={{ horizontal: "left", vertical: "top" }}>
+                <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
+              </IconMenu>
+              : null}
+          </div>
+          <div>
+            <span>
+              {this.props.res.type === "normal" && this.props.res.reply !== null
+                ? <IconButton
+                  onClick={() => this.onSendReplyClock()}
+                  style={small}
+                  iconStyle={smallIcon}>
+                  <FontIcon className="material-icons">send</FontIcon>
+                </IconButton>
+                : null}
+              {this.props.res.replyCount !== 0
+                ? <span>
+                  <IconButton
+                    onClick={() => this.onReceiveReplyClock()}
                     style={small}
                     iconStyle={smallIcon}>
-                    <FontIcon className="material-icons">send</FontIcon>
+                    <FontIcon className="material-icons">reply</FontIcon>
                   </IconButton>
+                  {this.props.res.replyCount}
+                </span>
+                : null}
+            </span>
+            {this.props.res.type === "normal" ?
+              <Md body={this.props.res.text} />
+              : this.props.res.type === "history" ?
+                <Md body={this.props.res.history.text} />
+                : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ?
+                  <Md body={this.props.res.topicObject.text} />
                   : null}
-                {this.props.res.replyCount !== 0
-                  ? <span>
-                    <IconButton
-                      onClick={() => this.onReceiveReplyClock()}
-                      style={small}
-                      iconStyle={smallIcon}>
-                      <FontIcon className="material-icons">reply</FontIcon>
-                    </IconButton>
-                    {this.props.res.replyCount}
-                  </span>
-                  : null}
-              </span>
-              {this.props.res.type === "normal" ?
-                <Md body={this.props.res.text} />
-                : this.props.res.type === "history" ?
-                  <Md body={this.props.res.history.text} />
-                  : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ?
-                    <Md body={this.props.res.topicObject.text} />
-                    : null}
-              {this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
-                ? <div>
-                  <p>
-                    派生トピックが建ちました。
-                    </p>
-                </div>
-                : null}
-              {this.props.res.type === "fork"
-                ? <div>
-                  <p>
-                    派生トピック:<Link to={`/topic/${this.props.res.fork.id}`}>{this.props.res.fork.title}</Link>
-                  </p>
-                </div>
-                : null}
-
-              {this.props.res.type === "delete"
-                ? <div>
-                  <p>
-                    {this.props.res.flag === "self"
-                      ? "投稿者により削除されました。"
-                      : "管理人により削除されました。"}
-                  </p>
-                </div>
-                : null}
-
-            </div>
-            {this.state.isReply && this.props.user !== null
-              ? <Paper>
-                <ResWrite topic={this.props.res.topic} reply={this.props.res.id} />
-              </Paper>
-              : null}
-            {this.state.children !== null
+            {this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
               ? <div>
-                {this.state.children.msg !== null
-                  ? <Paper>
-                    <strong>{this.state.children.msg}</strong>
-                  </Paper>
-                  : null}
-                {this.state.children.reses.map(r =>
-                  <Paper>
-                    <Res
-                      key={r.id}
-                      res={r}
-                      update={res => this.updateChildren(res)} />
-                  </Paper>)}
+                <p>
+                  派生トピックが建ちました。
+                    </p>
               </div>
               : null}
+            {this.props.res.type === "fork"
+              ? <div>
+                <p>
+                  派生トピック:<Link to={`/topic/${this.props.res.fork.id}`}>{this.props.res.fork.title}</Link>
+                </p>
+              </div>
+              : null}
+
+            {this.props.res.type === "delete"
+              ? <div>
+                <p>
+                  {this.props.res.flag === "self"
+                    ? "投稿者により削除されました。"
+                    : "管理人により削除されました。"}
+                </p>
+              </div>
+              : null}
+
           </div>
+          {this.state.isReply && this.props.user !== null
+            ? <Paper>
+              <ResWrite topic={this.props.res.topic} reply={this.props.res.id} />
+            </Paper>
+            : null}
+          {this.state.children !== null
+            ? <div>
+              {this.state.children.msg !== null
+                ? <Paper>
+                  <strong>{this.state.children.msg}</strong>
+                </Paper>
+                : null}
+              {this.state.children.reses.map(r =>
+                <Paper>
+                  <Res
+                    key={r.id}
+                    res={r}
+                    update={res => this.updateChildren(res)} />
+                </Paper>)}
+            </div>
+            : null}
         </div>
-      );
+      </div>;
     }
   });
