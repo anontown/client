@@ -1,7 +1,11 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
-import { Checkbox, IconButton, MenuItem, SelectField, TextField } from "material-ui";
-import { NavigationArrowForward } from "material-ui/svg-icons";
+import { Checkbox,
+   IconButton,
+    MenuItem,
+     SelectField,
+      TextField,
+    FontIcon } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -101,7 +105,7 @@ export const ResWrite = connect((state: Store) => ({ user: state.user }))
             }}
             fullWidth />
           <IconButton onClick={() => this.onSubmit()}>
-            <NavigationArrowForward />
+            <FontIcon className="material-icons">arrow_forward</FontIcon>
           </IconButton>
         </form>
         : <div>書き込むにはログインが必要です</div>;

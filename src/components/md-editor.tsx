@@ -3,8 +3,8 @@ import {
   IconButton,
   TextField,
   Toggle,
+  FontIcon
 } from "material-ui";
-import { ContentCreate, ImageAddAPhoto } from "material-ui/svg-icons";
 import * as React from "react";
 import { Observable } from "rxjs";
 import { imgur } from "../utils";
@@ -94,10 +94,10 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
         </Dialog>
         <div>
           <IconButton onClick={() => this.setState({ slowImage: true })}>
-            <ImageAddAPhoto />
+            <FontIcon className="material-icons">add_a_photo</FontIcon>
           </IconButton>
           <IconButton onClick={() => this.setState({ slowOekaki: true })}>
-            <ContentCreate />
+            <FontIcon className="material-icons">create</FontIcon>
           </IconButton>
         </div>
         <Toggle

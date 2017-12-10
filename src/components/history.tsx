@@ -3,11 +3,8 @@ import * as Im from "immutable";
 import {
   IconButton,
   Paper,
+  FontIcon
 } from "material-ui";
-import {
-  NavigationArrowDropDown,
-  NavigationArrowDropUp,
-} from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -60,7 +57,9 @@ export const History = connect((state: Store) => ({ user: state.user }))
             onHide={() => this.setState({ snackMsg: null })} />
           <div>
             <IconButton onClick={() => this.setState({ detail: !this.state.detail })}>
-              {this.state.detail ? <NavigationArrowDropUp /> : <NavigationArrowDropDown />}
+              {this.state.detail 
+                  ? <FontIcon className="material-icons">arrow_drop_up</FontIcon> 
+                  :<FontIcon className="material-icons">arrow_drop_down</FontIcon>}
             </IconButton>
             {dateFormat.format(this.props.history.date)}
             <a onClick={() => this.onHashClick()} > HASH:{this.props.history.hash}</a>

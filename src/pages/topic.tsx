@@ -6,8 +6,8 @@ import {
   Paper,
   Slider,
   Toggle,
+  FontIcon
 } from "material-ui";
-import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -243,40 +243,40 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
           <Paper className={style.header}>
             <div className={style.subject}>
               {this.state.topic.type === "fork"
-                ? <icons.CommunicationCallSplit />
+                ? <FontIcon className="material-icons">call_split</FontIcon>
                 : null}
               {this.state.topic.type === "one"
-                ? <icons.ImageLooksOne />
+                ? <FontIcon className="material-icons">looks_one</FontIcon>
                 : null}
               {this.state.topic.title}
             </div>
             <div>
               <IconButton onClick={() => this.setState({ isDataDialog: true })}>
-                <icons.HardwareKeyboardArrowDown />
+              <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
               </IconButton>
               {this.state.topic.type === "normal"
                 ? <IconButton onClick={() => this.setState({ isForkDialog: true })}>
-                  <icons.CommunicationCallSplit />
+                  <FontIcon className="material-icons">call_split</FontIcon>
                 </IconButton>
                 : null}
               {this.state.topic.type === "normal" && this.props.user !== null
                 ? <IconButton onClick={() => this.setState({ isEditDialog: true })}>
-                  <icons.ActionSettings />
+                  <FontIcon className="material-icons">settings</FontIcon>
                 </IconButton>
                 : null}
               {this.props.user !== null
                 ? <IconButton onClick={() => this.favo()}>
                   {this.isFavo
-                    ? <icons.ToggleStar />
-                    : <icons.ToggleStarBorder />}
+                    ? <FontIcon className="material-icons">star</FontIcon>
+                    : <FontIcon className="material-icons">star_border</FontIcon>}
                 </IconButton>
                 : null}
               <IconButton onClick={() => this.setState({ isAutoScrollDialog: true })}>
-                <icons.AvPlayCircleOutline />
+              <FontIcon className="material-icons">play_circle_outline</FontIcon>
               </IconButton>
               {this.props.user !== null && this.state.topic.active
                 ? <IconButton onClick={() => this.setState({ isResWrite: !this.state.isResWrite })}>
-                  <icons.ContentCreate />
+                  <FontIcon className="material-icons">create</FontIcon>
                 </IconButton>
                 : null}
             </div>

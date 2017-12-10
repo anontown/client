@@ -6,13 +6,13 @@ import {
   Toolbar,
   ToolbarGroup,
   ToolbarTitle,
+  FontIcon
 } from "material-ui";
 import {
   getMuiTheme,
   lightBaseTheme,
   MuiThemeProvider,
 } from "material-ui/styles";
-import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -110,20 +110,20 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                 </ToolbarGroup>
                 <ToolbarGroup>
                   <IconButton containerElement={<Link to="/" />}>
-                    <icons.ActionHome />
+                  <FontIcon className="material-icons">home</FontIcon>
                   </IconButton>
                   <IconButton containerElement={<Link to="/topic/search" />}>
-                    <icons.ActionSearch />
+                    <FontIcon className="material-icons">search</FontIcon>
                   </IconButton>
                   {this.props.user !== null
                     ? <IconButton containerElement={<Link to="/notifications" />}>
-                      <icons.SocialNotifications />
+                      <FontIcon className="material-icons">notifications</FontIcon>
                     </IconButton>
                     : null}
                   <IconMenu
                     iconButtonElement={
                       <IconButton touch={true}>
-                        <icons.SocialPeople />
+                        <FontIcon className="material-icons">people</FontIcon>
                       </IconButton>
                     }>
                     {this.props.user !== null
@@ -153,7 +153,7 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                   <IconButton containerElement={<a
                     href="https://document.anontown.com/"
                     target="_blank" />}>
-                    <icons.ActionHelp />
+                    <FontIcon className="material-icons">help</FontIcon>
                   </IconButton>
                 </ToolbarGroup>
               </Toolbar>

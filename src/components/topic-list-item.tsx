@@ -1,10 +1,4 @@
 import * as api from "@anontown/api-types";
-import {
-  AvFiberNew,
-  AvNotInterested,
-  CommunicationCallSplit,
-  ImageLooksOne,
-} from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -14,6 +8,7 @@ import { Store } from "../reducers";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
+import { FontIcon } from "material-ui";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;
@@ -43,10 +38,10 @@ export const TopicListItem = connect((state: Store) => ({ user: state.user }))
       return (
         <div className={style.container}>
           <div>
-            {!this.props.topic.active ? <AvNotInterested /> : null}
-            {this.props.topic.type === "one" ? <ImageLooksOne /> : null}
-            {this.props.topic.type === "fork" ? <CommunicationCallSplit /> : null}
-            {newRes !== null && newRes !== 0 ? <AvFiberNew /> : null}
+            {!this.props.topic.active ? <FontIcon className="material-icons">not_interested</FontIcon> : null}
+            {this.props.topic.type === "one" ? <FontIcon className="material-icons">looks_one</FontIcon> : null}
+            {this.props.topic.type === "fork" ? <FontIcon className="material-icons">call_split</FontIcon> : null}
+            {newRes !== null && newRes !== 0 ? <FontIcon className="material-icons">fiber_new</FontIcon> : null}
             <Link className={style.title} to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
           </div >
           {this.props.detail

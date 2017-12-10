@@ -6,13 +6,8 @@ import {
   Paper,
   RaisedButton,
   TextField,
+  FontIcon
 } from "material-ui";
-import {
-  EditorModeEdit,
-  NavigationRefresh,
-  ToggleStar,
-  ToggleStarBorder,
-} from "material-ui/svg-icons";
 import * as qs from "query-string";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -184,8 +179,8 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
         {this.props.user !== null
           ? <IconButton onClick={() => this.favo()}>
             {this.props.user.storage.tagsFavo.has(Im.Set(this.state.tags))
-              ? <ToggleStar />
-              : <ToggleStarBorder />}
+              ? <FontIcon className="material-icons">star</FontIcon>
+              : <FontIcon className="material-icons">star_border</FontIcon>}
           </IconButton>
           : null}
         <div>
@@ -213,11 +208,11 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
       <div>
         {this.props.user !== null
           ? <IconButton containerElement={<Link to="/topic/create" />}>
-            <EditorModeEdit />
+            <FontIcon className="material-icons">edit</FontIcon>
           </IconButton>
           : null}
         <IconButton onClick={() => this.update()}>
-          <NavigationRefresh />
+          <FontIcon className="material-icons">refresh</FontIcon>
         </IconButton>
       </div>
       <div>

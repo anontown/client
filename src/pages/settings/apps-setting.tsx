@@ -3,8 +3,8 @@ import * as Im from "immutable";
 import {
   IconButton,
   Paper,
+  FontIcon
 } from "material-ui";
-import { ActionDelete } from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -54,7 +54,7 @@ export const AppsSettingPage = withRouter(connect((state: Store) => ({ user: sta
           {this.state.clients.map(c => <Paper>
             {c.name}
             <IconButton type="button" onClick={() => this.del(c)} >
-              <ActionDelete />
+            <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>
           </Paper>)}
         </div>

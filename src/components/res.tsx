@@ -5,8 +5,8 @@ import {
   IconMenu,
   MenuItem,
   Paper,
+  FontIcon
 } from "material-ui";
-import * as icons from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -205,14 +205,16 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             <IconButton
               onClick={() => this.onUV()}
               disabled={isSelf || this.props.user === null}>
-              <icons.HardwareKeyboardArrowUp
-                color={this.props.res.voteFlag === "uv" ? "orange" : undefined} />
+              <FontIcon
+                className="material-icons"
+                color={this.props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
             </IconButton>
             <IconButton
               onClick={() => this.onDV()}
               disabled={isSelf || this.props.user === null}>
-              <icons.HardwareKeyboardArrowDown
-                color={this.props.res.voteFlag === "dv" ? "orange" : undefined} />
+              <FontIcon
+                className="material-icons"
+                color={this.props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
             </IconButton>
           </div>
           <div className={style.main}>
@@ -261,7 +263,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                 </span>
                 {isSelf && this.props.res.type === "normal"
                   ? <IconMenu
-                    iconButtonElement={<IconButton><icons.NavigationMoreVert /></IconButton>}
+                    iconButtonElement={<IconButton><FontIcon className="material-icons">more_vert</FontIcon></IconButton>}
                     anchorOrigin={{ horizontal: "left", vertical: "top" }}
                     targetOrigin={{ horizontal: "left", vertical: "top" }}>
                     <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
@@ -276,7 +278,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                     onClick={() => this.onSendReplyClock()}
                     style={small}
                     iconStyle={smallIcon}>
-                    <icons.ContentSend />
+                    <FontIcon className="material-icons">send</FontIcon>
                   </IconButton>
                   : null}
                 {this.props.res.replyCount !== 0
@@ -285,7 +287,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                       onClick={() => this.onReceiveReplyClock()}
                       style={small}
                       iconStyle={smallIcon}>
-                      <icons.ContentReply />
+                      <FontIcon className="material-icons">reply</FontIcon>
                     </IconButton>
                     {this.props.res.replyCount}
                   </span>

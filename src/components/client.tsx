@@ -1,6 +1,6 @@
 import * as api from "@anontown/api-types";
-import { IconButton } from "material-ui";
-import { EditorModeEdit } from "material-ui/svg-icons";
+import { IconButton,
+FontIcon } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";
@@ -37,7 +37,7 @@ export const Client = connect((state: Store) => ({ user: state.user }))
       const edit = this.props.user !== null && this.props.user.token.user === this.props.client.user
         ? <div>
           <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
-            <EditorModeEdit />
+          <FontIcon className="material-icons">edit</FontIcon>
           </IconButton>
           {clientEditor}
         </div >

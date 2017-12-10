@@ -3,12 +3,8 @@ import {
   Checkbox,
   IconButton,
   Slider,
+  FontIcon
 } from "material-ui";
-import {
-  ContentRedo,
-  ContentUndo,
-  FileFileUpload,
-} from "material-ui/svg-icons";
 import * as React from "react";
 import { RGBColor } from "react-color";
 import * as ReactDOM from "react-dom";
@@ -138,10 +134,10 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
             checked={this.state.fill}
             onCheck={(_e, v) => this.setState({ fill: v })} />
           <IconButton onClick={() => this.setState({ value: this.state.value.undo() })}  >
-            <ContentUndo />
+          <FontIcon className="material-icons">undo</FontIcon>
           </IconButton>
           <IconButton onClick={() => this.setState({ value: this.state.value.redo() })} >
-            <ContentRedo />
+          <FontIcon className="material-icons">redo</FontIcon>
           </IconButton >
           <IconButton onClick={() => {
             // svg to formdata
@@ -161,7 +157,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
               });
             }
           }} >
-            <FileFileUpload />
+            <FontIcon className="material-icons">file_upload</FontIcon>
           </IconButton >
         </div >
         <img

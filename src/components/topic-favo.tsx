@@ -2,8 +2,8 @@ import * as api from "@anontown/api-types";
 import {
   IconButton,
   Paper,
+  FontIcon
 } from "material-ui";
-import { NavigationRefresh } from "material-ui/svg-icons";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -57,7 +57,7 @@ export const TopicFavo = connect((state: Store) => ({ user: state.user }))
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
         <IconButton onClick={() => this.update()} >
-          <NavigationRefresh />
+          <FontIcon className="material-icons">refresh</FontIcon>
         </IconButton>
         <Paper>
           {this.props.user !== null
