@@ -17,6 +17,7 @@ import {
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;
+  zDepth?: number;
 }
 
 interface ResBaseState {
@@ -53,7 +54,7 @@ const ResBase = withRouter(connect((state: Store) => ({ user: state.user }))
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
         {this.state.res !== null
-          ? <Paper>
+          ? <Paper zDepth={this.props.zDepth}>
             <Res res={this.state.res} update={res => this.setState({ res })} />
           </Paper>
           : null}
@@ -65,4 +66,4 @@ export function ResPage() {
   return <Page><ResBase /></Page>;
 }
 
-export const ResModal = withModal(ResBase);
+export const ResModal = withModal(() => <ResBase zDepth={0} />);

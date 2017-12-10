@@ -16,6 +16,7 @@ import {
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserData | null;
+  zDepth?: number;
 }
 
 interface ProfileBaseState {
@@ -50,7 +51,7 @@ const ProfileBase = withRouter(connect((state: Store) => ({ user: state.user }))
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
         {this.state.profile !== null
-          ? <Paper>
+          ? <Paper zDepth={this.props.zDepth}>
             <Profile profile={this.state.profile} />
           </Paper>
           : null}
@@ -62,4 +63,4 @@ export function ProfilePage() {
   return <Page><ProfileBase /></Page>;
 }
 
-export const ProfileModal = withModal(ProfileBase);
+export const ProfileModal = withModal(() => <ProfileBase zDepth={0} />);
