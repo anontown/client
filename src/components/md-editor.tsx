@@ -60,7 +60,6 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
     return (
       <div onPaste={e => {
         const items = e.clipboardData.items;
-        console.log(Array.from(items).map(x => x.type));
         const datas = Array.from(items)
           .filter(x => x.type.indexOf('image') !== -1)
           .map(x => x.getAsFile())
