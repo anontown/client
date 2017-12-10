@@ -252,7 +252,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
             </div>
             <div>
               <IconButton onClick={() => this.setState({ isDataDialog: true })}>
-              <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
+                <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
               </IconButton>
               {this.state.topic.type === "normal"
                 ? <IconButton onClick={() => this.setState({ isForkDialog: true })}>
@@ -272,7 +272,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
                 </IconButton>
                 : null}
               <IconButton onClick={() => this.setState({ isAutoScrollDialog: true })}>
-              <FontIcon className="material-icons">play_circle_outline</FontIcon>
+                <FontIcon className="material-icons">play_circle_outline</FontIcon>
               </IconButton>
               {this.props.user !== null && this.state.topic.active
                 ? <IconButton onClick={() => this.setState({ isResWrite: !this.state.isResWrite })}>
