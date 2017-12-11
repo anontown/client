@@ -2,11 +2,11 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Dialog,
+  FontIcon,
   IconButton,
   Paper,
   Slider,
   Toggle,
-  FontIcon
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";

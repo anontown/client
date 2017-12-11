@@ -11,7 +11,7 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import {
   apiClient,
-  withModal
+  withModal,
 } from "../utils";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {

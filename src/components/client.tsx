@@ -1,6 +1,6 @@
 import * as api from "@anontown/api-types";
-import { IconButton,
-FontIcon } from "material-ui";
+import { FontIcon,
+IconButton } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { ObjectOmit } from "typelevel-ts";

@@ -12,7 +12,7 @@ import { Store } from "../reducers";
 import {
   apiClient,
   resSetedCreate,
-  withModal
+  withModal,
 } from "../utils";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {

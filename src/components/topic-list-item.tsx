@@ -1,4 +1,5 @@
 import * as api from "@anontown/api-types";
+import { FontIcon } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -8,7 +9,6 @@ import { Store } from "../reducers";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
-import { FontIcon } from "material-ui";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;

@@ -1,8 +1,8 @@
 import * as api from "@anontown/api-types";
 import {
+  FontIcon,
   IconButton,
   Paper,
-  FontIcon
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";

@@ -1,12 +1,12 @@
 import { TokenMaster } from "@anontown/api-client";
 import {
+  FontIcon,
   IconButton,
   IconMenu,
   MenuItem,
   Toolbar,
   ToolbarGroup,
   ToolbarTitle,
-  FontIcon
 } from "material-ui";
 import {
   getMuiTheme,
@@ -29,7 +29,7 @@ import * as pages from "../pages";
 import { Store } from "../reducers";
 import {
   apiClient,
-  createUserData
+  createUserData,
 } from "../utils";
 import * as style from "./app.scss";
 

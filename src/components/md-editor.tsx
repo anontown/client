@@ -1,9 +1,9 @@
 import {
   Dialog,
+  FontIcon,
   IconButton,
   TextField,
   Toggle,
-  FontIcon
 } from "material-ui";
 import * as React from "react";
 import { Observable } from "rxjs";
@@ -18,7 +18,7 @@ export interface MdEditorProps {
   minRows?: number;
   onChange?: (newValue: string) => void;
   fullWidth?: boolean;
-  onKeyPress?: React.KeyboardEventHandler<{}>
+  onKeyPress?: React.KeyboardEventHandler<{}>;
 }
 
 interface MdEditorState {
@@ -61,7 +61,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
       <div onPaste={e => {
         const items = e.clipboardData.items;
         const datas = Array.from(items)
-          .filter(x => x.type.indexOf('image') !== -1)
+          .filter(x => x.type.indexOf("image") !== -1)
           .map(x => x.getAsFile())
           .filter<File>((x): x is File => x !== null)
           .map(x => {

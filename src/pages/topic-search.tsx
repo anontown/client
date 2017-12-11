@@ -2,11 +2,11 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Checkbox,
+  FontIcon,
   IconButton,
   Paper,
   RaisedButton,
   TextField,
-  FontIcon
 } from "material-ui";
 import * as qs from "query-string";
 import * as React from "react";

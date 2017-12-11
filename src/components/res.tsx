@@ -1,11 +1,12 @@
 import * as api from "@anontown/api-types";
+import * as classNames from "classnames";
 import * as Im from "immutable";
 import {
+  FontIcon,
   IconButton,
   IconMenu,
   MenuItem,
   Paper,
-  FontIcon
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -25,7 +26,6 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import * as classNames from "classnames";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -219,7 +219,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
         <div className={style.main}>
           <div className={classNames(style.header, {
             [style.self]: isSelf,
-            [style.reply]: this.props.res.type === 'normal' && this.props.res.isReply && !isSelf
+            [style.reply]: this.props.res.type === "normal" && this.props.res.isReply && !isSelf,
           })}>
             <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
               #
@@ -265,7 +265,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             {isSelf && this.props.res.type === "normal"
               ? <IconMenu
                 iconStyle={{ fontSize: "10px" }}
-                iconButtonElement={<IconButton style={{ width: '16px', height: '16px', padding: '0px' }}>
+                iconButtonElement={<IconButton style={{ width: "16px", height: "16px", padding: "0px" }}>
                   <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
                 </IconButton>}
                 anchorOrigin={{ horizontal: "left", vertical: "top" }}

@@ -1,9 +1,9 @@
 import * as Im from "immutable";
 import {
   Checkbox,
+  FontIcon,
   IconButton,
   Slider,
-  FontIcon
 } from "material-ui";
 import * as React from "react";
 import { RGBColor } from "react-color";
