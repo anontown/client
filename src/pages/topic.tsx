@@ -211,7 +211,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
         autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ isDataDialog: false })}>
         {this.state.topic !== null
-          ? <Paper><TopicData topic={this.state.topic} /></Paper>
+          ? <TopicData topic={this.state.topic} />
           : null}
       </Dialog>
       <Dialog
