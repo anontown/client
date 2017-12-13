@@ -7,7 +7,7 @@ import {
   TextField,
 } from "material-ui";
 import * as React from "react";
-import * as Recaptcha from "react-google-recaptcha";
+import Recaptcha from "react-google-recaptcha";
 import { connect } from "react-redux";
 import {
   Redirect,
@@ -77,7 +77,7 @@ export const InPage = withRouter(connect((state: Store) => ({ user: state.user }
             </SelectField>
             {!this.state.isLogin
               ? <Recaptcha
-                siteKey={Config.recaptcha.siteKey}
+                sitekey={Config.recaptcha.siteKey}
                 ref="recaptcha"
                 onChange={(v: string) => this.setState({ recaptcha: v })} />
               : null}
@@ -90,7 +90,7 @@ export const InPage = withRouter(connect((state: Store) => ({ user: state.user }
 
   ok() {
     (this.state.isLogin ? apiClient.findUserID({ sn: this.state.sn })
-      : apiClient.createUser(this.state.recaptcha as string, // キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
+      : apiClient.createUser(this.state.recaptcha as string, // TODO:キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
         {
           sn: this.state.sn,
           pass: this.state.pass,
