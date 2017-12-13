@@ -60,9 +60,8 @@ export const NotificationsPage = withRouter(connect((state: Store) => ({ user: s
                 <RaisedButton label="最新" onClick={() => this.readNew()} />
               </div>
               <div>
-                {this.state.reses.map(r => <Paper>
+                {this.state.reses.map(r => <Paper key={r.id}>
                   <Res
-                    key={r.id}
                     res={r}
                     update={newRes => this.update(newRes)} />
                 </Paper>)}

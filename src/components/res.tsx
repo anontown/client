@@ -342,9 +342,8 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                 </Paper>
                 : null}
               {this.state.children.reses.map(r =>
-                <Paper>
+                <Paper key={r.id}>
                   <Res
-                    key={r.id}
                     res={r}
                     update={res => this.updateChildren(res)} />
                 </Paper>)}
