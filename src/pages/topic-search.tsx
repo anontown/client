@@ -217,8 +217,8 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
       </div>
       <div>
         {this.state.topics.map(t =>
-          <Paper>
-            <TopicListItem key={t.id} topic={t} detail={true} />
+          <Paper key={t.id}>
+            <TopicListItem topic={t} detail={true} />
           </Paper>,
         )}
       </div>
