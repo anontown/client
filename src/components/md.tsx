@@ -2,7 +2,11 @@ import { Dialog } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { Config } from "../env";
-import { camo, mdParser } from "../utils";
+import {
+  camo,
+  mdParser,
+  safeURL
+} from "../utils";
 import * as style from "./md.scss";
 
 type URLType = { type: "normal", url: string } |
@@ -94,13 +98,13 @@ function MdLink(props: { node: mdParser.Link }) {
   switch (link.type) {
     case "normal":
       return React.createElement("a", {
-        href: props.node.url,
+        href: safeURL(props.node.url),
         target: "_blank",
         title: props.node.title || undefined,
       }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
       return <img
-        src={camo.getCamoUrl(props.node.url)}
+        src={safeURL(camo.getCamoUrl(props.node.url))}
         title={props.node.title || undefined} />;
     case "youtube":
       return <MdYouTube videoID={link.videoID} title={props.node.title || undefined} />;
