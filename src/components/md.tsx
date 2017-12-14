@@ -5,7 +5,7 @@ import { Config } from "../env";
 import {
   camo,
   mdParser,
-  safeURL
+  safeURL,
 } from "../utils";
 import * as style from "./md.scss";
 
