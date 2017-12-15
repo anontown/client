@@ -9,6 +9,7 @@ import { Store } from "../reducers";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
+import * as style from "./profile-editor.scss";
 
 interface UnconnectedProfileEditorProps {
   profile: api.Profile | null;
@@ -40,7 +41,7 @@ export const ProfileEditor = connect((state: Store) => ({ user: state.user }))
 
     render() {
       return this.props.user !== null
-        ? <Paper>
+        ? <Paper className={style.container}>
           <form>
             <Errors errors={this.state.errors} />
             <TextField
