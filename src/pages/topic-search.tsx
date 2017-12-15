@@ -31,6 +31,7 @@ import {
 import { UserData } from "../models";
 import { Store } from "../reducers";
 import { apiClient } from "../utils";
+import * as style from "./topic-search.scss";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserData | null;
@@ -175,7 +176,7 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
-      <Paper>
+      <Paper className={style.form}>
         {this.props.user !== null
           ? <IconButton onClick={() => this.favo()}>
             {this.props.user.storage.tagsFavo.has(Im.Set(this.state.tags))
