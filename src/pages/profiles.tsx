@@ -2,6 +2,8 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Paper,
+  Tabs,
+  Tab
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -53,18 +55,20 @@ export const ProfilesPage = withRouter(connect((state: Store) => ({ user: state.
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
           {this.props.user !== null
-            ? <div>
-              <ProfileEditor
-                profile={null}
-                onAdd={p => this.add(p)} />
-              <div>
+            ? <Tabs>
+              <Tab label="編集">
                 {this.state.profiles.map(p =>
                   <ProfileEditor
                     key={p.id}
                     profile={p}
                     onUpdate={newProfile => this.update(newProfile)} />)}
-              </div>
-            </div>
+              </Tab>
+              <Tab label="新規">
+                <ProfileEditor
+                  profile={null}
+                  onAdd={p => this.add(p)} />
+              </Tab>
+            </Tabs>
             : <Paper>
               ログインしてください。
         </Paper>
