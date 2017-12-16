@@ -8,6 +8,7 @@ import { ObjectOmit } from "typelevel-ts";
 import { UserData } from "../models";
 import { Store } from "../reducers";
 import { TagsLink } from "./tags-link";
+import * as style from "./tag-favo.scss";
 
 interface UnconnectedTagFavoProps {
   user: UserData | null;
@@ -25,7 +26,7 @@ export const TagFavo = connect((state: Store) => ({ user: state.user }))
     }
 
     render() {
-      return <Paper>
+      return <Paper className={style.container}>
         {this.props.user !== null
           ? this.props.user.storage.tagsFavo.size !== 0 ?
             this.props.user.storage.tagsFavo.map(tags =>
