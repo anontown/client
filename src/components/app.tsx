@@ -165,6 +165,7 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                   <Route exact path="/topic/create" component={pages.TopicCreatePage} />
                   <Route exact path="/topic/:id" component={pages.TopicPage} />
                   <Route exact path="/topic/:id/data" component={pages.TopicDataPage} />
+                  <Route exact path="/topic/:id/fork" component={pages.TopicForkPage} />
                   <Route exact path="/profiles" component={pages.ProfilesPage} />
                   <Route exact path="/notifications" component={pages.NotificationsPage} />
                   <Route exact path="/messages" component={pages.MessagesPage} />
@@ -177,6 +178,7 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                 {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
                 {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
                 {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
+                {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
               </div>
             </div>
             : null}

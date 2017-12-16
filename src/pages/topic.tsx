@@ -29,7 +29,6 @@ import {
   Snack,
   TopicEditor,
   TopicFavo,
-  TopicFork,
 } from "../components";
 import { ResSeted, UserData } from "../models";
 import { Store } from "../reducers";
@@ -53,7 +52,6 @@ export interface TopicPageState {
   isAutoScrollDialog: boolean;
   autoScrollSpeed: number;
   isAutoScroll: boolean;
-  isForkDialog: boolean;
   isEditDialog: boolean;
 }
 
@@ -72,7 +70,6 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
     isAutoScrollDialog: false,
     autoScrollSpeed: 15,
     isAutoScroll: false,
-    isForkDialog: false,
     isEditDialog: false,
   };
 
@@ -204,18 +201,6 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
           onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
       </Dialog>
       <Dialog
-        title="派生トピック"
-        open={this.state.isForkDialog}
-        autoScrollBodyContent={true}
-        onRequestClose={() => this.setState({ isForkDialog: false })}>
-        {this.state.topic !== null && this.state.topic.type === "normal"
-          ? <TopicFork topic={this.state.topic} onCreate={topic => {
-            this.setState({ isForkDialog: false });
-            this.props.history.push(`/topic/${topic.id}`);
-          }} />
-          : null}
-      </Dialog>
-      <Dialog
         title="編集"
         open={this.state.isEditDialog}
         autoScrollBodyContent={true}
@@ -247,7 +232,10 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
                 <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
               </IconButton>
               {this.state.topic.type === "normal"
-                ? <IconButton onClick={() => this.setState({ isForkDialog: true })}>
+                ? <IconButton containerElement={<Link to={{
+                  pathname: `/topic/${this.props.match.params.id}/fork`,
+                  state: { modal: true }
+                }} />}>
                   <FontIcon className="material-icons">call_split</FontIcon>
                 </IconButton>
                 : null}
