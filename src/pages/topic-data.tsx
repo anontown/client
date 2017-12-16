@@ -39,7 +39,7 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
   }
 
   render() {
-    return <div>
+    return <Paper zDepth={this.props.zDepth}>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
@@ -48,7 +48,7 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
           <TopicData topic={this.state.topic} />
         </Paper>
         : null}
-    </div>;
+    </Paper>;
   }
 });
 

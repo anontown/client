@@ -13,6 +13,7 @@ import {
   apiClient,
   withModal,
 } from "../utils";
+import { Paper } from "material-ui";
 
 interface TopicForkBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -46,7 +47,7 @@ const TopicForkBase = withRouter(class extends React.Component<TopicForkBaseProp
   }
 
   render() {
-    return <div>
+    return <Paper zDepth={this.props.zDepth}>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
@@ -55,7 +56,7 @@ const TopicForkBase = withRouter(class extends React.Component<TopicForkBaseProp
           this.props.history.push(`/topic/${topic.id}`);
         }} />
         : null}
-    </div>;
+    </Paper>;
   }
 });
 
