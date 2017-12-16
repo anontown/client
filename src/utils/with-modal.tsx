@@ -7,9 +7,10 @@ import {
   withRouter,
 } from "react-router-dom";
 
-export const withModal = <P extends {}>(Page: React.ComponentType<P>) => {
+export const withModal = <P extends {}>(Page: React.ComponentType<P>, title: string) => {
   return withRouter((props: P & RouteComponentProps<{}>) => {
     return <Dialog
+      title={title}
       open={true}
       autoScrollBodyContent={true}
       onRequestClose={() => {

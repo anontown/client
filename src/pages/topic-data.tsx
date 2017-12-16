@@ -56,4 +56,4 @@ export function TopicDataPage() {
   return <Page><TopicDataBase /></Page>;
 }
 
-export const TopicDataModal = withModal(() => <TopicDataBase zDepth={0} />);
+export const TopicDataModal = withModal(() => <TopicDataBase zDepth={0} />, "トピック詳細");

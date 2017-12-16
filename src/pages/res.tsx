@@ -66,4 +66,4 @@ export function ResPage() {
   return <Page><ResBase /></Page>;
 }
 
-export const ResModal = withModal(() => <ResBase zDepth={0} />);
+export const ResModal = withModal(() => <ResBase zDepth={0} />, "レス詳細");

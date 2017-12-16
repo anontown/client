@@ -63,4 +63,4 @@ export function ProfilePage() {
   return <Page><ProfileBase /></Page>;
 }
 
-export const ProfileModal = withModal(() => <ProfileBase zDepth={0} />);
+export const ProfileModal = withModal(() => <ProfileBase zDepth={0} />, "プロフィール");
