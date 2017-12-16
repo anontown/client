@@ -13,3 +13,4 @@ export * from "./topic-create";
 export * from "./topic-search";
 export * from "./topic";
 export * from "./profile";
+export * from "./topic-data";

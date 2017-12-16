@@ -110,7 +110,7 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                 </ToolbarGroup>
                 <ToolbarGroup>
                   <IconButton containerElement={<Link to="/" />}>
-                  <FontIcon className="material-icons">home</FontIcon>
+                    <FontIcon className="material-icons">home</FontIcon>
                   </IconButton>
                   <IconButton containerElement={<Link to="/topic/search" />}>
                     <FontIcon className="material-icons">search</FontIcon>
@@ -160,21 +160,23 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
               <div className={style.main}>
                 <Switch location={isModal ? this.previousLocation : location}>
                   <Route exact path="/" component={pages.HomePage} />
-                  <Route path="/res/:id" component={pages.ResPage} />
-                  <Route path="/topic/search" component={pages.TopicSearchPage} />
-                  <Route path="/topic/create" component={pages.TopicCreatePage} />
-                  <Route path="/topic/:id" component={pages.TopicPage} />
-                  <Route path="/profiles" component={pages.ProfilesPage} />
-                  <Route path="/notifications" component={pages.NotificationsPage} />
-                  <Route path="/messages" component={pages.MessagesPage} />
-                  <Route path="/in" component={pages.InPage} />
-                  <Route path="/auth" component={pages.AuthPage} />
+                  <Route exact path="/res/:id" component={pages.ResPage} />
+                  <Route exact path="/topic/search" component={pages.TopicSearchPage} />
+                  <Route exact path="/topic/create" component={pages.TopicCreatePage} />
+                  <Route exact path="/topic/:id" component={pages.TopicPage} />
+                  <Route exact path="/topic/:id/data" component={pages.TopicDataPage} />
+                  <Route exact path="/profiles" component={pages.ProfilesPage} />
+                  <Route exact path="/notifications" component={pages.NotificationsPage} />
+                  <Route exact path="/messages" component={pages.MessagesPage} />
+                  <Route exact path="/in" component={pages.InPage} />
+                  <Route exact path="/auth" component={pages.AuthPage} />
                   <Route path="/settings" component={pages.SettingsPage} />
-                  <Route path="/profile/:id" component={pages.ProfilePage} />
+                  <Route exact path="/profile/:id" component={pages.ProfilePage} />
                   <Route component={pages.NotFoundPage} />
                 </Switch>
                 {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
                 {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
+                {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
               </div>
             </div>
             : null}

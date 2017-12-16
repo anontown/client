@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import {
   RouteComponentProps,
   withRouter,
+  Link
 } from "react-router-dom";
 import {
   Observable,
@@ -26,7 +27,6 @@ import {
   ResWrite,
   Scroll,
   Snack,
-  TopicData,
   TopicEditor,
   TopicFavo,
   TopicFork,
@@ -53,7 +53,6 @@ export interface TopicPageState {
   isAutoScrollDialog: boolean;
   autoScrollSpeed: number;
   isAutoScroll: boolean;
-  isDataDialog: boolean;
   isForkDialog: boolean;
   isEditDialog: boolean;
 }
@@ -73,7 +72,6 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
     isAutoScrollDialog: false,
     autoScrollSpeed: 15,
     isAutoScroll: false,
-    isDataDialog: false,
     isForkDialog: false,
     isEditDialog: false,
   };
@@ -206,15 +204,6 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
           onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
       </Dialog>
       <Dialog
-        title="詳細データ"
-        open={this.state.isDataDialog}
-        autoScrollBodyContent={true}
-        onRequestClose={() => this.setState({ isDataDialog: false })}>
-        {this.state.topic !== null
-          ? <TopicData topic={this.state.topic} />
-          : null}
-      </Dialog>
-      <Dialog
         title="派生トピック"
         open={this.state.isForkDialog}
         autoScrollBodyContent={true}
@@ -251,7 +240,10 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
               {this.state.topic.title}
             </div>
             <div>
-              <IconButton onClick={() => this.setState({ isDataDialog: true })}>
+              <IconButton containerElement={<Link to={{
+                pathname: `/topic/${this.props.match.params.id}/data`,
+                state: { modal: true }
+              }} />}>
                 <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
               </IconButton>
               {this.state.topic.type === "normal"
