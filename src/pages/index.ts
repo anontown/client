@@ -15,3 +15,4 @@ export * from "./topic";
 export * from "./profile";
 export * from "./topic-data";
 export * from "./topic-fork";
+export * from "./topic-edit";

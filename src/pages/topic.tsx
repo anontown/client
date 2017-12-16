@@ -27,7 +27,6 @@ import {
   ResWrite,
   Scroll,
   Snack,
-  TopicEditor,
   TopicFavo,
 } from "../components";
 import { ResSeted, UserData } from "../models";
@@ -52,7 +51,6 @@ export interface TopicPageState {
   isAutoScrollDialog: boolean;
   autoScrollSpeed: number;
   isAutoScroll: boolean;
-  isEditDialog: boolean;
 }
 
 export const TopicPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
@@ -70,7 +68,6 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
     isAutoScrollDialog: false,
     autoScrollSpeed: 15,
     isAutoScroll: false,
-    isEditDialog: false,
   };
 
   constructor(props: TopicPageProps) {
@@ -200,18 +197,6 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
           value={this.state.autoScrollSpeed}
           onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
       </Dialog>
-      <Dialog
-        title="編集"
-        open={this.state.isEditDialog}
-        autoScrollBodyContent={true}
-        onRequestClose={() => this.setState({ isEditDialog: false })}>
-        {this.state.topic !== null && this.state.topic.type === "normal"
-          ? <TopicEditor topic={this.state.topic} onUpdate={topic => {
-            this.setState({ isEditDialog: false });
-            this.setState({ topic });
-          }} />
-          : null}
-      </Dialog>
       {this.state.topic !== null
         ? <div className={style.main}>
           <Paper className={style.header}>
@@ -240,7 +225,10 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
                 </IconButton>
                 : null}
               {this.state.topic.type === "normal" && this.props.user !== null
-                ? <IconButton onClick={() => this.setState({ isEditDialog: true })}>
+                ? <IconButton containerElement={<Link to={{
+                  pathname: `/topic/${this.props.match.params.id}/edit`,
+                  state: { modal: true }
+                }} />}>
                   <FontIcon className="material-icons">settings</FontIcon>
                 </IconButton>
                 : null}
