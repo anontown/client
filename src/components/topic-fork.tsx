@@ -70,10 +70,9 @@ export const TopicFork = connect((state: Store) => ({ user: state.user }))
           : null}
         <hr />
         <div>
-          {this.state.children.map(t => <Paper>
+          {this.state.children.map(t => <Paper key={t.id}>
             <TopicListItem
               topic={t}
-              key={t.id}
               detail={false} />
           </Paper>)}
         </div>
