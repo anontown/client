@@ -140,25 +140,6 @@ export const Res = connect((state: Store) => ({ user: state.user }))
         });
     }
 
-    onSendReplyClock() {
-      if (this.props.res.type === "normal" && this.props.res.reply !== null) {
-        const token = this.props.user !== null ? this.props.user.token : null;
-        if (this.state.children === null) {
-          apiClient.findResOne(token, {
-            id: this.props.res.reply,
-          })
-            .mergeMap(res => resSetedCreate.resSet(token, [res]))
-            .subscribe(reses => {
-              this.setState({ children: { reses: Im.List(reses), msg: null } });
-            }, () => {
-              this.setState({ snackMsg: "レス取得に失敗しました" });
-            });
-        } else {
-          this.setState({ children: null });
-        }
-      }
-    }
-
     onReceiveReplyClock() {
       const token = this.props.user !== null ? this.props.user.token : null;
       if (this.state.children === null) {
@@ -278,7 +259,10 @@ export const Res = connect((state: Store) => ({ user: state.user }))
             <span>
               {this.props.res.type === "normal" && this.props.res.reply !== null
                 ? <IconButton
-                  onClick={() => this.onSendReplyClock()}
+                  containerElement={<Link to={{
+                    pathname: `/res/${this.props.res.reply}`,
+                    state: { modal: true }
+                  }} />}
                   style={small}
                   iconStyle={smallIcon}>
                   <FontIcon className="material-icons">send</FontIcon>
