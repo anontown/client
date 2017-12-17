@@ -11,9 +11,9 @@ import { UserData } from "../models";
 import { Store } from "../reducers";
 import {
   apiClient,
+  list,
   resSetedCreate,
   withModal,
-  list
 } from "../utils";
 
 import * as Im from "immutable";
@@ -39,12 +39,12 @@ const ResReplyBase = withRouter(connect((state: Store) => ({ user: state.user })
       const token = this.props.user !== null ? this.props.user.token : null;
 
       apiClient.findResOne(token, {
-        id: this.props.match.params.id
+        id: this.props.match.params.id,
       })
         .map(res => res.topic)
         .mergeMap(topic => apiClient.findResReply(token, {
           reply: this.props.match.params.id,
-          topic
+          topic,
         }))
         .mergeMap(reses => resSetedCreate.resSet(token, reses))
         .map(reses => Im.List(reses))
@@ -64,9 +64,9 @@ const ResReplyBase = withRouter(connect((state: Store) => ({ user: state.user })
           ? this.state.reses.map(res => <Paper key={res.id}>
             <Res
               res={res}
-              update={res => {
+              update={updateRes => {
                 if (this.state.reses !== null) {
-                  this.setState({ reses: list.update(this.state.reses, res) })
+                  this.setState({ reses: list.update(this.state.reses, updateRes) });
                 }
               }} />
           </Paper>)

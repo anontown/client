@@ -2,8 +2,8 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Paper,
+  Tab,
   Tabs,
-  Tab
 } from "material-ui";
 import * as React from "react";
 import { connect } from "react-redux";

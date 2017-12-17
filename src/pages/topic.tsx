@@ -11,9 +11,9 @@ import {
 import * as React from "react";
 import { connect } from "react-redux";
 import {
+  Link,
   RouteComponentProps,
   withRouter,
-  Link
 } from "react-router-dom";
 import {
   Observable,
@@ -212,14 +212,14 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
             <div>
               <IconButton containerElement={<Link to={{
                 pathname: `/topic/${this.props.match.params.id}/data`,
-                state: { modal: true }
+                state: { modal: true },
               }} />}>
                 <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
               </IconButton>
               {this.state.topic.type === "normal"
                 ? <IconButton containerElement={<Link to={{
                   pathname: `/topic/${this.props.match.params.id}/fork`,
-                  state: { modal: true }
+                  state: { modal: true },
                 }} />}>
                   <FontIcon className="material-icons">call_split</FontIcon>
                 </IconButton>
@@ -227,7 +227,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
               {this.state.topic.type === "normal" && this.props.user !== null
                 ? <IconButton containerElement={<Link to={{
                   pathname: `/topic/${this.props.match.params.id}/edit`,
-                  state: { modal: true }
+                  state: { modal: true },
                 }} />}>
                   <FontIcon className="material-icons">settings</FontIcon>
                 </IconButton>

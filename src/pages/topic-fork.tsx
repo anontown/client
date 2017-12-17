@@ -1,4 +1,5 @@
 import * as api from "@anontown/api-types";
+import { Paper } from "material-ui";
 import * as React from "react";
 import {
   RouteComponentProps,
@@ -7,20 +8,19 @@ import {
 import {
   Page,
   Snack,
-  TopicFork
+  TopicFork,
 } from "../components";
 import {
   apiClient,
   withModal,
 } from "../utils";
-import { Paper } from "material-ui";
 
 interface TopicForkBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
 }
 
 interface TopicForkBaseState {
-  topic: api.TopicNormal | null,
+  topic: api.TopicNormal | null;
   snackMsg: null | string;
 }
 

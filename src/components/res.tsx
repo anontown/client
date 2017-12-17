@@ -243,7 +243,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                 ? <IconButton
                   containerElement={<Link to={{
                     pathname: `/res/${this.props.res.reply}`,
-                    state: { modal: true }
+                    state: { modal: true },
                   }} />}
                   style={small}
                   iconStyle={smallIcon}>
@@ -255,7 +255,7 @@ export const Res = connect((state: Store) => ({ user: state.user }))
                   <IconButton
                     containerElement={<Link to={{
                       pathname: `/res/${this.props.res.id}/reply`,
-                      state: { modal: true }
+                      state: { modal: true },
                     }} />}
                     style={small}
                     iconStyle={smallIcon}>

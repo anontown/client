@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
 import { UserData } from "../models";
 import { Store } from "../reducers";
-import { TagsLink } from "./tags-link";
 import * as style from "./tag-favo.scss";
+import { TagsLink } from "./tags-link";
 
 interface UnconnectedTagFavoProps {
   user: UserData | null;

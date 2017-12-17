@@ -1,15 +1,15 @@
+import * as api from "@anontown/api-types";
 import { Paper } from "material-ui";
 import * as React from "react";
 import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Page, TopicData, Snack } from "../components";
+import { Page, Snack, TopicData } from "../components";
 import {
   apiClient,
   withModal,
 } from "../utils";
-import * as api from "@anontown/api-types";
 
 interface TopicDataBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
