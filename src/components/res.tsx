@@ -140,24 +140,6 @@ export const Res = connect((state: Store) => ({ user: state.user }))
         });
     }
 
-    onReceiveReplyClock() {
-      const token = this.props.user !== null ? this.props.user.token : null;
-      if (this.state.children === null) {
-        apiClient.findResReply(token, {
-          topic: this.props.res.topic,
-          reply: this.props.res.id,
-        })
-          .mergeMap(reses => resSetedCreate.resSet(token, reses))
-          .subscribe(reses => {
-            this.setState({ children: { reses: Im.List(reses), msg: null } });
-          }, () => {
-            this.setState({ snackMsg: "レス取得に失敗しました" });
-          });
-      } else {
-        this.setState({ children: null });
-      }
-    }
-
     updateChildren(res: ResSeted) {
       if (this.state.children !== null) {
         this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } });
@@ -271,7 +253,10 @@ export const Res = connect((state: Store) => ({ user: state.user }))
               {this.props.res.replyCount !== 0
                 ? <span>
                   <IconButton
-                    onClick={() => this.onReceiveReplyClock()}
+                    containerElement={<Link to={{
+                      pathname: `/res/${this.props.res.id}/reply`,
+                      state: { modal: true }
+                    }} />}
                     style={small}
                     iconStyle={smallIcon}>
                     <FontIcon className="material-icons">reply</FontIcon>

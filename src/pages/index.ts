@@ -16,3 +16,4 @@ export * from "./profile";
 export * from "./topic-data";
 export * from "./topic-fork";
 export * from "./topic-edit";
+export * from "./res-reply";

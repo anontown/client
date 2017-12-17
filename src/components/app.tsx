@@ -161,6 +161,7 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                 <Switch location={isModal ? this.previousLocation : location}>
                   <Route exact path="/" component={pages.HomePage} />
                   <Route exact path="/res/:id" component={pages.ResPage} />
+                  <Route exact path="/res/:id/reply" component={pages.ResReplyPage} />
                   <Route exact path="/topic/search" component={pages.TopicSearchPage} />
                   <Route exact path="/topic/create" component={pages.TopicCreatePage} />
                   <Route exact path="/topic/:id" component={pages.TopicPage} />
@@ -177,6 +178,7 @@ export const App = withRouter(connect((state: Store) => ({ user: state.user }),
                   <Route component={pages.NotFoundPage} />
                 </Switch>
                 {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
+                {isModal ? <Route path="/res/:id/reply" component={pages.ResReplyModal} /> : null}
                 {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
                 {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
                 {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
