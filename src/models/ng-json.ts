@@ -1,46 +1,47 @@
-export interface NG {
+export interface NGJson {
+  name: string
   topic: string | null,
   transparent: boolean,
   date: string,
   expirationDate: string,
-  body: NGBody
+  body: NGBodyJson
 }
 
-export type NGBody = NGBodyNot |
-  NGBodyAnd |
-  NGBodyOr |
-  NGBodyProfile |
-  NGBodyHash |
-  NGBodyBody |
-  NGBodyName |
-  NGBodyVote;
+export type NGBodyJson = NGBodyNotJson |
+  NGBodyAndJson |
+  NGBodyOrJson |
+  NGBodyProfileJson |
+  NGBodyHashJson |
+  NGBodyBodyJson |
+  NGBodyNameJson |
+  NGBodyVoteJson;
 
-export interface NGBodyNot {
+export interface NGBodyNotJson {
   type: "not",
-  body: NGBody
+  body: NGBodyJson
 }
 
-export interface NGBodyAnd {
+export interface NGBodyAndJson {
   type: "and",
-  body: NGBody[]
+  body: NGBodyJson[]
 }
 
-export interface NGBodyOr {
+export interface NGBodyOrJson {
   type: "or",
-  body: NGBody[]
+  body: NGBodyJson[]
 }
 
-export interface NGBodyProfile {
+export interface NGBodyProfileJson {
   type: "profile",
   id: string
 }
 
-export interface NGBodyHash {
+export interface NGBodyHashJson {
   type: "hash",
   id: string
 }
 
-export interface NGBodyReg {
+export interface NGBodyRegJson {
   reg: string,
   g: boolean,
   i: boolean,
@@ -48,15 +49,15 @@ export interface NGBodyReg {
   y: boolean
 }
 
-export interface NGBodyBody extends NGBodyReg {
+export interface NGBodyBodyJson extends NGBodyRegJson {
   type: "body"
 }
 
-export interface NGBodyName extends NGBodyReg {
+export interface NGBodyNameJson extends NGBodyRegJson {
   type: "name"
 }
 
-export interface NGBodyVote {
+export interface NGBodyVoteJson {
   type: "vote",
   value: number
 }
