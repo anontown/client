@@ -3,7 +3,6 @@ export interface NG {
   transparent: boolean,
   date: string,
   expirationDate: string,
-  chain: number | null,
   body: NGBody
 }
 
