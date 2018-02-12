@@ -38,7 +38,7 @@ export interface NGBodyProfileJson {
 
 export interface NGBodyHashJson {
   type: "hash",
-  id: string
+  hash: string
 }
 
 export interface NGBodyRegJson {
