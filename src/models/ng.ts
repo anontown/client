@@ -1,5 +1,5 @@
-import { ResSeted } from "./res-seted";
 import * as ngJson from "./ng-json";
+import { ResSeted } from "./res-seted";
 
 export function isNG(ng: ngJson.NGJson, res: ResSeted) {
   if (ng.topic !== null && ng.topic !== res.topic) {
@@ -39,6 +39,6 @@ function isRegNG(reg: ngJson.NGBodyRegJson, str: string) {
     reg.g ? "g" : "",
     reg.i ? "i" : "",
     reg.m ? "m" : "",
-    reg.y ? "y" : ""
+    reg.y ? "y" : "",
   ].join()));
 }

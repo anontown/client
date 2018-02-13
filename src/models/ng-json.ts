@@ -1,10 +1,10 @@
 export interface NGJson {
-  name: string
-  topic: string | null,
-  transparent: boolean,
-  date: string,
-  expirationDate: string,
-  body: NGBodyJson
+  name: string;
+  topic: string | null;
+  transparent: boolean;
+  date: string;
+  expirationDate: string;
+  body: NGBodyJson;
 }
 
 export type NGBodyJson = NGBodyNotJson |
@@ -17,47 +17,47 @@ export type NGBodyJson = NGBodyNotJson |
   NGBodyVoteJson;
 
 export interface NGBodyNotJson {
-  type: "not",
-  body: NGBodyJson
+  type: "not";
+  body: NGBodyJson;
 }
 
 export interface NGBodyAndJson {
-  type: "and",
-  body: NGBodyJson[]
+  type: "and";
+  body: NGBodyJson[];
 }
 
 export interface NGBodyOrJson {
-  type: "or",
-  body: NGBodyJson[]
+  type: "or";
+  body: NGBodyJson[];
 }
 
 export interface NGBodyProfileJson {
-  type: "profile",
-  id: string
+  type: "profile";
+  id: string;
 }
 
 export interface NGBodyHashJson {
-  type: "hash",
-  hash: string
+  type: "hash";
+  hash: string;
 }
 
 export interface NGBodyRegJson {
-  reg: string,
-  g: boolean,
-  i: boolean,
-  m: boolean,
-  y: boolean
+  reg: string;
+  g: boolean;
+  i: boolean;
+  m: boolean;
+  y: boolean;
 }
 
 export interface NGBodyBodyJson extends NGBodyRegJson {
-  type: "body"
+  type: "body";
 }
 
 export interface NGBodyNameJson extends NGBodyRegJson {
-  type: "name"
+  type: "name";
 }
 
 export interface NGBodyVoteJson {
-  type: "vote",
-  value: number
+  type: "vote";
+  value: number;
 }
