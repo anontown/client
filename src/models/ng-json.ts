@@ -1,10 +1,10 @@
 export interface NGJson {
-  name: string;
-  topic: string | null;
-  transparent: boolean;
-  date: string;
-  expirationDate: string;
-  body: NGBodyJson;
+  readonly name: string;
+  readonly topic: string | null;
+  readonly transparent: boolean;
+  readonly date: string;
+  readonly expirationDate: string;
+  readonly body: NGBodyJson;
 }
 
 export type NGBodyJson = NGBodyNotJson |
@@ -17,47 +17,46 @@ export type NGBodyJson = NGBodyNotJson |
   NGBodyVoteJson;
 
 export interface NGBodyNotJson {
-  type: "not";
-  body: NGBodyJson;
+  readonly type: "not";
+  readonly body: NGBodyJson;
 }
 
 export interface NGBodyAndJson {
-  type: "and";
-  body: NGBodyJson[];
+  readonly type: "and";
+  readonly body: NGBodyJson[];
 }
 
 export interface NGBodyOrJson {
-  type: "or";
-  body: NGBodyJson[];
+  readonly type: "or";
+  readonly body: NGBodyJson[];
 }
 
 export interface NGBodyProfileJson {
-  type: "profile";
-  id: string;
+  readonly type: "profile";
+  readonly id: string;
 }
 
 export interface NGBodyHashJson {
-  type: "hash";
-  hash: string;
+  readonly type: "hash";
+  readonly hash: string;
 }
 
 export interface NGBodyRegJson {
-  reg: string;
-  g: boolean;
-  i: boolean;
-  m: boolean;
-  y: boolean;
+  readonly source: string;
+  readonly i: boolean;
 }
 
-export interface NGBodyBodyJson extends NGBodyRegJson {
-  type: "body";
+export interface NGBodyBodyJson {
+  readonly type: "body";
+  readonly reg: NGBodyRegJson;
 }
 
-export interface NGBodyNameJson extends NGBodyRegJson {
-  type: "name";
+export interface NGBodyNameJson {
+  readonly type: "name";
+  readonly reg: NGBodyRegJson;
 }
 
 export interface NGBodyVoteJson {
-  type: "vote";
-  value: number;
+  readonly type: "vote";
+  readonly value: number;
 }
