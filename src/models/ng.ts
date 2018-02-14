@@ -44,14 +44,14 @@ export function toJSON(ng: NG): ngJson.NGJson {
   };
 }
 
-export function toJSONReg(reg: RegExp): ngJson.NGBodyRegJson {
+function toJSONReg(reg: RegExp): ngJson.NGBodyRegJson {
   return {
     source: reg.source,
     i: reg.ignoreCase,
   };
 }
 
-export function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
+function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
   switch (ngBody.type) {
     case "not":
       return { type: "not", body: toJSONBody(ngBody.body) };
@@ -81,13 +81,13 @@ export function fromJSON(ngJson: ngJson.NGJson): NG {
   };
 }
 
-export function fromJSONReg(reg: ngJson.NGBodyRegJson): RegExp {
+function fromJSONReg(reg: ngJson.NGBodyRegJson): RegExp {
   return new RegExp(reg.source, [
     reg.i ? "i" : ""
   ].join());
 }
 
-export function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
+function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
   switch (ngBody.type) {
     case "not":
       return { type: "not", body: fromJSONBody(ngBody.body) };

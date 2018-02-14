@@ -1,4 +1,7 @@
 import * as Im from "immutable";
+import * as ng from "./ng";
+import * as ngJson from "./ng-json";
+
 
 interface StorageJSON1 {
   ver: "1.0.0";
@@ -40,26 +43,37 @@ interface StorageJSON6 {
   topicRead: { [key: string]: { res: string, count: number } };
 }
 
+interface StorageJSON7 {
+  ver: "7";
+  topicFavo: string[];
+  tagsFavo: string[][];
+  topicRead: { [key: string]: { res: string, count: number } };
+  ng: ngJson.NGJson[]
+}
+
 export type StorageJSON = StorageJSON1 |
   StorageJSON2 |
   StorageJSON3 |
   StorageJSON4 |
   StorageJSON5 |
-  StorageJSON6;
+  StorageJSON6 |
+  StorageJSON7;
 
-export type StorageJSONLatest = StorageJSON6;
+export type StorageJSONLatest = StorageJSON7;
 export const initStorage: StorageJSONLatest = {
-  ver: "6",
+  ver: "7",
   topicFavo: [],
   tagsFavo: [],
   topicRead: {},
+  ng: []
 };
-export const verArray: Array<StorageJSON["ver"]> = ["6", "5", "4", "3", "2", "1.0.0"];
+export const verArray: Array<StorageJSON["ver"]> = ["7", "6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
   topicFavo: Im.Set<string>;
   tagsFavo: Im.Set<Im.Set<string>>;
   topicRead: Im.Map<string, { res: string, count: number }>;
+  ng: Im.List<ng.NG>
 }
 
 export function toStorage(json: StorageJSONLatest): Storage {
@@ -67,15 +81,17 @@ export function toStorage(json: StorageJSONLatest): Storage {
     topicFavo: Im.Set(json.topicFavo),
     tagsFavo: Im.Set(json.tagsFavo.map(tags => Im.Set(tags))),
     topicRead: Im.Map(json.topicRead),
+    ng: Im.List(json.ng.map(x => ng.fromJSON(x)))
   };
 }
 
 export function toJSON(storage: Storage): StorageJSONLatest {
   return {
-    ver: "6",
+    ver: "7",
     topicFavo: storage.topicFavo.toArray(),
     tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
     topicRead: storage.topicRead.toObject(),
+    ng: storage.ng.map(x => ng.toJSON(x)).toArray()
   };
 }
 
@@ -130,6 +146,14 @@ function convert5To6(val: StorageJSON5): StorageJSON6 {
   };
 }
 
+function convert6To7(val: StorageJSON6): StorageJSON7 {
+  return {
+    ...val,
+    ver: "7",
+    ng: []
+  };
+}
+
 export function convert(storage: StorageJSON): StorageJSONLatest {
   const s1 = storage;
   const s2 = s1.ver === "1.0.0" ? convert1To2(s1) : s1;
@@ -137,8 +161,9 @@ export function convert(storage: StorageJSON): StorageJSONLatest {
   const s4 = s3.ver === "3" ? convert3To4(s3) : s3;
   const s5 = s4.ver === "4" ? convert4To5(s4) : s4;
   const s6 = s5.ver === "5" ? convert5To6(s5) : s5;
+  const s7 = s6.ver === "6" ? convert6To7(s6) : s6;
 
-  const json = s6.ver === "6" ? s6 : initStorage;
+  const json = s6.ver === "7" ? s7 : initStorage;
 
   return json;
 }
