@@ -7,7 +7,7 @@ export function isNG(ng: NG, res: ResSeted) {
     return false;
   }
 
-  if (ng.expirationDate.valueOf() < new Date(res.date).valueOf()) {
+  if (ng.expirationDate !== null && ng.expirationDate.valueOf() < new Date(res.date).valueOf()) {
     return false;
   }
 
@@ -39,7 +39,7 @@ export function toJSON(ng: NG): ngJson.NGJson {
   return {
     ...ng,
     body: toJSONBody(ng.body),
-    expirationDate: ng.expirationDate.toISOString(),
+    expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
     date: ng.date.toISOString()
   };
 }
@@ -76,7 +76,7 @@ export function fromJSON(ngJson: ngJson.NGJson): NG {
   return {
     ...ngJson,
     body: fromJSONBody(ngJson.body),
-    expirationDate: new Date(ngJson.expirationDate),
+    expirationDate: ngJson.expirationDate !== null ? new Date(ngJson.expirationDate) : null,
     date: new Date(ngJson.date)
   };
 }
@@ -111,9 +111,8 @@ export function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
 export interface NG {
   readonly name: string;
   readonly topic: string | null;
-  readonly transparent: boolean;
   readonly date: Date;
-  readonly expirationDate: Date;
+  readonly expirationDate: Date | null;
   readonly body: NGBody;
 }
 
