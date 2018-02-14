@@ -4,51 +4,51 @@ import * as ngJson from "./ng-json";
 
 
 interface StorageJSON1 {
-  ver: "1.0.0";
-  topicFav: string[];
-  topicRead: Array<{ topic: string, res: string }>;
+  readonly ver: "1.0.0";
+  readonly topicFav: string[];
+  readonly topicRead: Array<{ topic: string, res: string }>;
 }
 
 interface StorageJSON2 {
-  ver: "2";
-  topicFav: string[];
-  topicRead: Array<{ topic: string, res: string, count: number }>;
+  readonly ver: "2";
+  readonly topicFav: string[];
+  readonly topicRead: Array<{ topic: string, res: string, count: number }>;
 }
 
 interface StorageJSON3 {
-  ver: "3";
-  topicFavo: string[];
-  topicRead: { [key: string]: { res: string, count: number } };
+  readonly ver: "3";
+  readonly topicFavo: string[];
+  readonly topicRead: { [key: string]: { res: string, count: number } };
 }
 
 interface StorageJSON4 {
-  ver: "4";
-  topicFavo: string[];
-  boardFavo: string[];
-  topicRead: { [key: string]: { res: string, count: number } };
+  readonly ver: "4";
+  readonly topicFavo: string[];
+  readonly boardFavo: string[];
+  readonly topicRead: { [key: string]: { res: string, count: number } };
 }
 
 interface StorageJSON5 {
   // バグでtopicFavoが壊れたのでリセットする用
-  ver: "5";
-  topicFavo: string[];
-  boardFavo: string[];
-  topicRead: { [key: string]: { res: string, count: number } };
+  readonly ver: "5";
+  readonly topicFavo: string[];
+  readonly boardFavo: string[];
+  readonly topicRead: { [key: string]: { res: string, count: number } };
 }
 
 interface StorageJSON6 {
-  ver: "6";
-  topicFavo: string[];
-  tagsFavo: string[][];
-  topicRead: { [key: string]: { res: string, count: number } };
+  readonly ver: "6";
+  readonly topicFavo: string[];
+  readonly tagsFavo: string[][];
+  readonly topicRead: { [key: string]: { res: string, count: number } };
 }
 
 interface StorageJSON7 {
-  ver: "7";
-  topicFavo: string[];
-  tagsFavo: string[][];
-  topicRead: { [key: string]: { res: string, count: number } };
-  ng: ngJson.NGJson[]
+  readonly ver: "7";
+  readonly topicFavo: string[];
+  readonly tagsFavo: string[][];
+  readonly topicRead: { [key: string]: { res: string, count: number } };
+  readonly ng: ngJson.NGJson[]
 }
 
 export type StorageJSON = StorageJSON1 |
@@ -70,10 +70,10 @@ export const initStorage: StorageJSONLatest = {
 export const verArray: Array<StorageJSON["ver"]> = ["7", "6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
-  topicFavo: Im.Set<string>;
-  tagsFavo: Im.Set<Im.Set<string>>;
-  topicRead: Im.Map<string, { res: string, count: number }>;
-  ng: Im.List<ng.NG>
+  readonly topicFavo: Im.Set<string>;
+  readonly tagsFavo: Im.Set<Im.Set<string>>;
+  readonly topicRead: Im.Map<string, { res: string, count: number }>;
+  readonly ng: Im.List<ng.NG>
 }
 
 export function toStorage(json: StorageJSONLatest): Storage {
