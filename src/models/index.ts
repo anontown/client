@@ -1,3 +1,5 @@
 export * from "./res-seted";
 export * from "./storage";
 export * from "./user-data";
+import * as ng from "./ng";
+export { ng };
