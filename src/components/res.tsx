@@ -9,13 +9,11 @@ import {
   Paper,
 } from "material-ui";
 import * as React from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Observable } from "rxjs";
 import { ObjectOmit } from "typelevel-ts";
 import { ResSeted } from "../models";
-import { UserData, ng } from "../models";
-import { Store } from "../reducers";
+import { ng } from "../models";
 import {
   apiClient,
   dateFormat,
@@ -26,10 +24,11 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
+import { UserStore, appInject } from "../stores";
 
 interface UnconnectedResProps {
   res: ResSeted;
-  user: UserData | null;
+  user: UserStore;
   update?: (res: ResSeted) => void;
 }
 
@@ -41,286 +40,285 @@ interface ResState {
   snackMsg: null | string;
 }
 
-export const Res = connect((state: Store) => ({ user: state.user }))
-  (class extends React.Component<UnconnectedResProps, ResState> {
-    constructor(props: UnconnectedResProps) {
-      super(props);
-      this.state = {
-        isReply: false,
-        children: null,
-        snackMsg: null,
-      };
+export const Res = appInject(class extends React.Component<UnconnectedResProps, ResState> {
+  constructor(props: UnconnectedResProps) {
+    super(props);
+    this.state = {
+      isReply: false,
+      children: null,
+      snackMsg: null,
+    };
+  }
+
+  vote(token: api.Token, res$: Observable<api.Res>) {
+    res$.mergeMap(res => resSetedCreate.resSet(token, [res]))
+      .map(reses => reses[0])
+      .subscribe(res => {
+        if (this.props.update) {
+          this.props.update(res);
+        }
+      }, () => {
+        this.setState({ snackMsg: "投票に失敗しました" });
+      });
+  }
+
+  onUV() {
+    const user = this.props.user.data;
+    if (user === null) {
+      return;
     }
 
-    vote(token: api.Token, res$: Observable<api.Res>) {
-      res$.mergeMap(res => resSetedCreate.resSet(token, [res]))
-        .map(reses => reses[0])
-        .subscribe(res => {
-          if (this.props.update) {
-            this.props.update(res);
-          }
+    switch (this.props.res.voteFlag) {
+      case "uv":
+        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
+        break;
+      case "dv":
+        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
+          .mergeMap(() => apiClient.uvRes(user.token, { id: this.props.res.id })));
+        break;
+      case "not":
+        this.vote(user.token, apiClient.uvRes(user.token, { id: this.props.res.id }));
+        break;
+    }
+  }
+
+  onDV() {
+    const user = this.props.user.data;
+    if (user === null) {
+      return;
+    }
+
+    switch (this.props.res.voteFlag) {
+      case "dv":
+        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
+        break;
+      case "uv":
+        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
+          .mergeMap(() => apiClient.dvRes(user.token, { id: this.props.res.id })));
+        break;
+      case "not":
+        this.vote(user.token, apiClient.dvRes(user.token, { id: this.props.res.id }));
+        break;
+    }
+  }
+
+  onHashClock() {
+    const token = this.props.user.data !== null ? this.props.user.data.token : null;
+    if (this.state.children === null) {
+      apiClient.findResHash(token, {
+        topic: this.props.res.topic,
+        hash: this.props.res.hash,
+      })
+        .mergeMap(reses => resSetedCreate.resSet(token, reses))
+        .subscribe(reses => {
+          this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } });
         }, () => {
-          this.setState({ snackMsg: "投票に失敗しました" });
+          this.setState({ snackMsg: "レス取得に失敗しました" });
         });
+    } else {
+      this.setState({ children: null });
     }
+  }
 
-    onUV() {
-      const user = this.props.user;
-      if (user === null) {
-        return;
-      }
-
-      switch (this.props.res.voteFlag) {
-        case "uv":
-          this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
-          break;
-        case "dv":
-          this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
-            .mergeMap(() => apiClient.uvRes(user.token, { id: this.props.res.id })));
-          break;
-        case "not":
-          this.vote(user.token, apiClient.uvRes(user.token, { id: this.props.res.id }));
-          break;
-      }
+  onDeleteClick() {
+    if (this.props.user.data === null) {
+      return;
     }
+    const user = this.props.user.data;
 
-    onDV() {
-      const user = this.props.user;
-      if (user === null) {
-        return;
-      }
+    apiClient.delRes(user.token, { id: this.props.res.id })
+      .mergeMap(res => resSetedCreate.resSet(user.token, [res]))
+      .map(reses => reses[0])
+      .subscribe(res => {
+        if (this.props.update) {
+          this.props.update(res);
+        }
+      }, () => {
+        this.setState({ snackMsg: "レス削除に失敗しました" });
+      });
+  }
 
-      switch (this.props.res.voteFlag) {
-        case "dv":
-          this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
-          break;
-        case "uv":
-          this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
-            .mergeMap(() => apiClient.dvRes(user.token, { id: this.props.res.id })));
-          break;
-        case "not":
-          this.vote(user.token, apiClient.dvRes(user.token, { id: this.props.res.id }));
-          break;
-      }
+  updateChildren(res: ResSeted) {
+    if (this.state.children !== null) {
+      this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } });
     }
+  }
 
-    onHashClock() {
-      const token = this.props.user !== null ? this.props.user.token : null;
-      if (this.state.children === null) {
-        apiClient.findResHash(token, {
-          topic: this.props.res.topic,
-          hash: this.props.res.hash,
-        })
-          .mergeMap(reses => resSetedCreate.resSet(token, reses))
-          .subscribe(reses => {
-            this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } });
-          }, () => {
-            this.setState({ snackMsg: "レス取得に失敗しました" });
-          });
-      } else {
-        this.setState({ children: null });
-      }
-    }
+  render(): JSX.Element {
+    const smallIcon = {
+      width: 18,
+      height: 18,
+    };
+    const small = {
+      width: 36,
+      height: 36,
+      padding: 8,
+    };
 
-    onDeleteClick() {
-      if (this.props.user === null) {
-        return;
-      }
-      const user = this.props.user;
+    const isSelf = this.props.user.data !== null && this.props.user.data.token.user === this.props.res.user;
 
-      apiClient.delRes(user.token, { id: this.props.res.id })
-        .mergeMap(res => resSetedCreate.resSet(user.token, [res]))
-        .map(reses => reses[0])
-        .subscribe(res => {
-          if (this.props.update) {
-            this.props.update(res);
-          }
-        }, () => {
-          this.setState({ snackMsg: "レス削除に失敗しました" });
-        });
-    }
-
-    updateChildren(res: ResSeted) {
-      if (this.state.children !== null) {
-        this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } });
-      }
-    }
-
-    render(): JSX.Element {
-      const smallIcon = {
-        width: 18,
-        height: 18,
-      };
-      const small = {
-        width: 36,
-        height: 36,
-        padding: 8,
-      };
-
-      const isSelf = this.props.user !== null && this.props.user.token.user === this.props.res.user;
-
-      return this.props.user !== null && this.props.user.storage.ng.some(x => ng.isNG(x, this.props.res))
-        ? <div>あぼーん</div>
-        : <div className={style.container} >
-          <Snack
-            msg={this.state.snackMsg}
-            onHide={() => this.setState({ snackMsg: null })} />
-          <div className={style.vote}>
-            <IconButton
-              onClick={() => this.onUV()}
-              disabled={isSelf || this.props.user === null}>
-              <FontIcon
-                className="material-icons"
-                color={this.props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
-            </IconButton>
-            <IconButton
-              onClick={() => this.onDV()}
-              disabled={isSelf || this.props.user === null}>
-              <FontIcon
-                className="material-icons"
-                color={this.props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
-            </IconButton>
-          </div>
-          <div className={style.main}>
-            <div className={classNames(style.header, {
-              [style.self]: isSelf,
-              [style.reply]: this.props.res.type === "normal" && this.props.res.isReply && !isSelf,
-            })}>
-              <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
-                #
+    return this.props.user.data !== null && this.props.user.data.storage.ng.some(x => ng.isNG(x, this.props.res))
+      ? <div>あぼーん</div>
+      : <div className={style.container} >
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        <div className={style.vote}>
+          <IconButton
+            onClick={() => this.onUV()}
+            disabled={isSelf || this.props.user.data === null}>
+            <FontIcon
+              className="material-icons"
+              color={this.props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
+          </IconButton>
+          <IconButton
+            onClick={() => this.onDV()}
+            disabled={isSelf || this.props.user.data === null}>
+            <FontIcon
+              className="material-icons"
+              color={this.props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
+          </IconButton>
+        </div>
+        <div className={style.main}>
+          <div className={classNames(style.header, {
+            [style.self]: isSelf,
+            [style.reply]: this.props.res.type === "normal" && this.props.res.isReply && !isSelf,
+          })}>
+            <a onClick={() => this.setState({ isReply: !this.state.isReply })}>
+              #
               </a>
-              &nbsp;
+            &nbsp;
               {this.props.res.type === "normal" && this.props.res.name !== null
-                ? <span>{this.props.res.name}</span>
-                : null}
-              {this.props.res.type === "normal" && this.props.res.name === null && this.props.res.profile === null
-                ? <span>名無しさん</span>
-                : null}
-              {this.props.res.type === "history"
-                ? <span>トピックデータ</span>
-                : null}
-              {this.props.res.type === "topic"
-                ? <span>トピ主</span>
-                : null}
-              {this.props.res.type === "fork"
-                ? <span>派生トピック</span>
-                : null}
-              {this.props.res.type === "delete"
-                ? <span>削除</span>
-                : null}
-              {this.props.res.type === "normal" && this.props.res.profile !== null
-                ? <Link to={{
-                  pathname: `/profile/${this.props.res.profile.id}`,
-                  state: {
-                    modal: true,
-                  },
-                }}>●{this.props.res.profile.sn}</Link>
-                : null}
-              &nbsp;
+              ? <span>{this.props.res.name}</span>
+              : null}
+            {this.props.res.type === "normal" && this.props.res.name === null && this.props.res.profile === null
+              ? <span>名無しさん</span>
+              : null}
+            {this.props.res.type === "history"
+              ? <span>トピックデータ</span>
+              : null}
+            {this.props.res.type === "topic"
+              ? <span>トピ主</span>
+              : null}
+            {this.props.res.type === "fork"
+              ? <span>派生トピック</span>
+              : null}
+            {this.props.res.type === "delete"
+              ? <span>削除</span>
+              : null}
+            {this.props.res.type === "normal" && this.props.res.profile !== null
+              ? <Link to={{
+                pathname: `/profile/${this.props.res.profile.id}`,
+                state: {
+                  modal: true,
+                },
+              }}>●{this.props.res.profile.sn}</Link>
+              : null}
+            &nbsp;
               <Link to={{
-                pathname: `/res/${this.props.res.id}`,
-                state: { modal: true },
-              }}>{dateFormat.format(this.props.res.date)}</Link>
-              &nbsp;
+              pathname: `/res/${this.props.res.id}`,
+              state: { modal: true },
+            }}>{dateFormat.format(this.props.res.date)}</Link>
+            &nbsp;
               <a onClick={() => this.onHashClock()}>HASH:{this.props.res.hash.substr(0, 6)}</a>
-              &nbsp;
+            &nbsp;
             <span>
-                {this.props.res.uv - this.props.res.dv}ポイント
+              {this.props.res.uv - this.props.res.dv}ポイント
             </span>
-              {isSelf && this.props.res.type === "normal"
-                ? <IconMenu
-                  iconStyle={{ fontSize: "10px" }}
-                  iconButtonElement={<IconButton style={{ width: "16px", height: "16px", padding: "0px" }}>
-                    <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
-                  </IconButton>}
-                  anchorOrigin={{ horizontal: "left", vertical: "top" }}
-                  targetOrigin={{ horizontal: "left", vertical: "top" }}>
-                  <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
-                </IconMenu>
+            {isSelf && this.props.res.type === "normal"
+              ? <IconMenu
+                iconStyle={{ fontSize: "10px" }}
+                iconButtonElement={<IconButton style={{ width: "16px", height: "16px", padding: "0px" }}>
+                  <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
+                </IconButton>}
+                anchorOrigin={{ horizontal: "left", vertical: "top" }}
+                targetOrigin={{ horizontal: "left", vertical: "top" }}>
+                <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
+              </IconMenu>
+              : null}
+          </div>
+          <div>
+            <span>
+              {this.props.res.type === "normal" && this.props.res.reply !== null
+                ? <IconButton
+                  containerElement={<Link to={{
+                    pathname: `/res/${this.props.res.reply}`,
+                    state: { modal: true },
+                  }} />}
+                  style={small}
+                  iconStyle={smallIcon}>
+                  <FontIcon className="material-icons">send</FontIcon>
+                </IconButton>
                 : null}
-            </div>
-            <div>
-              <span>
-                {this.props.res.type === "normal" && this.props.res.reply !== null
-                  ? <IconButton
+              {this.props.res.replyCount !== 0
+                ? <span>
+                  <IconButton
                     containerElement={<Link to={{
-                      pathname: `/res/${this.props.res.reply}`,
+                      pathname: `/res/${this.props.res.id}/reply`,
                       state: { modal: true },
                     }} />}
                     style={small}
                     iconStyle={smallIcon}>
-                    <FontIcon className="material-icons">send</FontIcon>
+                    <FontIcon className="material-icons">reply</FontIcon>
                   </IconButton>
+                  {this.props.res.replyCount}
+                </span>
+                : null}
+            </span>
+            {this.props.res.type === "normal" ?
+              <Md body={this.props.res.text} />
+              : this.props.res.type === "history" ?
+                <Md body={this.props.res.history.text} />
+                : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ?
+                  <Md body={this.props.res.topicObject.text} />
                   : null}
-                {this.props.res.replyCount !== 0
-                  ? <span>
-                    <IconButton
-                      containerElement={<Link to={{
-                        pathname: `/res/${this.props.res.id}/reply`,
-                        state: { modal: true },
-                      }} />}
-                      style={small}
-                      iconStyle={smallIcon}>
-                      <FontIcon className="material-icons">reply</FontIcon>
-                    </IconButton>
-                    {this.props.res.replyCount}
-                  </span>
-                  : null}
-              </span>
-              {this.props.res.type === "normal" ?
-                <Md body={this.props.res.text} />
-                : this.props.res.type === "history" ?
-                  <Md body={this.props.res.history.text} />
-                  : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ?
-                    <Md body={this.props.res.topicObject.text} />
-                    : null}
-              {this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
-                ? <div>
-                  <p>
-                    派生トピックが建ちました。
-                    </p>
-                </div>
-                : null}
-              {this.props.res.type === "fork"
-                ? <div>
-                  <p>
-                    派生トピック:<Link to={`/topic/${this.props.res.fork.id}`}>{this.props.res.fork.title}</Link>
-                  </p>
-                </div>
-                : null}
-
-              {this.props.res.type === "delete"
-                ? <div>
-                  <p>
-                    {this.props.res.flag === "self"
-                      ? "投稿者により削除されました。"
-                      : "管理人により削除されました。"}
-                  </p>
-                </div>
-                : null}
-
-            </div>
-            {this.state.isReply && this.props.user !== null
-              ? <Paper>
-                <ResWrite topic={this.props.res.topic} reply={this.props.res.id} />
-              </Paper>
-              : null}
-            {this.state.children !== null
+            {this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
               ? <div>
-                {this.state.children.msg !== null
-                  ? <Paper>
-                    <strong>{this.state.children.msg}</strong>
-                  </Paper>
-                  : null}
-                {this.state.children.reses.map(r =>
-                  <Paper key={r.id}>
-                    <Res
-                      res={r}
-                      update={res => this.updateChildren(res)} />
-                  </Paper>)}
+                <p>
+                  派生トピックが建ちました。
+                    </p>
               </div>
               : null}
+            {this.props.res.type === "fork"
+              ? <div>
+                <p>
+                  派生トピック:<Link to={`/topic/${this.props.res.fork.id}`}>{this.props.res.fork.title}</Link>
+                </p>
+              </div>
+              : null}
+
+            {this.props.res.type === "delete"
+              ? <div>
+                <p>
+                  {this.props.res.flag === "self"
+                    ? "投稿者により削除されました。"
+                    : "管理人により削除されました。"}
+                </p>
+              </div>
+              : null}
+
           </div>
-        </div >;
-    }
-  });
+          {this.state.isReply && this.props.user.data !== null
+            ? <Paper>
+              <ResWrite topic={this.props.res.topic} reply={this.props.res.id} />
+            </Paper>
+            : null}
+          {this.state.children !== null
+            ? <div>
+              {this.state.children.msg !== null
+                ? <Paper>
+                  <strong>{this.state.children.msg}</strong>
+                </Paper>
+                : null}
+              {this.state.children.reses.map(r =>
+                <Paper key={r.id}>
+                  <Res
+                    res={r}
+                    update={res => this.updateChildren(res)} />
+                </Paper>)}
+            </div>
+            : null}
+        </div>
+      </div >;
+  }
+});

@@ -4,7 +4,6 @@ import {
   Tabs,
 } from "material-ui";
 import * as React from "react";
-import { connect } from "react-redux";
 import {
   Link,
   RouteComponentProps,
@@ -15,17 +14,16 @@ import {
   TagFavo,
   TopicFavo,
 } from "../components";
-import { UserData } from "../models";
-import { Store } from "../reducers";
+import { UserStore, appInject } from "../stores";
 
 interface HomePageProps extends RouteComponentProps<{}> {
-  user: UserData | null;
+  user: UserStore;
 }
 
-export const HomePage = withRouter(connect((state: Store) => ({ user: state.user }))
+export const HomePage = withRouter(appInject
   ((props: HomePageProps) => {
     return <Page>
-      {props.user !== null
+      {props.user.data !== null
         ? <Tabs>
           <Tab label="トピック">
             <TopicFavo detail={true} />

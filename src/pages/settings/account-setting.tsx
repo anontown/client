@@ -5,20 +5,17 @@ import {
   TextField,
 } from "material-ui";
 import * as React from "react";
-import { connect } from "react-redux";
 import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { updateUserData } from "../../actions";
 import { Errors, Snack } from "../../components";
-import { UserData } from "../../models";
-import { Store } from "../../reducers";
 import { apiClient } from "../../utils";
+import { UserStore, appInject } from "../../stores";
+
 
 interface AccountSettingPageProps extends RouteComponentProps<{}> {
-  user: UserData | null;
-  updateUser: (user: UserData | null) => void;
+  user: UserStore;
 }
 
 interface AccountSettingPageState {
@@ -29,11 +26,7 @@ interface AccountSettingPageState {
   snackMsg: string | null;
 }
 
-export const AccountSettingPage = withRouter(connect(
-  (state: Store) => ({ user: state.user }), dispatch => ({
-    updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
-  }),
-)(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
+export const AccountSettingPage = appInject(withRouter(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
   constructor(props: AccountSettingPageProps) {
     super(props);
     this.state = {
@@ -44,9 +37,9 @@ export const AccountSettingPage = withRouter(connect(
       errors: [],
     };
 
-    if (this.props.user !== null) {
+    if (this.props.user.data !== null) {
       apiClient
-        .findUserSN({ id: this.props.user.token.user })
+        .findUserSN({ id: this.props.user.data.token.user })
         .subscribe(sn => {
           this.setState({ sn });
         }, () => {
@@ -56,17 +49,17 @@ export const AccountSettingPage = withRouter(connect(
   }
 
   onSubmit() {
-    if (this.props.user === null) {
+    if (this.props.user.data === null) {
       return;
     }
-    const user = this.props.user;
+    const user = this.props.user.data;
     apiClient.updateUser({ id: user.token.user, pass: this.state.oldPass }, {
       pass: this.state.newPass,
       sn: this.state.sn,
     })
       .mergeMap(() => apiClient.createTokenMaster({ id: user.token.user, pass: this.state.newPass }))
       .subscribe(token => {
-        this.props.updateUser({ ...user, token });
+        this.props.user.setData({ ...user, token });
         this.setState({ errors: [] });
       }, error => {
         if (error instanceof AtError) {
@@ -78,7 +71,7 @@ export const AccountSettingPage = withRouter(connect(
   }
 
   render() {
-    return this.props.user !== null
+    return this.props.user.data !== null
       ? <Paper>
         <Snack
           msg={this.state.snackMsg}

@@ -10,7 +10,6 @@ import {
 } from "material-ui";
 import * as qs from "query-string";
 import * as React from "react";
-import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import {
   Link,
@@ -21,21 +20,18 @@ import {
   Subscription,
 } from "rxjs";
 import { isArray } from "util";
-import { updateUserData } from "../actions";
 import {
   Page,
   Snack,
   TagsInput,
   TopicListItem,
 } from "../components";
-import { UserData } from "../models";
-import { Store } from "../reducers";
 import { apiClient } from "../utils";
 import * as style from "./topic-search.scss";
+import { UserStore, appInject } from "../stores";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
-  user: UserData | null;
-  updateUser: (user: UserData | null) => void;
+  user: UserStore;
 }
 
 export interface TopicSearchPageState {
@@ -50,9 +46,7 @@ export interface TopicSearchPageState {
   count: number;
 }
 
-export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
-  updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
-}))(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
+export const TopicSearchPage = withRouter(appInject(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
   limit = 100;
   subs: Subscription[] = [];
   formChange$ = new Subject<void>();
@@ -156,14 +150,14 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
   }
 
   favo() {
-    if (this.props.user === null) {
+    if (this.props.user.data === null) {
       return;
     }
-    const storage = this.props.user.storage;
+    const storage = this.props.user.data.storage;
     const tf = storage.tagsFavo;
     const tags = Im.Set(this.state.tags);
-    this.props.updateUser({
-      ...this.props.user,
+    this.props.user.setData({
+      ...this.props.user.data,
       storage: {
         ...storage,
         tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
@@ -177,9 +171,9 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
       <Paper className={style.form}>
-        {this.props.user !== null
+        {this.props.user.data !== null
           ? <IconButton onClick={() => this.favo()}>
-            {this.props.user.storage.tagsFavo.has(Im.Set(this.state.tags))
+            {this.props.user.data.storage.tagsFavo.has(Im.Set(this.state.tags))
               ? <FontIcon className="material-icons">star</FontIcon>
               : <FontIcon className="material-icons">star_border</FontIcon>}
           </IconButton>
@@ -207,7 +201,7 @@ export const TopicSearchPage = withRouter(connect((state: Store) => ({ user: sta
         </div>
       </Paper>
       <div>
-        {this.props.user !== null
+        {this.props.user.data !== null
           ? <IconButton containerElement={<Link to="/topic/create" />}>
             <FontIcon className="material-icons">edit</FontIcon>
           </IconButton>

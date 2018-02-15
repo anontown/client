@@ -9,7 +9,6 @@ import {
   Toggle,
 } from "material-ui";
 import * as React from "react";
-import { connect } from "react-redux";
 import {
   Link,
   RouteComponentProps,
@@ -20,7 +19,6 @@ import {
   ReplaySubject,
   Subject,
 } from "rxjs";
-import { updateUserData } from "../actions";
 import {
   Page,
   Res,
@@ -29,18 +27,17 @@ import {
   Snack,
   TopicFavo,
 } from "../components";
-import { ResSeted, UserData } from "../models";
-import { Store } from "../reducers";
+import { ResSeted } from "../models";
 import { apiClient, resSetedCreate } from "../utils";
 import * as style from "./topic.scss";
+import { UserStore, appInject } from "../stores";
 
 // ジェネリクス解除
 interface ResScroll { new(): Scroll<ResSeted>; }
 const ResScroll = Scroll as ResScroll;
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
-  user: UserData | null;
-  updateUser: (user: UserData | null) => void;
+  user: UserStore;
 }
 
 export interface TopicPageState {
@@ -53,9 +50,7 @@ export interface TopicPageState {
   isAutoScroll: boolean;
 }
 
-export const TopicPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
-  updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
-}))(class extends React.Component<TopicPageProps, TopicPageState> {
+export const TopicPage = withRouter(appInject(class extends React.Component<TopicPageProps, TopicPageState> {
   limit = 50;
   scrollNewItem = new ReplaySubject<string | null>(1);
   updateItem = new Subject<ResSeted>();
@@ -86,7 +81,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
         this.setState({ snackMsg: "トピック取得に失敗" });
       });
 
-    const user = props.user;
+    const user = props.user.data;
     if (user !== null) {
       const topicRead = user.storage.topicRead.get(props.match.params.id);
       if (topicRead !== undefined) {
@@ -123,10 +118,10 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
   }
 
   storageSave(res: string | null) {
-    if (this.props.user === null || this.state.topic === null) {
+    if (this.props.user.data === null || this.state.topic === null) {
       return;
     }
-    const storage = this.props.user.storage;
+    const storage = this.props.user.data.storage;
     if (res === null) {
       const storageRes = storage.topicRead.get(this.state.topic.id);
       if (storageRes !== undefined) {
@@ -139,8 +134,8 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
         res = first.id;
       }
     }
-    this.props.updateUser({
-      ...this.props.user,
+    this.props.user.setData({
+      ...this.props.user.data,
       storage: {
         ...storage,
         topicRead: storage.topicRead.set(this.state.topic.id, {
@@ -152,13 +147,13 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
   }
 
   favo() {
-    if (this.props.user === null || this.state.topic === null) {
+    if (this.props.user.data === null || this.state.topic === null) {
       return;
     }
-    const storage = this.props.user.storage;
+    const storage = this.props.user.data.storage;
     const tf = storage.topicFavo;
-    this.props.updateUser({
-      ...this.props.user,
+    this.props.user.setData({
+      ...this.props.user.data,
       storage: {
         ...storage,
         topicFavo: this.isFavo ? tf.delete(this.state.topic.id) : tf.add(this.state.topic.id),
@@ -167,17 +162,17 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
   }
 
   get isFavo() {
-    if (this.props.user === null || this.state.topic === null) {
+    if (this.props.user.data === null || this.state.topic === null) {
       return false;
     }
 
-    return this.props.user.storage.topicFavo.has(this.state.topic.id);
+    return this.props.user.data.storage.topicFavo.has(this.state.topic.id);
   }
 
   render() {
     return <Page
       disableScroll={true}
-      sidebar={this.props.user !== null
+      sidebar={this.props.user.data !== null
         ? <TopicFavo detail={false} />
         : undefined}>
       <Snack
@@ -224,7 +219,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
                   <FontIcon className="material-icons">call_split</FontIcon>
                 </IconButton>
                 : null}
-              {this.state.topic.type === "normal" && this.props.user !== null
+              {this.state.topic.type === "normal" && this.props.user.data !== null
                 ? <IconButton containerElement={<Link to={{
                   pathname: `/topic/${this.props.match.params.id}/edit`,
                   state: { modal: true },
@@ -232,7 +227,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
                   <FontIcon className="material-icons">settings</FontIcon>
                 </IconButton>
                 : null}
-              {this.props.user !== null
+              {this.props.user.data !== null
                 ? <IconButton onClick={() => this.favo()}>
                   {this.isFavo
                     ? <FontIcon className="material-icons">star</FontIcon>
@@ -242,7 +237,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
               <IconButton onClick={() => this.setState({ isAutoScrollDialog: true })}>
                 <FontIcon className="material-icons">play_circle_outline</FontIcon>
               </IconButton>
-              {this.props.user !== null && this.state.topic.active
+              {this.props.user.data !== null && this.state.topic.active
                 ? <IconButton onClick={() => this.setState({ isResWrite: !this.state.isResWrite })}>
                   <FontIcon className="material-icons">create</FontIcon>
                 </IconButton>
@@ -258,7 +253,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
               if (this.state.topic === null) {
                 return Observable.empty();
               }
-              const token = this.props.user !== null ? this.props.user.token : null;
+              const token = this.props.user.data !== null ? this.props.user.data.token : null;
               return apiClient.findResNew(token, {
                 topic: this.state.topic.id,
                 limit: this.limit,
@@ -270,7 +265,7 @@ export const TopicPage = withRouter(connect((state: Store) => ({ user: state.use
               if (this.state.topic === null) {
                 return Observable.empty();
               }
-              const token = this.props.user !== null ? this.props.user.token : null;
+              const token = this.props.user.data !== null ? this.props.user.data.token : null;
               return apiClient.findRes(token, {
                 topic: this.state.topic.id,
                 type,

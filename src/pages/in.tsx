@@ -8,28 +8,24 @@ import {
 } from "material-ui";
 import * as React from "react";
 import Recaptcha from "react-google-recaptcha";
-import { connect } from "react-redux";
+import { UserStore, appInject } from "../stores";
 import {
   Redirect,
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { updateUserData } from "../actions";
 import {
   Errors,
   Page,
 } from "../components";
 import { Config } from "../env";
-import { UserData } from "../models";
-import { Store } from "../reducers";
 import {
   apiClient,
   createUserData,
 } from "../utils";
 
 interface InPageProps extends RouteComponentProps<{}> {
-  user: UserData | null;
-  updateUser: (user: UserData | null) => void;
+  user: UserStore;
 }
 
 interface InPageState {
@@ -40,9 +36,7 @@ interface InPageState {
   recaptcha: string | null;
 }
 
-export const InPage = withRouter(connect((state: Store) => ({ user: state.user }), dispatch => ({
-  updateUser: (user: UserData | null) => { dispatch(updateUserData(user)); },
-}))(class extends React.Component<InPageProps, InPageState> {
+export const InPage = withRouter(appInject(class extends React.Component<InPageProps, InPageState> {
   constructor(props: InPageProps) {
     super(props);
     this.state = {
@@ -55,7 +49,7 @@ export const InPage = withRouter(connect((state: Store) => ({ user: state.user }
 
   render() {
     return <Page>
-      {this.props.user !== null
+      {this.props.user.data !== null
         ? <Redirect to="/" />
         : <Paper>
           <form>
@@ -99,7 +93,7 @@ export const InPage = withRouter(connect((state: Store) => ({ user: state.user }
       .mergeMap(id => apiClient.createTokenMaster({ id, pass: this.state.pass }))
       .mergeMap(token => createUserData(token))
       .subscribe(userData => {
-        this.props.updateUser(userData);
+        this.props.user.setData(userData);
       }, errors => {
         const rc = this.refs.recaptcha as any;
         if (rc) {
