@@ -67,7 +67,7 @@ export const initStorage: StorageJSONLatest = {
   topicRead: {},
   ng: []
 };
-export const verArray: Array<StorageJSON["ver"]> = ["7", "6", "5", "4", "3", "2", "1.0.0"];
+export const verArray: StorageJSON["ver"][] = ["7", "6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
   readonly topicFavo: Im.Set<string>;
