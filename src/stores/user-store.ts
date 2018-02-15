@@ -1,14 +1,15 @@
 import { observable, action } from "mobx";
 import { UserData } from "../models";
-import { Subject } from "rxjs";
+import { Observable } from "rxjs";
 import {
   storageAPI,
 } from "../utils";
+import * as mobxUtils from "mobx-utils";
 
 export class UserStore {
-  private changeData = new Subject<UserData | null>();
   constructor() {
-    this.changeData
+    Observable
+      .from(mobxUtils.toStream(() => this.data))
       .debounceTime(5000)
       .subscribe(data => {
         if (data !== null) {
@@ -28,6 +29,5 @@ export class UserStore {
   @observable data: UserData | null = null;
   @action.bound async setData(data: UserData | null) {
     this.data = data;
-    this.changeData.next(data);
   }
 }
