@@ -28,5 +28,6 @@ export class UserStore {
   @observable data: UserData | null = null;
   @action.bound async setData(data: UserData | null) {
     this.data = data;
+    this.changeData.next(data);
   }
 }
