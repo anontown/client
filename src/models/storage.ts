@@ -163,7 +163,7 @@ export function convert(storage: StorageJSON): StorageJSONLatest {
   const s6 = s5.ver === "5" ? convert5To6(s5) : s5;
   const s7 = s6.ver === "6" ? convert6To7(s6) : s6;
 
-  const json = s6.ver === "7" ? s7 : initStorage;
+  const json = s7.ver === "7" ? s7 : initStorage;
 
   return json;
 }
