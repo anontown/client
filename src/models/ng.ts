@@ -28,29 +28,48 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
     case "hash":
       return res.hash === ngBody.hash;
     case "body":
-      return res.type === "normal" && ngBody.reg.test(res.text);
+      return res.type === "normal" && textMatcherTest(ngBody.matcher, res.text);
     case "name":
-      return res.type === "normal" && res.name !== null && ngBody.reg.test(res.name);
+      return res.type === "normal" && res.name !== null && textMatcherTest(ngBody.matcher, res.name);
     case "vote":
       return res.uv - res.dv < ngBody.value;
   }
 }
 
+function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean {
+  switch (matcher.type) {
+    case "reg":
+      return matcher.reg.test(text);
+    case "text":
+      if (matcher.i) {
+        return matcher.source.toLowerCase().indexOf(text.toLowerCase()) !== -1;
+      } else {
+        return matcher.source.indexOf(text) !== -1;
+      }
+  }
+}
+
 export function toJSON(ng: NG): ngJson.NGJson {
   return {
-    name:ng.name,
-    topic:ng.topic,
+    name: ng.name,
+    topic: ng.topic,
     body: toJSONBody(ng.body),
     expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
     date: ng.date.toISOString()
   };
 }
 
-function toJSONReg(reg: RegExp): ngJson.NGBodyRegJson {
-  return {
-    source: reg.source,
-    i: reg.ignoreCase,
-  };
+function toJSONMatcher(matcher: NGBodyTextMatcher): ngJson.NGBodyTextMatcherJson {
+  switch (matcher.type) {
+    case "reg":
+      return {
+        type: "reg",
+        source: matcher.reg.source,
+        i: matcher.reg.ignoreCase,
+      };
+    case "text":
+      return matcher;
+  }
 }
 
 function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
@@ -66,9 +85,9 @@ function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
     case "hash":
       return ngBody;
     case "body":
-      return { type: "body", reg: toJSONReg(ngBody.reg) };
+      return { type: "body", matcher: toJSONMatcher(ngBody.matcher) };
     case "name":
-      return { type: "name", reg: toJSONReg(ngBody.reg) };
+      return { type: "name", matcher: toJSONMatcher(ngBody.matcher) };
     case "vote":
       return ngBody;
   }
@@ -76,7 +95,7 @@ function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
 
 export function fromJSON(ngJson: ngJson.NGJson): NG {
   return {
-    id:uuid.v4(),
+    id: uuid.v4(),
     ...ngJson,
     body: fromJSONBody(ngJson.body),
     expirationDate: ngJson.expirationDate !== null ? new Date(ngJson.expirationDate) : null,
@@ -84,10 +103,18 @@ export function fromJSON(ngJson: ngJson.NGJson): NG {
   };
 }
 
-function fromJSONReg(reg: ngJson.NGBodyRegJson): RegExp {
-  return new RegExp(reg.source, [
-    reg.i ? "i" : ""
-  ].join());
+function fromJSONTextMatcher(matcher: ngJson.NGBodyTextMatcherJson): NGBodyTextMatcher {
+  switch (matcher.type) {
+    case "reg":
+      return {
+        type: "reg",
+        reg: new RegExp(matcher.source, [
+          matcher.i ? "i" : ""
+        ].join())
+      };
+    case "text":
+      return matcher;
+  }
 }
 
 function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
@@ -103,9 +130,9 @@ function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
     case "hash":
       return { id: uuid.v4(), ...ngBody };
     case "body":
-      return { id: uuid.v4(), type: "body", reg: fromJSONReg(ngBody.reg) };
+      return { id: uuid.v4(), type: "body", matcher: fromJSONTextMatcher(ngBody.matcher) };
     case "name":
-      return { id: uuid.v4(), type: "name", reg: fromJSONReg(ngBody.reg) };
+      return { id: uuid.v4(), type: "name", matcher: fromJSONTextMatcher(ngBody.matcher) };
     case "vote":
       return { id: uuid.v4(), ...ngBody };
   }
@@ -159,21 +186,28 @@ export interface NGBodyHash {
   readonly hash: string;
 }
 
-export interface NGBodyReg {
-  readonly id: string;
+export type NGBodyTextMatcher = NGBodyTextMatcherReg | NGBodyTextMatcherText;
+export interface NGBodyTextMatcherReg {
+  readonly type: "reg";
   readonly reg: RegExp;
+}
+
+export interface NGBodyTextMatcherText {
+  readonly type: "text";
+  readonly source: string;
+  readonly i: boolean;
 }
 
 export interface NGBodyBody {
   readonly id: string;
   readonly type: "body";
-  readonly reg: RegExp;
+  readonly matcher: NGBodyTextMatcher;
 }
 
 export interface NGBodyName {
   readonly id: string;
   readonly type: "name";
-  readonly reg: RegExp;
+  readonly matcher: NGBodyTextMatcher;
 }
 
 export interface NGBodyVote {

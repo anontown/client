@@ -40,19 +40,28 @@ export interface NGBodyHashJson {
   readonly hash: string;
 }
 
-export interface NGBodyRegJson {
+export type NGBodyTextMatcherJson = NGBodyTextMatcherRegJson | NGBodyTextMatcherTextJson;
+
+export interface NGBodyTextMatcherRegJson {
+  readonly type: "reg";
+  readonly source: string;
+  readonly i: boolean;
+}
+
+export interface NGBodyTextMatcherTextJson {
+  readonly type: "text";
   readonly source: string;
   readonly i: boolean;
 }
 
 export interface NGBodyBodyJson {
   readonly type: "body";
-  readonly reg: NGBodyRegJson;
+  readonly matcher: NGBodyTextMatcherJson;
 }
 
 export interface NGBodyNameJson {
   readonly type: "name";
-  readonly reg: NGBodyRegJson;
+  readonly matcher: NGBodyTextMatcherJson;
 }
 
 export interface NGBodyVoteJson {
