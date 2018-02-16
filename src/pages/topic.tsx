@@ -26,6 +26,7 @@ import {
   Scroll,
   Snack,
   TopicFavo,
+  NG
 } from "../components";
 import { ResSeted } from "../models";
 import { apiClient, resSetedCreate } from "../utils";
@@ -49,6 +50,7 @@ export interface TopicPageState {
   isAutoScrollDialog: boolean;
   autoScrollSpeed: number;
   isAutoScroll: boolean;
+  isNGDialog: boolean;
 }
 
 export const TopicPage = withRouter(appInject(class extends React.Component<TopicPageProps, TopicPageState> {
@@ -64,6 +66,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
     isAutoScrollDialog: false,
     autoScrollSpeed: 15,
     isAutoScroll: false,
+    isNGDialog: false
   };
 
   constructor(props: TopicPageProps) {
@@ -193,6 +196,13 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
           value={this.state.autoScrollSpeed}
           onChange={(_e, v) => this.setState({ autoScrollSpeed: v })} />
       </Dialog>
+      <Dialog
+        title="NG"
+        open={this.state.isNGDialog}
+        autoScrollBodyContent={true}
+        onRequestClose={() => this.setState({ isNGDialog: false })}>
+        <NG />
+      </Dialog>
       {this.state.topic !== null
         ? <div className={style.main}>
           <Paper className={style.header}>
@@ -237,6 +247,9 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
                 : null}
               <IconButton onClick={() => this.setState({ isAutoScrollDialog: true })}>
                 <FontIcon className="material-icons">play_circle_outline</FontIcon>
+              </IconButton>
+              <IconButton onClick={() => this.setState({ isNGDialog: true })}>
+                <FontIcon className="material-icons">mood_bad</FontIcon>
               </IconButton>
               {this.props.user.data !== null && this.state.topic.active
                 ? <IconButton onClick={() => this.setState({ isResWrite: !this.state.isResWrite })}>
