@@ -61,8 +61,11 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
 function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean {
   switch (matcher.type) {
     case "reg":
-      return matcher.reg.test(text);
+      return matcher.reg.source.length !== 0 && matcher.reg.test(text);
     case "text":
+      if (matcher.source.length === 0) {
+        return false;
+      }
       if (matcher.i) {
         return text.toLowerCase().indexOf(matcher.source.toLowerCase()) !== -1;
       } else {
