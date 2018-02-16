@@ -42,7 +42,7 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
     case "not":
       return !isBodyNG(ngBody.body, res);
     case "and":
-      return ngBody.body.every(body => isBodyNG(body, res));
+      return ngBody.body.size === 0 ? false : ngBody.body.every(body => isBodyNG(body, res));
     case "or":
       return ngBody.body.some(body => isBodyNG(body, res));
     case "profile":

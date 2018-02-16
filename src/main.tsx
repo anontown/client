@@ -7,7 +7,6 @@ import { App } from "./components/app";
 import * as dialogStyle from "./dialog.scss";
 import { Provider } from 'mobx-react';
 import { stores } from "./stores";
-
 (Dialog as any).defaultProps.className = dialogStyle.dialog;
 (Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;
 
