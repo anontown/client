@@ -34,17 +34,18 @@ export function isNG(ng: NG, res: ResSeted) {
     return false;
   }
 
-  return isBodyNG(ng.body, res);
+  return !!isBodyNG(ng.body, res);
 }
 
-function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
+function isBodyNG(ngBody: NGBody, res: ResSeted): boolean | null {
   switch (ngBody.type) {
     case "not":
-      return !isBodyNG(ngBody.body, res);
+      const b = isBodyNG(ngBody.body, res);;
+      return b !== null ? !b : null;
     case "and":
-      return ngBody.body.size === 0 ? false : ngBody.body.every(body => isBodyNG(body, res));
+      return ngBody.body.size === 0 ? null : ngBody.body.every(body => !!isBodyNG(body, res));
     case "or":
-      return ngBody.body.some(body => isBodyNG(body, res));
+      return ngBody.body.size === 0 ? null : ngBody.body.some(body => !!isBodyNG(body, res));
     case "profile":
       return res.type === "normal" && res.profile !== null && ngBody.profile === res.profile.id;
     case "hash":
@@ -58,9 +59,9 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
   }
 }
 
-function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean {
+function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean | null {
   if (matcher.source.length === 0) {
-    return false;
+    return null;
   }
   switch (matcher.type) {
     case "reg":
