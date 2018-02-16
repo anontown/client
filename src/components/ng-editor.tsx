@@ -18,7 +18,7 @@ export function NGEditor(props: NGEditorProps) {
       onChange={(_e, v) => props.onUpdate({ ...props.ng, name: v })} />
     <TextField
       floatingLabelText="トピック"
-      value={props.ng.topic}
+      value={props.ng.topic || ""}
       onChange={(_e, v) => props.onUpdate({ ...props.ng, topic: v || null })} />
     <NGBodyEditor
       ngBody={props.ng.body}
