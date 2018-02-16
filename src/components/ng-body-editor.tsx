@@ -6,7 +6,9 @@ import {
   SelectField,
   MenuItem,
   TextField,
-  Checkbox
+  Checkbox,
+  IconButton,
+  FontIcon
 } from "material-ui";
 import * as Im from "immutable";
 import { list } from "../utils";
@@ -16,24 +18,24 @@ export interface NGBodyEditorProps {
   onUpdateNGBody: (body: ng.NGBody) => void;
 }
 
-function createDefaultBody(): ng.NGBody {
-  return {
-    id: uuid.v4(),
-    type: "and",
-    body: Im.List()
-  };
-}
-
 export interface NGBodysEditorProps {
   ngBody: Im.List<ng.NGBody>,
   onUpdateNGBody: (body: Im.List<ng.NGBody>) => void;
 }
 function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
   return <div>
-    {props.ngBody.map(x => <NGBodyEditor
-      key={x.id}
-      ngBody={x}
-      onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />)}
+    {props.ngBody.map(ng => <div>
+      <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
+        <FontIcon className="material-icons">close</FontIcon>
+      </IconButton>
+      <NGBodyEditor
+        key={ng.id}
+        ngBody={ng}
+        onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />
+    </div>)}
+    <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.push(ng.createDefaultBody()))}>
+      <FontIcon className="material-icons">note_add</FontIcon>
+    </IconButton>
   </div>;
 }
 
@@ -109,7 +111,7 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
             props.onUpdateNGBody({
               id: uuid.v4(),
               type: "not",
-              body: createDefaultBody(),
+              body: ng.createDefaultBody(),
             });
             break;
           case "and":
