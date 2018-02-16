@@ -1,15 +1,8 @@
 import * as React from "react";
-import * as uuid from "uuid";
 import { ng } from "../models";
 import {
-  Paper,
-  SelectField,
-  MenuItem,
   TextField,
-  Checkbox
 } from "material-ui";
-import * as Im from "immutable";
-import { list } from "../utils";
 import { NGBodyEditor } from "./ng-body-editor";
 
 export interface NGEditorProps {
