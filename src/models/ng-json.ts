@@ -4,6 +4,8 @@ export interface NGJson {
   readonly date: string;
   readonly expirationDate: string | null;
   readonly body: NGBodyJson;
+  readonly chain: number;
+  readonly transparent: boolean;
 }
 
 export type NGBodyJson = NGBodyNotJson |

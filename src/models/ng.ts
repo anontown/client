@@ -55,7 +55,9 @@ export function toJSON(ng: NG): ngJson.NGJson {
     topic: ng.topic,
     body: toJSONBody(ng.body),
     expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
-    date: ng.date.toISOString()
+    date: ng.date.toISOString(),
+    chain: ng.chain,
+    transparent: ng.transparent
   };
 }
 
@@ -145,6 +147,8 @@ export interface NG {
   readonly date: Date;
   readonly expirationDate: Date | null;
   readonly body: NGBody;
+  readonly chain: number;
+  readonly transparent: boolean;
 }
 
 export type NGBody = NGBodyNot |
