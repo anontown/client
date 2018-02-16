@@ -3,6 +3,27 @@ import { ResSeted } from "./res-seted";
 import * as Im from "immutable";
 import * as uuid from "uuid";
 
+export function createDefaultBody(): NGBody {
+  return {
+    id: uuid.v4(),
+    type: "and",
+    body: Im.List()
+  };
+}
+
+export function createDefaultNG(): NG {
+  return {
+    id: uuid.v4(),
+    name: "新規設定",
+    topic: null,
+    date: new Date(),
+    expirationDate: null,
+    chain: 1,
+    transparent: false,
+    body: createDefaultBody()
+  };
+}
+
 //TODO:chain
 export function isNG(ng: NG, res: ResSeted) {
   if (ng.topic !== null && ng.topic !== res.topic) {
