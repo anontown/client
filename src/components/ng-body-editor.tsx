@@ -24,12 +24,11 @@ export interface NGBodysEditorProps {
 }
 function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
   return <div>
-    {props.ngBody.map(ng => <div>
+    {props.ngBody.map(ng => <div key={ng.id}>
       <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
         <FontIcon className="material-icons">close</FontIcon>
       </IconButton>
       <NGBodyEditor
-        key={ng.id}
         ngBody={ng}
         onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />
     </div>)}

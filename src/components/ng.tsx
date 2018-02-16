@@ -22,7 +22,7 @@ export const NG = appInject(class extends React.Component<NGProps, NGState> {
     return user !== null
       ? <div>
         {user.storage.ng.map(ng =>
-          <div>
+          <div key={ng.id}>
             <IconButton onClick={() => this.props.user.setData({
               ...user, storage: {
                 ...user.storage,
@@ -32,7 +32,6 @@ export const NG = appInject(class extends React.Component<NGProps, NGState> {
               <FontIcon className="material-icons">close</FontIcon>
             </IconButton>
             <NGEditor
-              key={ng.id}
               ng={ng}
               onUpdate={v => this.props.user.setData({
                 ...user, storage: {
