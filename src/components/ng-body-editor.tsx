@@ -23,7 +23,9 @@ export interface NGBodysEditorProps {
   onUpdateNGBody: (body: Im.List<ng.NGBody>) => void;
 }
 function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
-  return <div>
+  return <div style={{
+    paddingLeft: "16px"
+  }}>
     <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.insert(0, ng.createDefaultBody()))}>
       <FontIcon className="material-icons">note_add</FontIcon>
     </IconButton>
