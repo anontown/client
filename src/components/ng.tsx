@@ -5,7 +5,9 @@ import { NGEditor } from "./ng-editor";
 import {
   IconButton,
   FontIcon,
-  Paper
+  Dialog,
+  List,
+  ListItem
 } from "material-ui";
 import { ng } from "../models";
 
@@ -14,11 +16,15 @@ interface NGProps {
 }
 
 interface NGState {
+  dialog: string | null
 }
 
 export const NG = appInject(class extends React.Component<NGProps, NGState> {
   constructor(props: NGProps) {
     super(props);
+    this.state = {
+      dialog: null
+    }
   }
 
   render() {
@@ -33,25 +39,36 @@ export const NG = appInject(class extends React.Component<NGProps, NGState> {
         })}>
           <FontIcon className="material-icons">note_add</FontIcon>
         </IconButton>
-        {user.storage.ng.map(ng =>
-          <Paper key={ng.id}>
-            <IconButton onClick={() => this.props.user.setData({
-              ...user, storage: {
-                ...user.storage,
-                ng: user.storage.ng.filter(x => x.id !== ng.id)
-              }
-            })}>
-              <FontIcon className="material-icons">close</FontIcon>
-            </IconButton>
-            <NGEditor
-              ng={ng}
-              onUpdate={v => this.props.user.setData({
+        <List>
+          {user.storage.ng.map(ng =>
+            <ListItem
+              rightIconButton={<IconButton onClick={() => this.props.user.setData({
                 ...user, storage: {
                   ...user.storage,
-                  ng: list.update(user.storage.ng, v)
+                  ng: user.storage.ng.filter(x => x.id !== ng.id)
                 }
-              })} />
-          </Paper>)}
+              })}>
+                <FontIcon className="material-icons">close</FontIcon>
+              </IconButton>}
+              onClick={() => this.setState({ dialog: ng.id })}
+              key={ng.id}
+              primaryText={ng.name}>
+              <Dialog
+                title={ng.name}
+                open={this.state.dialog === ng.id}
+                autoScrollBodyContent={true}
+                onRequestClose={() => this.setState({ dialog: null })}>
+                <NGEditor
+                  ng={ng}
+                  onUpdate={v => this.props.user.setData({
+                    ...user, storage: {
+                      ...user.storage,
+                      ng: list.update(user.storage.ng, v)
+                    }
+                  })} />
+              </Dialog>
+            </ListItem>)}
+        </List>
       </div>
       : <div>ログインして下さい</div>;
   }
