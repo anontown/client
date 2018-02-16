@@ -1,12 +1,5 @@
-import { AtError } from "@anontown/api-client";
-import * as api from "@anontown/api-types";
-import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
-import { ObjectOmit } from "typelevel-ts";
 import { list } from "../utils";
-import { Errors } from "./errors";
-import { MdEditor } from "./md-editor";
-import * as style from "./profile-editor.scss";
 import { UserStore, appInject } from "../stores";
 import { NGEditor } from "./ng-editor";
 
