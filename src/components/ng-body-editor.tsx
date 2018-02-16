@@ -46,55 +46,32 @@ export interface NGMatcherEditorProps {
 function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement<any> {
   return <div>
     <Checkbox label="正規表現" checked={props.matcher.type === "reg"} onCheck={(_e, v) => {
-      const old = props.matcher.type === "reg"
-        ? { i: props.matcher.reg.ignoreCase, source: props.matcher.reg.source }
-        : { i: props.matcher.i, source: props.matcher.source };
       if (v) {
         props.onChange({
+          ...props.matcher,
           type: "reg",
-          reg: new RegExp(old.source, [
-            old.i ? "i" : ""
-          ].join())
         });
       } else {
         props.onChange({
+          ...props.matcher,
           type: "text",
-          ...old
         });
       }
     }} />
-    <Checkbox label="大小文字区別しない" onCheck={(_e, v) => {
-      if (props.matcher.type === "reg") {
-        props.onChange({
-          ...props.matcher,
-          reg: new RegExp(props.matcher.reg.source, [
-            v ? "i" : ""
-          ].join())
-        });
-      } else {
-        props.onChange({
-          ...props.matcher,
-          i: v
-        });
-      }
+    <Checkbox label="大小文字区別しない" checked={props.matcher.i} onCheck={(_e, v) => {
+      props.onChange({
+        ...props.matcher,
+        i: v
+      });
     }} />
     <TextField
       floatingLabelText={props.floatingLabelText}
-      value={props.matcher.type === "reg" ? props.matcher.reg.source : props.matcher.source}
+      value={props.matcher.source}
       onChange={(_e, v) => {
-        if (props.matcher.type === "reg") {
-          props.onChange({
-            ...props.matcher,
-            reg: new RegExp(v, [
-              props.matcher.reg.ignoreCase ? "i" : ""
-            ].join())
-          });
-        } else {
-          props.onChange({
-            ...props.matcher,
-            source: v
-          });
-        }
+        props.onChange({
+          ...props.matcher,
+          source: v
+        });
       }} />
   </div>;
 }

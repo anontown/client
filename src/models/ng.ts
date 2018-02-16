@@ -59,13 +59,19 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
 }
 
 function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean {
+  if (matcher.source.length === 0) {
+    return false;
+  }
   switch (matcher.type) {
     case "reg":
-      return matcher.reg.source.length !== 0 && matcher.reg.test(text);
-    case "text":
-      if (matcher.source.length === 0) {
+      try {
+        return new RegExp(matcher.source, [
+          matcher.i ? "i" : ""
+        ].join()).test(text);
+      } catch{
         return false;
       }
+    case "text":
       if (matcher.i) {
         return text.toLowerCase().indexOf(matcher.source.toLowerCase()) !== -1;
       } else {
@@ -89,11 +95,7 @@ export function toJSON(ng: NG): ngJson.NGJson {
 function toJSONMatcher(matcher: NGBodyTextMatcher): ngJson.NGBodyTextMatcherJson {
   switch (matcher.type) {
     case "reg":
-      return {
-        type: "reg",
-        source: matcher.reg.source,
-        i: matcher.reg.ignoreCase,
-      };
+      return matcher;
     case "text":
       return matcher;
   }
@@ -133,12 +135,7 @@ export function fromJSON(ngJson: ngJson.NGJson): NG {
 function fromJSONTextMatcher(matcher: ngJson.NGBodyTextMatcherJson): NGBodyTextMatcher {
   switch (matcher.type) {
     case "reg":
-      return {
-        type: "reg",
-        reg: new RegExp(matcher.source, [
-          matcher.i ? "i" : ""
-        ].join())
-      };
+      return matcher;
     case "text":
       return matcher;
   }
@@ -218,7 +215,8 @@ export interface NGBodyHash {
 export type NGBodyTextMatcher = NGBodyTextMatcherReg | NGBodyTextMatcherText;
 export interface NGBodyTextMatcherReg {
   readonly type: "reg";
-  readonly reg: RegExp;
+  readonly source: string;
+  readonly i: boolean;
 }
 
 export interface NGBodyTextMatcherText {
