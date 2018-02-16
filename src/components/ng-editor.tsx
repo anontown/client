@@ -16,7 +16,7 @@ export interface NGEditorProps {
   ng: ng.NG,
   onUpdate: (body: ng.NG) => void;
 }
-
+//TODO:expirationDate,chain,transparent
 export function NGEditor(props: NGEditorProps) {
   return <div>
     <TextField

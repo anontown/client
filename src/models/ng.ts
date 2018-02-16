@@ -3,6 +3,7 @@ import { ResSeted } from "./res-seted";
 import * as Im from "immutable";
 import * as uuid from "uuid";
 
+//TODO:chain
 export function isNG(ng: NG, res: ResSeted) {
   if (ng.topic !== null && ng.topic !== res.topic) {
     return false;

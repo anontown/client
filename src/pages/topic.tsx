@@ -31,6 +31,7 @@ import { ResSeted } from "../models";
 import { apiClient, resSetedCreate } from "../utils";
 import * as style from "./topic.scss";
 import { UserStore, appInject } from "../stores";
+//TODO:NGのtransparent
 
 // ジェネリクス解除
 interface ResScroll { new(): Scroll<ResSeted>; }
