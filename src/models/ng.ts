@@ -64,9 +64,9 @@ function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean {
       return matcher.reg.test(text);
     case "text":
       if (matcher.i) {
-        return matcher.source.toLowerCase().indexOf(text.toLowerCase()) !== -1;
+        return text.toLowerCase().indexOf(matcher.source.toLowerCase()) !== -1;
       } else {
-        return matcher.source.indexOf(text) !== -1;
+        return text.indexOf(matcher.source) !== -1;
       }
   }
 }
