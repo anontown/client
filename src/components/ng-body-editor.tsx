@@ -24,17 +24,17 @@ export interface NGBodysEditorProps {
 }
 function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
   return <div>
-    {props.ngBody.map(ng => <div key={ng.id}>
+    <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.insert(0, ng.createDefaultBody()))}>
+      <FontIcon className="material-icons">note_add</FontIcon>
+    </IconButton>
+    {props.ngBody.map(ng => <Paper key={ng.id}>
       <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
         <FontIcon className="material-icons">close</FontIcon>
       </IconButton>
       <NGBodyEditor
         ngBody={ng}
         onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />
-    </div>)}
-    <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.push(ng.createDefaultBody()))}>
-      <FontIcon className="material-icons">note_add</FontIcon>
-    </IconButton>
+    </Paper>)}
   </div>;
 }
 
@@ -77,7 +77,7 @@ function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement<any> {
 }
 
 export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> {
-  return <Paper>
+  return <div>
     <SelectField
       floatingLabelText="タイプ"
       value={props.ngBody.type}
@@ -159,14 +159,14 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
       <MenuItem value={"name"} primaryText="name" />
       <MenuItem value={"vote"} primaryText="vote" />
     </SelectField>
-    {props.ngBody.type === "not" ? <NGBodyEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
+    {props.ngBody.type === "not" ? <Paper><NGBodyEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
       if (props.ngBody.type === "not") {
         props.onUpdateNGBody({
           ...props.ngBody,
           body: newBody
         });
       }
-    }} />
+    }} /></Paper>
       : props.ngBody.type === "and" ? <NGBodysEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
         if (props.ngBody.type === "and") {
           props.onUpdateNGBody({
@@ -241,5 +241,5 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
                       }
                     }} />
                     : null}
-  </Paper>;
+  </div>;
 }
