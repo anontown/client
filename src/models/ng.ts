@@ -1,6 +1,7 @@
 import * as ngJson from "./ng-json";
 import { ResSeted } from "./res-seted";
 import * as Im from "immutable";
+import * as uuid from "uuid";
 
 export function isNG(ng: NG, res: ResSeted) {
   if (ng.topic !== null && ng.topic !== res.topic) {
@@ -23,7 +24,7 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
     case "or":
       return ngBody.body.some(body => isBodyNG(body, res));
     case "profile":
-      return res.type === "normal" && res.profile !== null && ngBody.id === res.profile.id;
+      return res.type === "normal" && res.profile !== null && ngBody.profile === res.profile.id;
     case "hash":
       return res.hash === ngBody.hash;
     case "body":
@@ -37,7 +38,8 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean {
 
 export function toJSON(ng: NG): ngJson.NGJson {
   return {
-    ...ng,
+    name:ng.name,
+    topic:ng.topic,
     body: toJSONBody(ng.body),
     expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
     date: ng.date.toISOString()
@@ -74,6 +76,7 @@ function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
 
 export function fromJSON(ngJson: ngJson.NGJson): NG {
   return {
+    id:uuid.v4(),
     ...ngJson,
     body: fromJSONBody(ngJson.body),
     expirationDate: ngJson.expirationDate !== null ? new Date(ngJson.expirationDate) : null,
@@ -90,25 +93,26 @@ function fromJSONReg(reg: ngJson.NGBodyRegJson): RegExp {
 function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
   switch (ngBody.type) {
     case "not":
-      return { type: "not", body: fromJSONBody(ngBody.body) };
+      return { id: uuid.v4(), type: "not", body: fromJSONBody(ngBody.body) };
     case "and":
-      return { type: "and", body: Im.List(ngBody.body.map(x => fromJSONBody(x))) };
+      return { id: uuid.v4(), type: "and", body: Im.List(ngBody.body.map(x => fromJSONBody(x))) };
     case "or":
-      return { type: "or", body: Im.List(ngBody.body.map(x => fromJSONBody(x))) };
+      return { id: uuid.v4(), type: "or", body: Im.List(ngBody.body.map(x => fromJSONBody(x))) };
     case "profile":
-      return ngBody;
+      return { id: uuid.v4(), ...ngBody };
     case "hash":
-      return ngBody;
+      return { id: uuid.v4(), ...ngBody };
     case "body":
-      return { type: "body", reg: fromJSONReg(ngBody.reg) };
+      return { id: uuid.v4(), type: "body", reg: fromJSONReg(ngBody.reg) };
     case "name":
-      return { type: "name", reg: fromJSONReg(ngBody.reg) };
+      return { id: uuid.v4(), type: "name", reg: fromJSONReg(ngBody.reg) };
     case "vote":
-      return ngBody;
+      return { id: uuid.v4(), ...ngBody };
   }
 }
 
 export interface NG {
+  readonly id: string;
   readonly name: string;
   readonly topic: string | null;
   readonly date: Date;
@@ -126,45 +130,54 @@ export type NGBody = NGBodyNot |
   NGBodyVote;
 
 export interface NGBodyNot {
+  readonly id: string;
   readonly type: "not";
   readonly body: NGBody;
 }
 
 export interface NGBodyAnd {
+  readonly id: string;
   readonly type: "and";
   readonly body: Im.List<NGBody>;
 }
 
 export interface NGBodyOr {
+  readonly id: string;
   readonly type: "or";
   readonly body: Im.List<NGBody>;
 }
 
 export interface NGBodyProfile {
-  readonly type: "profile";
   readonly id: string;
+  readonly type: "profile";
+  readonly profile: string;
 }
 
 export interface NGBodyHash {
+  readonly id: string;
   readonly type: "hash";
   readonly hash: string;
 }
 
 export interface NGBodyReg {
+  readonly id: string;
   readonly reg: RegExp;
 }
 
 export interface NGBodyBody {
+  readonly id: string;
   readonly type: "body";
   readonly reg: RegExp;
 }
 
 export interface NGBodyName {
+  readonly id: string;
   readonly type: "name";
   readonly reg: RegExp;
 }
 
 export interface NGBodyVote {
+  readonly id: string;
   readonly type: "vote";
   readonly value: number;
 }

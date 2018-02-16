@@ -24,6 +24,7 @@
     "@types/react-intl": "^2.3.2",
     "@types/react-router": "^4.0.19",
     "@types/react-router-dom": "^4.2.3",
+    "@types/uuid": "^3.4.3",
     "awesome-typescript-loader": "^3.4.1",
     "css-loader": "^0.28.7",
     "node-sass": "^4.7.2",
@@ -62,6 +63,7 @@
     "remark-parse": "^4.0.0",
     "rxjs": "^5.5.5",
     "typelevel-ts": "^0.2.2",
-    "unified": "^6.1.6"
+    "unified": "^6.1.6",
+    "uuid": "^3.2.1"
   }
 }

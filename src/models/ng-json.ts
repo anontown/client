@@ -32,7 +32,7 @@ export interface NGBodyOrJson {
 
 export interface NGBodyProfileJson {
   readonly type: "profile";
-  readonly id: string;
+  readonly profile: string;
 }
 
 export interface NGBodyHashJson {
