@@ -36,118 +36,130 @@ function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
   </div>;
 }
 
+export interface NGBodyEditorState {
+
+}
+
 export interface NGBodyEditorProps {
   value: ng.NGBody,
   onChange: (body: ng.NGBody) => void;
 }
 
-export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> {
-  return <div>
-    <SelectField
-      floatingLabelText="タイプ"
-      value={props.value.type}
-      onChange={(_e, _i, type) => {
-        switch (type) {
-          case "not":
-            props.onChange({
-              id: uuid.v4(),
-              type: "not",
-              body: ng.createDefaultBody(),
-            });
-            break;
-          case "and":
-            props.onChange({
-              id: uuid.v4(),
-              type: "and",
-              body: Im.List()
-            });
-            break;
-          case "or":
-            props.onChange({
-              id: uuid.v4(),
-              type: "or",
-              body: Im.List()
-            });
-            break;
-          case "profile":
-            props.onChange({
-              id: uuid.v4(),
-              type: "profile",
-              profile: ""
-            });
-            break;
-          case "hash":
-            props.onChange({
-              id: uuid.v4(),
-              type: "hash",
-              hash: ""
-            });
-            break;
-          case "body":
-            props.onChange({
-              id: uuid.v4(),
-              type: "body",
-              matcher: {
-                type: "text",
-                i: false,
-                source: ""
-              }
-            });
-            break;
-          case "name":
-            props.onChange({
-              id: uuid.v4(),
-              type: "name",
-              matcher: {
-                type: "text",
-                i: false,
-                source: ""
-              }
-            });
-            break;
-          case "vote":
-            props.onChange({
-              id: uuid.v4(),
-              type: "vote",
-              value: -5
-            });
-            break;
-        }
-      }}
-    >
-      <MenuItem value={"not"} primaryText="not" />
-      <MenuItem value={"and"} primaryText="and" />
-      <MenuItem value={"or"} primaryText="or" />
-      <MenuItem value={"profile"} primaryText="profile" />
-      <MenuItem value={"hash"} primaryText="hash" />
-      <MenuItem value={"body"} primaryText="body" />
-      <MenuItem value={"name"} primaryText="name" />
-      <MenuItem value={"vote"} primaryText="vote" />
-    </SelectField>
-    {props.value.type === "not" ? <NGNotNodeEditor value={props.value} onChange={v => props.onChange(v)} />
-      : props.value.type === "and" ? <NGAndNodeEditor
-        value={props.value}
-        onChange={v => props.onChange(v)} />
-        : props.value.type === "or" ? <NGOrNodeEditor
-          value={props.value}
-          onChange={v => props.onChange(v)} />
-          : props.value.type === "profile" ? <NGProfileNodeEditor
-            value={props.value}
-            onChange={v => props.onChange(v)} />
-            : props.value.type === "hash" ? <NGHashNodeEditor
-              value={props.value}
-              onChange={v => props.onChange(v)} />
-              : props.value.type === "body" ? <NGBodyNodeEditor
-                value={props.value}
-                onChange={v => props.onChange(v)} />
-                : props.value.type === "name" ? <NGNameNodeEditor
-                  value={props.value}
-                  onChange={v => props.onChange(v)} />
-                  : props.value.type === "vote" ? <NGVoteNodeEditor
-                    value={props.value}
-                    onChange={v => props.onChange(v)} />
-                    : null}
-  </div>;
+export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEditorState>{
+  constructor(props: NGBodyEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render(): React.ReactNode {
+    return <div>
+      <SelectField
+        floatingLabelText="タイプ"
+        value={this.props.value.type}
+        onChange={(_e, _i, type) => {
+          switch (type) {
+            case "not":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "not",
+                body: ng.createDefaultBody(),
+              });
+              break;
+            case "and":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "and",
+                body: Im.List()
+              });
+              break;
+            case "or":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "or",
+                body: Im.List()
+              });
+              break;
+            case "profile":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "profile",
+                profile: ""
+              });
+              break;
+            case "hash":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "hash",
+                hash: ""
+              });
+              break;
+            case "body":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "body",
+                matcher: {
+                  type: "text",
+                  i: false,
+                  source: ""
+                }
+              });
+              break;
+            case "name":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "name",
+                matcher: {
+                  type: "text",
+                  i: false,
+                  source: ""
+                }
+              });
+              break;
+            case "vote":
+              this.props.onChange({
+                id: uuid.v4(),
+                type: "vote",
+                value: -5
+              });
+              break;
+          }
+        }}
+      >
+        <MenuItem value={"not"} primaryText="not" />
+        <MenuItem value={"and"} primaryText="and" />
+        <MenuItem value={"or"} primaryText="or" />
+        <MenuItem value={"profile"} primaryText="profile" />
+        <MenuItem value={"hash"} primaryText="hash" />
+        <MenuItem value={"body"} primaryText="body" />
+        <MenuItem value={"name"} primaryText="name" />
+        <MenuItem value={"vote"} primaryText="vote" />
+      </SelectField>
+      {this.props.value.type === "not" ? <NGNotNodeEditor value={this.props.value}
+        onChange={v => this.props.onChange(v)} />
+        : this.props.value.type === "and" ? <NGAndNodeEditor
+          value={this.props.value}
+          onChange={v => this.props.onChange(v)} />
+          : this.props.value.type === "or" ? <NGOrNodeEditor
+            value={this.props.value}
+            onChange={v => this.props.onChange(v)} />
+            : this.props.value.type === "profile" ? <NGProfileNodeEditor
+              value={this.props.value}
+              onChange={v => this.props.onChange(v)} />
+              : this.props.value.type === "hash" ? <NGHashNodeEditor
+                value={this.props.value}
+                onChange={v => this.props.onChange(v)} />
+                : this.props.value.type === "body" ? <NGBodyNodeEditor
+                  value={this.props.value}
+                  onChange={v => this.props.onChange(v)} />
+                  : this.props.value.type === "name" ? <NGNameNodeEditor
+                    value={this.props.value}
+                    onChange={v => this.props.onChange(v)} />
+                    : this.props.value.type === "vote" ? <NGVoteNodeEditor
+                      value={this.props.value}
+                      onChange={v => this.props.onChange(v)} />
+                      : null}
+    </div>;
+  }
 }
 
 export interface NGOrNodeEditorProps {
