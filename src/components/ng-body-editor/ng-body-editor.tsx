@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as uuid from "uuid";
-import { ng } from "../models";
+import { ng } from "../../models";
 import {
   List,
   ListItem,
@@ -12,7 +12,7 @@ import {
   FontIcon,
 } from "material-ui";
 import * as Im from "immutable";
-import { list } from "../utils";
+import { list } from "../../utils";
 
 export interface NGBodyEditorProps {
   ngBody: ng.NGBody,
