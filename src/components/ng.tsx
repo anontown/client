@@ -37,7 +37,7 @@ export const NG = appInject(class extends React.Component<NGProps, NGState> {
             ng: user.storage.ng.insert(0, ng.createDefaultNG())
           }
         })}>
-          <FontIcon className="material-icons">note_add</FontIcon>
+          <FontIcon className="material-icons">add_circle</FontIcon>
         </IconButton>
         <List>
           {user.storage.ng.map(ng =>

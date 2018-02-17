@@ -27,7 +27,7 @@ function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
     paddingLeft: "16px"
   }}>
     <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.insert(0, ng.createDefaultBody()))}>
-      <FontIcon className="material-icons">note_add</FontIcon>
+      <FontIcon className="material-icons">add_circle</FontIcon>
     </IconButton>
     {props.ngBody.map(ng => <Paper key={ng.id}>
       <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
