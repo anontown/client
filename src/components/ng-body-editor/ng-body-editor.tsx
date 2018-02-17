@@ -124,30 +124,13 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
       <MenuItem value={"name"} primaryText="name" />
       <MenuItem value={"vote"} primaryText="vote" />
     </SelectField>
-    {props.value.type === "not" ? <NGBodyEditor value={props.value.body} onChange={newBody => {
-      if (props.value.type === "not") {
-        props.onChange({
-          ...props.value,
-          body: newBody
-        });
-      }
-    }} />
-      : props.value.type === "and" ? <NGBodysEditor values={props.value.body} onChange={newBody => {
-        if (props.value.type === "and") {
-          props.onChange({
-            ...props.value,
-            body: newBody
-          });
-        }
-      }} />
-        : props.value.type === "or" ? <NGBodysEditor values={props.value.body} onChange={newBody => {
-          if (props.value.type === "or") {
-            props.onChange({
-              ...props.value,
-              body: newBody
-            });
-          }
-        }} />
+    {props.value.type === "not" ? <NGNotNodeEditor value={props.value} onChange={v => props.onChange(v)} />
+      : props.value.type === "and" ? <NGAndNodeEditor
+        value={props.value}
+        onChange={v => props.onChange(v)} />
+        : props.value.type === "or" ? <NGOrNodeEditor
+          value={props.value}
+          onChange={v => props.onChange(v)} />
           : props.value.type === "profile" ? <NGProfileNodeEditor
             value={props.value}
             onChange={v => props.onChange(v)} />
@@ -167,6 +150,80 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
   </div>;
 }
 
+export interface NGOrNodeEditorProps {
+  value: ng.NGBodyOr;
+  onChange: (body: ng.NGBodyOr) => void;
+}
+
+export interface NGOrNodeEditorState {
+
+}
+
+export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNodeEditorState>{
+  constructor(props: NGOrNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <NGBodysEditor values={this.props.value.body} onChange={newBody => {
+      this.props.onChange({
+        ...this.props.value,
+        body: newBody
+      });
+    }} />;
+  }
+}
+
+export interface NGAndNodeEditorProps {
+  value: ng.NGBodyAnd;
+  onChange: (body: ng.NGBodyAnd) => void;
+}
+
+export interface NGAndNodeEditorState {
+
+}
+
+export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAndNodeEditorState>{
+  constructor(props: NGAndNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <NGBodysEditor values={this.props.value.body} onChange={newBody => {
+      this.props.onChange({
+        ...this.props.value,
+        body: newBody
+      });
+    }} />;
+  }
+}
+
+export interface NGNotNodeEditorProps {
+  value: ng.NGBodyNot;
+  onChange: (body: ng.NGBodyNot) => void;
+}
+
+export interface NGNotNodeEditorState {
+
+}
+
+export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNotNodeEditorState>{
+  constructor(props: NGNotNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <NGBodyEditor value={this.props.value.body} onChange={newBody => {
+      this.props.onChange({
+        ...this.props.value,
+        body: newBody
+      });
+    }} />;
+  }
+}
 
 export interface NGProfileNodeEditorProps {
   value: ng.NGBodyProfile;
