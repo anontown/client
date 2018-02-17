@@ -469,7 +469,7 @@ export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGB
       <ListItem
         nestedLevel={this.props.nestedLevel}
         onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`BODY:${this.props.value.matcher.source}`} />
+        primaryText={`Body:${this.props.value.matcher.source}`} />
     </React.Fragment>;
   }
 }
