@@ -75,8 +75,10 @@ export const InPage = withRouter(appInject(class extends React.Component<InPageP
                 ref="recaptcha"
                 onChange={(v: string) => this.setState({ recaptcha: v })} />
               : null}
-
-            <RaisedButton label="OK" onClick={() => this.ok()} />
+            {!this.state.isLogin
+              ? <a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a>
+              : null}
+            <RaisedButton label={this.state.isLogin ? "ログイン" : "利用規約に同意して登録"} onClick={() => this.ok()} />
           </form>
         </Paper>}
     </Page>;
