@@ -590,7 +590,7 @@ export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGV
         nestedLevel={this.props.nestedLevel}
         rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`VOTE:${this.props.value.value}`} />
+        primaryText={`Vote:${this.props.value.value}`} />
     </>;
   }
 }
