@@ -7,17 +7,12 @@ import {
   SelectField,
   MenuItem,
   TextField,
-  Checkbox,
   IconButton,
   FontIcon,
 } from "material-ui";
 import * as Im from "immutable";
 import { list } from "../../utils";
-
-export interface NGBodyEditorProps {
-  ngBody: ng.NGBody,
-  onUpdateNGBody: (body: ng.NGBody) => void;
-}
+import { NGMatcherEditor } from "./ng-matcher-editor";
 
 export interface NGBodysEditorProps {
   ngBody: Im.List<ng.NGBody>,
@@ -41,42 +36,9 @@ function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
   </div>;
 }
 
-export interface NGMatcherEditorProps {
-  matcher: ng.NGBodyTextMatcher,
-  onChange: (body: ng.NGBodyTextMatcher) => void;
-  floatingLabelText?: string;
-}
-function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement<any> {
-  return <div>
-    <Checkbox label="正規表現" checked={props.matcher.type === "reg"} onCheck={(_e, v) => {
-      if (v) {
-        props.onChange({
-          ...props.matcher,
-          type: "reg",
-        });
-      } else {
-        props.onChange({
-          ...props.matcher,
-          type: "text",
-        });
-      }
-    }} />
-    <Checkbox label="大小文字区別しない" checked={props.matcher.i} onCheck={(_e, v) => {
-      props.onChange({
-        ...props.matcher,
-        i: v
-      });
-    }} />
-    <TextField
-      floatingLabelText={props.floatingLabelText}
-      value={props.matcher.source}
-      onChange={(_e, v) => {
-        props.onChange({
-          ...props.matcher,
-          source: v
-        });
-      }} />
-  </div>;
+export interface NGBodyEditorProps {
+  ngBody: ng.NGBody,
+  onUpdateNGBody: (body: ng.NGBody) => void;
 }
 
 export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> {
