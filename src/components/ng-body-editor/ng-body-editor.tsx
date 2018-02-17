@@ -14,26 +14,35 @@ import * as Im from "immutable";
 import { list } from "../../utils";
 import { NGMatcherEditor } from "./ng-matcher-editor";
 
+export interface NGBodysEditorState {
+}
 export interface NGBodysEditorProps {
   values: Im.List<ng.NGBody>,
   onChange: (body: Im.List<ng.NGBody>) => void;
 }
-function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
-  return <div>
-    <IconButton onClick={() => props.onChange(props.values.insert(0, ng.createDefaultBody()))}>
-      <FontIcon className="material-icons">add_circle</FontIcon>
-    </IconButton>
-    <List>
-      {props.values.map(ng => <ListItem key={ng.id}>
-        <IconButton onClick={() => props.onChange(props.values.filter(x => x.id !== ng.id))}>
-          <FontIcon className="material-icons">close</FontIcon>
-        </IconButton>
-        <NGBodyEditor
-          value={ng}
-          onChange={x => props.onChange(list.update(props.values, x))} />
-      </ListItem>)}
-    </List>
-  </div>;
+export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEditorState>{
+  constructor(props: NGBodysEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <div>
+      <IconButton onClick={() => this.props.onChange(this.props.values.insert(0, ng.createDefaultBody()))}>
+        <FontIcon className="material-icons">add_circle</FontIcon>
+      </IconButton>
+      <List>
+        {this.props.values.map(ng => <ListItem key={ng.id}>
+          <IconButton onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== ng.id))}>
+            <FontIcon className="material-icons">close</FontIcon>
+          </IconButton>
+          <NGBodyEditor
+            value={ng}
+            onChange={x => this.props.onChange(list.update(this.props.values, x))} />
+        </ListItem>)}
+      </List>
+    </div>;
+  }
 }
 
 export interface NGBodyEditorState {
