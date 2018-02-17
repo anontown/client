@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as uuid from "uuid";
 import { ng } from "../../models";
 import {
   ListItem,
@@ -85,46 +84,45 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
       floatingLabelText="タイプ"
       value={this.props.value.type}
       onChange={(_e, _i, type) => {
-        console.log(type);
         switch (type) {
           case "not":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "not",
               body: ng.createDefaultBody(),
             });
             break;
           case "and":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "and",
               body: Im.List()
             });
             break;
           case "or":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "or",
               body: Im.List()
             });
             break;
           case "profile":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "profile",
               profile: ""
             });
             break;
           case "hash":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "hash",
               hash: ""
             });
             break;
           case "body":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "body",
               matcher: {
                 type: "text",
@@ -135,7 +133,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
             break;
           case "name":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "name",
               matcher: {
                 type: "text",
@@ -146,7 +144,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
             break;
           case "vote":
             this.props.onChange({
-              id: uuid.v4(),
+              id: this.props.value.id,
               type: "vote",
               value: -5
             });
