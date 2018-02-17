@@ -15,76 +15,76 @@ import { list } from "../../utils";
 import { NGMatcherEditor } from "./ng-matcher-editor";
 
 export interface NGBodysEditorProps {
-  ngBody: Im.List<ng.NGBody>,
-  onUpdateNGBody: (body: Im.List<ng.NGBody>) => void;
+  values: Im.List<ng.NGBody>,
+  onChange: (body: Im.List<ng.NGBody>) => void;
 }
 function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
   return <div>
-    <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.insert(0, ng.createDefaultBody()))}>
+    <IconButton onClick={() => props.onChange(props.values.insert(0, ng.createDefaultBody()))}>
       <FontIcon className="material-icons">add_circle</FontIcon>
     </IconButton>
     <List>
-      {props.ngBody.map(ng => <ListItem key={ng.id}>
-        <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
+      {props.values.map(ng => <ListItem key={ng.id}>
+        <IconButton onClick={() => props.onChange(props.values.filter(x => x.id !== ng.id))}>
           <FontIcon className="material-icons">close</FontIcon>
         </IconButton>
         <NGBodyEditor
-          ngBody={ng}
-          onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />
+          value={ng}
+          onChange={x => props.onChange(list.update(props.values, x))} />
       </ListItem>)}
     </List>
   </div>;
 }
 
 export interface NGBodyEditorProps {
-  ngBody: ng.NGBody,
-  onUpdateNGBody: (body: ng.NGBody) => void;
+  value: ng.NGBody,
+  onChange: (body: ng.NGBody) => void;
 }
 
 export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> {
   return <div>
     <SelectField
       floatingLabelText="タイプ"
-      value={props.ngBody.type}
+      value={props.value.type}
       onChange={(_e, _i, type) => {
         switch (type) {
           case "not":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "not",
               body: ng.createDefaultBody(),
             });
             break;
           case "and":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "and",
               body: Im.List()
             });
             break;
           case "or":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "or",
               body: Im.List()
             });
             break;
           case "profile":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "profile",
               profile: ""
             });
             break;
           case "hash":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "hash",
               hash: ""
             });
             break;
           case "body":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "body",
               matcher: {
@@ -95,7 +95,7 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
             });
             break;
           case "name":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "name",
               matcher: {
@@ -106,7 +106,7 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
             });
             break;
           case "vote":
-            props.onUpdateNGBody({
+            props.onChange({
               id: uuid.v4(),
               type: "vote",
               value: -5
@@ -124,45 +124,45 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
       <MenuItem value={"name"} primaryText="name" />
       <MenuItem value={"vote"} primaryText="vote" />
     </SelectField>
-    {props.ngBody.type === "not" ? <NGBodyEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
-      if (props.ngBody.type === "not") {
-        props.onUpdateNGBody({
-          ...props.ngBody,
+    {props.value.type === "not" ? <NGBodyEditor value={props.value.body} onChange={newBody => {
+      if (props.value.type === "not") {
+        props.onChange({
+          ...props.value,
           body: newBody
         });
       }
     }} />
-      : props.ngBody.type === "and" ? <NGBodysEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
-        if (props.ngBody.type === "and") {
-          props.onUpdateNGBody({
-            ...props.ngBody,
+      : props.value.type === "and" ? <NGBodysEditor values={props.value.body} onChange={newBody => {
+        if (props.value.type === "and") {
+          props.onChange({
+            ...props.value,
             body: newBody
           });
         }
       }} />
-        : props.ngBody.type === "or" ? <NGBodysEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
-          if (props.ngBody.type === "or") {
-            props.onUpdateNGBody({
-              ...props.ngBody,
+        : props.value.type === "or" ? <NGBodysEditor values={props.value.body} onChange={newBody => {
+          if (props.value.type === "or") {
+            props.onChange({
+              ...props.value,
               body: newBody
             });
           }
         }} />
-          : props.ngBody.type === "profile" ? <NGProfileNodeEditor
-            value={props.ngBody}
-            onChange={v => props.onUpdateNGBody(v)} />
-            : props.ngBody.type === "hash" ? <NGHashNodeEditor
-              value={props.ngBody}
-              onChange={v => props.onUpdateNGBody(v)} />
-              : props.ngBody.type === "body" ? <NGBodyNodeEditor
-                value={props.ngBody}
-                onChange={v => props.onUpdateNGBody(v)} />
-                : props.ngBody.type === "name" ? <NGNameNodeEditor
-                  value={props.ngBody}
-                  onChange={v => props.onUpdateNGBody(v)} />
-                  : props.ngBody.type === "vote" ? <NGVoteNodeEditor
-                    value={props.ngBody}
-                    onChange={v => props.onUpdateNGBody(v)} />
+          : props.value.type === "profile" ? <NGProfileNodeEditor
+            value={props.value}
+            onChange={v => props.onChange(v)} />
+            : props.value.type === "hash" ? <NGHashNodeEditor
+              value={props.value}
+              onChange={v => props.onChange(v)} />
+              : props.value.type === "body" ? <NGBodyNodeEditor
+                value={props.value}
+                onChange={v => props.onChange(v)} />
+                : props.value.type === "name" ? <NGNameNodeEditor
+                  value={props.value}
+                  onChange={v => props.onChange(v)} />
+                  : props.value.type === "vote" ? <NGVoteNodeEditor
+                    value={props.value}
+                    onChange={v => props.onChange(v)} />
                     : null}
   </div>;
 }

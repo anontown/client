@@ -21,7 +21,7 @@ export function NGEditor(props: NGEditorProps) {
       value={props.ng.topic || ""}
       onChange={(_e, v) => props.onUpdate({ ...props.ng, topic: v || null })} />
     <NGBodyEditor
-      ngBody={props.ng.body}
-      onUpdateNGBody={v => props.onUpdate({ ...props.ng, body: v })} />
+      value={props.ng.body}
+      onChange={v => props.onUpdate({ ...props.ng, body: v })} />
   </div>;
 }
