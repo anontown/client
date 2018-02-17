@@ -54,21 +54,27 @@ export const InPage = withRouter(appInject(class extends React.Component<InPageP
         : <Paper>
           <form>
             <Errors errors={this.state.errors} />
-            <TextField
-              floatingLabelText="ID"
-              value={this.state.sn}
-              onChange={(_e, v) => this.setState({ sn: v })} />
-            <TextField
-              floatingLabelText="パスワード"
-              value={this.state.pass}
-              onChange={(_e, v) => this.setState({ pass: v })}
-              type="password" />
-            <SelectField floatingLabelText="ログイン/登録"
-              value={this.state.isLogin}
-              onChange={(_e, _i, v) => this.setState({ isLogin: v })}>
-              <MenuItem value={true} primaryText="ログイン" />
-              <MenuItem value={false} primaryText="登録" />
-            </SelectField>
+            <div>
+              <SelectField floatingLabelText="ログイン/登録"
+                value={this.state.isLogin}
+                onChange={(_e, _i, v) => this.setState({ isLogin: v })}>
+                <MenuItem value={true} primaryText="ログイン" />
+                <MenuItem value={false} primaryText="登録" />
+              </SelectField>
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="ID"
+                value={this.state.sn}
+                onChange={(_e, v) => this.setState({ sn: v })} />
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="パスワード"
+                value={this.state.pass}
+                onChange={(_e, v) => this.setState({ pass: v })}
+                type="password" />
+            </div>
             {!this.state.isLogin
               ? <Recaptcha
                 sitekey={Config.recaptcha.siteKey}
@@ -76,9 +82,9 @@ export const InPage = withRouter(appInject(class extends React.Component<InPageP
                 onChange={(v: string) => this.setState({ recaptcha: v })} />
               : null}
             {!this.state.isLogin
-              ? <a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a>
+              ? <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
               : null}
-            <RaisedButton label={this.state.isLogin ? "ログイン" : "利用規約に同意して登録"} onClick={() => this.ok()} />
+            <div><RaisedButton label={this.state.isLogin ? "ログイン" : "利用規約に同意して登録"} onClick={() => this.ok()} /></div>
           </form>
         </Paper>}
     </Page>;
