@@ -1,1 +1,1 @@
-export * from "./ng-body-editor";
+export { NGBodyEditor, NGBodyEditorProps } from "./ng-body-editor";
