@@ -51,6 +51,7 @@ export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEd
         rightIconButton={<IconButton onClick={() => this.props.onChange(this.props.values.insert(0, ng.createDefaultBody()))}>
           <FontIcon className="material-icons">add_circle</FontIcon>
         </IconButton>}
+        autoGenerateNestedIndicator={false}
         nestedItems={this.props.values.map(ng => <NGBodyEditor
           key={ng.id}
           value={ng}
@@ -325,6 +326,7 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
         onClick={() => this.props.changeOpenDialog(true)}
         open={true}
         primaryText="Not"
+        autoGenerateNestedIndicator={false}
         nestedItems={[
           <NGBodyEditor
             nestedLevel={this.props.nestedLevel + 1}
