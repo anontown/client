@@ -38,6 +38,7 @@ interface ResState {
   isReply: boolean;
   children: { reses: Im.List<ResSeted>, msg: string | null } | null;
   snackMsg: null | string;
+  disableNG: boolean
 }
 
 export const Res = appInject(class extends React.Component<UnconnectedResProps, ResState> {
@@ -47,6 +48,7 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
       isReply: false,
       children: null,
       snackMsg: null,
+      disableNG: false
     };
   }
 
@@ -157,8 +159,8 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
 
     const isSelf = this.props.user.data !== null && this.props.user.data.token.user === this.props.res.user;
 
-    return this.props.user.data !== null && this.props.user.data.storage.ng.some(x => ng.isNG(x, this.props.res))
-      ? <div>あぼーん</div>
+    return this.props.user.data !== null && !isSelf && !this.state.disableNG && this.props.user.data.storage.ng.some(x => ng.isNG(x, this.props.res))
+      ? <div>あぼーん<a onClick={()=>this.setState({disableNG:true})}>[見る]</a></div>
       : <div className={style.container} >
         <Snack
           msg={this.state.snackMsg}
