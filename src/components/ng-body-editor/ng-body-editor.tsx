@@ -7,7 +7,7 @@ import {
   TextField,
   IconButton,
   FontIcon,
-  Dialog
+  Dialog,
 } from "material-ui";
 import * as Im from "immutable";
 import { list } from "../../utils";
@@ -21,6 +21,7 @@ export interface NGBodysEditorProps {
   select: React.ReactNode;
   primaryText: React.ReactNode;
   nestedLevel: number,
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -31,12 +32,7 @@ export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEd
   }
 
   render() {
-    /*
-    <IconButton onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== this.props..id))}>
-        <FontIcon className="material-icons">close</FontIcon>
-      </IconButton>
-    */
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -45,21 +41,29 @@ export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEd
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
         open={true}
-        primaryText={this.props.primaryText}
-        rightIconButton={<IconButton onClick={() => this.props.onChange(this.props.values.insert(0, ng.createDefaultBody()))}>
-          <FontIcon className="material-icons">add_circle</FontIcon>
-        </IconButton>}
+        primaryText={<>
+          <a onClick={e => {
+            e.stopPropagation();
+            this.props.onChange(this.props.values.insert(0, ng.createDefaultBody()));
+          }}>[+]</a>
+          {this.props.primaryText}
+        </>}
         autoGenerateNestedIndicator={false}
         nestedItems={this.props.values.map(ng => <NGBodyEditor
           key={ng.id}
           value={ng}
           onChange={x => this.props.onChange(list.update(this.props.values, x))}
           nestedLevel={this.props.nestedLevel + 1}
+          rightIconButton={<IconButton
+            onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== ng.id))}>
+            <FontIcon className="material-icons">close</FontIcon>
+          </IconButton>}
         />)
           .toArray()} />
-    </React.Fragment>;
+    </>;
   }
 }
 
@@ -71,6 +75,7 @@ export interface NGBodyEditorProps {
   value: ng.NGBody,
   onChange: (body: ng.NGBody) => void;
   nestedLevel: number
+  rightIconButton?: React.ReactElement<any>;
 }
 
 export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEditorState>{
@@ -165,6 +170,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
     </SelectField>;
     return this.props.value.type === "not" ? <NGNotNodeEditor
       nestedLevel={this.props.nestedLevel}
+      rightIconButton={this.props.rightIconButton}
       openDialog={this.state.openDialog}
       changeOpenDialog={v => this.setState({ openDialog: v })}
       value={this.props.value}
@@ -172,6 +178,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
       onChange={v => this.props.onChange(v)} />
       : this.props.value.type === "and" ? <NGAndNodeEditor
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         select={select}
         openDialog={this.state.openDialog}
         changeOpenDialog={v => this.setState({ openDialog: v })}
@@ -179,6 +186,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
         onChange={v => this.props.onChange(v)} />
         : this.props.value.type === "or" ? <NGOrNodeEditor
           nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
           select={select}
           openDialog={this.state.openDialog}
           changeOpenDialog={v => this.setState({ openDialog: v })}
@@ -186,6 +194,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
           onChange={v => this.props.onChange(v)} />
           : this.props.value.type === "profile" ? <NGProfileNodeEditor
             nestedLevel={this.props.nestedLevel}
+            rightIconButton={this.props.rightIconButton}
             select={select}
             openDialog={this.state.openDialog}
             changeOpenDialog={v => this.setState({ openDialog: v })}
@@ -193,6 +202,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
             onChange={v => this.props.onChange(v)} />
             : this.props.value.type === "hash" ? <NGHashNodeEditor
               nestedLevel={this.props.nestedLevel}
+              rightIconButton={this.props.rightIconButton}
               select={select}
               openDialog={this.state.openDialog}
               changeOpenDialog={v => this.setState({ openDialog: v })}
@@ -200,6 +210,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
               onChange={v => this.props.onChange(v)} />
               : this.props.value.type === "body" ? <NGBodyNodeEditor
                 nestedLevel={this.props.nestedLevel}
+                rightIconButton={this.props.rightIconButton}
                 openDialog={this.state.openDialog}
                 changeOpenDialog={v => this.setState({ openDialog: v })}
                 select={select}
@@ -207,6 +218,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
                 onChange={v => this.props.onChange(v)} />
                 : this.props.value.type === "name" ? <NGNameNodeEditor
                   nestedLevel={this.props.nestedLevel}
+                  rightIconButton={this.props.rightIconButton}
                   openDialog={this.state.openDialog}
                   changeOpenDialog={v => this.setState({ openDialog: v })}
                   select={select}
@@ -214,6 +226,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
                   onChange={v => this.props.onChange(v)} />
                   : this.props.value.type === "vote" ? <NGVoteNodeEditor
                     nestedLevel={this.props.nestedLevel}
+                    rightIconButton={this.props.rightIconButton}
                     select={select}
                     openDialog={this.state.openDialog}
                     changeOpenDialog={v => this.setState({ openDialog: v })}
@@ -228,6 +241,7 @@ export interface NGOrNodeEditorProps {
   onChange: (body: ng.NGBodyOr) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -248,6 +262,7 @@ export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNod
       changeOpenDialog={this.props.changeOpenDialog}
       select={this.props.select}
       nestedLevel={this.props.nestedLevel}
+      rightIconButton={this.props.rightIconButton}
       primaryText="Or"
       values={this.props.value.body} onChange={newBody => {
         this.props.onChange({
@@ -263,6 +278,7 @@ export interface NGAndNodeEditorProps {
   onChange: (body: ng.NGBodyAnd) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -282,6 +298,7 @@ export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAnd
       openDialog={this.props.openDialog}
       changeOpenDialog={this.props.changeOpenDialog}
       nestedLevel={this.props.nestedLevel}
+      rightIconButton={this.props.rightIconButton}
       select={this.props.select}
       values={this.props.value.body}
       primaryText="And"
@@ -299,6 +316,7 @@ export interface NGNotNodeEditorProps {
   onChange: (body: ng.NGBodyNot) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -314,7 +332,7 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
   }
 
   render() {
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -323,6 +341,7 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
         open={true}
         primaryText="Not"
@@ -338,7 +357,7 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
               });
             }} />
         ]} />
-    </React.Fragment>;
+    </>;
   }
 }
 
@@ -347,6 +366,7 @@ export interface NGProfileNodeEditorProps {
   onChange: (body: ng.NGBodyProfile) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -362,7 +382,7 @@ export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProp
   }
 
   render() {
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -380,9 +400,10 @@ export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProp
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
         primaryText={`Profile:${this.props.value.profile}`} />
-    </React.Fragment>;
+    </>;
   }
 }
 
@@ -391,6 +412,7 @@ export interface NGHashNodeEditorProps {
   onChange: (body: ng.NGBodyHash) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -406,7 +428,7 @@ export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGH
   }
 
   render() {
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -424,9 +446,10 @@ export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGH
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
         primaryText={`HASH:${this.props.value.hash}`} />
-    </React.Fragment>;
+    </>;
   }
 }
 
@@ -435,6 +458,7 @@ export interface NGBodyNodeEditorProps {
   onChange: (body: ng.NGBodyBody) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -450,7 +474,7 @@ export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGB
   }
 
   render() {
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -468,9 +492,10 @@ export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGB
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
         primaryText={`Body:${this.props.value.matcher.source}`} />
-    </React.Fragment>;
+    </>;
   }
 }
 
@@ -479,6 +504,7 @@ export interface NGNameNodeEditorProps {
   onChange: (body: ng.NGBodyName) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -494,7 +520,7 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
   }
 
   render() {
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -512,9 +538,10 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
         primaryText={`NAME:${this.props.value.matcher.source}`} />
-    </React.Fragment>;
+    </>;
   }
 }
 
@@ -523,6 +550,7 @@ export interface NGVoteNodeEditorProps {
   onChange: (body: ng.NGBodyVote) => void;
   select: JSX.Element;
   nestedLevel: number;
+  rightIconButton?: React.ReactElement<any>;
   openDialog: boolean,
   changeOpenDialog: (v: boolean) => void;
 }
@@ -538,7 +566,7 @@ export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGV
   }
 
   render() {
-    return <React.Fragment>
+    return <>
       <Dialog
         open={this.props.openDialog}
         autoScrollBodyContent={true}
@@ -560,8 +588,9 @@ export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGV
       </Dialog>
       <ListItem
         nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`VOTE:${this.props.value}`} />
-    </React.Fragment>;
+        primaryText={`VOTE:${this.props.value.value}`} />
+    </>;
   }
 }
