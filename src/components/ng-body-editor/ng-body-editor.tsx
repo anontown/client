@@ -148,63 +148,166 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
             });
           }
         }} />
-          : props.ngBody.type === "profile" ? <TextField
-            floatingLabelText="ID"
-            value={props.ngBody.profile}
-            onChange={(_e, v) => {
-              if (props.ngBody.type === "profile") {
-                props.onUpdateNGBody({
-                  ...props.ngBody,
-                  profile: v
-                });
-              }
-            }} />
-            : props.ngBody.type === "hash" ? <TextField
-              floatingLabelText="HASH"
-              value={props.ngBody.hash}
-              onChange={(_e, v) => {
-                if (props.ngBody.type === "hash") {
-                  props.onUpdateNGBody({
-                    ...props.ngBody,
-                    hash: v
-                  });
-                }
-              }} />
-              : props.ngBody.type === "body" ? <NGMatcherEditor
-                floatingLabelText="本文"
-                matcher={props.ngBody.matcher}
-                onChange={v => {
-                  if (props.ngBody.type === "body") {
-                    props.onUpdateNGBody({
-                      ...props.ngBody,
-                      matcher: v
-                    });
-                  }
-                }} />
-                : props.ngBody.type === "name" ? <NGMatcherEditor
-                  floatingLabelText="名前"
-                  matcher={props.ngBody.matcher}
-                  onChange={v => {
-                    if (props.ngBody.type === "name") {
-                      props.onUpdateNGBody({
-                        ...props.ngBody,
-                        matcher: v
-                      });
-                    }
-                  }} />
-                  : props.ngBody.type === "vote" ? <TextField
-                    floatingLabelText="しきい値"
-                    type="number"
-                    value={props.ngBody.value.toString()}
-                    onChange={(_e, v) => {
-                      const newV = +v;
-                      if (props.ngBody.type === "vote" && !isNaN(newV)) {
-                        props.onUpdateNGBody({
-                          ...props.ngBody,
-                          value: newV
-                        });
-                      }
-                    }} />
+          : props.ngBody.type === "profile" ? <NGProfileNodeEditor
+            value={props.ngBody}
+            onChange={v => props.onUpdateNGBody(v)} />
+            : props.ngBody.type === "hash" ? <NGHashNodeEditor
+              value={props.ngBody}
+              onChange={v => props.onUpdateNGBody(v)} />
+              : props.ngBody.type === "body" ? <NGBodyNodeEditor
+                value={props.ngBody}
+                onChange={v => props.onUpdateNGBody(v)} />
+                : props.ngBody.type === "name" ? <NGNameNodeEditor
+                  value={props.ngBody}
+                  onChange={v => props.onUpdateNGBody(v)} />
+                  : props.ngBody.type === "vote" ? <NGVoteNodeEditor
+                    value={props.ngBody}
+                    onChange={v => props.onUpdateNGBody(v)} />
                     : null}
   </div>;
+}
+
+
+export interface NGProfileNodeEditorProps {
+  value: ng.NGBodyProfile;
+  onChange: (body: ng.NGBodyProfile) => void;
+}
+
+export interface NGProfileNodeEditorState {
+
+}
+
+export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProps, NGProfileNodeEditorState>{
+  constructor(props: NGProfileNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <TextField
+      floatingLabelText="ID"
+      value={this.props.value.profile}
+      onChange={(_e, v) => {
+        this.props.onChange({
+          ...this.props.value,
+          profile: v
+        });
+      }} />;
+  }
+}
+
+export interface NGHashNodeEditorProps {
+  value: ng.NGBodyHash;
+  onChange: (body: ng.NGBodyHash) => void;
+}
+
+export interface NGHashNodeEditorState {
+
+}
+
+export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGHashNodeEditorState>{
+  constructor(props: NGHashNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <TextField
+      floatingLabelText="HASH"
+      value={this.props.value.hash}
+      onChange={(_e, v) => {
+        this.props.onChange({
+          ...this.props.value,
+          hash: v
+        });
+      }} />;
+  }
+}
+
+export interface NGBodyNodeEditorProps {
+  value: ng.NGBodyBody;
+  onChange: (body: ng.NGBodyBody) => void;
+}
+
+export interface NGBodyNodeEditorState {
+
+}
+
+export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGBodyNodeEditorState>{
+  constructor(props: NGBodyNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <NGMatcherEditor
+      floatingLabelText="本文"
+      matcher={this.props.value.matcher}
+      onChange={v => {
+        this.props.onChange({
+          ...this.props.value,
+          matcher: v
+        });
+      }} />;
+  }
+}
+
+export interface NGNameNodeEditorProps {
+  value: ng.NGBodyName;
+  onChange: (body: ng.NGBodyName) => void;
+}
+
+export interface NGNameNodeEditorState {
+
+}
+
+export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGNameNodeEditorState>{
+  constructor(props: NGNameNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <NGMatcherEditor
+      floatingLabelText="名前"
+      matcher={this.props.value.matcher}
+      onChange={v => {
+        this.props.onChange({
+          ...this.props.value,
+          matcher: v
+        });
+      }} />;
+  }
+}
+
+export interface NGVoteNodeEditorProps {
+  value: ng.NGBodyVote;
+  onChange: (body: ng.NGBodyVote) => void;
+}
+
+export interface NGVoteNodeEditorState {
+
+}
+
+export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGVoteNodeEditorState>{
+  constructor(props: NGVoteNodeEditorProps) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return <TextField
+      floatingLabelText="しきい値"
+      type="number"
+      value={this.props.value.value.toString()}
+      onChange={(_e, v) => {
+        const newV = +v;
+        if (this.props.value.type === "vote" && !isNaN(newV)) {
+          this.props.onChange({
+            ...this.props.value,
+            value: newV
+          });
+        }
+      }} />;
+  }
 }
