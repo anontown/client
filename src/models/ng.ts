@@ -43,9 +43,9 @@ function isBodyNG(ngBody: NGBody, res: ResSeted): boolean | null {
       const b = isBodyNG(ngBody.body, res);;
       return b !== null ? !b : null;
     case "and":
-      return ngBody.body.size === 0 ? null : ngBody.body.every(body => !!isBodyNG(body, res));
+      return ngBody.body.filter(x => x !== null).size === 0 ? null : ngBody.body.every(body => !!isBodyNG(body, res));
     case "or":
-      return ngBody.body.size === 0 ? null : ngBody.body.some(body => !!isBodyNG(body, res));
+      return ngBody.body.filter(x => x !== null).size === 0 ? null : ngBody.body.some(body => !!isBodyNG(body, res));
     case "profile":
       return res.type === "normal" && res.profile !== null && ngBody.profile === res.profile.id;
     case "hash":
