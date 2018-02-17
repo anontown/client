@@ -2,13 +2,14 @@ import * as React from "react";
 import * as uuid from "uuid";
 import { ng } from "../models";
 import {
-  Paper,
+  List,
+  ListItem,
   SelectField,
   MenuItem,
   TextField,
   Checkbox,
   IconButton,
-  FontIcon
+  FontIcon,
 } from "material-ui";
 import * as Im from "immutable";
 import { list } from "../utils";
@@ -23,20 +24,20 @@ export interface NGBodysEditorProps {
   onUpdateNGBody: (body: Im.List<ng.NGBody>) => void;
 }
 function NGBodysEditor(props: NGBodysEditorProps): React.ReactElement<any> {
-  return <div style={{
-    paddingLeft: "16px"
-  }}>
+  return <div>
     <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.insert(0, ng.createDefaultBody()))}>
       <FontIcon className="material-icons">add_circle</FontIcon>
     </IconButton>
-    {props.ngBody.map(ng => <Paper key={ng.id}>
-      <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
-        <FontIcon className="material-icons">close</FontIcon>
-      </IconButton>
-      <NGBodyEditor
-        ngBody={ng}
-        onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />
-    </Paper>)}
+    <List>
+      {props.ngBody.map(ng => <ListItem key={ng.id}>
+        <IconButton onClick={() => props.onUpdateNGBody(props.ngBody.filter(x => x.id !== ng.id))}>
+          <FontIcon className="material-icons">close</FontIcon>
+        </IconButton>
+        <NGBodyEditor
+          ngBody={ng}
+          onUpdateNGBody={x => props.onUpdateNGBody(list.update(props.ngBody, x))} />
+      </ListItem>)}
+    </List>
   </div>;
 }
 
@@ -161,14 +162,14 @@ export function NGBodyEditor(props: NGBodyEditorProps): React.ReactElement<any> 
       <MenuItem value={"name"} primaryText="name" />
       <MenuItem value={"vote"} primaryText="vote" />
     </SelectField>
-    {props.ngBody.type === "not" ? <Paper><NGBodyEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
+    {props.ngBody.type === "not" ? <NGBodyEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
       if (props.ngBody.type === "not") {
         props.onUpdateNGBody({
           ...props.ngBody,
           body: newBody
         });
       }
-    }} /></Paper>
+    }} />
       : props.ngBody.type === "and" ? <NGBodysEditor ngBody={props.ngBody.body} onUpdateNGBody={newBody => {
         if (props.ngBody.type === "and") {
           props.onUpdateNGBody({
