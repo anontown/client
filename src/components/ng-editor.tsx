@@ -2,6 +2,7 @@ import * as React from "react";
 import { ng } from "../models";
 import {
   TextField,
+  List
 } from "material-ui";
 import { NGBodyEditor } from "./ng-body-editor";
 
@@ -20,8 +21,11 @@ export function NGEditor(props: NGEditorProps) {
       floatingLabelText="トピック"
       value={props.ng.topic || ""}
       onChange={(_e, v) => props.onUpdate({ ...props.ng, topic: v || null })} />
-    <NGBodyEditor
-      value={props.ng.body}
-      onChange={v => props.onUpdate({ ...props.ng, body: v })} />
+    <List>
+      <NGBodyEditor
+        nestedLevel={0}
+        value={props.ng.body}
+        onChange={v => props.onUpdate({ ...props.ng, body: v })} />
+    </List>
   </div>;
 }
