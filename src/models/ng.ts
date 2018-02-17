@@ -70,7 +70,7 @@ function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean | nu
           matcher.i ? "i" : ""
         ].join()).test(text);
       } catch{
-        return false;
+        return null;
       }
     case "text":
       if (matcher.i) {
