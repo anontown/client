@@ -24,8 +24,8 @@ export function NGEditor(props: NGEditorProps) {
     <List>
       <NGBodyEditor
         nestedLevel={0}
-        value={props.ng.body}
-        onChange={v => props.onUpdate({ ...props.ng, body: v })} />
+        value={props.ng.node}
+        onChange={v => props.onUpdate({ ...props.ng, node: v })} />
     </List>
   </div>;
 }

@@ -20,7 +20,7 @@ export function createDefaultNG(): NG {
     expirationDate: null,
     chain: 1,
     transparent: false,
-    body: createDefaultBody(),
+    node: createDefaultBody(),
   };
 }
 
@@ -34,7 +34,7 @@ export function isNG(ng: NG, res: ResSeted) {
     return false;
   }
 
-  return !!isBodyNG(ng.body, res);
+  return !!isBodyNG(ng.node, res);
 }
 
 function isBodyNG(ngBody: NGBody, res: ResSeted): boolean | null {
@@ -85,7 +85,7 @@ export function toJSON(ng: NG): ngJson.NGJson {
   return {
     name: ng.name,
     topic: ng.topic,
-    body: toJSONBody(ng.body),
+    node: toJSONBody(ng.node),
     expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
     date: ng.date.toISOString(),
     chain: ng.chain,
@@ -127,7 +127,7 @@ export function fromJSON(json: ngJson.NGJson): NG {
   return {
     id: uuid.v4(),
     ...json,
-    body: fromJSONBody(json.body),
+    node: fromJSONBody(json.node),
     expirationDate: json.expirationDate !== null ? new Date(json.expirationDate) : null,
     date: new Date(json.date),
   };
@@ -169,7 +169,7 @@ export interface NG {
   readonly topic: string | null;
   readonly date: Date;
   readonly expirationDate: Date | null;
-  readonly body: NGBody;
+  readonly node: NGBody;
   readonly chain: number;
   readonly transparent: boolean;
 }

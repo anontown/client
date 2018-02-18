@@ -3,7 +3,7 @@ export interface NGJson {
   readonly topic: string | null;
   readonly date: string;
   readonly expirationDate: string | null;
-  readonly body: NGBodyJson;
+  readonly node: NGBodyJson;
   readonly chain: number;
   readonly transparent: boolean;
 }
