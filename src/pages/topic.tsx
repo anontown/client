@@ -20,19 +20,19 @@ import {
   Subject,
 } from "rxjs";
 import {
+  NG,
   Page,
   Res,
   ResWrite,
   Scroll,
   Snack,
   TopicFavo,
-  NG
 } from "../components";
 import { ResSeted } from "../models";
+import { appInject, UserStore } from "../stores";
 import { apiClient, resSetedCreate } from "../utils";
 import * as style from "./topic.scss";
-import { UserStore, appInject } from "../stores";
-//TODO:NGのtransparent
+// TODO:NGのtransparent
 
 // ジェネリクス解除
 interface ResScroll { new(): Scroll<ResSeted>; }
@@ -66,7 +66,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
     isAutoScrollDialog: false,
     autoScrollSpeed: 15,
     isAutoScroll: false,
-    isNGDialog: false
+    isNGDialog: false,
   };
 
   constructor(props: TopicPageProps) {

@@ -3,15 +3,15 @@ import * as api from "@anontown/api-types";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedClientEditorProps {
   client: api.Client | null;
   onUpdate?: (client: api.Client) => void;
   onAdd?: (client: api.Client) => void;
-  user: UserStore
+  user: UserStore;
 }
 
 export type ClientEditorProps = ObjectOmit<UnconnectedClientEditorProps, "user">;

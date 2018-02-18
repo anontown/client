@@ -1,13 +1,13 @@
-import * as ngJson from "./ng-json";
-import { ResSeted } from "./res-seted";
 import * as Im from "immutable";
 import * as uuid from "uuid";
+import * as ngJson from "./ng-json";
+import { ResSeted } from "./res-seted";
 
 export function createDefaultBody(): NGBody {
   return {
     id: uuid.v4(),
     type: "and",
-    body: Im.List()
+    body: Im.List(),
   };
 }
 
@@ -20,11 +20,11 @@ export function createDefaultNG(): NG {
     expirationDate: null,
     chain: 1,
     transparent: false,
-    body: createDefaultBody()
+    body: createDefaultBody(),
   };
 }
 
-//TODO:chain
+// TODO:chain
 export function isNG(ng: NG, res: ResSeted) {
   if (ng.topic !== null && ng.topic !== res.topic) {
     return false;
@@ -40,7 +40,7 @@ export function isNG(ng: NG, res: ResSeted) {
 function isBodyNG(ngBody: NGBody, res: ResSeted): boolean | null {
   switch (ngBody.type) {
     case "not":
-      const b = isBodyNG(ngBody.body, res);;
+      const b = isBodyNG(ngBody.body, res);
       return b !== null ? !b : null;
     case "and":
       return ngBody.body.filter(x => x !== null).size === 0 ? null : ngBody.body.every(body => !!isBodyNG(body, res));
@@ -67,9 +67,9 @@ function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean | nu
     case "reg":
       try {
         return new RegExp(matcher.source, [
-          matcher.i ? "i" : ""
+          matcher.i ? "i" : "",
         ].join()).test(text);
-      } catch{
+      } catch {
         return null;
       }
     case "text":
@@ -89,7 +89,7 @@ export function toJSON(ng: NG): ngJson.NGJson {
     expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
     date: ng.date.toISOString(),
     chain: ng.chain,
-    transparent: ng.transparent
+    transparent: ng.transparent,
   };
 }
 
@@ -123,13 +123,13 @@ function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
   }
 }
 
-export function fromJSON(ngJson: ngJson.NGJson): NG {
+export function fromJSON(json: ngJson.NGJson): NG {
   return {
     id: uuid.v4(),
-    ...ngJson,
-    body: fromJSONBody(ngJson.body),
-    expirationDate: ngJson.expirationDate !== null ? new Date(ngJson.expirationDate) : null,
-    date: new Date(ngJson.date)
+    ...json,
+    body: fromJSONBody(json.body),
+    expirationDate: json.expirationDate !== null ? new Date(json.expirationDate) : null,
+    date: new Date(json.date),
   };
 }
 

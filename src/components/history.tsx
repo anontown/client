@@ -10,6 +10,7 @@ import { ObjectOmit } from "typelevel-ts";
 import {
   ResSeted,
 } from "../models";
+import { appInject, UserStore } from "../stores";
 import {
   apiClient,
   dateFormat,
@@ -20,11 +21,10 @@ import { Md } from "./md";
 import { Res } from "./res";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedHistoryProps {
   history: api.History;
-  user: UserStore
+  user: UserStore;
 }
 
 export type HistoryProps = ObjectOmit<UnconnectedHistoryProps, "user">;

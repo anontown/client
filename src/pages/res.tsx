@@ -6,12 +6,12 @@ import {
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
 import { ResSeted } from "../models";
+import { appInject, UserStore } from "../stores";
 import {
   apiClient,
   resSetedCreate,
   withModal,
 } from "../utils";
-import { UserStore, appInject } from "../stores";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;

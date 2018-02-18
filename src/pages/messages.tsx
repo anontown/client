@@ -12,8 +12,8 @@ import {
   Page,
   Snack,
 } from "../components";
+import { appInject, UserStore } from "../stores";
 import { apiClient, dateFormat } from "../utils";
-import { UserStore, appInject } from "../stores";
 
 interface MessagesPageProps extends RouteComponentProps<{}> {
   user: UserStore;

@@ -4,12 +4,12 @@ import {
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import * as style from "./tag-favo.scss";
 import { TagsLink } from "./tags-link";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedTagFavoProps {
-  user: UserStore
+  user: UserStore;
 }
 
 export type TagFavoProps = ObjectOmit<UnconnectedTagFavoProps, "user">;

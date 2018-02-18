@@ -23,17 +23,17 @@ import {
 } from "react-router-dom";
 import { Observable } from "rxjs";
 import * as pages from "../pages";
+import { appInject, UserStore } from "../stores";
 import {
   apiClient,
   createUserData,
 } from "../utils";
 import * as style from "./app.scss";
-import { UserStore, appInject } from "../stores";
 
 const muiTheme = getMuiTheme(lightBaseTheme);
 
 interface AppProps extends RouteComponentProps<{}> {
-  user: UserStore
+  user: UserStore;
 }
 
 interface AppState {

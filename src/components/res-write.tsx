@@ -10,16 +10,16 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedResWriteProps {
   onSubmit?: (value: api.Res) => void;
   topic: string;
   reply: string | null;
-  user: UserStore
+  user: UserStore;
 }
 
 export type ResWriteProps = ObjectOmit<UnconnectedResWriteProps, "user">;

@@ -15,8 +15,8 @@ import {
   ProfileEditor,
   Snack,
 } from "../components";
+import { appInject, UserStore } from "../stores";
 import { apiClient, list } from "../utils";
-import { UserStore, appInject } from "../stores";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
   user: UserStore;

@@ -4,16 +4,16 @@ import * as Im from "immutable";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedTopicEditorProps {
   topic: api.TopicNormal;
   onUpdate?: (topic: api.TopicNormal) => void;
-  user: UserStore
+  user: UserStore;
 }
 
 export type TopicEditorProps = ObjectOmit<UnconnectedTopicEditorProps, "user">;

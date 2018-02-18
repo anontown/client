@@ -22,8 +22,8 @@ import {
   Page,
   TagsInput,
 } from "../components";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
-import { UserStore, appInject } from "../stores";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -39,104 +39,105 @@ export interface TopicCreatePageState {
   openDialog: boolean;
 }
 
-export const TopicCreatePage = withRouter(appInject(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
-  constructor(props: TopicCreatePageProps) {
-    super(props);
-    this.state = {
-      title: "",
-      tags: Im.Set(),
-      text: "",
-      type: "one",
-      redirect: null,
-      openDialog: false,
-    };
-  }
+export const TopicCreatePage =
+  withRouter(appInject(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
+    constructor(props: TopicCreatePageProps) {
+      super(props);
+      this.state = {
+        title: "",
+        tags: Im.Set(),
+        text: "",
+        type: "one",
+        redirect: null,
+        openDialog: false,
+      };
+    }
 
-  render() {
-    return this.state.redirect === null
-      ? <Page>
-        {this.props.user.data !== null
-          ? <Paper>
-            <Dialog
-              title="確認"
-              open={this.state.openDialog}
-              autoScrollBodyContent={true}
-              onRequestClose={() => this.setState({ openDialog: false })}
-              actions={[
-                <RaisedButton label={"はい"} onClick={() => {
-                  this.setState({ openDialog: false });
-                  this.create();
-                }} />,
-                <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
-              ]}>
-              ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
-              本当に建てますか？
+    render() {
+      return this.state.redirect === null
+        ? <Page>
+          {this.props.user.data !== null
+            ? <Paper>
+              <Dialog
+                title="確認"
+                open={this.state.openDialog}
+                autoScrollBodyContent={true}
+                onRequestClose={() => this.setState({ openDialog: false })}
+                actions={[
+                  <RaisedButton label={"はい"} onClick={() => {
+                    this.setState({ openDialog: false });
+                    this.create();
+                  }} />,
+                  <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
+                ]}>
+                ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
+                本当に建てますか？
             </Dialog>
-            <form>
-              <Errors errors={this.state.errors} />
-              <div>
-                <SelectField
-                  floatingLabelText="種類"
-                  value={this.state.type}
-                  onChange={(_e, _i, v) => this.setState({ type: v })}>
-                  <MenuItem value="one" primaryText="単発" />
-                  <MenuItem value="normal" primaryText="通常" />
-                </SelectField>
-              </div>
-              <div>
-                <TextField
-                  floatingLabelText="タイトル"
-                  value={this.state.title}
-                  onChange={(_e, v) => this.setState({ title: v })} />
-              </div>
-              <div>
-                <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
-              </div>
-              <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
-              <div>
-                <RaisedButton onClick={() => this.submit()} label="トピック作成" />
-              </div>
-            </form>
-          </Paper>
-          : <Paper>
-            ログインしてください。
+              <form>
+                <Errors errors={this.state.errors} />
+                <div>
+                  <SelectField
+                    floatingLabelText="種類"
+                    value={this.state.type}
+                    onChange={(_e, _i, v) => this.setState({ type: v })}>
+                    <MenuItem value="one" primaryText="単発" />
+                    <MenuItem value="normal" primaryText="通常" />
+                  </SelectField>
+                </div>
+                <div>
+                  <TextField
+                    floatingLabelText="タイトル"
+                    value={this.state.title}
+                    onChange={(_e, v) => this.setState({ title: v })} />
+                </div>
+                <div>
+                  <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
+                </div>
+                <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
+                <div>
+                  <RaisedButton onClick={() => this.submit()} label="トピック作成" />
+                </div>
+              </form>
+            </Paper>
+            : <Paper>
+              ログインしてください。
         </Paper>
-        }
-      </Page>
-      : <Redirect to={`/topic/${this.state.redirect}`} />;
-  }
-
-  submit() {
-    if (this.state.type === "normal") {
-      this.setState({ openDialog: true });
-    } else {
-      this.create();
+          }
+        </Page>
+        : <Redirect to={`/topic/${this.state.redirect}`} />;
     }
-  }
 
-  create() {
-    if (this.props.user.data === null) {
-      return;
-    }
-    const params = {
-      title: this.state.title,
-      tags: this.state.tags.toArray(),
-      text: this.state.text,
-    };
-
-    const obs$: Observable<api.Topic> = (this.state.type === "one" ?
-      apiClient.createTopicOne(this.props.user.data.token, params) :
-      apiClient.createTopicNormal(this.props.user.data.token, params));
-
-    obs$.subscribe(topic => {
-      this.setState({ errors: undefined, redirect: topic.id });
-    }, error => {
-      if (error instanceof AtError) {
-        this.setState({ errors: error.errors.map(e => e.message) });
+    submit() {
+      if (this.state.type === "normal") {
+        this.setState({ openDialog: true });
       } else {
-        this.setState({ errors: ["エラーが発生しました"] });
+        this.create();
       }
-    });
+    }
 
-  }
-}));
+    create() {
+      if (this.props.user.data === null) {
+        return;
+      }
+      const params = {
+        title: this.state.title,
+        tags: this.state.tags.toArray(),
+        text: this.state.text,
+      };
+
+      const obs$: Observable<api.Topic> = (this.state.type === "one" ?
+        apiClient.createTopicOne(this.props.user.data.token, params) :
+        apiClient.createTopicNormal(this.props.user.data.token, params));
+
+      obs$.subscribe(topic => {
+        this.setState({ errors: undefined, redirect: topic.id });
+      }, error => {
+        if (error instanceof AtError) {
+          this.setState({ errors: error.errors.map(e => e.message) });
+        } else {
+          this.setState({ errors: ["エラーが発生しました"] });
+        }
+      });
+
+    }
+  }));

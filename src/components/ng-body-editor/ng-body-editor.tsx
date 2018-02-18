@@ -1,31 +1,31 @@
+import * as Im from "immutable";
+import {
+  Dialog,
+  FontIcon,
+  IconButton,
+  ListItem,
+  MenuItem,
+  SelectField,
+  TextField,
+} from "material-ui";
 import * as React from "react";
 import { ng } from "../../models";
-import {
-  ListItem,
-  SelectField,
-  MenuItem,
-  TextField,
-  IconButton,
-  FontIcon,
-  Dialog,
-} from "material-ui";
-import * as Im from "immutable";
 import { list } from "../../utils";
 import { NGMatcherEditor } from "./ng-matcher-editor";
 
 export interface NGBodysEditorState {
 }
 export interface NGBodysEditorProps {
-  values: Im.List<ng.NGBody>,
+  values: Im.List<ng.NGBody>;
   onChange: (body: Im.List<ng.NGBody>) => void;
   select: React.ReactNode;
   primaryText: React.ReactNode;
-  nestedLevel: number,
+  nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
-export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEditorState>{
+export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEditorState> {
   constructor(props: NGBodysEditorProps) {
     super(props);
     this.state = {};
@@ -52,13 +52,13 @@ export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEd
           {this.props.primaryText}
         </>}
         autoGenerateNestedIndicator={false}
-        nestedItems={this.props.values.map(ng => <NGBodyEditor
-          key={ng.id}
-          value={ng}
+        nestedItems={this.props.values.map(value => <NGBodyEditor
+          key={value.id}
+          value={value}
           onChange={x => this.props.onChange(list.update(this.props.values, x))}
           nestedLevel={this.props.nestedLevel + 1}
           rightIconButton={<IconButton
-            onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== ng.id))}>
+            onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== value.id))}>
             <FontIcon className="material-icons">close</FontIcon>
           </IconButton>}
         />)
@@ -68,21 +68,21 @@ export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEd
 }
 
 export interface NGBodyEditorState {
-  openDialog: boolean
+  openDialog: boolean;
 }
 
 export interface NGBodyEditorProps {
-  value: ng.NGBody,
+  value: ng.NGBody;
   onChange: (body: ng.NGBody) => void;
-  nestedLevel: number
+  nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
 }
 
-export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEditorState>{
+export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEditorState> {
   constructor(props: NGBodyEditorProps) {
     super(props);
     this.state = {
-      openDialog: false
+      openDialog: false,
     };
   }
 
@@ -103,28 +103,28 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
             this.props.onChange({
               id: this.props.value.id,
               type: "and",
-              body: Im.List()
+              body: Im.List(),
             });
             break;
           case "or":
             this.props.onChange({
               id: this.props.value.id,
               type: "or",
-              body: Im.List()
+              body: Im.List(),
             });
             break;
           case "profile":
             this.props.onChange({
               id: this.props.value.id,
               type: "profile",
-              profile: ""
+              profile: "",
             });
             break;
           case "hash":
             this.props.onChange({
               id: this.props.value.id,
               type: "hash",
-              hash: ""
+              hash: "",
             });
             break;
           case "body":
@@ -134,8 +134,8 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
               matcher: {
                 type: "text",
                 i: false,
-                source: ""
-              }
+                source: "",
+              },
             });
             break;
           case "name":
@@ -145,15 +145,15 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
               matcher: {
                 type: "text",
                 i: false,
-                source: ""
-              }
+                source: "",
+              },
             });
             break;
           case "vote":
             this.props.onChange({
               id: this.props.value.id,
               type: "vote",
-              value: -5
+              value: -5,
             });
             break;
         }
@@ -242,7 +242,7 @@ export interface NGOrNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
@@ -250,7 +250,7 @@ export interface NGOrNodeEditorState {
 
 }
 
-export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNodeEditorState>{
+export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNodeEditorState> {
   constructor(props: NGOrNodeEditorProps) {
     super(props);
     this.state = {};
@@ -267,7 +267,7 @@ export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNod
       values={this.props.value.body} onChange={newBody => {
         this.props.onChange({
           ...this.props.value,
-          body: newBody
+          body: newBody,
         });
       }} />;
   }
@@ -279,7 +279,7 @@ export interface NGAndNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
@@ -287,7 +287,7 @@ export interface NGAndNodeEditorState {
 
 }
 
-export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAndNodeEditorState>{
+export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAndNodeEditorState> {
   constructor(props: NGAndNodeEditorProps) {
     super(props);
     this.state = {};
@@ -305,7 +305,7 @@ export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAnd
       onChange={newBody => {
         this.props.onChange({
           ...this.props.value,
-          body: newBody
+          body: newBody,
         });
       }} />;
   }
@@ -317,14 +317,14 @@ export interface NGNotNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
 export interface NGNotNodeEditorState {
 }
 
-export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNotNodeEditorState>{
+export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNotNodeEditorState> {
   constructor(props: NGNotNodeEditorProps) {
     super(props);
     this.state = {
@@ -353,9 +353,9 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
             value={this.props.value.body} onChange={newBody => {
               this.props.onChange({
                 ...this.props.value,
-                body: newBody
+                body: newBody,
               });
-            }} />
+            }} />,
         ]} />
     </>;
   }
@@ -367,14 +367,14 @@ export interface NGProfileNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
 export interface NGProfileNodeEditorState {
 }
 
-export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProps, NGProfileNodeEditorState>{
+export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProps, NGProfileNodeEditorState> {
   constructor(props: NGProfileNodeEditorProps) {
     super(props);
     this.state = {
@@ -394,7 +394,7 @@ export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProp
           onChange={(_e, v) => {
             this.props.onChange({
               ...this.props.value,
-              profile: v
+              profile: v,
             });
           }} />
       </Dialog>
@@ -413,14 +413,14 @@ export interface NGHashNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
 export interface NGHashNodeEditorState {
 }
 
-export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGHashNodeEditorState>{
+export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGHashNodeEditorState> {
   constructor(props: NGHashNodeEditorProps) {
     super(props);
     this.state = {
@@ -440,7 +440,7 @@ export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGH
           onChange={(_e, v) => {
             this.props.onChange({
               ...this.props.value,
-              hash: v
+              hash: v,
             });
           }} />
       </Dialog>
@@ -459,14 +459,14 @@ export interface NGBodyNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
 export interface NGBodyNodeEditorState {
 }
 
-export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGBodyNodeEditorState>{
+export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGBodyNodeEditorState> {
   constructor(props: NGBodyNodeEditorProps) {
     super(props);
     this.state = {
@@ -486,7 +486,7 @@ export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGB
           onChange={v => {
             this.props.onChange({
               ...this.props.value,
-              matcher: v
+              matcher: v,
             });
           }} />
       </Dialog>
@@ -505,14 +505,14 @@ export interface NGNameNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
 export interface NGNameNodeEditorState {
 }
 
-export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGNameNodeEditorState>{
+export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGNameNodeEditorState> {
   constructor(props: NGNameNodeEditorProps) {
     super(props);
     this.state = {
@@ -532,7 +532,7 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
           onChange={v => {
             this.props.onChange({
               ...this.props.value,
-              matcher: v
+              matcher: v,
             });
           }} />
       </Dialog>
@@ -551,14 +551,14 @@ export interface NGVoteNodeEditorProps {
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
-  openDialog: boolean,
+  openDialog: boolean;
   changeOpenDialog: (v: boolean) => void;
 }
 
 export interface NGVoteNodeEditorState {
 }
 
-export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGVoteNodeEditorState>{
+export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGVoteNodeEditorState> {
   constructor(props: NGVoteNodeEditorProps) {
     super(props);
     this.state = {
@@ -581,7 +581,7 @@ export class NGVoteNodeEditor extends React.Component<NGVoteNodeEditorProps, NGV
             if (this.props.value.type === "vote" && !isNaN(newV)) {
               this.props.onChange({
                 ...this.props.value,
-                value: newV
+                value: newV,
               });
             }
           }} />

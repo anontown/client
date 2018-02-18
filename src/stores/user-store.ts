@@ -1,12 +1,14 @@
-import { observable, action } from "mobx";
-import { UserData } from "../models";
+import { action, observable } from "mobx";
+import * as mobxUtils from "mobx-utils";
 import { Observable } from "rxjs";
+import { UserData } from "../models";
 import {
   storageAPI,
 } from "../utils";
-import * as mobxUtils from "mobx-utils";
 
 export class UserStore {
+  @observable data: UserData | null = null;
+
   constructor() {
     Observable
       .from(mobxUtils.toStream(() => this.data))
@@ -26,7 +28,6 @@ export class UserStore {
       });
   }
 
-  @observable data: UserData | null = null;
   @action.bound async setData(data: UserData | null) {
     this.data = data;
   }

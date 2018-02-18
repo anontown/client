@@ -1,16 +1,16 @@
+import {
+  List,
+  TextField,
+} from "material-ui";
 import * as React from "react";
 import { ng } from "../models";
-import {
-  TextField,
-  List
-} from "material-ui";
 import { NGBodyEditor } from "./ng-body-editor";
 
 export interface NGEditorProps {
-  ng: ng.NG,
+  ng: ng.NG;
   onUpdate: (body: ng.NG) => void;
 }
-//TODO:expirationDate,chain,transparent
+// TODO:expirationDate,chain,transparent
 export function NGEditor(props: NGEditorProps) {
   return <div>
     <TextField

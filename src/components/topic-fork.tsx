@@ -1,5 +1,4 @@
-import { AtError } from "@anontown/api-client"; import { UserStore, appInject } from "../stores";
-
+import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import {
   Paper,
@@ -8,6 +7,7 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { Snack } from "./snack";

@@ -6,11 +6,11 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Page, Profile, Snack } from "../components";
+import { appInject, UserStore } from "../stores";
 import {
   apiClient,
   withModal,
 } from "../utils";
-import { UserStore, appInject } from "../stores";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;

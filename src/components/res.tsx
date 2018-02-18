@@ -14,6 +14,7 @@ import { Observable } from "rxjs";
 import { ObjectOmit } from "typelevel-ts";
 import { ResSeted } from "../models";
 import { ng } from "../models";
+import { appInject, UserStore } from "../stores";
 import {
   apiClient,
   dateFormat,
@@ -24,7 +25,6 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -38,7 +38,7 @@ interface ResState {
   isReply: boolean;
   children: { reses: Im.List<ResSeted>, msg: string | null } | null;
   snackMsg: null | string;
-  disableNG: boolean
+  disableNG: boolean;
 }
 
 export const Res = appInject(class extends React.Component<UnconnectedResProps, ResState> {
@@ -48,7 +48,7 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
       isReply: false,
       children: null,
       snackMsg: null,
-      disableNG: false
+      disableNG: false,
     };
   }
 
@@ -159,8 +159,11 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
 
     const isSelf = this.props.user.data !== null && this.props.user.data.token.user === this.props.res.user;
 
-    return this.props.user.data !== null && !isSelf && !this.state.disableNG && this.props.user.data.storage.ng.some(x => ng.isNG(x, this.props.res))
-      ? <div>あぼーん<a onClick={()=>this.setState({disableNG:true})}>[見る]</a></div>
+    return this.props.user.data !== null
+      && !isSelf
+      && !this.state.disableNG
+      && this.props.user.data.storage.ng.some(x => ng.isNG(x, this.props.res))
+      ? <div>あぼーん<a onClick={() => this.setState({ disableNG: true })}>[見る]</a></div>
       : <div className={style.container} >
         <Snack
           msg={this.state.snackMsg}

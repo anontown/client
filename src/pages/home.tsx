@@ -14,7 +14,7 @@ import {
   TagFavo,
   TopicFavo,
 } from "../components";
-import { UserStore, appInject } from "../stores";
+import { appInject, UserStore } from "../stores";
 
 interface HomePageProps extends RouteComponentProps<{}> {
   user: UserStore;

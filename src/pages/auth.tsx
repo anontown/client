@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { Page } from "../components";
 import { Snack } from "../components";
-import { UserStore, appInject } from "../stores";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 
 interface AuthPageProps extends RouteComponentProps<{}> {

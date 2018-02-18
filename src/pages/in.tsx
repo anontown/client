@@ -8,7 +8,6 @@ import {
 } from "material-ui";
 import * as React from "react";
 import Recaptcha from "react-google-recaptcha";
-import { UserStore, appInject } from "../stores";
 import {
   Redirect,
   RouteComponentProps,
@@ -19,6 +18,7 @@ import {
   Page,
 } from "../components";
 import { Config } from "../env";
+import { appInject, UserStore } from "../stores";
 import {
   apiClient,
   createUserData,

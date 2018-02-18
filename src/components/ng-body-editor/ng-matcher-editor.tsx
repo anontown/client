@@ -1,12 +1,12 @@
+import {
+  Checkbox,
+  TextField,
+} from "material-ui";
 import * as React from "react";
 import { ng } from "../../models";
-import {
-  TextField,
-  Checkbox,
-} from "material-ui";
 
 export interface NGMatcherEditorProps {
-  matcher: ng.NGBodyTextMatcher,
+  matcher: ng.NGBodyTextMatcher;
   onChange: (body: ng.NGBodyTextMatcher) => void;
   floatingLabelText?: string;
 }
@@ -28,7 +28,7 @@ export function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement
     <Checkbox label="大小文字区別しない" checked={props.matcher.i} onCheck={(_e, v) => {
       props.onChange({
         ...props.matcher,
-        i: v
+        i: v,
       });
     }} />
     <TextField
@@ -37,7 +37,7 @@ export function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement
       onChange={(_e, v) => {
         props.onChange({
           ...props.matcher,
-          source: v
+          source: v,
         });
       }} />
   </div>;

@@ -7,13 +7,13 @@ import {
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedTopicFavoProps {
-  user: UserStore
+  user: UserStore;
   detail: boolean;
 }
 

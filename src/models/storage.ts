@@ -2,7 +2,6 @@ import * as Im from "immutable";
 import * as ng from "./ng";
 import * as ngJson from "./ng-json";
 
-
 interface StorageJSON1 {
   readonly ver: "1.0.0";
   readonly topicFav: string[];
@@ -48,7 +47,7 @@ interface StorageJSON7 {
   readonly topicFavo: string[];
   readonly tagsFavo: string[][];
   readonly topicRead: { [key: string]: { res: string, count: number } };
-  readonly ng: ngJson.NGJson[]
+  readonly ng: ngJson.NGJson[];
 }
 
 export type StorageJSON = StorageJSON1 |
@@ -65,15 +64,15 @@ export const initStorage: StorageJSONLatest = {
   topicFavo: [],
   tagsFavo: [],
   topicRead: {},
-  ng: []
+  ng: [],
 };
-export const verArray: StorageJSON["ver"][] = ["7", "6", "5", "4", "3", "2", "1.0.0"];
+export const verArray: Array<StorageJSON["ver"]> = ["7", "6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
   readonly topicFavo: Im.Set<string>;
   readonly tagsFavo: Im.Set<Im.Set<string>>;
   readonly topicRead: Im.Map<string, { res: string, count: number }>;
-  readonly ng: Im.List<ng.NG>
+  readonly ng: Im.List<ng.NG>;
 }
 
 export function toStorage(json: StorageJSONLatest): Storage {
@@ -81,7 +80,7 @@ export function toStorage(json: StorageJSONLatest): Storage {
     topicFavo: Im.Set(json.topicFavo),
     tagsFavo: Im.Set(json.tagsFavo.map(tags => Im.Set(tags))),
     topicRead: Im.Map(json.topicRead),
-    ng: Im.List(json.ng.map(x => ng.fromJSON(x)))
+    ng: Im.List(json.ng.map(x => ng.fromJSON(x))),
   };
 }
 
@@ -91,7 +90,7 @@ export function toJSON(storage: Storage): StorageJSONLatest {
     topicFavo: storage.topicFavo.toArray(),
     tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
     topicRead: storage.topicRead.toObject(),
-    ng: storage.ng.map(x => ng.toJSON(x)).toArray()
+    ng: storage.ng.map(x => ng.toJSON(x)).toArray(),
   };
 }
 
@@ -150,7 +149,7 @@ function convert6To7(val: StorageJSON6): StorageJSON7 {
   return {
     ...val,
     ver: "7",
-    ng: []
+    ng: [],
   };
 }
 

@@ -1,17 +1,17 @@
 import * as api from "@anontown/api-types";
 import {
   FontIcon,
-  IconButton
+  IconButton,
 } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
+import { appInject, UserStore } from "../stores";
 import { ClientEditor } from "./client-editor";
-import { UserStore, appInject } from "../stores";
 
 interface UnconnectedClientProps {
   client: api.Client;
   onUpdate?: (client: api.Client) => void;
-  user: UserStore
+  user: UserStore;
 }
 
 export type ClientProps = ObjectOmit<UnconnectedClientProps, "user">;

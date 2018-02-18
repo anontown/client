@@ -1,8 +1,8 @@
-export * from './user-store';
-import { UserStore } from "./user-store";
-import { inject, observer } from 'mobx-react';
-import { ObjectOmit } from "typelevel-ts";
+export * from "./user-store";
+import { inject, observer } from "mobx-react";
 import * as React from "react";
+import { ObjectOmit } from "typelevel-ts";
+import { UserStore } from "./user-store";
 
 export const stores = {
   user: new UserStore(),
