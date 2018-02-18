@@ -48,12 +48,11 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
   }
 
   render() {
-    return [
+    return <>
       <Snack
-        key="snack"
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />,
-      <div key="tags">
+      <div>
         {this.props.value.map(t => <span key={t} className={style.tag}>
           <span className={style.tagButton} onClick={() => {
             if (this.props.onChange !== undefined) {
@@ -65,7 +64,6 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
       </div>,
       <AutoComplete
         fullWidth={this.props.fullWidth}
-        key="input"
         floatingLabelText="タグ"
         dataSource={this.state.acTags.map(t => ({
           text: t.name,
@@ -90,6 +88,6 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           maxHeight: "30vh",
         }}
       />,
-    ];
+    </>;
   }
 }

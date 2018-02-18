@@ -43,14 +43,12 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
   }
 
   render() {
-    return [
+    return <>
       <img
-        key="img"
         src={`https://i.ytimg.com/vi/${this.props.videoID}/maxresdefault.jpg`}
         title={this.props.title || undefined}
         onClick={() => this.setState({ slow: true })} />,
       <Dialog
-        key="dialog"
         title="YouTube"
         open={this.state.slow}
         autoScrollBodyContent={true}
@@ -62,7 +60,7 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
           </iframe>
         </div>
       </Dialog>,
-    ];
+    </>;
   }
 }
 
