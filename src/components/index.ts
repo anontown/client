@@ -25,4 +25,4 @@ export * from "./tags-input";
 export * from "./scroll";
 export * from "./ng";
 export * from "./ng-editor";
-export * from "./ng-body-editor";
+export * from "./ng-node-editor";

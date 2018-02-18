@@ -4,7 +4,7 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ng } from "../models";
-import { NGNodeEditor } from "./ng-body-editor";
+import { NGNodeEditor } from "./ng-node-editor";
 
 export interface NGEditorProps {
   ng: ng.NG;
