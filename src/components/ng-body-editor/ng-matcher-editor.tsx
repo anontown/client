@@ -32,6 +32,7 @@ export function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement
       });
     }} />
     <TextField
+      multiLine={true}
       floatingLabelText={props.floatingLabelText}
       value={props.matcher.source}
       onChange={(_e, v) => {
