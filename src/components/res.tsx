@@ -25,6 +25,7 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
+import * as uuid from "uuid";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -230,7 +231,7 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
             <span>
               {this.props.res.uv - this.props.res.dv}ポイント
             </span>
-            {isSelf && this.props.res.type === "normal"
+            {this.props.user.data !== null && this.props.res.type === "normal"
               ? <IconMenu
                 iconStyle={{ fontSize: "10px" }}
                 iconButtonElement={<IconButton style={{ width: "16px", height: "16px", padding: "0px" }}>
@@ -238,7 +239,9 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
                 </IconButton>}
                 anchorOrigin={{ horizontal: "left", vertical: "top" }}
                 targetOrigin={{ horizontal: "left", vertical: "top" }}>
-                <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
+                {isSelf
+                  ? <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
+                  : null}
               </IconMenu>
               : null}
           </div>
