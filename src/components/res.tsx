@@ -25,7 +25,6 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import * as uuid from "uuid";
 
 interface UnconnectedResProps {
   res: ResSeted;
