@@ -7,7 +7,7 @@ export function createDefaultBody(): NGBody {
   return {
     id: uuid.v4(),
     type: "and",
-    body: Im.List(),
+    children: Im.List(),
   };
 }
 
@@ -40,12 +40,12 @@ export function isNG(ng: NG, res: ResSeted) {
 function isBodyNG(ngBody: NGBody, res: ResSeted): boolean | null {
   switch (ngBody.type) {
     case "not":
-      const b = isBodyNG(ngBody.body, res);
+      const b = isBodyNG(ngBody.child, res);
       return b !== null ? !b : null;
     case "and":
-      return ngBody.body.filter(x => x !== null).size === 0 ? null : ngBody.body.every(body => !!isBodyNG(body, res));
+      return ngBody.children.filter(x => x !== null).size === 0 ? null : ngBody.children.every(body => !!isBodyNG(body, res));
     case "or":
-      return ngBody.body.filter(x => x !== null).size === 0 ? null : ngBody.body.some(body => !!isBodyNG(body, res));
+      return ngBody.children.filter(x => x !== null).size === 0 ? null : ngBody.children.some(body => !!isBodyNG(body, res));
     case "profile":
       return res.type === "normal" && res.profile !== null && ngBody.profile === res.profile.id;
     case "hash":
@@ -105,11 +105,11 @@ function toJSONMatcher(matcher: NGBodyTextMatcher): ngJson.NGBodyTextMatcherJson
 function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
   switch (ngBody.type) {
     case "not":
-      return { type: "not", body: toJSONBody(ngBody.body) };
+      return { type: "not", child: toJSONBody(ngBody.child) };
     case "and":
-      return { type: "and", body: ngBody.body.map(x => toJSONBody(x)).toArray() };
+      return { type: "and", children: ngBody.children.map(x => toJSONBody(x)).toArray() };
     case "or":
-      return { type: "or", body: ngBody.body.map(x => toJSONBody(x)).toArray() };
+      return { type: "or", children: ngBody.children.map(x => toJSONBody(x)).toArray() };
     case "profile":
       return ngBody;
     case "hash":
@@ -145,11 +145,11 @@ function fromJSONTextMatcher(matcher: ngJson.NGBodyTextMatcherJson): NGBodyTextM
 function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
   switch (ngBody.type) {
     case "not":
-      return { id: uuid.v4(), type: "not", body: fromJSONBody(ngBody.body) };
+      return { id: uuid.v4(), type: "not", child: fromJSONBody(ngBody.child) };
     case "and":
-      return { id: uuid.v4(), type: "and", body: Im.List(ngBody.body.map(x => fromJSONBody(x))) };
+      return { id: uuid.v4(), type: "and", children: Im.List(ngBody.children.map(x => fromJSONBody(x))) };
     case "or":
-      return { id: uuid.v4(), type: "or", body: Im.List(ngBody.body.map(x => fromJSONBody(x))) };
+      return { id: uuid.v4(), type: "or", children: Im.List(ngBody.children.map(x => fromJSONBody(x))) };
     case "profile":
       return { id: uuid.v4(), ...ngBody };
     case "hash":
@@ -186,19 +186,19 @@ export type NGBody = NGBodyNot |
 export interface NGBodyNot {
   readonly id: string;
   readonly type: "not";
-  readonly body: NGBody;
+  readonly child: NGBody;
 }
 
 export interface NGBodyAnd {
   readonly id: string;
   readonly type: "and";
-  readonly body: Im.List<NGBody>;
+  readonly children: Im.List<NGBody>;
 }
 
 export interface NGBodyOr {
   readonly id: string;
   readonly type: "or";
-  readonly body: Im.List<NGBody>;
+  readonly children: Im.List<NGBody>;
 }
 
 export interface NGBodyProfile {

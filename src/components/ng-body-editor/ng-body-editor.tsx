@@ -96,21 +96,21 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
             this.props.onChange({
               id: this.props.value.id,
               type: "not",
-              body: ng.createDefaultBody(),
+              child: ng.createDefaultBody(),
             });
             break;
           case "and":
             this.props.onChange({
               id: this.props.value.id,
               type: "and",
-              body: Im.List(),
+              children: Im.List(),
             });
             break;
           case "or":
             this.props.onChange({
               id: this.props.value.id,
               type: "or",
-              body: Im.List(),
+              children: Im.List(),
             });
             break;
           case "profile":
@@ -264,10 +264,10 @@ export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNod
       nestedLevel={this.props.nestedLevel}
       rightIconButton={this.props.rightIconButton}
       primaryText="Or"
-      values={this.props.value.body} onChange={newBody => {
+      values={this.props.value.children} onChange={newBody => {
         this.props.onChange({
           ...this.props.value,
-          body: newBody,
+          children: newBody,
         });
       }} />;
   }
@@ -300,12 +300,12 @@ export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAnd
       nestedLevel={this.props.nestedLevel}
       rightIconButton={this.props.rightIconButton}
       select={this.props.select}
-      values={this.props.value.body}
+      values={this.props.value.children}
       primaryText="And"
       onChange={newBody => {
         this.props.onChange({
           ...this.props.value,
-          body: newBody,
+          children: newBody,
         });
       }} />;
   }
@@ -350,10 +350,10 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
           <NGBodyEditor
             nestedLevel={this.props.nestedLevel + 1}
             key="node"
-            value={this.props.value.body} onChange={newBody => {
+            value={this.props.value.child} onChange={newBody => {
               this.props.onChange({
                 ...this.props.value,
-                body: newBody,
+                child: newBody,
               });
             }} />,
         ]} />

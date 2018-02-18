@@ -19,17 +19,17 @@ export type NGBodyJson = NGBodyNotJson |
 
 export interface NGBodyNotJson {
   readonly type: "not";
-  readonly body: NGBodyJson;
+  readonly child: NGBodyJson;
 }
 
 export interface NGBodyAndJson {
   readonly type: "and";
-  readonly body: NGBodyJson[];
+  readonly children: NGBodyJson[];
 }
 
 export interface NGBodyOrJson {
   readonly type: "or";
-  readonly body: NGBodyJson[];
+  readonly children: NGBodyJson[];
 }
 
 export interface NGBodyProfileJson {
