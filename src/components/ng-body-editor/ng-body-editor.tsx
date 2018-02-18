@@ -16,8 +16,8 @@ import { NGMatcherEditor } from "./ng-matcher-editor";
 export interface NGBodysEditorState {
 }
 export interface NGBodysEditorProps {
-  values: Im.List<ng.NGBody>;
-  onChange: (body: Im.List<ng.NGBody>) => void;
+  values: Im.List<ng.NGNode>;
+  onChange: (body: Im.List<ng.NGNode>) => void;
   select: React.ReactNode;
   primaryText: React.ReactNode;
   nestedLevel: number;
@@ -47,7 +47,7 @@ export class NGBodysEditor extends React.Component<NGBodysEditorProps, NGBodysEd
         primaryText={<>
           <a onClick={e => {
             e.stopPropagation();
-            this.props.onChange(this.props.values.insert(0, ng.createDefaultBody()));
+            this.props.onChange(this.props.values.insert(0, ng.createDefaultNode()));
           }}>[+]</a>
           {this.props.primaryText}
         </>}
@@ -72,8 +72,8 @@ export interface NGBodyEditorState {
 }
 
 export interface NGBodyEditorProps {
-  value: ng.NGBody;
-  onChange: (body: ng.NGBody) => void;
+  value: ng.NGNode;
+  onChange: (body: ng.NGNode) => void;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
 }
@@ -96,7 +96,7 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
             this.props.onChange({
               id: this.props.value.id,
               type: "not",
-              child: ng.createDefaultBody(),
+              child: ng.createDefaultNode(),
             });
             break;
           case "and":
@@ -237,8 +237,8 @@ export class NGBodyEditor extends React.Component<NGBodyEditorProps, NGBodyEdito
 }
 
 export interface NGOrNodeEditorProps {
-  value: ng.NGBodyOr;
-  onChange: (body: ng.NGBodyOr) => void;
+  value: ng.NGNodeOr;
+  onChange: (body: ng.NGNodeOr) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -274,8 +274,8 @@ export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNod
 }
 
 export interface NGAndNodeEditorProps {
-  value: ng.NGBodyAnd;
-  onChange: (body: ng.NGBodyAnd) => void;
+  value: ng.NGNodeAnd;
+  onChange: (body: ng.NGNodeAnd) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -312,8 +312,8 @@ export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAnd
 }
 
 export interface NGNotNodeEditorProps {
-  value: ng.NGBodyNot;
-  onChange: (body: ng.NGBodyNot) => void;
+  value: ng.NGNodeNot;
+  onChange: (body: ng.NGNodeNot) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -362,8 +362,8 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
 }
 
 export interface NGProfileNodeEditorProps {
-  value: ng.NGBodyProfile;
-  onChange: (body: ng.NGBodyProfile) => void;
+  value: ng.NGNodeProfile;
+  onChange: (body: ng.NGNodeProfile) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -408,8 +408,8 @@ export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProp
 }
 
 export interface NGHashNodeEditorProps {
-  value: ng.NGBodyHash;
-  onChange: (body: ng.NGBodyHash) => void;
+  value: ng.NGNodeHash;
+  onChange: (body: ng.NGNodeHash) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -454,8 +454,8 @@ export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGH
 }
 
 export interface NGBodyNodeEditorProps {
-  value: ng.NGBodyBody;
-  onChange: (body: ng.NGBodyBody) => void;
+  value: ng.NGNodeBody;
+  onChange: (body: ng.NGNodeBody) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -500,8 +500,8 @@ export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGB
 }
 
 export interface NGNameNodeEditorProps {
-  value: ng.NGBodyName;
-  onChange: (body: ng.NGBodyName) => void;
+  value: ng.NGNodeName;
+  onChange: (body: ng.NGNodeName) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -546,8 +546,8 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
 }
 
 export interface NGVoteNodeEditorProps {
-  value: ng.NGBodyVote;
-  onChange: (body: ng.NGBodyVote) => void;
+  value: ng.NGNodeVote;
+  onChange: (body: ng.NGNodeVote) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;

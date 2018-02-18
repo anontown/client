@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 import * as ngJson from "./ng-json";
 import { ResSeted } from "./res-seted";
 
-export function createDefaultBody(): NGBody {
+export function createDefaultNode(): NGNode {
   return {
     id: uuid.v4(),
     type: "and",
@@ -20,7 +20,7 @@ export function createDefaultNG(): NG {
     expirationDate: null,
     chain: 1,
     transparent: false,
-    node: createDefaultBody(),
+    node: createDefaultNode(),
   };
 }
 
@@ -34,32 +34,32 @@ export function isNG(ng: NG, res: ResSeted) {
     return false;
   }
 
-  return !!isBodyNG(ng.node, res);
+  return !!isNodeNG(ng.node, res);
 }
 
-function isBodyNG(ngBody: NGBody, res: ResSeted): boolean | null {
-  switch (ngBody.type) {
+function isNodeNG(node: NGNode, res: ResSeted): boolean | null {
+  switch (node.type) {
     case "not":
-      const b = isBodyNG(ngBody.child, res);
+      const b = isNodeNG(node.child, res);
       return b !== null ? !b : null;
     case "and":
-      return ngBody.children.filter(x => x !== null).size === 0 ? null : ngBody.children.every(body => !!isBodyNG(body, res));
+      return node.children.filter(x => x !== null).size === 0 ? null : node.children.every(x => !!isNodeNG(x, res));
     case "or":
-      return ngBody.children.filter(x => x !== null).size === 0 ? null : ngBody.children.some(body => !!isBodyNG(body, res));
+      return node.children.filter(x => x !== null).size === 0 ? null : node.children.some(x => !!isNodeNG(x, res));
     case "profile":
-      return res.type === "normal" && res.profile !== null && ngBody.profile === res.profile.id;
+      return res.type === "normal" && res.profile !== null && node.profile === res.profile.id;
     case "hash":
-      return res.hash === ngBody.hash;
+      return res.hash === node.hash;
     case "body":
-      return res.type === "normal" && textMatcherTest(ngBody.matcher, res.text);
+      return res.type === "normal" && textMatcherTest(node.matcher, res.text);
     case "name":
-      return res.type === "normal" && res.name !== null && textMatcherTest(ngBody.matcher, res.name);
+      return res.type === "normal" && res.name !== null && textMatcherTest(node.matcher, res.name);
     case "vote":
-      return res.uv - res.dv < ngBody.value;
+      return res.uv - res.dv < node.value;
   }
 }
 
-function textMatcherTest(matcher: NGBodyTextMatcher, text: string): boolean | null {
+function textMatcherTest(matcher: NGNodeTextMatcher, text: string): boolean | null {
   if (matcher.source.length === 0) {
     return null;
   }
@@ -85,7 +85,7 @@ export function toJSON(ng: NG): ngJson.NGJson {
   return {
     name: ng.name,
     topic: ng.topic,
-    node: toJSONBody(ng.node),
+    node: toJSONNode(ng.node),
     expirationDate: ng.expirationDate !== null ? ng.expirationDate.toISOString() : null,
     date: ng.date.toISOString(),
     chain: ng.chain,
@@ -93,7 +93,7 @@ export function toJSON(ng: NG): ngJson.NGJson {
   };
 }
 
-function toJSONMatcher(matcher: NGBodyTextMatcher): ngJson.NGBodyTextMatcherJson {
+function toJSONMatcher(matcher: NGNodeTextMatcher): ngJson.NGNodeTextMatcherJson {
   switch (matcher.type) {
     case "reg":
       return matcher;
@@ -102,24 +102,24 @@ function toJSONMatcher(matcher: NGBodyTextMatcher): ngJson.NGBodyTextMatcherJson
   }
 }
 
-function toJSONBody(ngBody: NGBody): ngJson.NGBodyJson {
-  switch (ngBody.type) {
+function toJSONNode(node: NGNode): ngJson.NGNodeJson {
+  switch (node.type) {
     case "not":
-      return { type: "not", child: toJSONBody(ngBody.child) };
+      return { type: "not", child: toJSONNode(node.child) };
     case "and":
-      return { type: "and", children: ngBody.children.map(x => toJSONBody(x)).toArray() };
+      return { type: "and", children: node.children.map(x => toJSONNode(x)).toArray() };
     case "or":
-      return { type: "or", children: ngBody.children.map(x => toJSONBody(x)).toArray() };
+      return { type: "or", children: node.children.map(x => toJSONNode(x)).toArray() };
     case "profile":
-      return ngBody;
+      return node;
     case "hash":
-      return ngBody;
+      return node;
     case "body":
-      return { type: "body", matcher: toJSONMatcher(ngBody.matcher) };
+      return { type: "body", matcher: toJSONMatcher(node.matcher) };
     case "name":
-      return { type: "name", matcher: toJSONMatcher(ngBody.matcher) };
+      return { type: "name", matcher: toJSONMatcher(node.matcher) };
     case "vote":
-      return ngBody;
+      return node;
   }
 }
 
@@ -127,13 +127,13 @@ export function fromJSON(json: ngJson.NGJson): NG {
   return {
     id: uuid.v4(),
     ...json,
-    node: fromJSONBody(json.node),
+    node: fromJSONNode(json.node),
     expirationDate: json.expirationDate !== null ? new Date(json.expirationDate) : null,
     date: new Date(json.date),
   };
 }
 
-function fromJSONTextMatcher(matcher: ngJson.NGBodyTextMatcherJson): NGBodyTextMatcher {
+function fromJSONTextMatcher(matcher: ngJson.NGNodeTextMatcherJson): NGNodeTextMatcher {
   switch (matcher.type) {
     case "reg":
       return matcher;
@@ -142,24 +142,24 @@ function fromJSONTextMatcher(matcher: ngJson.NGBodyTextMatcherJson): NGBodyTextM
   }
 }
 
-function fromJSONBody(ngBody: ngJson.NGBodyJson): NGBody {
-  switch (ngBody.type) {
+function fromJSONNode(node: ngJson.NGNodeJson): NGNode {
+  switch (node.type) {
     case "not":
-      return { id: uuid.v4(), type: "not", child: fromJSONBody(ngBody.child) };
+      return { id: uuid.v4(), type: "not", child: fromJSONNode(node.child) };
     case "and":
-      return { id: uuid.v4(), type: "and", children: Im.List(ngBody.children.map(x => fromJSONBody(x))) };
+      return { id: uuid.v4(), type: "and", children: Im.List(node.children.map(x => fromJSONNode(x))) };
     case "or":
-      return { id: uuid.v4(), type: "or", children: Im.List(ngBody.children.map(x => fromJSONBody(x))) };
+      return { id: uuid.v4(), type: "or", children: Im.List(node.children.map(x => fromJSONNode(x))) };
     case "profile":
-      return { id: uuid.v4(), ...ngBody };
+      return { id: uuid.v4(), ...node };
     case "hash":
-      return { id: uuid.v4(), ...ngBody };
+      return { id: uuid.v4(), ...node };
     case "body":
-      return { id: uuid.v4(), type: "body", matcher: fromJSONTextMatcher(ngBody.matcher) };
+      return { id: uuid.v4(), type: "body", matcher: fromJSONTextMatcher(node.matcher) };
     case "name":
-      return { id: uuid.v4(), type: "name", matcher: fromJSONTextMatcher(ngBody.matcher) };
+      return { id: uuid.v4(), type: "name", matcher: fromJSONTextMatcher(node.matcher) };
     case "vote":
-      return { id: uuid.v4(), ...ngBody };
+      return { id: uuid.v4(), ...node };
   }
 }
 
@@ -169,76 +169,76 @@ export interface NG {
   readonly topic: string | null;
   readonly date: Date;
   readonly expirationDate: Date | null;
-  readonly node: NGBody;
+  readonly node: NGNode;
   readonly chain: number;
   readonly transparent: boolean;
 }
 
-export type NGBody = NGBodyNot |
-  NGBodyAnd |
-  NGBodyOr |
-  NGBodyProfile |
-  NGBodyHash |
-  NGBodyBody |
-  NGBodyName |
-  NGBodyVote;
+export type NGNode = NGNodeNot |
+  NGNodeAnd |
+  NGNodeOr |
+  NGNodeProfile |
+  NGNodeHash |
+  NGNodeBody |
+  NGNodeName |
+  NGNodeVote;
 
-export interface NGBodyNot {
+export interface NGNodeNot {
   readonly id: string;
   readonly type: "not";
-  readonly child: NGBody;
+  readonly child: NGNode;
 }
 
-export interface NGBodyAnd {
+export interface NGNodeAnd {
   readonly id: string;
   readonly type: "and";
-  readonly children: Im.List<NGBody>;
+  readonly children: Im.List<NGNode>;
 }
 
-export interface NGBodyOr {
+export interface NGNodeOr {
   readonly id: string;
   readonly type: "or";
-  readonly children: Im.List<NGBody>;
+  readonly children: Im.List<NGNode>;
 }
 
-export interface NGBodyProfile {
+export interface NGNodeProfile {
   readonly id: string;
   readonly type: "profile";
   readonly profile: string;
 }
 
-export interface NGBodyHash {
+export interface NGNodeHash {
   readonly id: string;
   readonly type: "hash";
   readonly hash: string;
 }
 
-export type NGBodyTextMatcher = NGBodyTextMatcherReg | NGBodyTextMatcherText;
-export interface NGBodyTextMatcherReg {
+export type NGNodeTextMatcher = NGNodeTextMatcherReg | NGNodeTextMatcherText;
+export interface NGNodeTextMatcherReg {
   readonly type: "reg";
   readonly source: string;
   readonly i: boolean;
 }
 
-export interface NGBodyTextMatcherText {
+export interface NGNodeTextMatcherText {
   readonly type: "text";
   readonly source: string;
   readonly i: boolean;
 }
 
-export interface NGBodyBody {
+export interface NGNodeBody {
   readonly id: string;
   readonly type: "body";
-  readonly matcher: NGBodyTextMatcher;
+  readonly matcher: NGNodeTextMatcher;
 }
 
-export interface NGBodyName {
+export interface NGNodeName {
   readonly id: string;
   readonly type: "name";
-  readonly matcher: NGBodyTextMatcher;
+  readonly matcher: NGNodeTextMatcher;
 }
 
-export interface NGBodyVote {
+export interface NGNodeVote {
   readonly id: string;
   readonly type: "vote";
   readonly value: number;

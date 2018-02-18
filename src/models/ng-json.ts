@@ -3,70 +3,70 @@ export interface NGJson {
   readonly topic: string | null;
   readonly date: string;
   readonly expirationDate: string | null;
-  readonly node: NGBodyJson;
+  readonly node: NGNodeJson;
   readonly chain: number;
   readonly transparent: boolean;
 }
 
-export type NGBodyJson = NGBodyNotJson |
-  NGBodyAndJson |
-  NGBodyOrJson |
-  NGBodyProfileJson |
-  NGBodyHashJson |
-  NGBodyBodyJson |
-  NGBodyNameJson |
-  NGBodyVoteJson;
+export type NGNodeJson = NGNodeNotJson |
+  NGNodeAndJson |
+  NGNodeOrJson |
+  NGNodeProfileJson |
+  NGNodeHashJson |
+  NGNodeBodyJson |
+  NGNodeNameJson |
+  NGNodeVoteJson;
 
-export interface NGBodyNotJson {
+export interface NGNodeNotJson {
   readonly type: "not";
-  readonly child: NGBodyJson;
+  readonly child: NGNodeJson;
 }
 
-export interface NGBodyAndJson {
+export interface NGNodeAndJson {
   readonly type: "and";
-  readonly children: NGBodyJson[];
+  readonly children: NGNodeJson[];
 }
 
-export interface NGBodyOrJson {
+export interface NGNodeOrJson {
   readonly type: "or";
-  readonly children: NGBodyJson[];
+  readonly children: NGNodeJson[];
 }
 
-export interface NGBodyProfileJson {
+export interface NGNodeProfileJson {
   readonly type: "profile";
   readonly profile: string;
 }
 
-export interface NGBodyHashJson {
+export interface NGNodeHashJson {
   readonly type: "hash";
   readonly hash: string;
 }
 
-export type NGBodyTextMatcherJson = NGBodyTextMatcherRegJson | NGBodyTextMatcherTextJson;
+export type NGNodeTextMatcherJson = NGNodeTextMatcherRegJson | NGNodeTextMatcherTextJson;
 
-export interface NGBodyTextMatcherRegJson {
+export interface NGNodeTextMatcherRegJson {
   readonly type: "reg";
   readonly source: string;
   readonly i: boolean;
 }
 
-export interface NGBodyTextMatcherTextJson {
+export interface NGNodeTextMatcherTextJson {
   readonly type: "text";
   readonly source: string;
   readonly i: boolean;
 }
 
-export interface NGBodyBodyJson {
+export interface NGNodeBodyJson {
   readonly type: "body";
-  readonly matcher: NGBodyTextMatcherJson;
+  readonly matcher: NGNodeTextMatcherJson;
 }
 
-export interface NGBodyNameJson {
+export interface NGNodeNameJson {
   readonly type: "name";
-  readonly matcher: NGBodyTextMatcherJson;
+  readonly matcher: NGNodeTextMatcherJson;
 }
 
-export interface NGBodyVoteJson {
+export interface NGNodeVoteJson {
   readonly type: "vote";
   readonly value: number;
 }

@@ -6,8 +6,8 @@ import * as React from "react";
 import { ng } from "../../models";
 
 export interface NGMatcherEditorProps {
-  matcher: ng.NGBodyTextMatcher;
-  onChange: (body: ng.NGBodyTextMatcher) => void;
+  matcher: ng.NGNodeTextMatcher;
+  onChange: (body: ng.NGNodeTextMatcher) => void;
   floatingLabelText?: string;
 }
 export function NGMatcherEditor(props: NGMatcherEditorProps): React.ReactElement<any> {
