@@ -4,7 +4,7 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ng } from "../models";
-import { NGBodyEditor } from "./ng-body-editor";
+import { NGNodeEditor } from "./ng-body-editor";
 
 export interface NGEditorProps {
   ng: ng.NG;
@@ -22,7 +22,7 @@ export function NGEditor(props: NGEditorProps) {
       value={props.ng.topic || ""}
       onChange={(_e, v) => props.onUpdate({ ...props.ng, topic: v || null })} />
     <List>
-      <NGBodyEditor
+      <NGNodeEditor
         nestedLevel={0}
         value={props.ng.node}
         onChange={v => props.onUpdate({ ...props.ng, node: v })} />
