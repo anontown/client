@@ -8,7 +8,7 @@ import { NGNodeEditor } from "./ng-node-editor";
 
 export interface NGEditorProps {
   ng: ng.NG;
-  onUpdate: (body: ng.NG) => void;
+  onUpdate: (ng: ng.NG) => void;
 }
 // TODO:expirationDate,chain,transparent
 export function NGEditor(props: NGEditorProps) {
