@@ -51,7 +51,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
     return <>
       <Snack
         msg={this.state.snackMsg}
-        onHide={() => this.setState({ snackMsg: null })} />,
+        onHide={() => this.setState({ snackMsg: null })} />
       <div>
         {this.props.value.map(t => <span key={t} className={style.tag}>
           <span className={style.tagButton} onClick={() => {
@@ -61,7 +61,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           }}>×</span>
           {t}
         </span>).toArray()}
-      </div>,
+      </div>
       <AutoComplete
         fullWidth={this.props.fullWidth}
         floatingLabelText="タグ"
@@ -70,7 +70,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           value: <MenuItem
             primaryText={t.name}
             secondaryText={t.count.toString()}
-          />,
+          />
         }))}
         filter={(text, key) => key.toLowerCase().indexOf(text.toLowerCase()) !== -1}
         searchText={this.state.inputValue}
@@ -87,7 +87,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
         listStyle={{
           maxHeight: "30vh",
         }}
-      />,
+      />
     </>;
   }
 }
