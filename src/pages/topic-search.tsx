@@ -215,7 +215,7 @@ export const TopicSearchPage =
           {this.state.topics.map(t =>
             <Paper key={t.id}>
               <TopicListItem topic={t} detail={true} />
-            </Paper>,
+            </Paper>
           )}
         </div>
         {this.state.count === this.limit
