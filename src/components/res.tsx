@@ -25,6 +25,7 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
+import * as uuid from "uuid";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -230,7 +231,7 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
             <span>
               {this.props.res.uv - this.props.res.dv}ポイント
             </span>
-            {this.props.user.data !== null && this.props.res.type === "normal"
+            {this.props.user.data !== null
               ? <IconMenu
                 iconStyle={{ fontSize: "10px" }}
                 iconButtonElement={<IconButton style={{ width: "16px", height: "16px", padding: "0px" }}>
@@ -238,8 +239,58 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
                 </IconButton>}
                 anchorOrigin={{ horizontal: "left", vertical: "top" }}
                 targetOrigin={{ horizontal: "left", vertical: "top" }}>
-                {isSelf
+                {isSelf && this.props.res.type === "normal"
                   ? <MenuItem primaryText="削除" onClick={() => this.onDeleteClick()} />
+                  : null}
+                <MenuItem primaryText="NG HASH" onClick={() => {
+                  const user = this.props.user.data;
+                  if (user !== null) {
+                    this.props.user.setData({
+                      ...user, storage: {
+                        ...user.storage,
+                        ng: user.storage.ng.insert(0, {
+                          id: uuid.v4(),
+                          name: `HASH:${this.props.res.hash}`,
+                          topic: this.props.res.topic,
+                          date: new Date(),
+                          expirationDate: null,
+                          chain: 1,
+                          transparent: false,
+                          node: {
+                            type: "hash",
+                            id: uuid.v4(),
+                            hash: this.props.res.hash
+                          },
+                        }),
+                      },
+                    });
+                  }
+                }} />
+                {this.props.res.type === "normal" && this.props.res.profile !== null
+                  ? <MenuItem primaryText="NG Profile" onClick={() => {
+                    const user = this.props.user.data;
+                    if (user !== null && this.props.res.type === "normal" && this.props.res.profile !== null) {
+                      this.props.user.setData({
+                        ...user, storage: {
+                          ...user.storage,
+                          ng: user.storage.ng.insert(0, {
+                            id: uuid.v4(),
+                            name: `Profile:${this.props.res.profile.id}`,
+                            topic: null,
+                            date: new Date(),
+                            expirationDate: null,
+                            chain: 1,
+                            transparent: false,
+                            node: {
+                              type: "profile",
+                              id: uuid.v4(),
+                              profile: this.props.res.profile.id
+                            },
+                          }),
+                        },
+                      });
+                    }
+                  }} />
                   : null}
               </IconMenu>
               : null}
@@ -303,7 +354,6 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
                 </p>
               </div>
               : null}
-
           </div>
           {this.state.isReply && this.props.user.data !== null
             ? <Paper>
