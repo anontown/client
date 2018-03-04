@@ -12,8 +12,9 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { Observable } from "rxjs";
 import { ObjectOmit } from "typelevel-ts";
-import { ResSeted } from "../models";
+import * as uuid from "uuid";
 import { ng } from "../models";
+import { ResSeted } from "../models";
 import { appInject, UserStore } from "../stores";
 import {
   apiClient,
@@ -25,7 +26,6 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import * as uuid from "uuid";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -259,7 +259,7 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
                           node: {
                             type: "hash",
                             id: uuid.v4(),
-                            hash: this.props.res.hash
+                            hash: this.props.res.hash,
                           },
                         }),
                       },
@@ -284,7 +284,7 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
                             node: {
                               type: "profile",
                               id: uuid.v4(),
-                              profile: this.props.res.profile.id
+                              profile: this.props.res.profile.id,
                             },
                           }),
                         },

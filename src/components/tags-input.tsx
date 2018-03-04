@@ -70,7 +70,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           value: <MenuItem
             primaryText={t.name}
             secondaryText={t.count.toString()}
-          />
+          />,
         }))}
         filter={(text, key) => key.toLowerCase().indexOf(text.toLowerCase()) !== -1}
         searchText={this.state.inputValue}
