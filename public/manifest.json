@@ -1,24 +1,23 @@
 {
+  "name": "Anontown",
+  "short_name": "Anontown",
+  "description": "高機能匿名掲示板Anontown",
   "start_url": "/",
   "icons": [
     {
-      "src": "128.png",
-      "type": "image/png",
+      "src": "icon.svg",
       "sizes": "128x128"
     },
     {
-      "src": "152.png",
-      "type": "image/png",
+      "src": "icon.svg",
       "sizes": "152x152"
     },
     {
-      "src": "144.png",
-      "type": "image/png",
+      "src": "icon.svg",
       "sizes": "144x144"
     },
     {
-      "src": "192.png",
-      "type": "image/png",
+      "src": "icon.svg",
       "sizes": "192x192"
     }
   ],
