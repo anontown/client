@@ -46,3 +46,6 @@ export const Config = __PROD__ ?
             clientID: "042fd78266ccaaf",
         },
     };
+
+
+export const gaID = "UA-108693999-2";

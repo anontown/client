@@ -29,6 +29,9 @@ import {
   createUserData,
 } from "../utils";
 import * as style from "./app.scss";
+import { gaID } from "../env";
+
+declare const gtag: any;
 
 const muiTheme = getMuiTheme(lightBaseTheme);
 
@@ -48,6 +51,21 @@ export const App = appInject(withRouter(class extends React.Component<AppProps, 
     this.state = {
       isInit: false,
     };
+    this.changeLocation(this.props);
+  }
+
+  componentDidUpdate(prevProps: AppProps) {
+    if (this.props.location !== prevProps.location) {
+      this.changeLocation(this.props);
+    }
+  }
+
+  changeLocation(prop: AppProps) {
+    const path = prop.location.pathname;
+    console.log("ga", path);
+    gtag('config', gaID, {
+      page_path: path
+    });
   }
 
   componentWillMount() {
