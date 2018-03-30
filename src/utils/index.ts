@@ -5,6 +5,7 @@ import * as list from "./list";
 import * as mdParser from "./md-parser";
 import * as resSetedCreate from "./res-seted-create";
 import * as storageAPI from "./storage-api";
+export * from "./props-type";
 
 export {
   dateFormat,
