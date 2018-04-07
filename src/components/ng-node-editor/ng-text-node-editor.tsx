@@ -6,9 +6,9 @@ import * as React from "react";
 import { ng } from "../../models";
 import { NGMatcherEditor } from "./ng-matcher-editor";
 
-export interface NGBodyNodeEditorProps {
-  value: ng.NGNodeBody;
-  onChange: (node: ng.NGNodeBody) => void;
+export interface NGTextNodeEditorProps {
+  value: ng.NGNodeText;
+  onChange: (node: ng.NGNodeText) => void;
   select: JSX.Element;
   nestedLevel: number;
   rightIconButton?: React.ReactElement<any>;
@@ -16,11 +16,11 @@ export interface NGBodyNodeEditorProps {
   changeOpenDialog: (v: boolean) => void;
 }
 
-export interface NGBodyNodeEditorState {
+export interface NGTextNodeEditorState {
 }
 
-export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGBodyNodeEditorState> {
-  constructor(props: NGBodyNodeEditorProps) {
+export class NGTextNodeEditor extends React.Component<NGTextNodeEditorProps, NGTextNodeEditorState> {
+  constructor(props: NGTextNodeEditorProps) {
     super(props);
     this.state = {
     };
@@ -47,7 +47,7 @@ export class NGBodyNodeEditor extends React.Component<NGBodyNodeEditorProps, NGB
         nestedLevel={this.props.nestedLevel}
         rightIconButton={this.props.rightIconButton}
         onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`Body:${this.props.value.matcher.source}`} />
+        primaryText={`Text:${this.props.value.matcher.source}`} />
     </>;
   }
 }

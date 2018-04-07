@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import { ng } from "../../models";
 import { list } from "../../utils";
-import { NGBodyNodeEditor } from "./ng-text-node-editor";
+import { NGTextNodeEditor } from "./ng-text-node-editor";
 import { NGHashNodeEditor } from "./ng-hash-node-editor";
 import { NGNameNodeEditor } from "./ng-name-node-editor";
 import { NGProfileNodeEditor } from "./ng-profile-node-editor";
@@ -211,7 +211,7 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
               changeOpenDialog={v => this.setState({ openDialog: v })}
               value={this.props.value}
               onChange={v => this.props.onChange(v)} />
-              : this.props.value.type === "text" ? <NGBodyNodeEditor
+              : this.props.value.type === "text" ? <NGTextNodeEditor
                 nestedLevel={this.props.nestedLevel}
                 rightIconButton={this.props.rightIconButton}
                 openDialog={this.state.openDialog}

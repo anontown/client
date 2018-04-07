@@ -13,7 +13,7 @@ export type NGNodeJson = NGNodeNotJson |
   NGNodeOrJson |
   NGNodeProfileJson |
   NGNodeHashJson |
-  NGNodeBodyJson |
+  NGNodeTextJson |
   NGNodeNameJson |
   NGNodeVoteJson;
 
@@ -56,7 +56,7 @@ export interface NGNodeTextMatcherTextJson {
   readonly i: boolean;
 }
 
-export interface NGNodeBodyJson {
+export interface NGNodeTextJson {
   readonly type: "text";
   readonly matcher: NGNodeTextMatcherJson;
 }

@@ -179,7 +179,7 @@ export type NGNode = NGNodeNot |
   NGNodeOr |
   NGNodeProfile |
   NGNodeHash |
-  NGNodeBody |
+  NGNodeText |
   NGNodeName |
   NGNodeVote;
 
@@ -226,7 +226,7 @@ export interface NGNodeTextMatcherText {
   readonly i: boolean;
 }
 
-export interface NGNodeBody {
+export interface NGNodeText {
   readonly id: string;
   readonly type: "text";
   readonly matcher: NGNodeTextMatcher;
