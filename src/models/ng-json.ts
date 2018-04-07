@@ -57,7 +57,7 @@ export interface NGNodeTextMatcherTextJson {
 }
 
 export interface NGNodeBodyJson {
-  readonly type: "body";
+  readonly type: "text";
   readonly matcher: NGNodeTextMatcherJson;
 }
 

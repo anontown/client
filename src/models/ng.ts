@@ -50,7 +50,7 @@ function isNodeNG(node: NGNode, res: ResSeted): boolean | null {
       return res.type === "normal" && res.profile !== null && node.profile === res.profile.id;
     case "hash":
       return res.hash === node.hash;
-    case "body":
+    case "text":
       return res.type === "normal" && textMatcherTest(node.matcher, res.text);
     case "name":
       return res.type === "normal" && res.name !== null && textMatcherTest(node.matcher, res.name);
@@ -114,8 +114,8 @@ function toJSONNode(node: NGNode): ngJson.NGNodeJson {
       return node;
     case "hash":
       return node;
-    case "body":
-      return { type: "body", matcher: toJSONMatcher(node.matcher) };
+    case "text":
+      return { type: "text", matcher: toJSONMatcher(node.matcher) };
     case "name":
       return { type: "name", matcher: toJSONMatcher(node.matcher) };
     case "vote":
@@ -154,8 +154,8 @@ function fromJSONNode(node: ngJson.NGNodeJson): NGNode {
       return { id: uuid.v4(), ...node };
     case "hash":
       return { id: uuid.v4(), ...node };
-    case "body":
-      return { id: uuid.v4(), type: "body", matcher: fromJSONTextMatcher(node.matcher) };
+    case "text":
+      return { id: uuid.v4(), type: "text", matcher: fromJSONTextMatcher(node.matcher) };
     case "name":
       return { id: uuid.v4(), type: "name", matcher: fromJSONTextMatcher(node.matcher) };
     case "vote":
@@ -228,7 +228,7 @@ export interface NGNodeTextMatcherText {
 
 export interface NGNodeBody {
   readonly id: string;
-  readonly type: "body";
+  readonly type: "text";
   readonly matcher: NGNodeTextMatcher;
 }
 

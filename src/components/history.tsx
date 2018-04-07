@@ -69,7 +69,7 @@ export const History = appInject(class extends React.Component<UnconnectedHistor
             <dd><TagsLink tags={this.props.history.tags} /></dd >
             <dt>本文</dt>
             <dd>
-              <Md body={this.props.history.text} />
+              <Md text={this.props.history.text} />
             </dd >
           </dl > : null
         }

@@ -130,10 +130,10 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
               hash: "",
             });
             break;
-          case "body":
+          case "text":
             this.props.onChange({
               id: this.props.value.id,
-              type: "body",
+              type: "text",
               matcher: {
                 type: "text",
                 i: false,
@@ -167,7 +167,7 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
       <MenuItem value={"or"} primaryText="or" />
       <MenuItem value={"profile"} primaryText="profile" />
       <MenuItem value={"hash"} primaryText="hash" />
-      <MenuItem value={"body"} primaryText="body" />
+      <MenuItem value={"text"} primaryText="text" />
       <MenuItem value={"name"} primaryText="name" />
       <MenuItem value={"vote"} primaryText="vote" />
     </SelectField>;
@@ -211,7 +211,7 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
               changeOpenDialog={v => this.setState({ openDialog: v })}
               value={this.props.value}
               onChange={v => this.props.onChange(v)} />
-              : this.props.value.type === "body" ? <NGBodyNodeEditor
+              : this.props.value.type === "text" ? <NGBodyNodeEditor
                 nestedLevel={this.props.nestedLevel}
                 rightIconButton={this.props.rightIconButton}
                 openDialog={this.state.openDialog}

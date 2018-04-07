@@ -324,11 +324,11 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
                 : null}
             </span>
             {this.props.res.type === "normal" ?
-              <Md body={this.props.res.text} />
+              <Md text={this.props.res.text} />
               : this.props.res.type === "history" ?
-                <Md body={this.props.res.history.text} />
+                <Md text={this.props.res.history.text} />
                 : this.props.res.type === "topic" && this.props.res.topicObject.type === "one" ?
-                  <Md body={this.props.res.topicObject.text} />
+                  <Md text={this.props.res.topicObject.text} />
                   : null}
             {this.props.res.type === "topic" && this.props.res.topicObject.type === "fork"
               ? <div>

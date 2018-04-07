@@ -52,7 +52,7 @@ export const MessagesPage = withRouter(appInject(class extends React.Component<M
               {this.state.msgs.map(m =>
                 <Paper>
                   <div>{dateFormat.format(m.date)}</div>
-                  <Md body={m.text} />
+                  <Md text={m.text} />
                 </Paper>)}
             </div>
             <div>

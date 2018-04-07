@@ -26,7 +26,7 @@ export type ResWriteProps = ObjectOmit<UnconnectedResWriteProps, "user">;
 
 interface ResWriteState {
   errors?: string[];
-  body: string;
+  text: string;
   name: string;
   profile: string | null;
   age: boolean;
@@ -36,7 +36,7 @@ export const ResWrite = appInject(class extends React.Component<UnconnectedResWr
   constructor(props: UnconnectedResWriteProps) {
     super(props);
     this.state = {
-      body: "",
+      text: "",
       name: "",
       profile: null,
       age: true,
@@ -51,7 +51,7 @@ export const ResWrite = appInject(class extends React.Component<UnconnectedResWr
     apiClient.createRes(this.props.user.data.token, {
       topic: this.props.topic,
       name: this.state.name.length !== 0 ? this.state.name : null,
-      text: this.state.body,
+      text: this.state.text,
       reply: this.props.reply,
       profile: this.state.profile,
       age: this.state.age,
@@ -59,7 +59,7 @@ export const ResWrite = appInject(class extends React.Component<UnconnectedResWr
       if (this.props.onSubmit) {
         this.props.onSubmit(res);
       }
-      this.setState({ errors: [], body: "" });
+      this.setState({ errors: [], text: "" });
     }, error => {
       if (error instanceof AtError) {
         this.setState({ errors: error.errors.map(e => e.message) });
@@ -92,8 +92,8 @@ export const ResWrite = appInject(class extends React.Component<UnconnectedResWr
           label="age"
           checked={this.state.age}
           onCheck={(_e, v) => this.setState({ age: v })} />
-        <MdEditor value={this.state.body}
-          onChange={v => this.setState({ body: v })}
+        <MdEditor value={this.state.text}
+          onChange={v => this.setState({ text: v })}
           maxRows={5}
           minRows={1}
           onKeyPress={e => {

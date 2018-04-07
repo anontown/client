@@ -127,7 +127,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           fullWidth={this.props.fullWidth} />
         {this.state.preview
           ? <div style={{ backgroundColor: "#fff" }}>
-            <Md body={this.props.value} />
+            <Md text={this.props.value} />
           </div>
           : null}
       </div>

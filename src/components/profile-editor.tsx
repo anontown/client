@@ -22,7 +22,7 @@ interface ProfileEditorState {
   errors: string[];
   sn: string;
   name: string;
-  body: string;
+  text: string;
 }
 
 export const ProfileEditor =
@@ -33,7 +33,7 @@ export const ProfileEditor =
         errors: [],
         sn: props.profile !== null ? props.profile.sn : "",
         name: props.profile !== null ? props.profile.name : "",
-        body: props.profile !== null ? props.profile.text : "",
+        text: props.profile !== null ? props.profile.text : "",
       };
     }
 
@@ -54,8 +54,8 @@ export const ProfileEditor =
               onChange={(_e, v) => this.setState({ name: v })} />
             <MdEditor
               fullWidth
-              value={this.state.body}
-              onChange={v => this.setState({ body: v })} />
+              value={this.state.text}
+              onChange={v => this.setState({ text: v })} />
             <RaisedButton onClick={() => this.submit()} label="OK" />
           </form>
         </Paper>
@@ -71,7 +71,7 @@ export const ProfileEditor =
         apiClient.updateProfile(this.props.user.data.token, {
           id: this.props.profile.id,
           name: this.state.name,
-          text: this.state.body,
+          text: this.state.text,
           sn: this.state.sn,
         }).subscribe(profile => {
           if (this.props.onUpdate) {
@@ -88,7 +88,7 @@ export const ProfileEditor =
       } else {
         apiClient.createProfile(this.props.user.data.token, {
           name: this.state.name,
-          text: this.state.body,
+          text: this.state.text,
           sn: this.state.sn,
         }).subscribe(profile => {
           if (this.props.onAdd) {

@@ -60,7 +60,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
             </dd>
             <dt>本文</dt>
             <dd>
-              <Md body={this.props.topic.text} />
+              <Md text={this.props.topic.text} />
             </dd>
           </div>
           : null

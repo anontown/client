@@ -15,11 +15,11 @@ type URLType = { type: "normal", url: string } |
   { type: "image", url: string };
 
 export interface MdProps {
-  body: string;
+  text: string;
 }
 
 export function Md(props: MdProps) {
-  const node = mdParser.parse(props.body);
+  const node = mdParser.parse(props.text);
   return React.createElement("div", {
     style: {
       padding: "2px",

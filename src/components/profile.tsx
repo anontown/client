@@ -19,7 +19,7 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
       <div>
         {this.props.profile.name}●{this.props.profile.sn}
         <hr />
-        <Md body={this.props.profile.text} />
+        <Md text={this.props.profile.text} />
       </div>
     );
   }
