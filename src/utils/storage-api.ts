@@ -22,7 +22,8 @@ export function load(auth: api.TokenMaster) {
         return Observable.of(initStorage);
       }
     })
-    .map(json => toStorage(convert(json)));
+    .mergeMap(json => convert(json))
+    .map(data => toStorage(data));
 }
 
 export function save(auth: api.TokenMaster, storage: Storage) {

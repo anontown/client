@@ -6,7 +6,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "lib": [
-      "es6",
+      "esnext",
       "dom"
     ],
     "strict": true,

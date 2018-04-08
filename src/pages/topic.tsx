@@ -79,7 +79,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
     apiClient.findTopicOne({ id: props.match.params.id })
       .subscribe(topic => {
         this.setState({ topic }, () => {
-          this.storageSave(null);
+          this.storageSaveDate(null);
         });
       }, () => {
         this.setState({ snackMsg: "トピック取得に失敗" });
@@ -89,13 +89,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
     if (user !== null) {
       const topicRead = user.storage.topicRead.get(props.match.params.id);
       if (topicRead !== undefined) {
-        apiClient.findResOne(user.token, {
-          id: topicRead.res,
-        }).subscribe(res => {
-          this.scrollNewItem.next(res.date);
-        }, () => {
-          this.scrollNewItem.next(null);
-        });
+        this.scrollNewItem.next(topicRead.date);
       } else {
         this.scrollNewItem.next(null);
       }
@@ -107,7 +101,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
       .do(x => {
         if (this.state.topic !== null) {
           this.setState({ topic: { ...this.state.topic, resCount: x.count } });
-          this.storageSave(null);
+          this.storageSaveDate(null);
         }
       })
       .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map(reses => reses[0]));
@@ -121,21 +115,21 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
     }
   }
 
-  storageSave(res: string | null) {
+  storageSaveDate(date: string | null) {
     if (this.props.user.data === null || this.state.topic === null) {
       return;
     }
     const storage = this.props.user.data.storage;
-    if (res === null) {
+    if (date === null) {
       const storageRes = storage.topicRead.get(this.state.topic.id);
       if (storageRes !== undefined) {
-        res = storageRes.res;
+        date = storageRes.date;
       } else {
         const first = this.state.reses.first();
         if (first === undefined) {
           return;
         }
-        res = first.id;
+        date = first.date;
       }
     }
     this.props.user.setData({
@@ -143,7 +137,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
       storage: {
         ...storage,
         topicRead: storage.topicRead.set(this.state.topic.id, {
-          res,
+          date,
           count: this.state.topic.resCount,
         }),
       },
@@ -294,7 +288,7 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
             debounceTime={500}
             autoScrollSpeed={this.state.autoScrollSpeed}
             isAutoScroll={this.state.isAutoScroll}
-            scrollNewItemChange={res => this.storageSave(res.id)}
+            scrollNewItemChange={res => this.storageSaveDate(res.date)}
             scrollNewItem={this.scrollNewItem}
             updateItem={this.updateItem}
             newItem={this.newItem}

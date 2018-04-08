@@ -1,6 +1,7 @@
 import * as Im from "immutable";
 import * as ng from "./ng";
 import * as ngJson from "./ng-json";
+import { apiClient } from "../utils";
 
 interface StorageJSON1 {
   readonly ver: "1.0.0";
@@ -50,28 +51,37 @@ interface StorageJSON7 {
   readonly ng: ngJson.NGJson[];
 }
 
+interface StorageJSON8 {
+  readonly ver: "8";
+  readonly topicFavo: string[];
+  readonly tagsFavo: string[][];
+  readonly topicRead: { [key: string]: { date: string, count: number } };
+  readonly ng: ngJson.NGJson[];
+}
+
 export type StorageJSON = StorageJSON1 |
   StorageJSON2 |
   StorageJSON3 |
   StorageJSON4 |
   StorageJSON5 |
   StorageJSON6 |
-  StorageJSON7;
+  StorageJSON7 |
+  StorageJSON8;
 
-export type StorageJSONLatest = StorageJSON7;
+export type StorageJSONLatest = StorageJSON8;
 export const initStorage: StorageJSONLatest = {
-  ver: "7",
+  ver: "8",
   topicFavo: [],
   tagsFavo: [],
   topicRead: {},
   ng: [],
 };
-export const verArray: Array<StorageJSON["ver"]> = ["7", "6", "5", "4", "3", "2", "1.0.0"];
+export const verArray: Array<StorageJSON["ver"]> = ["8", "7", "6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
   readonly topicFavo: Im.Set<string>;
   readonly tagsFavo: Im.Set<Im.Set<string>>;
-  readonly topicRead: Im.Map<string, { res: string, count: number }>;
+  readonly topicRead: Im.Map<string, { date: string, count: number }>;
   readonly ng: Im.List<ng.NG>;
 }
 
@@ -86,7 +96,7 @@ export function toStorage(json: StorageJSONLatest): Storage {
 
 export function toJSON(storage: Storage): StorageJSONLatest {
   return {
-    ver: "7",
+    ver: "8",
     topicFavo: storage.topicFavo.toArray(),
     tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
     topicRead: storage.topicRead.toObject(),
@@ -153,7 +163,26 @@ function convert6To7(val: StorageJSON6): StorageJSON7 {
   };
 }
 
-export function convert(storage: StorageJSON): StorageJSONLatest {
+async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
+  const topicRead: StorageJSON8["topicRead"] = {};
+  const dates = new Map((await apiClient
+    .findResIn(null, {
+      ids: Object.entries(val.topicRead)
+        .map(([_l, { res }]) => res)
+    }).toPromise())
+    .map<[string, string]>(x => [x.id, x.date]));
+  for (let topic of Object.keys(val.topicRead)) {
+    const data = val.topicRead[topic];
+    topicRead[topic] = { count: data.count, date: dates.get(data.res)! };
+  }
+  return {
+    ...val,
+    ver: "8",
+    topicRead
+  };
+}
+
+export async function convert(storage: StorageJSON): Promise<StorageJSONLatest> {
   const s1 = storage;
   const s2 = s1.ver === "1.0.0" ? convert1To2(s1) : s1;
   const s3 = s2.ver === "2" ? convert2To3(s2) : s2;
@@ -161,8 +190,9 @@ export function convert(storage: StorageJSON): StorageJSONLatest {
   const s5 = s4.ver === "4" ? convert4To5(s4) : s4;
   const s6 = s5.ver === "5" ? convert5To6(s5) : s5;
   const s7 = s6.ver === "6" ? convert6To7(s6) : s6;
+  const s8 = s7.ver === "7" ? await convert7To8(s7) : s7;
 
-  const json = s7.ver === "7" ? s7 : initStorage;
+  const json = s8.ver === "8" ? s8 : initStorage;
 
   return json;
 }
