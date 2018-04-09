@@ -12,11 +12,11 @@ import {
 import { apiClient } from "../utils";
 
 export function load(auth: api.TokenMaster) {
-  return apiClient.listTokenStorage(auth)
-    .map(storageNames => [...verArray, "main"].find(ver => storageNames.indexOf(ver) !== -1))
-    .mergeMap(name => {
-      if (name !== undefined) {
-        return apiClient.getTokenStorage(auth, { name })
+  return apiClient.listStorage(auth)
+    .map(storageKeys => [...verArray, "main"].find(ver => storageKeys.indexOf(ver) !== -1))
+    .mergeMap(key => {
+      if (key !== undefined) {
+        return apiClient.getStorage(auth, { key })
           .map(jsonStr => JSON.parse(jsonStr) as StorageJSON);
       } else {
         return Observable.of(initStorage);
@@ -28,8 +28,8 @@ export function load(auth: api.TokenMaster) {
 
 export function save(auth: api.TokenMaster, storage: Storage) {
   const json = toJSON(storage);
-  return apiClient.setTokenStorage(auth, {
-    name: json.ver,
+  return apiClient.setStorage(auth, {
+    key: json.ver,
     value: JSON.stringify(json),
   });
 }

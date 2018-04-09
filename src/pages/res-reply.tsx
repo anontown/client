@@ -35,14 +35,9 @@ const ResReplyBase = withRouter(appInject(class extends React.Component<ResReply
 
     const token = this.props.user.data !== null ? this.props.user.data.token : null;
 
-    apiClient.findResOne(token, {
-      id: this.props.match.params.id,
+    apiClient.findResReply(token, {
+      reply: this.props.match.params.id,
     })
-      .map(res => res.topic)
-      .mergeMap(topic => apiClient.findResReply(token, {
-        reply: this.props.match.params.id,
-        topic,
-      }))
       .mergeMap(reses => resSetedCreate.resSet(token, reses))
       .map(reses => Im.List(reses))
       .subscribe(reses => {

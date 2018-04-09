@@ -109,7 +109,6 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
     const token = this.props.user.data !== null ? this.props.user.data.token : null;
     if (this.state.children === null) {
       apiClient.findResHash(token, {
-        topic: this.props.res.topic,
         hash: this.props.res.hash,
       })
         .mergeMap(reses => resSetedCreate.resSet(token, reses))

@@ -33,8 +33,12 @@ export const AppsSettingPage =
       };
 
       if (this.props.user.data !== null) {
-        apiClient
-          .findTokenClientAll(this.props.user.data.token)
+        const token = this.props.user.data.token;
+        apiClient.findTokenAll(token)
+          .map(tokens => Array.from(new Set(tokens
+            .filter<api.TokenGeneral>((x): x is api.TokenGeneral => x.type === "general")
+            .map(x => x.client))))
+          .mergeMap(x => apiClient.findClientIn(token, { ids: x }))
           .subscribe(clients => {
             this.setState({ clients: Im.List(clients) });
           }, () => {

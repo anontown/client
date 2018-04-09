@@ -91,7 +91,6 @@ export const History = appInject(class extends React.Component<UnconnectedHistor
     if (this.state.hashReses === null) {
       const token = this.props.user.data !== null ? this.props.user.data.token : null;
       apiClient.findResHash(token, {
-        topic: this.props.history.topic,
         hash: this.props.history.hash,
       })
         .mergeMap(reses => resSetedCreate.resSet(token, reses))
