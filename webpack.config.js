@@ -49,6 +49,8 @@ module.exports = {
         port: 3000,
         historyApiFallback: {
             index: 'index.html'
-        }
+        },
+        host: '0.0.0.0',
+        disableHostCheck: true
     },
 };
