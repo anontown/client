@@ -14,6 +14,7 @@ import {
 } from "../components";
 import { appInject, UserStore } from "../stores";
 import { apiClient, dateFormat } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface MessagesPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -40,6 +41,9 @@ export const MessagesPage = withRouter(appInject(class extends React.Component<M
   render() {
     return (
       <Page>
+        <Helmet>
+          <title>お知らせ</title>
+        </Helmet>
         <Snack
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />

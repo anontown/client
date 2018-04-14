@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { App } from "./components/app";
 import * as dialogStyle from "./dialog.scss";
 import { stores } from "./stores";
+
 (Dialog as any).defaultProps.className = dialogStyle.dialog;
 (Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;
 

@@ -32,6 +32,8 @@ import { ResSeted } from "../models";
 import { appInject, UserStore } from "../stores";
 import { apiClient, resSetedCreate } from "../utils";
 import * as style from "./topic.scss";
+import { Helmet } from "react-helmet";
+
 // TODO:NGのtransparent
 
 // ジェネリクス解除
@@ -173,6 +175,9 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
       sidebar={this.props.user.data !== null
         ? <TopicFavo detail={false} />
         : undefined}>
+      <Helmet>
+        <title>トピック</title>
+      </Helmet>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
@@ -199,6 +204,9 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
       </Dialog>
       {this.state.topic !== null
         ? <div className={style.main}>
+          <Helmet>
+            <title>{this.state.topic.title}</title>
+          </Helmet>
           <Paper className={style.header}>
             <div className={style.subject}>
               {this.state.topic.type === "fork"

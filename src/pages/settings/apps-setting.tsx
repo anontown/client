@@ -13,6 +13,7 @@ import {
 import { Snack } from "../../components";
 import { appInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
+import { Helmet } from "react-helmet";
 
 interface AppsSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -50,6 +51,9 @@ export const AppsSettingPage =
     render() {
       return this.props.user.data !== null
         ? <div>
+          <Helmet>
+            <title>連携アプリ管理</title>
+          </Helmet>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />

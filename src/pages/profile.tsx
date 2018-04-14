@@ -11,7 +11,7 @@ import {
   apiClient,
   withModal,
 } from "../utils";
-
+import { Helmet } from "react-helmet";
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   zDepth?: number;
@@ -44,11 +44,17 @@ const ProfileBase = withRouter(appInject(class extends React.Component<ProfileBa
 
   render() {
     return <div>
+      <Helmet>
+        <title>プロフィール</title>
+      </Helmet>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />
       {this.state.profile !== null
         ? <Paper zDepth={this.props.zDepth}>
+          <Helmet>
+            <title>●{this.state.profile.sn}</title>
+          </Helmet>
           <Profile profile={this.state.profile} />
         </Paper>
         : null}

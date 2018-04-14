@@ -15,6 +15,7 @@ import {
   TopicFavo,
 } from "../components";
 import { appInject, UserStore } from "../stores";
+import { Helmet } from "react-helmet";
 
 interface HomePageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -23,6 +24,9 @@ interface HomePageProps extends RouteComponentProps<{}> {
 export const HomePage = withRouter(appInject
   ((props: HomePageProps) => {
     return <Page>
+      <Helmet>
+        <title>Anontown</title>
+      </Helmet>
       {props.user.data !== null
         ? <Tabs>
           <Tab label="トピック">

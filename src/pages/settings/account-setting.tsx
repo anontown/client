@@ -12,6 +12,7 @@ import {
 import { Errors, Snack } from "../../components";
 import { appInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
+import { Helmet } from "react-helmet";
 
 interface AccountSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -73,6 +74,9 @@ export const AccountSettingPage =
     render() {
       return this.props.user.data !== null
         ? <Paper>
+          <Helmet>
+            <title>アカウント設定</title>
+          </Helmet>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
