@@ -13,6 +13,7 @@ import {
   resSetedCreate,
   withModal,
 } from "../utils";
+import { Helmet } from "react-helmet";
 
 import * as Im from "immutable";
 
@@ -54,6 +55,9 @@ const ResReplyBase = withRouter(appInject(class extends React.Component<ResReply
 
   render() {
     return <div>
+      <Helmet>
+        <title>リプライ</title>
+      </Helmet>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />

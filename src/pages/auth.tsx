@@ -10,6 +10,7 @@ import { Page } from "../components";
 import { Snack } from "../components";
 import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface AuthPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -43,6 +44,9 @@ export const AuthPage = withRouter(appInject(class extends React.Component<AuthP
   render() {
     return (
       <Page>
+        <Helmet>
+          <title>アプリ認証</title>
+        </Helmet>
         <Snack
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />

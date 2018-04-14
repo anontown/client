@@ -29,6 +29,7 @@ import {
 import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import * as style from "./topic-search.scss";
+import { Helmet } from "react-helmet";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -168,6 +169,9 @@ export const TopicSearchPage =
 
     render() {
       return <Page>
+        <Helmet>
+          <title>検索</title>
+        </Helmet>
         <Snack
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />

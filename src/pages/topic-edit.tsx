@@ -14,6 +14,7 @@ import {
   apiClient,
   withModal,
 } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface TopicEditBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -48,6 +49,9 @@ const TopicEditBase = withRouter(class extends React.Component<TopicEditBaseProp
 
   render() {
     return <Paper zDepth={this.props.zDepth}>
+      <Helmet>
+        <title>トピック編集</title>
+      </Helmet>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />

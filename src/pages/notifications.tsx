@@ -22,6 +22,7 @@ import {
   list,
   resSetedCreate,
 } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface NotificationsPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -50,6 +51,9 @@ export const NotificationsPage =
       render() {
         return (
           <Page>
+            <Helmet>
+              <title>通知</title>
+            </Helmet>
             <Snack
               msg={this.state.snackMsg}
               onHide={() => this.setState({ snackMsg: null })} />

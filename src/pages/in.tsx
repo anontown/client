@@ -23,6 +23,7 @@ import {
   apiClient,
   createUserData,
 } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface InPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -49,6 +50,9 @@ export const InPage = withRouter(appInject(class extends React.Component<InPageP
 
   render() {
     return <Page>
+      <Helmet>
+        <title>ログイン/登録</title>
+      </Helmet>
       {this.props.user.data !== null
         ? <Redirect to="/" />
         : <Paper>

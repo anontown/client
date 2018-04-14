@@ -14,6 +14,7 @@ import {
   apiClient,
   withModal,
 } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface TopicForkBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -48,6 +49,9 @@ const TopicForkBase = withRouter(class extends React.Component<TopicForkBaseProp
 
   render() {
     return <Paper zDepth={this.props.zDepth}>
+      <Helmet>
+        <title>派生トピック</title>
+      </Helmet>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />

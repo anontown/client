@@ -17,6 +17,7 @@ import {
 } from "../components";
 import { appInject, UserStore } from "../stores";
 import { apiClient, list } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -48,6 +49,9 @@ export const ProfilesPage = withRouter(appInject(class extends React.Component<P
   render() {
     return (
       <Page>
+        <Helmet>
+          <title>プロフィール管理</title>
+        </Helmet>
         <Snack
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />

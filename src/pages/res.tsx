@@ -12,6 +12,7 @@ import {
   resSetedCreate,
   withModal,
 } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
@@ -47,6 +48,9 @@ const ResBase = withRouter(appInject(class extends React.Component<ResBaseProps,
 
   render() {
     return <div>
+      <Helmet>
+        <title>レス</title>
+      </Helmet>
       <Snack
         msg={this.state.snackMsg}
         onHide={() => this.setState({ snackMsg: null })} />

@@ -6,6 +6,7 @@ import { Page } from "../../components";
 import { AccountSettingPage } from "./account-setting";
 import { AppsSettingPage } from "./apps-setting";
 import { DevSettingPage } from "./dev-setting";
+import { Helmet } from "react-helmet";
 
 interface SettingsPageProps extends RouteComponentProps<{}> {
 
@@ -28,6 +29,9 @@ export const SettingsPage = withRouter(class extends React.Component<SettingsPag
         <ListItem containerElement={<Link to="/settings/apps" />}>連携アプリ</ListItem>
         <ListItem containerElement={<Link to="/settings/dev" />}>開発者向け</ListItem>
       </List>}>
+      <Helmet>
+        <title>アカウント設定</title>
+      </Helmet>
       <Switch>
         <Route path="/settings/account" component={AccountSettingPage} />
         <Route path="/settings/apps" component={AppsSettingPage} />

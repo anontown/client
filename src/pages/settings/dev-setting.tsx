@@ -17,6 +17,7 @@ import {
   apiClient,
   list,
 } from "../../utils";
+import { Helmet } from "react-helmet";
 
 interface DevSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -50,6 +51,9 @@ export const DevSettingPage =
     render() {
       return this.props.user.data !== null
         ? <Paper>
+          <Helmet>
+            <title>開発者向け</title>
+          </Helmet>
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />

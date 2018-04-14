@@ -24,6 +24,7 @@ import {
 } from "../components";
 import { appInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
+import { Helmet } from "react-helmet";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -56,6 +57,9 @@ export const TopicCreatePage =
     render() {
       return this.state.redirect === null
         ? <Page>
+          <Helmet>
+            <title>トピック作成</title>
+          </Helmet>
           {this.props.user.data !== null
             ? <Paper>
               <Dialog
