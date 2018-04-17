@@ -96,8 +96,8 @@ export const ResWrite = appInject(class extends React.Component<UnconnectedResWr
           onChange={v => this.setState({ text: v })}
           maxRows={5}
           minRows={1}
-          onKeyPress={e => {
-            if (e.shiftKey && e.charCode === 13) {
+          onKeyDown={e => {
+            if ((e.shiftKey || e.ctrlKey) && e.keyCode === 13) {
               e.preventDefault();
               this.onSubmit();
             }

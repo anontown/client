@@ -19,6 +19,7 @@ export interface MdEditorProps {
   onChange?: (newValue: string) => void;
   fullWidth?: boolean;
   onKeyPress?: React.KeyboardEventHandler<{}>;
+  onKeyDown?: React.KeyboardEventHandler<{}>;
 }
 
 interface MdEditorState {
@@ -124,6 +125,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             }
           }}
           onKeyPress={this.props.onKeyPress}
+          onKeyDown={this.props.onKeyDown}
           fullWidth={this.props.fullWidth} />
         {this.state.preview
           ? <div style={{ backgroundColor: "#fff" }}>
