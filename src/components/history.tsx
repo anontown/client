@@ -10,7 +10,7 @@ import { ObjectOmit } from "typelevel-ts";
 import {
   ResSeted,
 } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   dateFormat,
@@ -21,6 +21,7 @@ import { Md } from "./md";
 import { Res } from "./res";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
+import { observer } from "mobx-react";
 
 interface UnconnectedHistoryProps {
   history: api.History;
@@ -35,7 +36,7 @@ interface HistoryState {
   snackMsg: null | string;
 }
 
-export const History = appInject(class extends React.Component<UnconnectedHistoryProps, HistoryState> {
+export const History = myInject(["user"], observer(class extends React.Component<UnconnectedHistoryProps, HistoryState> {
   constructor(props: UnconnectedHistoryProps) {
     super(props);
 
@@ -104,4 +105,4 @@ export const History = appInject(class extends React.Component<UnconnectedHistor
       this.setState({ hashReses: Im.List() });
     }
   }
-});
+}));

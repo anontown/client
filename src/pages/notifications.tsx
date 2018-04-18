@@ -16,13 +16,14 @@ import {
 import {
   ResSeted,
 } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   list,
   resSetedCreate,
 } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface NotificationsPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -35,7 +36,7 @@ export interface NotificationsPageState {
 
 export const NotificationsPage =
   withRouter(
-    appInject(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
+    myInject(["user"], observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
       private limit = 50;
 
       constructor(props: NotificationsPageProps) {
@@ -161,4 +162,4 @@ export const NotificationsPage =
             });
         }
       }
-    }));
+    })));

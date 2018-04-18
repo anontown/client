@@ -6,12 +6,15 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Page, Profile, Snack } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   withModal,
 } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
+
+
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   zDepth?: number;
@@ -22,7 +25,7 @@ interface ProfileBaseState {
   snackMsg: null | string;
 }
 
-const ProfileBase = withRouter(appInject(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
+const ProfileBase = withRouter(myInject(["user"], observer(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
   constructor(props: ProfileBaseProps) {
     super(props);
     this.state = {
@@ -60,7 +63,7 @@ const ProfileBase = withRouter(appInject(class extends React.Component<ProfileBa
         : null}
     </div>;
   }
-}));
+})));
 
 export function ProfilePage() {
   return <Page><ProfileBase /></Page>;

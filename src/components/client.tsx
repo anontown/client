@@ -5,8 +5,9 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { ClientEditor } from "./client-editor";
+import { observer } from "mobx-react";
 
 interface UnconnectedClientProps {
   client: api.Client;
@@ -20,7 +21,7 @@ interface ClientState {
   edit: boolean;
 }
 
-export const Client = appInject(class extends React.Component<UnconnectedClientProps, ClientState> {
+export const Client = myInject(["user"],observer(class extends React.Component<UnconnectedClientProps, ClientState> {
   constructor(props: UnconnectedClientProps) {
     super(props);
     this.state = {
@@ -51,4 +52,4 @@ export const Client = appInject(class extends React.Component<UnconnectedClientP
       </div>
     );
   }
-});
+}));

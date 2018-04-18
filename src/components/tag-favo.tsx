@@ -4,9 +4,10 @@ import {
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import * as style from "./tag-favo.scss";
 import { TagsLink } from "./tags-link";
+import { observer } from "mobx-react";
 
 interface UnconnectedTagFavoProps {
   user: UserStore;
@@ -17,7 +18,7 @@ export type TagFavoProps = ObjectOmit<UnconnectedTagFavoProps, "user">;
 interface TagFavoState {
 }
 
-export const TagFavo = appInject(class extends React.Component<UnconnectedTagFavoProps, TagFavoState> {
+export const TagFavo = myInject(["user"], observer(class extends React.Component<UnconnectedTagFavoProps, TagFavoState> {
   constructor(props: UnconnectedTagFavoProps) {
     super(props);
   }
@@ -38,4 +39,4 @@ export const TagFavo = appInject(class extends React.Component<UnconnectedTagFav
         : <div>ログインしないと表示出来ません</div>}
     </Paper>;
   }
-});
+}));

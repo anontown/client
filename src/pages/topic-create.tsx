@@ -22,9 +22,10 @@ import {
   Page,
   TagsInput,
 } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -41,7 +42,7 @@ export interface TopicCreatePageState {
 }
 
 export const TopicCreatePage =
-  withRouter(appInject(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
+  withRouter(myInject(["user"], observer(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
     constructor(props: TopicCreatePageProps) {
       super(props);
       this.state = {
@@ -144,4 +145,4 @@ export const TopicCreatePage =
       });
 
     }
-  }));
+  })));

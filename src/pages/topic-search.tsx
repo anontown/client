@@ -26,10 +26,11 @@ import {
   TagsInput,
   TopicListItem,
 } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import * as style from "./topic-search.scss";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -48,7 +49,7 @@ export interface TopicSearchPageState {
 }
 
 export const TopicSearchPage =
-  withRouter(appInject(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
+  withRouter(myInject(["user"], observer(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
     limit = 100;
     subs: Subscription[] = [];
     formChange$ = new Subject<void>();
@@ -229,4 +230,4 @@ export const TopicSearchPage =
           : null}
       </Page>;
     }
-  }));
+  })));

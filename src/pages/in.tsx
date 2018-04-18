@@ -18,12 +18,13 @@ import {
   Page,
 } from "../components";
 import { Config } from "../env";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   createUserData,
 } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface InPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -37,7 +38,7 @@ interface InPageState {
   recaptcha: string | null;
 }
 
-export const InPage = withRouter(appInject(class extends React.Component<InPageProps, InPageState> {
+export const InPage = withRouter(myInject(["user"], observer(class extends React.Component<InPageProps, InPageState> {
   constructor(props: InPageProps) {
     super(props);
     this.state = {
@@ -119,4 +120,4 @@ export const InPage = withRouter(appInject(class extends React.Component<InPageP
         }
       });
   }
-}));
+})));

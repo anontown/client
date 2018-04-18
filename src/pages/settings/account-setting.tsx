@@ -10,9 +10,10 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Errors, Snack } from "../../components";
-import { appInject, UserStore } from "../../stores";
+import { myInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface AccountSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -27,7 +28,7 @@ interface AccountSettingPageState {
 }
 
 export const AccountSettingPage =
-  appInject(withRouter(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
+  myInject(["user"], observer(withRouter(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
     constructor(props: AccountSettingPageProps) {
       super(props);
       this.state = {
@@ -96,4 +97,4 @@ export const AccountSettingPage =
         </Paper>
         : <div>ログインして下さい。</div>;
     }
-  }));
+  })));

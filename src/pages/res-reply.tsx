@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
 import { ResSeted } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   list,
@@ -14,6 +14,7 @@ import {
   withModal,
 } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 import * as Im from "immutable";
 
@@ -26,7 +27,7 @@ interface ResReplyBaseState {
   snackMsg: null | string;
 }
 
-const ResReplyBase = withRouter(appInject(class extends React.Component<ResReplyBaseProps, ResReplyBaseState> {
+const ResReplyBase = withRouter(myInject(["user"], observer(class extends React.Component<ResReplyBaseProps, ResReplyBaseState> {
   constructor(props: ResReplyBaseProps) {
     super(props);
     this.state = {
@@ -69,7 +70,7 @@ const ResReplyBase = withRouter(appInject(class extends React.Component<ResReply
         : null}
     </div>;
   }
-}));
+})));
 
 export function ResReplyPage() {
   return <Page><ResReplyBase /></Page>;

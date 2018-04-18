@@ -12,9 +12,10 @@ import {
   Page,
   Snack,
 } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient, dateFormat } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface MessagesPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -25,7 +26,7 @@ interface MessagesPageState {
   snackMsg: null | string;
 }
 
-export const MessagesPage = withRouter(appInject(class extends React.Component<MessagesPageProps, MessagesPageState> {
+export const MessagesPage = withRouter(myInject(["user"], observer(class extends React.Component<MessagesPageProps, MessagesPageState> {
   private limit = 50;
 
   constructor(props: MessagesPageProps) {
@@ -138,4 +139,4 @@ export const MessagesPage = withRouter(appInject(class extends React.Component<M
         });
     }
   }
-}));
+})));

@@ -7,10 +7,11 @@ import {
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
+import { observer } from "mobx-react";
 
 interface UnconnectedTopicFavoProps {
   user: UserStore;
@@ -24,7 +25,7 @@ interface TopicFavoState {
   snackMsg: null | string;
 }
 
-export const TopicFavo = appInject(class extends React.Component<UnconnectedTopicFavoProps, TopicFavoState> {
+export const TopicFavo = myInject(["user"], observer(class extends React.Component<UnconnectedTopicFavoProps, TopicFavoState> {
   constructor(props: UnconnectedTopicFavoProps) {
     super(props);
     this.state = {
@@ -74,4 +75,4 @@ export const TopicFavo = appInject(class extends React.Component<UnconnectedTopi
       </Paper>
     </div>;
   }
-});
+}));

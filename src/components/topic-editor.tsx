@@ -4,11 +4,12 @@ import * as Im from "immutable";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
+import { observer } from "mobx-react";
 
 interface UnconnectedTopicEditorProps {
   topic: api.TopicNormal;
@@ -25,7 +26,7 @@ interface TopicEditorState {
   text: string;
 }
 
-export const TopicEditor = appInject(class extends React.Component<UnconnectedTopicEditorProps, TopicEditorState> {
+export const TopicEditor = myInject(["user"], observer(class extends React.Component<UnconnectedTopicEditorProps, TopicEditorState> {
   constructor(props: UnconnectedTopicEditorProps) {
     super(props);
     this.state = {
@@ -81,4 +82,4 @@ export const TopicEditor = appInject(class extends React.Component<UnconnectedTo
       }
     });
   }
-});
+}));

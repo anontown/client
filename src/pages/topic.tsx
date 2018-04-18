@@ -29,10 +29,11 @@ import {
   TopicFavo,
 } from "../components";
 import { ResSeted } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient, resSetedCreate } from "../utils";
 import * as style from "./topic.scss";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 // TODO:NGのtransparent
 
@@ -55,7 +56,7 @@ export interface TopicPageState {
   isNGDialog: boolean;
 }
 
-export const TopicPage = withRouter(appInject(class extends React.Component<TopicPageProps, TopicPageState> {
+export const TopicPage = withRouter(myInject(["user"], observer(class extends React.Component<TopicPageProps, TopicPageState> {
   limit = 50;
   scrollNewItem = new ReplaySubject<string | null>(1);
   updateItem = new Subject<ResSeted>();
@@ -316,4 +317,4 @@ export const TopicPage = withRouter(appInject(class extends React.Component<Topi
       }
     </Page>;
   }
-}));
+})));

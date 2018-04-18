@@ -23,7 +23,8 @@ import {
 } from "react-router-dom";
 import { Observable } from "rxjs";
 import * as pages from "../pages";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
+import { observer } from "mobx-react";
 import {
   apiClient,
   createUserData,
@@ -43,7 +44,7 @@ interface AppState {
   isInit: boolean;
 }
 
-export const App = appInject(withRouter(class extends React.Component<AppProps, AppState> {
+export const App = myInject(["user"],observer(withRouter(class extends React.Component<AppProps, AppState> {
   previousLocation = this.props.location;
 
   constructor(props: AppProps) {
@@ -199,4 +200,4 @@ export const App = appInject(withRouter(class extends React.Component<AppProps, 
       </MuiThemeProvider>
     );
   }
-}));
+})));

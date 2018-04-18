@@ -6,7 +6,8 @@ import {
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
 import { ResSeted } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
+import { observer } from "mobx-react";
 import {
   apiClient,
   resSetedCreate,
@@ -24,7 +25,7 @@ interface ResBaseState {
   snackMsg: null | string;
 }
 
-const ResBase = withRouter(appInject(class extends React.Component<ResBaseProps, ResBaseState> {
+const ResBase = withRouter(myInject(["user"], observer(class extends React.Component<ResBaseProps, ResBaseState> {
   constructor(props: ResBaseProps) {
     super(props);
     this.state = {
@@ -61,7 +62,7 @@ const ResBase = withRouter(appInject(class extends React.Component<ResBaseProps,
         : null}
     </div>;
   }
-}));
+})));
 
 export function ResPage() {
   return <Page><ResBase /></Page>;

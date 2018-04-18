@@ -14,14 +14,15 @@ import {
   TagFavo,
   TopicFavo,
 } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface HomePageProps extends RouteComponentProps<{}> {
   user: UserStore;
 }
 
-export const HomePage = withRouter(appInject
+export const HomePage = withRouter(myInject(["user"], observer
   ((props: HomePageProps) => {
     return <Page>
       <Helmet>
@@ -49,4 +50,4 @@ export const HomePage = withRouter(appInject
           </ul>
         </Paper>}
     </Page>;
-  }));
+  })));

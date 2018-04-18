@@ -7,9 +7,10 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ng } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { list } from "../utils";
 import { NGEditor } from "./ng-editor";
+import { observer } from "mobx-react";
 
 interface NGProps {
   user: UserStore;
@@ -19,7 +20,7 @@ interface NGState {
   dialog: string | null;
 }
 
-export const NG = appInject(class extends React.Component<NGProps, NGState> {
+export const NG = myInject(["user"], observer(class extends React.Component<NGProps, NGState> {
   constructor(props: NGProps) {
     super(props);
     this.state = {
@@ -72,4 +73,4 @@ export const NG = appInject(class extends React.Component<NGProps, NGState> {
       </div>
       : <div>ログインして下さい</div>;
   }
-});
+}));

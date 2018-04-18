@@ -3,10 +3,11 @@ import { FontIcon } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
+import { observer } from "mobx-react";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;
@@ -19,7 +20,7 @@ interface TopicListItemState {
 }
 
 export const TopicListItem =
-  appInject(class extends React.Component<UnconnectedTopicListItemProps, TopicListItemState> {
+  myInject(["user"], observer(class extends React.Component<UnconnectedTopicListItemProps, TopicListItemState> {
     constructor(props: UnconnectedTopicListItemProps) {
       super(props);
     }
@@ -62,4 +63,4 @@ export const TopicListItem =
         </div>
       );
     }
-  });
+  }));

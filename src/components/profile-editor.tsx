@@ -3,11 +3,12 @@ import * as api from "@anontown/api-types";
 import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
+import { observer } from "mobx-react";
 
 interface UnconnectedProfileEditorProps {
   profile: api.Profile | null;
@@ -26,7 +27,7 @@ interface ProfileEditorState {
 }
 
 export const ProfileEditor =
-  appInject(class extends React.Component<UnconnectedProfileEditorProps, ProfileEditorState> {
+  myInject(["user"], observer(class extends React.Component<UnconnectedProfileEditorProps, ProfileEditorState> {
     constructor(props: UnconnectedProfileEditorProps) {
       super(props);
       this.state = {
@@ -104,4 +105,4 @@ export const ProfileEditor =
         });
       }
     }
-  });
+  }));

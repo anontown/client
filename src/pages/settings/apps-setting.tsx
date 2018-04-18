@@ -11,9 +11,10 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack } from "../../components";
-import { appInject, UserStore } from "../../stores";
+import { myInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface AppsSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -25,7 +26,7 @@ interface AppsSettingPageState {
 }
 
 export const AppsSettingPage =
-  withRouter(appInject(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
+  withRouter(myInject(["user"], observer(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
     constructor(props: AppsSettingPageProps) {
       super(props);
       this.state = {
@@ -78,4 +79,4 @@ export const AppsSettingPage =
           this.setState({ snackMsg: "削除に失敗しました" });
         });
     }
-  }));
+  })));

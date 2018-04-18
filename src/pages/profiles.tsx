@@ -15,9 +15,10 @@ import {
   ProfileEditor,
   Snack,
 } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient, list } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -28,7 +29,7 @@ export interface ProfilesPageState {
   snackMsg: null | string;
 }
 
-export const ProfilesPage = withRouter(appInject(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
+export const ProfilesPage = withRouter(myInject(["user"], observer(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
   constructor(props: ProfilesPageProps) {
     super(props);
     this.state = {
@@ -89,4 +90,4 @@ export const ProfilesPage = withRouter(appInject(class extends React.Component<P
       profiles: this.state.profiles.push(profile),
     });
   }
-}));
+})));

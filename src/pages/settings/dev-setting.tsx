@@ -12,12 +12,13 @@ import {
   ClientEditor,
   Snack,
 } from "../../components";
-import { appInject, UserStore } from "../../stores";
+import { myInject, UserStore } from "../../stores";
 import {
   apiClient,
   list,
 } from "../../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface DevSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -29,7 +30,7 @@ interface DevSettingPageState {
 }
 
 export const DevSettingPage =
-  withRouter(appInject(class extends React.Component<DevSettingPageProps, DevSettingPageState> {
+  withRouter(myInject(["user"], observer(class extends React.Component<DevSettingPageProps, DevSettingPageState> {
     constructor(props: DevSettingPageProps) {
       super(props);
       this.state = {
@@ -66,4 +67,4 @@ export const DevSettingPage =
         </Paper>
         : <div>ログインして下さい。</div>;
     }
-  }));
+  })));

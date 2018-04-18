@@ -10,10 +10,11 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
+import { observer } from "mobx-react";
 
 interface UnconnectedResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -32,7 +33,7 @@ interface ResWriteState {
   age: boolean;
 }
 
-export const ResWrite = appInject(class extends React.Component<UnconnectedResWriteProps, ResWriteState> {
+export const ResWrite = myInject(["user"], observer(class extends React.Component<UnconnectedResWriteProps, ResWriteState> {
   constructor(props: UnconnectedResWriteProps) {
     super(props);
     this.state = {
@@ -109,4 +110,4 @@ export const ResWrite = appInject(class extends React.Component<UnconnectedResWr
       </form>
       : <div>書き込むにはログインが必要です</div>;
   }
-});
+}));

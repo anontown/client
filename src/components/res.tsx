@@ -15,7 +15,7 @@ import { ObjectOmit } from "typelevel-ts";
 import * as uuid from "uuid";
 import { ng } from "../models";
 import { ResSeted } from "../models";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   dateFormat,
@@ -26,6 +26,7 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
+import { observer } from "mobx-react";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -42,7 +43,7 @@ interface ResState {
   disableNG: boolean;
 }
 
-export const Res = appInject(class extends React.Component<UnconnectedResProps, ResState> {
+export const Res = myInject(["user"], observer(class extends React.Component<UnconnectedResProps, ResState> {
   constructor(props: UnconnectedResProps) {
     super(props);
     this.state = {
@@ -377,4 +378,4 @@ export const Res = appInject(class extends React.Component<UnconnectedResProps, 
         </div>
       </div >;
   }
-});
+}));

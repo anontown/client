@@ -8,9 +8,10 @@ import {
 } from "react-router-dom";
 import { Page } from "../components";
 import { Snack } from "../components";
-import { appInject, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Helmet } from "react-helmet";
+import { observer } from "mobx-react";
 
 interface AuthPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -21,7 +22,7 @@ interface AuthPageState {
   snackMsg: string | null;
 }
 
-export const AuthPage = withRouter(appInject(class extends React.Component<AuthPageProps, AuthPageState> {
+export const AuthPage = withRouter(myInject(["user"], observer(class extends React.Component<AuthPageProps, AuthPageState> {
   constructor(props: AuthPageProps) {
     super(props);
     this.state = {
@@ -73,4 +74,4 @@ export const AuthPage = withRouter(appInject(class extends React.Component<AuthP
         });
     }
   }
-}));
+})));
