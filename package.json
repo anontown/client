@@ -39,7 +39,7 @@
     "webpack-dev-server": "^3.1.0"
   },
   "dependencies": {
-    "@anontown/api-client": "^1.1.1",
+    "@anontown/api-client": "^1.1.2",
     "@anontown/api-types": "^1.2.1",
     "@trainline/react-skeletor": "^1.0.2",
     "classnames": "^2.2.5",
