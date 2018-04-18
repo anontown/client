@@ -63,46 +63,41 @@ export const ProfileEditor =
         : <div>ログインして下さい</div>;
     }
 
-    submit() {
+    async submit() {
       if (this.props.user.data === null) {
         return;
       }
 
-      if (this.props.profile !== null) {
-        apiClient.updateProfile(this.props.user.data.token, {
-          id: this.props.profile.id,
-          name: this.state.name,
-          text: this.state.text,
-          sn: this.state.sn,
-        }).subscribe(profile => {
+      try {
+        if (this.props.profile !== null) {
+          const profile = await apiClient.updateProfile(this.props.user.data.token, {
+            id: this.props.profile.id,
+            name: this.state.name,
+            text: this.state.text,
+            sn: this.state.sn,
+          });
           if (this.props.onUpdate) {
             this.props.onUpdate(profile);
           }
           this.setState({ errors: [] });
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map(e => e.message) });
-          } else {
-            this.setState({ errors: ["エラーが発生しました"] });
-          }
-        });
-      } else {
-        apiClient.createProfile(this.props.user.data.token, {
-          name: this.state.name,
-          text: this.state.text,
-          sn: this.state.sn,
-        }).subscribe(profile => {
+        } else {
+          const profile = await apiClient.createProfile(this.props.user.data.token, {
+            name: this.state.name,
+            text: this.state.text,
+            sn: this.state.sn,
+          });
+
           if (this.props.onAdd) {
             this.props.onAdd(profile);
           }
           this.setState({ errors: [] });
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map(e => e.message) });
-          } else {
-            this.setState({ errors: ["エラーが発生しました"] });
-          }
-        });
+        }
+      } catch (e) {
+        if (e instanceof AtError) {
+          this.setState({ errors: e.errors.map(e => e.message) });
+        } else {
+          this.setState({ errors: ["エラーが発生しました"] });
+        }
       }
     }
   }));

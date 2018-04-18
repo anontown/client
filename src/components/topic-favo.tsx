@@ -35,18 +35,19 @@ export const TopicFavo = myInject(["user"], observer(class extends React.Compone
     this.update();
   }
 
-  update() {
+  async update() {
     if (this.props.user.data === null) {
       return;
     }
-    apiClient
-      .findTopicIn({ ids: this.props.user.data.storage.topicFavo.toArray() })
-      .map(topics => topics.sort((a, b) => a.update > b.update ? -1 : a.update < b.update ? 1 : 0))
-      .subscribe(topics => {
-        this.setState({ topicFavo: topics });
-      }, () => {
-        this.setState({ snackMsg: "トピック取得に失敗しました" });
+    try {
+      const topics = await apiClient
+        .findTopicIn({ ids: this.props.user.data.storage.topicFavo.toArray() });
+      this.setState({
+        topicFavo: topics.sort((a, b) => a.update > b.update ? -1 : a.update < b.update ? 1 : 0)
       });
+    } catch{
+      this.setState({ snackMsg: "トピック取得に失敗しました" });
+    }
   }
 
   render() {

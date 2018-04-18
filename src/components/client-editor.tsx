@@ -45,44 +45,40 @@ export const ClientEditor = myInject(["user"],
         : <div>ログインして下さい</div>;
     }
 
-    submit() {
+    async submit() {
       if (this.props.user.data === null) {
         return;
       }
 
-      if (this.props.client !== null) {
-        apiClient.updateClient(this.props.user.data.token, {
-          id: this.props.client.id,
-          name: this.state.name,
-          url: this.state.url,
-        }).subscribe(client => {
+      try {
+        if (this.props.client !== null) {
+          const client = await apiClient.updateClient(this.props.user.data.token, {
+            id: this.props.client.id,
+            name: this.state.name,
+            url: this.state.url,
+          });
+
           if (this.props.onUpdate) {
             this.props.onUpdate(client);
           }
           this.setState({ errors: [] });
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map(e => e.message) });
-          } else {
-            this.setState({ errors: ["エラーが発生しました"] });
-          }
-        });
-      } else {
-        apiClient.createClient(this.props.user.data.token, {
-          name: this.state.name,
-          url: this.state.url,
-        }).subscribe(client => {
+        } else {
+          const client = await apiClient.createClient(this.props.user.data.token, {
+            name: this.state.name,
+            url: this.state.url,
+          });
+
           if (this.props.onAdd) {
             this.props.onAdd(client);
           }
           this.setState({ errors: [] });
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map(e => e.message) });
-          } else {
-            this.setState({ errors: ["エラーが発生しました"] });
-          }
-        });
+        }
+      } catch (e) {
+        if (e instanceof AtError) {
+          this.setState({ errors: e.errors.map(e => e.message) });
+        } else {
+          this.setState({ errors: ["エラーが発生しました"] });
+        }
       }
     }
   }));

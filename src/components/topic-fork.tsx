@@ -39,16 +39,19 @@ export const TopicFork = myInject(["user"], observer(class extends React.Compone
       snackMsg: null,
     };
 
-    apiClient.findTopicFork({
-      parent: this.props.topic.id,
-      skip: 0,
-      limit: 100,
-      activeOnly: false,
-    }).subscribe(topics => {
-      this.setState({ children: topics });
-    }, () => {
-      this.setState({ snackMsg: "トピック取得に失敗" });
-    });
+    (async () => {
+      try {
+        const topics = await apiClient.findTopicFork({
+          parent: this.props.topic.id,
+          skip: 0,
+          limit: 100,
+          activeOnly: false,
+        });
+        this.setState({ children: topics });
+      } catch{
+        this.setState({ snackMsg: "トピック取得に失敗" });
+      }
+    })();
   }
 
   render() {
@@ -77,25 +80,26 @@ export const TopicFork = myInject(["user"], observer(class extends React.Compone
     </div>;
   }
 
-  submit() {
+  async submit() {
     if (this.props.user.data === null) {
       return;
     }
 
-    apiClient.createTopicFork(this.props.user.data.token, {
-      title: this.state.title,
-      parent: this.props.topic.id,
-    }).subscribe(topic => {
+    try {
+      const topic = await apiClient.createTopicFork(this.props.user.data.token, {
+        title: this.state.title,
+        parent: this.props.topic.id,
+      });
       if (this.props.onCreate) {
         this.props.onCreate(topic);
       }
       this.setState({ errors: [] });
-    }, error => {
-      if (error instanceof AtError) {
-        this.setState({ errors: error.errors.map(e => e.message) });
+    } catch (e) {
+      if (e instanceof AtError) {
+        this.setState({ errors: e.errors.map(e => e.message) });
       } else {
         this.setState({ errors: ["エラーが発生しました"] });
       }
-    });
+    }
   }
 }));

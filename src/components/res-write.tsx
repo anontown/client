@@ -44,30 +44,32 @@ export const ResWrite = myInject(["user"], observer(class extends React.Componen
     };
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.props.user.data === null) {
       return;
     }
 
-    apiClient.createRes(this.props.user.data.token, {
-      topic: this.props.topic,
-      name: this.state.name.length !== 0 ? this.state.name : null,
-      text: this.state.text,
-      reply: this.props.reply,
-      profile: this.state.profile,
-      age: this.state.age,
-    }).subscribe(res => {
+    try {
+      const res = await apiClient.createRes(this.props.user.data.token, {
+        topic: this.props.topic,
+        name: this.state.name.length !== 0 ? this.state.name : null,
+        text: this.state.text,
+        reply: this.props.reply,
+        profile: this.state.profile,
+        age: this.state.age,
+      });
+
       if (this.props.onSubmit) {
         this.props.onSubmit(res);
       }
       this.setState({ errors: [], text: "" });
-    }, error => {
-      if (error instanceof AtError) {
-        this.setState({ errors: error.errors.map(e => e.message) });
+    } catch (e) {
+      if (e instanceof AtError) {
+        this.setState({ errors: e.errors.map(e => e.message) });
       } else {
         this.setState({ errors: ["エラーが発生しました"] });
       }
-    });
+    }
   }
 
   render() {

@@ -25,21 +25,20 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
       parent: null,
       snackMsg: null,
     };
-    if (this.props.topic.type === "normal") {
-      apiClient.findHistoryAll({ topic: this.props.topic.id })
-        .subscribe(histories => {
+
+    (async () => {
+      try {
+        if (this.props.topic.type === "normal") {
+          const histories=await apiClient.findHistoryAll({ topic: this.props.topic.id });
           this.setState({ histories });
-        }, () => {
-          this.setState({ snackMsg: "履歴取得に失敗しました" });
-        });
-    } else if (this.props.topic.type === "fork") {
-      apiClient.findTopicOne({ id: this.props.topic.parent })
-        .subscribe(parent => {
+        } else if (this.props.topic.type === "fork") {
+          const parent=await apiClient.findTopicOne({ id: this.props.topic.parent });
           this.setState({ parent });
-        }, () => {
-          this.setState({ snackMsg: "履歴取得に失敗しました" });
-        });
-    }
+        }
+      } catch{
+        this.setState({ snackMsg: "履歴取得に失敗しました" });
+      }
+    })();
   }
   render() {
     return <div>

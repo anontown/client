@@ -169,7 +169,7 @@ async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
     .findResIn(null, {
       ids: Object.entries(val.topicRead)
         .map(([_l, { res }]) => res)
-    }).toPromise())
+    }))
     .map<[string, string]>(x => [x.id, x.date]));
   for (let topic of Object.keys(val.topicRead)) {
     const data = val.topicRead[topic];

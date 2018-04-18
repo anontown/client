@@ -30,10 +30,9 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
     };
 
     apiClient.findTopicTags({ limit: 100 })
-      .subscribe(tags => {
+      .then(tags => {
         this.setState({ acTags: tags });
-      }, e => {
-        console.error(e);
+      }).catch(_e => {
         this.setState({ snackMsg: "タグ候補取得に失敗しました" });
       });
   }

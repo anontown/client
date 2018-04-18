@@ -88,19 +88,17 @@ export const History = myInject(["user"], observer(class extends React.Component
     );
   }
 
-  onHashClick() {
+  async onHashClick() {
     if (this.state.hashReses === null) {
-      const token = this.props.user.data !== null ? this.props.user.data.token : null;
-      apiClient.findResHash(token, {
-        hash: this.props.history.hash,
-      })
-        .mergeMap(reses => resSetedCreate.resSet(token, reses))
-        .map(reses => Im.List(reses))
-        .subscribe(reses => {
-          this.setState({ hashReses: reses });
-        }, () => {
-          this.setState({ snackMsg: "レスの取得に失敗しました" });
+      try {
+        const token = this.props.user.data !== null ? this.props.user.data.token : null;
+        const reses = await apiClient.findResHash(token, {
+          hash: this.props.history.hash,
         });
+        this.setState({ hashReses: Im.List(await resSetedCreate.resSet(token, reses)) });
+      } catch (_e) {
+        this.setState({ snackMsg: "レスの取得に失敗しました" });
+      }
     } else {
       this.setState({ hashReses: Im.List() });
     }

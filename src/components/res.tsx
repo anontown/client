@@ -10,7 +10,6 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { Observable } from "rxjs";
 import { ObjectOmit } from "typelevel-ts";
 import * as uuid from "uuid";
 import { ng } from "../models";
@@ -54,19 +53,19 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
     };
   }
 
-  vote(token: api.Token, res$: Observable<api.Res>) {
-    res$.mergeMap(res => resSetedCreate.resSet(token, [res]))
-      .map(reses => reses[0])
-      .subscribe(res => {
-        if (this.props.update) {
-          this.props.update(res);
-        }
-      }, () => {
-        this.setState({ snackMsg: "投票に失敗しました" });
-      });
+  async vote(token: api.Token, vote: () => Promise<api.Res>) {
+    try {
+      const reses = await resSetedCreate.resSet(token, [await vote()]);
+      const res = reses[0];
+      if (this.props.update) {
+        this.props.update(res);
+      }
+    } catch{
+      this.setState({ snackMsg: "投票に失敗しました" });
+    }
   }
 
-  onUV() {
+  async onUV() {
     const user = this.props.user.data;
     if (user === null) {
       return;
@@ -74,19 +73,19 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
 
     switch (this.props.res.voteFlag) {
       case "uv":
-        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
+        await this.vote(user.token, () => apiClient.cvRes(user.token, { id: this.props.res.id }));
         break;
       case "dv":
-        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
-          .mergeMap(() => apiClient.uvRes(user.token, { id: this.props.res.id })));
+        await this.vote(user.token, () => apiClient.cvRes(user.token, { id: this.props.res.id })
+          .then(() => apiClient.uvRes(user.token, { id: this.props.res.id })));
         break;
       case "not":
-        this.vote(user.token, apiClient.uvRes(user.token, { id: this.props.res.id }));
+        await this.vote(user.token, () => apiClient.uvRes(user.token, { id: this.props.res.id }));
         break;
     }
   }
 
-  onDV() {
+  async onDV() {
     const user = this.props.user.data;
     if (user === null) {
       return;
@@ -94,51 +93,55 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
 
     switch (this.props.res.voteFlag) {
       case "dv":
-        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id }));
+        await this.vote(user.token, () => apiClient.cvRes(user.token, { id: this.props.res.id }));
         break;
       case "uv":
-        this.vote(user.token, apiClient.cvRes(user.token, { id: this.props.res.id })
-          .mergeMap(() => apiClient.dvRes(user.token, { id: this.props.res.id })));
+        await this.vote(user.token, () => apiClient.cvRes(user.token, { id: this.props.res.id })
+          .then(() => apiClient.dvRes(user.token, { id: this.props.res.id })));
         break;
       case "not":
-        this.vote(user.token, apiClient.dvRes(user.token, { id: this.props.res.id }));
+        await this.vote(user.token, () => apiClient.dvRes(user.token, { id: this.props.res.id }));
         break;
     }
   }
 
-  onHashClock() {
+  async onHashClock() {
     const token = this.props.user.data !== null ? this.props.user.data.token : null;
     if (this.state.children === null) {
-      apiClient.findResHash(token, {
-        hash: this.props.res.hash,
-      })
-        .mergeMap(reses => resSetedCreate.resSet(token, reses))
-        .subscribe(reses => {
-          this.setState({ children: { reses: Im.List(reses), msg: `HASH抽出:${this.props.res.hash}` } });
-        }, () => {
-          this.setState({ snackMsg: "レス取得に失敗しました" });
+      try {
+        const reses = await resSetedCreate.resSet(token, await apiClient.findResHash(token, {
+          hash: this.props.res.hash,
+        }));
+
+        this.setState({
+          children: {
+            reses: Im.List(reses),
+            msg: `HASH抽出:${this.props.res.hash}`
+          }
         });
+      } catch{
+        this.setState({ snackMsg: "レス取得に失敗しました" });
+      }
     } else {
       this.setState({ children: null });
     }
   }
 
-  onDeleteClick() {
+  async onDeleteClick() {
     if (this.props.user.data === null) {
       return;
     }
     const user = this.props.user.data;
 
-    apiClient.delRes(user.token, { id: this.props.res.id })
-      .mergeMap(res => resSetedCreate.resSet(user.token, [res]))
-      .map(reses => reses[0])
-      .subscribe(res => {
-        if (this.props.update) {
-          this.props.update(res);
-        }
-      }, () => {
-        this.setState({ snackMsg: "レス削除に失敗しました" });
-      });
+    try {
+      const reses = await resSetedCreate
+        .resSet(user.token, [await apiClient.delRes(user.token, { id: this.props.res.id })]);
+      if (this.props.update) {
+        this.props.update(reses[0]);
+      }
+    } catch{
+      this.setState({ snackMsg: "レス削除に失敗しました" });
+    }
   }
 
   updateChildren(res: ResSeted) {
