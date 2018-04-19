@@ -28,8 +28,8 @@ export interface ScrollProps<T extends ListItemData> {
   items: Im.List<T>;
   onChangeItems: (items: Im.List<T>) => void;
   newItemOrder: "top" | "bottom";
-  findNewItem: () => Observable<Im.List<T>>;
-  findItem: (type: "before" | "after", date: string, equal: boolean) => Observable<Im.List<T>>;
+  findNewItem: () => Promise<Im.List<T>>;
+  findItem: (type: "before" | "after", date: string, equal: boolean) => Promise<Im.List<T>>;
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
@@ -289,7 +289,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.subscriptions.push(this.props.scrollNewItem.subscribe(date => {
       if (date !== null) {
         this._lock(async () => {
-          this.onChangeItems(await this.props.findItem("before", date, true).first().toPromise());
+          this.onChangeItems(await this.props.findItem("before", date, true));
           switch (this.props.newItemOrder) {
             case "top":
               await this.toTop();
@@ -357,7 +357,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.onChangeItems(this.props.items
-          .concat(await this.props.findItem("after", last.date, false).first().toPromise()));
+          .concat(await this.props.findItem("after", last.date, false)));
 
         switch (this.props.newItemOrder) {
           case "bottom":
@@ -396,7 +396,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.onChangeItems(this.props.items
-          .concat(await this.props.findItem("before", first.date, false).first().toPromise()));
+          .concat(await this.props.findItem("before", first.date, false)));
         switch (this.props.newItemOrder) {
           case "bottom":
             await this.setTopElement(ise);
@@ -411,7 +411,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   findNew() {
     this._lock(async () => {
-      this.onChangeItems(await this.props.findNewItem().first().toPromise());
+      this.onChangeItems(await this.props.findNewItem());
       switch (this.props.newItemOrder) {
         case "bottom":
           await this.toBottom();

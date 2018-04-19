@@ -78,15 +78,14 @@ export const TopicPage = withRouter(myInject(["user"], observer(class extends Re
     this.init(props);
   }
 
-  init(props: TopicPageProps) {
-    apiClient.findTopicOne({ id: props.match.params.id })
-      .subscribe(topic => {
-        this.setState({ topic }, () => {
-          this.storageSaveDate(null);
-        });
-      }, () => {
-        this.setState({ snackMsg: "トピック取得に失敗" });
+  async init(props: TopicPageProps) {
+    try{
+      this.setState({ topic:await apiClient.findTopicOne({ id: props.match.params.id }) }, () => {
+        this.storageSaveDate(null);
       });
+    }catch{
+      this.setState({ snackMsg: "トピック取得に失敗" });
+    }
 
     const user = props.user.data;
     if (user !== null) {
@@ -100,14 +99,16 @@ export const TopicPage = withRouter(myInject(["user"], observer(class extends Re
       this.scrollNewItem.next(null);
     }
 
-    this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, { id: props.match.params.id })
+    this.newItem = apiClient.streamUpdateTopic(user !== null ? user.token : null, {
+      id: props.match.params.id
+    })
       .do(x => {
         if (this.state.topic !== null) {
           this.setState({ topic: { ...this.state.topic, resCount: x.count } });
           this.storageSaveDate(null);
         }
       })
-      .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).map(reses => reses[0]));
+      .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).then(reses => reses[0]));
   }
 
   componentWillReceiveProps(nextProps: TopicPageProps) {
@@ -266,32 +267,28 @@ export const TopicPage = withRouter(myInject(["user"], observer(class extends Re
             items={this.state.reses}
             onChangeItems={reses => this.setState({ reses })}
             newItemOrder="bottom"
-            findNewItem={() => {
+            findNewItem={async () => {
               if (this.state.topic === null) {
-                return Observable.empty();
+                return Im.List();
               }
               const token = this.props.user.data !== null ? this.props.user.data.token : null;
-              return apiClient.findResNew(token, {
+              return Im.List(await resSetedCreate.resSet(token, await apiClient.findResNew(token, {
                 topic: this.state.topic.id,
                 limit: this.limit,
-              })
-                .mergeMap(r => resSetedCreate.resSet(token, r))
-                .map(reses => Im.List(reses));
+              })));
             }}
-            findItem={(type, date, equal) => {
+            findItem={async (type, date, equal) => {
               if (this.state.topic === null) {
-                return Observable.empty();
+                return Im.List();
               }
               const token = this.props.user.data !== null ? this.props.user.data.token : null;
-              return apiClient.findRes(token, {
+              return Im.List(await resSetedCreate.resSet(token, await apiClient.findRes(token, {
                 topic: this.state.topic.id,
                 type,
                 equal,
                 date,
                 limit: this.limit,
-              })
-                .mergeMap(r => resSetedCreate.resSet(token, r))
-                .map(reses => Im.List(reses));
+              })));
             }}
             width={10}
             debounceTime={500}
