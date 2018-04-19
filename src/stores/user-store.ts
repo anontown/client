@@ -20,8 +20,7 @@ export class UserStore {
             key: data.token.key,
           }));
           storageAPI
-            .save(data.token, data.storage)
-            .subscribe();
+            .save(data.token, data.storage);
         } else {
           localStorage.removeItem("token");
         }

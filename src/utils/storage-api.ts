@@ -1,5 +1,4 @@
 import * as api from "@anontown/api-types";
-import { Observable } from "rxjs";
 import {
   convert,
   initStorage,

@@ -7,7 +7,6 @@ import {
 } from "../models";
 
 import * as api from "@anontown/api-types";
-import { Observable } from "rxjs";
 import { apiClient } from "./api-client";
 
 export async function resForkSet(reses: api.ResFork[]): Promise<ResForkSetedTopic[]> {
