@@ -27,7 +27,7 @@ export class UserStore {
       });
   }
 
-  @action.bound async setData(data: UserData | null) {
+  @action.bound setData(data: UserData | null) {
     this.data = data;
   }
 }

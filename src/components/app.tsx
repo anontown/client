@@ -69,24 +69,21 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
     });
   }
 
-  componentWillMount() {
-    Observable.of(localStorage.getItem("token"))
-      .map(tokenStr => {
-        if (tokenStr !== null) {
-          return { ...JSON.parse(tokenStr), type: "master" } as TokenMaster;
-        } else {
-          throw Error();
-        }
-      })
-      .mergeMap(token => apiClient.findTokenOne(token))
-      .mergeMap(token => createUserData(token))
-      .subscribe(data => {
-        this.props.user.setData(data);
-        this.setState({ isInit: true });
-      }, () => {
-        this.props.user.setData(null);
-        this.setState({ isInit: true });
-      });
+  async componentWillMount() {
+    try {
+      const tokenStr = localStorage.getItem("token");
+      let token;
+      if (tokenStr !== null) {
+        token = { ...JSON.parse(tokenStr), type: "master" } as TokenMaster;
+      } else {
+        throw Error();
+      }
+      this.props.user.setData(await createUserData(await apiClient.findTokenOne(token)));
+      this.setState({ isInit: true });
+    } catch {
+      this.props.user.setData(null);
+      this.setState({ isInit: true });
+    }
   }
 
   componentWillUpdate(nextProps: AppProps) {

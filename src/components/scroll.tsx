@@ -133,7 +133,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   async getTopElement() {
-    sleep(0);
+    await sleep(0);
     // 最短距離のアイテム
     const minItem = this.props.items
       .map(item => {
@@ -298,9 +298,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
               await this.toBottom();
               break;
           }
-        }).then(() => {
-          this.findAfter();
-        });
+        }).then(() => this.findAfter());
       } else {
         this.findNew();
       }
@@ -331,12 +329,12 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this._isLock = false;
   }
 
-  findAfter() {
+  async findAfter() {
     const last = this.props.items.last();
     if (last === undefined) {
       this.findNew();
     } else {
-      this._lock(async () => {
+      await this._lock(async () => {
         let ise: {
           y: number;
           item: ListItem<T>;
@@ -371,12 +369,12 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }
   }
 
-  findBefore() {
+  async findBefore() {
     const first = this.props.items.first();
     if (first === undefined) {
-      this.findNew();
+      await this.findNew();
     } else {
-      this._lock(async () => {
+      await this._lock(async () => {
         let ise: {
           y: number;
           item: ListItem<T>;
@@ -409,8 +407,8 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }
   }
 
-  findNew() {
-    this._lock(async () => {
+  async findNew() {
+    await this._lock(async () => {
       this.onChangeItems(await this.props.findNewItem());
       switch (this.props.newItemOrder) {
         case "bottom":

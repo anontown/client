@@ -32,7 +32,7 @@
             "spaces",
             2
         ],
-        "no-floating-promises": true
+        "no-floating-promises": false
     },
     "rulesDirectory": []
 }

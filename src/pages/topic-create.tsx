@@ -111,11 +111,11 @@ export const TopicCreatePage =
         : <Redirect to={`/topic/${this.state.redirect}`} />;
     }
 
-    submit() {
+    async submit() {
       if (this.state.type === "normal") {
         this.setState({ openDialog: true });
       } else {
-        this.create();
+        await this.create();
       }
     }
 
