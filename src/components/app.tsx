@@ -22,7 +22,6 @@ import {
   Switch,
   withRouter,
 } from "react-router-dom";
-import { Observable } from "rxjs";
 import { gaID } from "../env";
 import * as pages from "../pages";
 import { myInject, UserStore } from "../stores";
