@@ -9,7 +9,9 @@ import {
   SelectField,
   TextField,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   Redirect,
   RouteComponentProps,
@@ -23,8 +25,6 @@ import {
 } from "../components";
 import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserStore;

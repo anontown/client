@@ -5,7 +5,9 @@ import {
   IconButton,
   Paper,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -13,8 +15,6 @@ import {
 import { Snack } from "../../components";
 import { myInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface AppsSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -42,11 +42,11 @@ export const AppsSettingPage =
             const clients = await apiClient.findClientIn(token, {
               ids: Array.from(new Set(tokens
                 .filter<api.TokenGeneral>((x): x is api.TokenGeneral => x.type === "general")
-                .map(x => x.client)))
+                .map(x => x.client))),
             });
             this.setState({ clients: Im.List(clients) });
           }
-        } catch{
+        } catch {
           this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
         }
       })();
@@ -78,7 +78,7 @@ export const AppsSettingPage =
       try {
         await apiClient.deleteTokenClient(this.props.user.data.token, { client: client.id });
         this.setState({ clients: this.state.clients.filter(c => c.id !== client.id) });
-      } catch{
+      } catch {
         this.setState({ snackMsg: "削除に失敗しました" });
       }
     }

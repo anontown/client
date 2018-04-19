@@ -8,8 +8,10 @@ import {
   RaisedButton,
   TextField,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as qs from "query-string";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import { withRouter } from "react-router";
 import {
   Link,
@@ -29,8 +31,6 @@ import {
 import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import * as style from "./topic-search.scss";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -147,7 +147,7 @@ export const TopicSearchPage =
           topics: this.state.topics.concat(topics),
         });
         this.page++;
-      } catch{
+      } catch {
         this.setState({ snackMsg: "トピック取得に失敗しました。" });
       }
     }

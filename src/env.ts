@@ -47,5 +47,4 @@ export const Config = __PROD__ ?
         },
     };
 
-
 export const gaID = "UA-108693999-1";

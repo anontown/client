@@ -3,7 +3,9 @@ import {
   Tab,
   Tabs,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   Link,
   RouteComponentProps,
@@ -15,8 +17,6 @@ import {
   TopicFavo,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface HomePageProps extends RouteComponentProps<{}> {
   user: UserStore;

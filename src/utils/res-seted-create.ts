@@ -18,7 +18,7 @@ export async function resForkSet(reses: api.ResFork[]): Promise<ResForkSetedTopi
     .findTopicIn({ ids: Array.from(new Set(reses.map(r => r.fork))) });
 
   const topicMap = new Map(topics.map<[string, api.Topic]>(t => [t.id, t]));
-  return reses.map(r => ({ ...r, fork: topicMap.get(r.fork)! }))
+  return reses.map(r => ({ ...r, fork: topicMap.get(r.fork)! }));
 }
 
 export async function resHistorySet(reses: api.ResHistory[]): Promise<ResHistorySetedHistory[]> {
@@ -29,7 +29,7 @@ export async function resHistorySet(reses: api.ResHistory[]): Promise<ResHistory
   const hs = await apiClient
     .findHistoryIn({ ids: Array.from(new Set(reses.map(r => r.history))) });
   const hMap = new Map(hs.map<[string, api.History]>(h => [h.id, h]));
-  return reses.map(r => ({ ...r, history: hMap.get(r.history)! }))
+  return reses.map(r => ({ ...r, history: hMap.get(r.history)! }));
 }
 
 export async function resTopicSet(reses: api.ResTopic[]): Promise<ResTopicSetedTopic[]> {

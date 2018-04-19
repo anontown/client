@@ -1,6 +1,7 @@
 import * as api from "@anontown/api-types";
 import { Paper } from "material-ui";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -14,7 +15,6 @@ import {
   apiClient,
   withModal,
 } from "../utils";
-import { Helmet } from "react-helmet";
 
 interface TopicEditBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -42,7 +42,7 @@ const TopicEditBase = withRouter(class extends React.Component<TopicEditBaseProp
         } else {
           this.setState({ snackMsg: "通常トピックではありません。" });
         }
-      } catch{
+      } catch {
         this.setState({ snackMsg: "トピック取得に失敗しました" });
       }
     })();

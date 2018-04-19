@@ -1,12 +1,12 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import { RaisedButton, TextField } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
 import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
-import { observer } from "mobx-react";
 
 interface UnconnectedClientEditorProps {
   client: api.Client | null;

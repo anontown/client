@@ -1,5 +1,6 @@
 import * as api from "@anontown/api-types";
 import { FontIcon } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
@@ -7,7 +8,6 @@ import { myInject, UserStore } from "../stores";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
-import { observer } from "mobx-react";
 
 interface UnconnectedTopicListItemProps {
   topic: api.Topic;

@@ -1,6 +1,7 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import { Paper, RaisedButton, TextField } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
 import { myInject, UserStore } from "../stores";
@@ -8,7 +9,6 @@ import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
-import { observer } from "mobx-react";
 
 interface UnconnectedProfileEditorProps {
   profile: api.Profile | null;

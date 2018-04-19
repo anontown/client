@@ -1,5 +1,7 @@
 import { Paper } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -7,13 +9,11 @@ import {
 import { Page, Res, Snack } from "../components";
 import { ResSeted } from "../models";
 import { myInject, UserStore } from "../stores";
-import { observer } from "mobx-react";
 import {
   apiClient,
   resSetedCreate,
   withModal,
 } from "../utils";
-import { Helmet } from "react-helmet";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
@@ -39,9 +39,9 @@ const ResBase = withRouter(myInject(["user"], observer(class extends React.Compo
         this.setState({
           res: (await resSetedCreate.resSet(token, [await apiClient.findResOne(token, {
             id: this.props.match.params.id,
-          })]))[0]
+          })]))[0],
         });
-      } catch{
+      } catch {
         this.setState({ snackMsg: "レス取得に失敗しました" });
       }
     })();

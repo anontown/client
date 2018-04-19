@@ -3,7 +3,9 @@ import {
   Paper,
   RaisedButton,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -22,8 +24,6 @@ import {
   list,
   resSetedCreate,
 } from "../utils";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface NotificationsPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -97,7 +97,7 @@ export const NotificationsPage =
               limit: this.limit,
             }));
           this.setState({ reses: Im.List(reses) });
-        } catch{
+        } catch {
           this.setState({ snackMsg: "レス取得に失敗" });
         }
       }
@@ -122,7 +122,7 @@ export const NotificationsPage =
                 limit: this.limit,
               }));
             this.setState({ reses: Im.List(reses).concat(this.state.reses) });
-          } catch{
+          } catch {
             this.setState({ snackMsg: "レス取得に失敗" });
           }
         }
@@ -149,7 +149,7 @@ export const NotificationsPage =
                 limit: this.limit,
               }));
             this.setState({ reses: this.state.reses.concat(reses) });
-          } catch{
+          } catch {
             this.setState({ snackMsg: "レス取得に失敗" });
           }
         }

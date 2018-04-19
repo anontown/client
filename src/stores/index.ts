@@ -11,4 +11,5 @@ export const stores = {
 export type Stores = typeof stores;
 
 export const myInject =
-  (<P, N extends keyof Stores>(names: N[], c: React.ComponentType<P>) => inject(...names)(c) as any as React.ComponentType<ObjectOmit<P, N>>);
+  (<P, N extends keyof Stores>(names: N[], c: React.ComponentType<P>) =>
+    inject(...names)(c) as any as React.ComponentType<ObjectOmit<P, N>>);

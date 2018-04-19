@@ -5,12 +5,12 @@ import {
   List,
   ListItem,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { ng } from "../models";
 import { myInject, UserStore } from "../stores";
 import { list } from "../utils";
 import { NGEditor } from "./ng-editor";
-import { observer } from "mobx-react";
 
 interface NGProps {
   user: UserStore;

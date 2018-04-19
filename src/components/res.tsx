@@ -8,12 +8,13 @@ import {
   MenuItem,
   Paper,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ObjectOmit } from "typelevel-ts";
 import * as uuid from "uuid";
-import { ng } from "../models";
 import { ResSeted } from "../models";
+import { ng } from "../models";
 import { myInject, UserStore } from "../stores";
 import {
   apiClient,
@@ -25,7 +26,6 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import { observer } from "mobx-react";
 
 interface UnconnectedResProps {
   res: ResSeted;
@@ -60,7 +60,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
       if (this.props.update) {
         this.props.update(res);
       }
-    } catch{
+    } catch {
       this.setState({ snackMsg: "投票に失敗しました" });
     }
   }
@@ -116,10 +116,10 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
         this.setState({
           children: {
             reses: Im.List(reses),
-            msg: `HASH抽出:${this.props.res.hash}`
-          }
+            msg: `HASH抽出:${this.props.res.hash}`,
+          },
         });
-      } catch{
+      } catch {
         this.setState({ snackMsg: "レス取得に失敗しました" });
       }
     } else {
@@ -139,7 +139,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
       if (this.props.update) {
         this.props.update(reses[0]);
       }
-    } catch{
+    } catch {
       this.setState({ snackMsg: "レス削除に失敗しました" });
     }
   }

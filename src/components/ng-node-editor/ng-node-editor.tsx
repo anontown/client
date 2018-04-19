@@ -10,10 +10,10 @@ import {
 import * as React from "react";
 import { ng } from "../../models";
 import { list } from "../../utils";
-import { NGTextNodeEditor } from "./ng-text-node-editor";
 import { NGHashNodeEditor } from "./ng-hash-node-editor";
 import { NGNameNodeEditor } from "./ng-name-node-editor";
 import { NGProfileNodeEditor } from "./ng-profile-node-editor";
+import { NGTextNodeEditor } from "./ng-text-node-editor";
 import { NGVoteNodeEditor } from "./ng-vote-node-editor";
 
 export interface NGNodesEditorState {

@@ -3,7 +3,9 @@ import * as Im from "immutable";
 import {
   Paper,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -17,8 +19,6 @@ import {
   apiClient,
   list,
 } from "../../utils";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface DevSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -45,7 +45,7 @@ export const DevSettingPage =
               .findClientAll(this.props.user.data.token);
             this.setState({ clients: Im.List(clients) });
           }
-        } catch{
+        } catch {
           this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
         }
       })();

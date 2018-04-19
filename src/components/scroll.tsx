@@ -83,7 +83,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   getItemEl(id: string) {
-    let dom = ReactDOM.findDOMNode(this.refs[`item-${id}`]) as HTMLElement | null;
+    const dom = ReactDOM.findDOMNode(this.refs[`item-${id}`]) as HTMLElement | null;
     if (dom !== null) {
       return new HTMLElementData(dom);
     } else {

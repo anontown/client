@@ -29,13 +29,13 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
     (async () => {
       try {
         if (this.props.topic.type === "normal") {
-          const histories=await apiClient.findHistoryAll({ topic: this.props.topic.id });
+          const histories = await apiClient.findHistoryAll({ topic: this.props.topic.id });
           this.setState({ histories });
         } else if (this.props.topic.type === "fork") {
-          const parent=await apiClient.findTopicOne({ id: this.props.topic.parent });
+          const parent = await apiClient.findTopicOne({ id: this.props.topic.parent });
           this.setState({ parent });
         }
-      } catch{
+      } catch {
         this.setState({ snackMsg: "履歴取得に失敗しました" });
       }
     })();

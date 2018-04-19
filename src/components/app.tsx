@@ -13,6 +13,7 @@ import {
   lightBaseTheme,
   MuiThemeProvider,
 } from "material-ui/styles";
+import { observer } from "mobx-react";
 import * as React from "react";
 import {
   Link,
@@ -22,15 +23,14 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Observable } from "rxjs";
+import { gaID } from "../env";
 import * as pages from "../pages";
 import { myInject, UserStore } from "../stores";
-import { observer } from "mobx-react";
 import {
   apiClient,
   createUserData,
 } from "../utils";
 import * as style from "./app.scss";
-import { gaID } from "../env";
 
 declare const gtag: any;
 
@@ -44,7 +44,7 @@ interface AppState {
   isInit: boolean;
 }
 
-export const App = myInject(["user"],observer(withRouter(class extends React.Component<AppProps, AppState> {
+export const App = myInject(["user"], observer(withRouter(class extends React.Component<AppProps, AppState> {
   previousLocation = this.props.location;
 
   constructor(props: AppProps) {
@@ -64,8 +64,8 @@ export const App = myInject(["user"],observer(withRouter(class extends React.Com
   changeLocation(prop: AppProps) {
     const path = prop.location.pathname;
     console.log("ga", path);
-    gtag('config', gaID, {
-      page_path: path
+    gtag("config", gaID, {
+      page_path: path,
     });
   }
 

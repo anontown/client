@@ -3,11 +3,11 @@ import {
   FontIcon,
   IconButton,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
 import { myInject, UserStore } from "../stores";
 import { ClientEditor } from "./client-editor";
-import { observer } from "mobx-react";
 
 interface UnconnectedClientProps {
   client: api.Client;
@@ -21,7 +21,7 @@ interface ClientState {
   edit: boolean;
 }
 
-export const Client = myInject(["user"],observer(class extends React.Component<UnconnectedClientProps, ClientState> {
+export const Client = myInject(["user"], observer(class extends React.Component<UnconnectedClientProps, ClientState> {
   constructor(props: UnconnectedClientProps) {
     super(props);
     this.state = {

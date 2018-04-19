@@ -1,7 +1,7 @@
 import * as Im from "immutable";
+import { apiClient } from "../utils";
 import * as ng from "./ng";
 import * as ngJson from "./ng-json";
-import { apiClient } from "../utils";
 
 interface StorageJSON1 {
   readonly ver: "1.0.0";
@@ -168,17 +168,17 @@ async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
   const dates = new Map((await apiClient
     .findResIn(null, {
       ids: Object.entries(val.topicRead)
-        .map(([_l, { res }]) => res)
+        .map(([_l, { res }]) => res),
     }))
     .map<[string, string]>(x => [x.id, x.date]));
-  for (let topic of Object.keys(val.topicRead)) {
+  for (const topic of Object.keys(val.topicRead)) {
     const data = val.topicRead[topic];
     topicRead[topic] = { count: data.count, date: dates.get(data.res)! };
   }
   return {
     ...val,
     ver: "8",
-    topicRead
+    topicRead,
   };
 }
 

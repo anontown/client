@@ -6,8 +6,10 @@ import {
   SelectField,
   TextField,
 } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import Recaptcha from "react-google-recaptcha";
+import { Helmet } from "react-helmet";
 import {
   Redirect,
   RouteComponentProps,
@@ -23,8 +25,6 @@ import {
   apiClient,
   createUserData,
 } from "../utils";
-import { Helmet } from "react-helmet";
-import { observer } from "mobx-react";
 
 interface InPageProps extends RouteComponentProps<{}> {
   user: UserStore;

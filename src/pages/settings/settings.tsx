@@ -1,12 +1,12 @@
 import { List, ListItem } from "material-ui";
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { Link, Route, Switch } from "react-router-dom";
 import { Page } from "../../components";
 import { AccountSettingPage } from "./account-setting";
 import { AppsSettingPage } from "./apps-setting";
 import { DevSettingPage } from "./dev-setting";
-import { Helmet } from "react-helmet";
 
 interface SettingsPageProps extends RouteComponentProps<{}> {
 
