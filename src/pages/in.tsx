@@ -95,29 +95,30 @@ export const InPage = withRouter(myInject(["user"], observer(class extends React
     </Page>;
   }
 
-  ok() {
-    (this.state.isLogin ? apiClient.findUserID({ sn: this.state.sn })
-      : apiClient.createUser(this.state.recaptcha as string, // TODO:キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
-        {
-          sn: this.state.sn,
-          pass: this.state.pass,
-        })
-        .map(user => user.id))
-      .mergeMap(id => apiClient.createTokenMaster({ id, pass: this.state.pass }))
-      .mergeMap(token => createUserData(token))
-      .subscribe(userData => {
-        this.props.user.setData(userData);
-      }, errors => {
-        const rc = this.refs.recaptcha as any;
-        if (rc) {
-          rc.reset();
-        }
+  async ok() {
+    try {
+      const id = this.state.isLogin
+        ? await apiClient.findUserID({ sn: this.state.sn })
+        : await apiClient.createUser(this.state.recaptcha as string, // TODO:キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
+          {
+            sn: this.state.sn,
+            pass: this.state.pass,
+          })
+          .then(user => user.id);
+      const token = await apiClient.createTokenMaster({ id, pass: this.state.pass });
+      const userData = await createUserData(token);
+      this.props.user.setData(userData);
+    } catch (e) {
+      const rc = this.refs.recaptcha as any;
+      if (rc) {
+        rc.reset();
+      }
 
-        if (errors instanceof AtError) {
-          this.setState({ errors: errors.errors.map(e => e.message) });
-        } else {
-          this.setState({ errors: ["ログインに失敗しました。"] });
-        }
-      });
+      if (e instanceof AtError) {
+        this.setState({ errors: e.errors.map(e => e.message) });
+      } else {
+        this.setState({ errors: ["ログインに失敗しました。"] });
+      }
+    }
   }
 })));

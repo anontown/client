@@ -34,19 +34,22 @@ export const AppsSettingPage =
         clients: Im.List(),
       };
 
-      if (this.props.user.data !== null) {
-        const token = this.props.user.data.token;
-        apiClient.findTokenAll(token)
-          .map(tokens => Array.from(new Set(tokens
-            .filter<api.TokenGeneral>((x): x is api.TokenGeneral => x.type === "general")
-            .map(x => x.client))))
-          .mergeMap(x => apiClient.findClientIn(token, { ids: x }))
-          .subscribe(clients => {
+      (async () => {
+        try {
+          if (this.props.user.data !== null) {
+            const token = this.props.user.data.token;
+            const tokens = await apiClient.findTokenAll(token);
+            const clients = await apiClient.findClientIn(token, {
+              ids: Array.from(new Set(tokens
+                .filter<api.TokenGeneral>((x): x is api.TokenGeneral => x.type === "general")
+                .map(x => x.client)))
+            });
             this.setState({ clients: Im.List(clients) });
-          }, () => {
-            this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
-          });
-      }
+          }
+        } catch{
+          this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+        }
+      })();
     }
 
     render() {
@@ -68,15 +71,15 @@ export const AppsSettingPage =
         : <div>ログインして下さい。</div>;
     }
 
-    del(client: api.Client) {
+    async del(client: api.Client) {
       if (this.props.user.data === null) {
         return;
       }
-      apiClient.deleteTokenClient(this.props.user.data.token, { client: client.id })
-        .subscribe(() => {
-          this.setState({ clients: this.state.clients.filter(c => c.id !== client.id) });
-        }, () => {
-          this.setState({ snackMsg: "削除に失敗しました" });
-        });
+      try {
+        await apiClient.deleteTokenClient(this.props.user.data.token, { client: client.id });
+        this.setState({ clients: this.state.clients.filter(c => c.id !== client.id) });
+      } catch{
+        this.setState({ snackMsg: "削除に失敗しました" });
+      }
     }
   })));

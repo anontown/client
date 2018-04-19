@@ -38,15 +38,17 @@ export const DevSettingPage =
         clients: Im.List(),
       };
 
-      if (this.props.user.data !== null) {
-        apiClient
-          .findClientAll(this.props.user.data.token)
-          .subscribe(clients => {
+      (async () => {
+        try {
+          if (this.props.user.data !== null) {
+            const clients = await apiClient
+              .findClientAll(this.props.user.data.token);
             this.setState({ clients: Im.List(clients) });
-          }, () => {
-            this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
-          });
-      }
+          }
+        } catch{
+          this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+        }
+      })();
     }
 
     render() {

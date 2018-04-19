@@ -35,14 +35,17 @@ const ProfileBase = withRouter(myInject(["user"], observer(class extends React.C
 
     const token = this.props.user.data !== null ? this.props.user.data.token : null;
 
-    apiClient.findProfileOne(token, {
-      id: this.props.match.params.id,
-    })
-      .subscribe(profile => {
-        this.setState({ profile });
-      }, () => {
+    (async () => {
+      try {
+        this.setState({
+          profile: await apiClient.findProfileOne(token, {
+            id: this.props.match.params.id,
+          })
+        });
+      } catch{
         this.setState({ snackMsg: "プロフィール取得に失敗しました" });
-      });
+      }
+    })();
   }
 
   render() {

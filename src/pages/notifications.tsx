@@ -86,26 +86,23 @@ export const NotificationsPage =
         this.setState({ reses: list.update(this.state.reses, res) });
       }
 
-      findNew() {
+      async findNew() {
         if (this.props.user.data === null) {
           return;
         }
         const token = this.props.user.data.token;
-
-        apiClient.findResNoticeNew(token,
-          {
-            limit: this.limit,
-          })
-          .mergeMap(reses => resSetedCreate.resSet(token, reses))
-          .map(reses => Im.List(reses))
-          .subscribe(reses => {
-            this.setState({ reses });
-          }, () => {
-            this.setState({ snackMsg: "レス取得に失敗" });
-          });
+        try {
+          const reses = await resSetedCreate.resSet(token, await apiClient.findResNoticeNew(token,
+            {
+              limit: this.limit,
+            }));
+          this.setState({ reses: Im.List(reses) });
+        } catch{
+          this.setState({ snackMsg: "レス取得に失敗" });
+        }
       }
 
-      readNew() {
+      async readNew() {
         if (this.props.user.data === null) {
           return;
         }
@@ -114,27 +111,24 @@ export const NotificationsPage =
 
         const first = this.state.reses.first();
         if (first === undefined) {
-          this.findNew();
+          await this.findNew();
         } else {
-          apiClient.findResNotice(token,
-            {
-              type: "after",
-              equal: false,
-              date: first.date,
-              limit: this.limit,
-            })
-            .mergeMap(reses => resSetedCreate.resSet(token, reses))
-            .map(reses => Im.List(reses))
-            .map(reses => reses.concat(this.state.reses))
-            .subscribe(reses => {
-              this.setState({ reses });
-            }, () => {
-              this.setState({ snackMsg: "レス取得に失敗" });
-            });
+          try {
+            const reses = await resSetedCreate.resSet(token, await apiClient.findResNotice(token,
+              {
+                type: "after",
+                equal: false,
+                date: first.date,
+                limit: this.limit,
+              }));
+            this.setState({ reses: Im.List(reses).concat(this.state.reses) });
+          } catch{
+            this.setState({ snackMsg: "レス取得に失敗" });
+          }
         }
       }
 
-      readOld() {
+      async readOld() {
         if (this.props.user.data === null) {
           return;
         }
@@ -144,22 +138,20 @@ export const NotificationsPage =
         const last = this.state.reses.last();
 
         if (last === undefined) {
-          this.findNew();
+          await this.findNew();
         } else {
-          apiClient.findResNotice(token,
-            {
-              type: "before",
-              equal: false,
-              date: last.date,
-              limit: this.limit,
-            })
-            .mergeMap(reses => resSetedCreate.resSet(token, reses))
-            .map(reses => this.state.reses.concat(reses))
-            .subscribe(reses => {
-              this.setState({ reses });
-            }, () => {
-              this.setState({ snackMsg: "レス取得に失敗" });
-            });
+          try {
+            const reses = await resSetedCreate.resSet(token, await apiClient.findResNotice(token,
+              {
+                type: "before",
+                equal: false,
+                date: last.date,
+                limit: this.limit,
+              }));
+            this.setState({ reses: this.state.reses.concat(reses) });
+          } catch{
+            this.setState({ snackMsg: "レス取得に失敗" });
+          }
         }
       }
     })));

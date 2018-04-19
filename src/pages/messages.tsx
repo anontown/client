@@ -72,71 +72,68 @@ export const MessagesPage = withRouter(myInject(["user"], observer(class extends
     );
   }
 
-  findNew() {
+  async findNew() {
     if (this.props.user.data === null) {
       return;
     }
 
-    apiClient.findMsgNew(this.props.user.data.token,
-      {
-        limit: this.limit,
-      })
-      .map(msgs => Im.List(msgs))
-      .subscribe(msgs => {
-        this.setState({ msgs });
-      }, () => {
-        this.setState({ snackMsg: "メッセージ取得に失敗" });
-      });
+    try {
+      const msgs = await apiClient.findMsgNew(this.props.user.data.token,
+        {
+          limit: this.limit,
+        });
+      this.setState({ msgs: Im.List(msgs) });
+    } catch{
+      this.setState({ snackMsg: "メッセージ取得に失敗" });
+    }
   }
 
-  readNew() {
+  async readNew() {
     if (this.props.user.data === null) {
       return;
     }
 
     const first = this.state.msgs.first();
     if (first === undefined) {
-      this.findNew();
+      await this.findNew();
     } else {
-      apiClient.findMsg(this.props.user.data.token,
-        {
-          type: "after",
-          equal: false,
-          date: first.date,
-          limit: this.limit,
-        })
-        .map(msgs => Im.List(msgs))
-        .map(msgs => msgs.concat(this.state.msgs))
-        .subscribe(msgs => {
-          this.setState({ msgs });
-        }, () => {
-          this.setState({ snackMsg: "メッセージ取得に失敗" });
-        });
+      try {
+        const msgs = await apiClient.findMsg(this.props.user.data.token,
+          {
+            type: "after",
+            equal: false,
+            date: first.date,
+            limit: this.limit,
+          });
+        this.setState({ msgs: Im.List(msgs).concat(this.state.msgs) });
+      } catch{
+        this.setState({ snackMsg: "メッセージ取得に失敗" });
+      }
     }
   }
 
-  readOld() {
+  async readOld() {
     if (this.props.user.data === null) {
       return;
     }
     const last = this.state.msgs.last();
 
     if (last === undefined) {
-      this.findNew();
+      await this.findNew();
     } else {
-      apiClient.findMsg(this.props.user.data.token,
-        {
-          type: "before",
-          equal: false,
-          date: last.date,
-          limit: this.limit,
-        })
-        .map(msgs => this.state.msgs.concat(msgs))
-        .subscribe(msgs => {
-          this.setState({ msgs });
-        }, () => {
-          this.setState({ snackMsg: "メッセージ取得に失敗" });
-        });
+      try {
+        const msgs = await apiClient.findMsg(this.props.user.data.token,
+          {
+            type: "before",
+            equal: false,
+            date: last.date,
+            limit: this.limit,
+          });
+
+        this.setState({ msgs: this.state.msgs.concat(msgs) });
+      } catch{
+        this.setState({ snackMsg: "メッセージ取得に失敗" });
+      }
     }
   }
 })));

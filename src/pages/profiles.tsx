@@ -37,14 +37,19 @@ export const ProfilesPage = withRouter(myInject(["user"], observer(class extends
       snackMsg: null,
     };
 
-    if (this.props.user.data !== null) {
-      apiClient.findProfileAll(this.props.user.data.token)
-        .subscribe(profiles => {
-          this.setState({ profiles: Im.List(profiles) });
-        }, () => {
-          this.setState({ snackMsg: "プロフィール取得に失敗" });
+    (async () => {
+      try {
+        if (this.props.user.data !== null) {
+          this.setState({
+            profiles: Im.List(await apiClient.findProfileAll(this.props.user.data.token))
+          });
+        }
+      } catch{
+        this.setState({
+          snackMsg: "プロフィール取得に失敗"
         });
-    }
+      }
+    })();
   }
 
   render() {

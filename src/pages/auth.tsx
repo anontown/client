@@ -30,16 +30,22 @@ export const AuthPage = withRouter(myInject(["user"], observer(class extends Rea
       snackMsg: null,
     };
 
-    const id: string | string[] | undefined = qs.parse(this.props.location.search).client;
-    if (typeof id === "string") {
-      apiClient.findClientOne(this.props.user.data !== null ? this.props.user.data.token : null, {
-        id,
-      }).subscribe(client => {
-        this.setState({ client });
-      }, () => {
+    (async () => {
+      try {
+        const id: string | string[] | undefined = qs.parse(this.props.location.search).client;
+        if (typeof id === "string") {
+          const client = await apiClient
+            .findClientOne(this.props.user.data !== null
+              ? this.props.user.data.token
+              : null, {
+                id,
+              });
+          this.setState({ client });
+        }
+      } catch{
         this.setState({ snackMsg: "クライアント取得に失敗しました。" });
-      });
-    }
+      }
+    })();
   }
 
   render() {
@@ -61,17 +67,17 @@ export const AuthPage = withRouter(myInject(["user"], observer(class extends Rea
     );
   }
 
-  ok() {
+  async ok() {
     if (this.props.user.data !== null && this.state.client !== null) {
       const user = this.props.user.data;
       const client = this.state.client;
-      apiClient.createTokenGeneral(user.token, { client: client.id })
-        .mergeMap(token => apiClient.createTokenReq(token))
-        .subscribe(req => {
-          location.href = client.url + "?" + "id=" + req.token + "&key=" + encodeURI(req.key);
-        }, () => {
-          this.setState({ snackMsg: "認証に失敗しました。" });
-        });
+      try {
+        const token = await apiClient.createTokenGeneral(user.token, { client: client.id });
+        const req = await apiClient.createTokenReq(token);
+        location.href = client.url + "?" + "id=" + req.token + "&key=" + encodeURI(req.key);
+      } catch{
+        this.setState({ snackMsg: "認証に失敗しました。" });
+      }
     }
   }
 })));

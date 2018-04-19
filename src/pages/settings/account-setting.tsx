@@ -39,37 +39,39 @@ export const AccountSettingPage =
         errors: [],
       };
 
-      if (this.props.user.data !== null) {
-        apiClient
-          .findUserSN({ id: this.props.user.data.token.user })
-          .subscribe(sn => {
+      (async () => {
+        if (this.props.user.data !== null) {
+          try {
+            const sn = await apiClient
+              .findUserSN({ id: this.props.user.data.token.user });
             this.setState({ sn });
-          }, () => {
+          } catch{
             this.setState({ snackMsg: "ユーザー情報取得に失敗しました。" });
-          });
-      }
+          }
+        }
+      })();
     }
 
-    onSubmit() {
+    async onSubmit() {
       if (this.props.user.data === null) {
         return;
       }
       const user = this.props.user.data;
-      apiClient.updateUser({ id: user.token.user, pass: this.state.oldPass }, {
-        pass: this.state.newPass,
-        sn: this.state.sn,
-      })
-        .mergeMap(() => apiClient.createTokenMaster({ id: user.token.user, pass: this.state.newPass }))
-        .subscribe(token => {
-          this.props.user.setData({ ...user, token });
-          this.setState({ errors: [] });
-        }, error => {
-          if (error instanceof AtError) {
-            this.setState({ errors: error.errors.map(e => e.message) });
-          } else {
-            this.setState({ errors: ["エラーが発生しました"] });
-          }
+      try {
+        await apiClient.updateUser({ id: user.token.user, pass: this.state.oldPass }, {
+          pass: this.state.newPass,
+          sn: this.state.sn,
         });
+        const token = await apiClient.createTokenMaster({ id: user.token.user, pass: this.state.newPass });
+        this.props.user.setData({ ...user, token });
+        this.setState({ errors: [] });
+      } catch (e) {
+        if (e instanceof AtError) {
+          this.setState({ errors: e.errors.map(e => e.message) });
+        } else {
+          this.setState({ errors: ["エラーが発生しました"] });
+        }
+      }
     }
 
     render() {

@@ -36,17 +36,17 @@ const ResReplyBase = withRouter(myInject(["user"], observer(class extends React.
     };
 
     const token = this.props.user.data !== null ? this.props.user.data.token : null;
-
-    apiClient.findResReply(token, {
-      reply: this.props.match.params.id,
-    })
-      .mergeMap(reses => resSetedCreate.resSet(token, reses))
-      .map(reses => Im.List(reses))
-      .subscribe(reses => {
-        this.setState({ reses });
-      }, () => {
+    (async () => {
+      try {
+        this.setState({
+          reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findResReply(token, {
+            reply: this.props.match.params.id,
+          })))
+        });
+      } catch{
         this.setState({ snackMsg: "レス取得に失敗しました" });
-      });
+      }
+    })();
   }
 
   render() {

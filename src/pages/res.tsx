@@ -34,17 +34,17 @@ const ResBase = withRouter(myInject(["user"], observer(class extends React.Compo
     };
 
     const token = this.props.user.data !== null ? this.props.user.data.token : null;
-
-    apiClient.findResOne(token, {
-      id: this.props.match.params.id,
-    })
-      .mergeMap(res => resSetedCreate.resSet(token, [res]))
-      .map(reses => reses[0])
-      .subscribe(res => {
-        this.setState({ res });
-      }, () => {
+    (async () => {
+      try {
+        this.setState({
+          res: (await resSetedCreate.resSet(token, [await apiClient.findResOne(token, {
+            id: this.props.match.params.id,
+          })]))[0]
+        });
+      } catch{
         this.setState({ snackMsg: "レス取得に失敗しました" });
-      });
+      }
+    })();
   }
 
   render() {
