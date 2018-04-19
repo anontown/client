@@ -33,18 +33,20 @@ const TopicForkBase = withRouter(class extends React.Component<TopicForkBaseProp
       snackMsg: null,
     };
 
-    apiClient.findTopicOne({
-      id: this.props.match.params.id,
-    })
-      .subscribe(topic => {
+    (async () => {
+      try {
+        const topic = await apiClient.findTopicOne({
+          id: this.props.match.params.id,
+        });
         if (topic.type === "normal") {
           this.setState({ topic });
         } else {
           this.setState({ snackMsg: "通常トピックではありません。" });
         }
-      }, () => {
+      } catch{
         this.setState({ snackMsg: "トピック取得に失敗しました" });
-      });
+      }
+    })();
   }
 
   render() {

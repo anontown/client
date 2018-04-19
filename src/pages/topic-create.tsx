@@ -15,7 +15,6 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Observable } from "rxjs";
 import {
   Errors,
   MdEditor,
@@ -120,7 +119,7 @@ export const TopicCreatePage =
       }
     }
 
-    create() {
+    async create() {
       if (this.props.user.data === null) {
         return;
       }
@@ -130,19 +129,17 @@ export const TopicCreatePage =
         text: this.state.text,
       };
 
-      const obs$: Observable<api.Topic> = (this.state.type === "one" ?
-        apiClient.createTopicOne(this.props.user.data.token, params) :
-        apiClient.createTopicNormal(this.props.user.data.token, params));
-
-      obs$.subscribe(topic => {
+      try {
+        const topic = this.state.type === "one" ?
+          await apiClient.createTopicOne(this.props.user.data.token, params) :
+          await apiClient.createTopicNormal(this.props.user.data.token, params);
         this.setState({ errors: undefined, redirect: topic.id });
-      }, error => {
-        if (error instanceof AtError) {
-          this.setState({ errors: error.errors.map(e => e.message) });
+      } catch (e) {
+        if (e instanceof AtError) {
+          this.setState({ errors: e.errors.map(e => e.message) });
         } else {
           this.setState({ errors: ["エラーが発生しました"] });
         }
-      });
-
+      }
     }
   })));

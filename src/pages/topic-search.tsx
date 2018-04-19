@@ -133,23 +133,23 @@ export const TopicSearchPage =
       this.more();
     }
 
-    more() {
-      apiClient.findTopic({
-        title: this.state.title,
-        tags: this.state.tags,
-        skip: this.page * this.limit,
-        limit: this.limit,
-        activeOnly: !this.state.dead,
-      })
-        .subscribe(topics => {
-          this.setState({
-            count: topics.length,
-            topics: this.state.topics.concat(topics),
-          });
-          this.page++;
-        }, () => {
-          this.setState({ snackMsg: "トピック取得に失敗しました。" });
+    async more() {
+      try {
+        const topics = await apiClient.findTopic({
+          title: this.state.title,
+          tags: this.state.tags,
+          skip: this.page * this.limit,
+          limit: this.limit,
+          activeOnly: !this.state.dead,
         });
+        this.setState({
+          count: topics.length,
+          topics: this.state.topics.concat(topics),
+        });
+        this.page++;
+      } catch{
+        this.setState({ snackMsg: "トピック取得に失敗しました。" });
+      }
     }
 
     favo() {

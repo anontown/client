@@ -28,14 +28,17 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
       snackMsg: null,
     };
 
-    apiClient.findTopicOne({
-      id: this.props.match.params.id,
-    })
-      .subscribe(topic => {
-        this.setState({ topic });
-      }, () => {
+    (async () => {
+      try {
+        this.setState({
+          topic: await apiClient.findTopicOne({
+            id: this.props.match.params.id,
+          })
+        });
+      } catch{
         this.setState({ snackMsg: "トピック取得に失敗しました" });
-      });
+      }
+    })();
   }
 
   render() {
