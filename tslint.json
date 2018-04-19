@@ -31,7 +31,8 @@
             true,
             "spaces",
             2
-        ]
+        ],
+        "no-floating-promises": true
     },
     "rulesDirectory": []
 }
