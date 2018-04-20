@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Checkbox,
@@ -28,32 +27,28 @@ import {
   TagsInput,
   TopicListItem,
 } from "../components";
-import { myInject, UserStore } from "../stores";
-import { apiClient } from "../utils";
+import {
+  myInject,
+  UserStore,
+  TopicSearchStore
+} from "../stores";
 import * as style from "./topic-search.scss";
 
 interface TopicSearchPageProps extends RouteComponentProps<{}> {
   user: UserStore;
+  topicSearch: TopicSearchStore;
 }
 
 export interface TopicSearchPageState {
-  snackMsg: null | string;
-  topics: Im.List<api.Topic>;
-  tags: string[];
-  title: string;
-  dead: boolean;
   formTitle: string;
   formDead: boolean;
   formTags: Im.Set<string>;
-  count: number;
 }
 
 export const TopicSearchPage =
-  withRouter(myInject(["user"], observer(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
-    limit = 100;
+  withRouter(myInject(["user", "topicSearch"], observer(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
     subs: Subscription[] = [];
     formChange$ = new Subject<void>();
-    page = 0;
 
     constructor(props: TopicSearchPageProps) {
       super(props);
@@ -61,16 +56,13 @@ export const TopicSearchPage =
       const query = this.parseQuery(props);
 
       this.state = {
-        snackMsg: null,
-        topics: Im.List(),
-        tags: query.tags,
-        title: query.title,
-        dead: query.dead,
         formTitle: query.title,
         formDead: query.dead,
         formTags: Im.Set(query.tags),
-        count: 0,
       };
+
+      this.props.topicSearch.search(query.tags, query.title, query.dead);
+
 
       this.subs.push(this.formChange$
         .debounceTime(500)
@@ -84,8 +76,6 @@ export const TopicSearchPage =
             }),
           });
         }));
-
-      this.more();
     }
 
     parseQuery(props: TopicSearchPageProps) {
@@ -108,48 +98,16 @@ export const TopicSearchPage =
       if (this.props.location.search !== nextProps.location.search) {
         const query = this.parseQuery(nextProps);
         this.setState({
-          title: query.title,
-          dead: query.dead,
-          tags: query.tags,
           formTitle: query.title,
           formDead: query.dead,
           formTags: Im.Set(query.tags),
-        }, () => {
-          this.update();
         });
+        this.props.topicSearch.search(query.tags, query.title, query.dead);
       }
     }
 
     componentWillUnmount() {
       this.subs.forEach(sub => sub.unsubscribe());
-    }
-
-    update() {
-      this.setState({
-        topics: Im.List(),
-        count: 0,
-      });
-      this.page = 0;
-      this.more();
-    }
-
-    async more() {
-      try {
-        const topics = await apiClient.findTopic({
-          title: this.state.title,
-          tags: this.state.tags,
-          skip: this.page * this.limit,
-          limit: this.limit,
-          activeOnly: !this.state.dead,
-        });
-        this.setState({
-          count: topics.length,
-          topics: this.state.topics.concat(topics),
-        });
-        this.page++;
-      } catch {
-        this.setState({ snackMsg: "トピック取得に失敗しました。" });
-      }
     }
 
     favo() {
@@ -158,7 +116,7 @@ export const TopicSearchPage =
       }
       const storage = this.props.user.data.storage;
       const tf = storage.tagsFavo;
-      const tags = Im.Set(this.state.tags);
+      const tags = Im.Set(this.props.topicSearch.tags);
       this.props.user.setData({
         ...this.props.user.data,
         storage: {
@@ -174,12 +132,12 @@ export const TopicSearchPage =
           <title>検索</title>
         </Helmet>
         <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
+          msg={this.props.topicSearch.msg}
+          onHide={() => this.props.topicSearch.clearMsg()} />
         <Paper className={style.form}>
           {this.props.user.data !== null
             ? <IconButton onClick={() => this.favo()}>
-              {this.props.user.data.storage.tagsFavo.has(Im.Set(this.state.tags))
+              {this.props.user.data.storage.tagsFavo.has(Im.Set(this.props.topicSearch.tags))
                 ? <FontIcon className="material-icons">star</FontIcon>
                 : <FontIcon className="material-icons">star_border</FontIcon>}
             </IconButton>
@@ -212,20 +170,20 @@ export const TopicSearchPage =
               <FontIcon className="material-icons">edit</FontIcon>
             </IconButton>
             : null}
-          <IconButton onClick={() => this.update()}>
+          <IconButton onClick={() => this.props.topicSearch.update()}>
             <FontIcon className="material-icons">refresh</FontIcon>
           </IconButton>
         </div>
         <div>
-          {this.state.topics.map(t =>
+          {this.props.topicSearch.topics.map(t =>
             <Paper key={t.id}>
               <TopicListItem topic={t} detail={true} />
             </Paper>,
           )}
         </div>
-        {this.state.count === this.limit
+        {this.props.topicSearch.isMore
           ? <div>
-            <RaisedButton onClick={() => this.more()} label="もっと" />
+            <RaisedButton onClick={() => this.props.topicSearch.more()} label="もっと" />
           </div>
           : null}
       </Page>;
