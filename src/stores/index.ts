@@ -1,15 +1,20 @@
 export * from "./user-store";
 export * from "./topic-search-store";
+export * from "./profiles-store";
 
 import { inject } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
 import { UserStore } from "./user-store";
 import { TopicSearchStore } from "./topic-search-store";
+import { ProfilesStore } from "./profiles-store";
+
+const userStore = new UserStore();
 
 export const stores = {
-  user: new UserStore(),
-  topicSearch: new TopicSearchStore()
+  user: userStore,
+  topicSearch: new TopicSearchStore(),
+  profiles: new ProfilesStore(userStore)
 };
 
 export type Stores = typeof stores;
