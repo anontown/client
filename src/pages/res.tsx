@@ -7,25 +7,21 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
-import { ResSeted } from "../models";
-import { myInject, UserStore } from "../stores";
+import { myInject, UserStore, ResStore } from "../stores";
 import {
-  apiClient,
-  resSetedCreate,
   withModal,
 } from "../utils";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   zDepth?: number;
+  res: ResStore
 }
 
 interface ResBaseState {
-  res: ResSeted | null;
-  snackMsg: null | string;
 }
 
-const ResBase = withRouter(myInject(["user"], observer(class extends React.Component<ResBaseProps, ResBaseState> {
+const ResBase = withRouter(myInject(["user", "res"], observer(class extends React.Component<ResBaseProps, ResBaseState> {
   constructor(props: ResBaseProps) {
     super(props);
     this.state = {
@@ -33,18 +29,7 @@ const ResBase = withRouter(myInject(["user"], observer(class extends React.Compo
       snackMsg: null,
     };
 
-    const token = this.props.user.data !== null ? this.props.user.data.token : null;
-    (async () => {
-      try {
-        this.setState({
-          res: (await resSetedCreate.resSet(token, [await apiClient.findResOne(token, {
-            id: this.props.match.params.id,
-          })]))[0],
-        });
-      } catch {
-        this.setState({ snackMsg: "レス取得に失敗しました" });
-      }
-    })();
+    this.props.res.load(this.props.match.params.id);
   }
 
   render() {
@@ -53,11 +38,11 @@ const ResBase = withRouter(myInject(["user"], observer(class extends React.Compo
         <title>レス</title>
       </Helmet>
       <Snack
-        msg={this.state.snackMsg}
-        onHide={() => this.setState({ snackMsg: null })} />
-      {this.state.res !== null
+        msg={this.props.res.msg}
+        onHide={() => this.props.res.clearMsg()} />
+      {this.props.res.res !== null
         ? <Paper zDepth={this.props.zDepth}>
-          <Res res={this.state.res} update={res => this.setState({ res })} />
+          <Res res={this.props.res.res} update={res => this.props.res.update(res)} />
         </Paper>
         : null}
     </div>;
