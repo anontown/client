@@ -74,7 +74,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           />,
         }))}
         open={this.state.open}
-        filter={(text, key) => key.toLowerCase().indexOf(text.toLowerCase()) !== -1}
+        filter={(text, key) => key.toLowerCase().includes(text.toLowerCase()) && !this.props.value.includes(key)}
         searchText={this.state.inputValue}
         onUpdateInput={v => this.setState({ inputValue: v })}
         onKeyDown={e => {
