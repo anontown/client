@@ -18,6 +18,7 @@ interface TagsInputState {
   acTags: Array<{ name: string, count: number }>;
   snackMsg: null | string;
   inputValue: string;
+  open: boolean;
 }
 
 export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
@@ -27,6 +28,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
       acTags: [],
       snackMsg: null,
       inputValue: "",
+      open: false,
     };
 
     apiClient.findTopicTags({ limit: 100 })
@@ -71,10 +73,10 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
             secondaryText={t.count.toString()}
           />,
         }))}
+        open={this.state.open}
         filter={(text, key) => key.toLowerCase().indexOf(text.toLowerCase()) !== -1}
         searchText={this.state.inputValue}
         onUpdateInput={v => this.setState({ inputValue: v })}
-        openOnFocus={true}
         onKeyDown={e => {
           // エンター/半角スペ
           if (e.keyCode === 13 || e.keyCode === 32) {
@@ -83,6 +85,15 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           }
         }}
         onNewRequest={() => this.addTag()}
+        onFocus={() => this.setState({ open: true })}
+        {...{ onClose: () => this.setState({ open: false }) }}
+        onBlur={() => {
+          setTimeout(() => {
+            if (!this.state.open) {
+              this.addTag();
+            }
+          }, 0);
+        }}
         listStyle={{
           maxHeight: "30vh",
         }}
