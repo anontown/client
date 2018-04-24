@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import { Paper } from "material-ui";
 import * as React from "react";
 import {
@@ -7,20 +6,20 @@ import {
 } from "react-router-dom";
 import { Page, Snack, TopicData } from "../components";
 import {
-  apiClient,
   withModal,
 } from "../utils";
+import { TopicDataStore, myInject } from "../stores";
+import { observer } from "mobx-react";
 
 interface TopicDataBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
+  topicData: TopicDataStore;
 }
 
 interface TopicDataBaseState {
-  topic: api.Topic | null;
-  snackMsg: null | string;
 }
 
-const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProps, TopicDataBaseState> {
+const TopicDataBase = withRouter(myInject(["topicData"], observer(class extends React.Component<TopicDataBaseProps, TopicDataBaseState> {
   constructor(props: TopicDataBaseProps) {
     super(props);
     this.state = {
@@ -28,32 +27,22 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
       snackMsg: null,
     };
 
-    (async () => {
-      try {
-        this.setState({
-          topic: await apiClient.findTopicOne({
-            id: this.props.match.params.id,
-          }),
-        });
-      } catch {
-        this.setState({ snackMsg: "トピック取得に失敗しました" });
-      }
-    })();
+    this.props.topicData.load(this.props.match.params.id);
   }
 
   render() {
     return <Paper zDepth={this.props.zDepth}>
       <Snack
-        msg={this.state.snackMsg}
-        onHide={() => this.setState({ snackMsg: null })} />
-      {this.state.topic !== null
+        msg={this.props.topicData.msg}
+        onHide={() => this.props.topicData.clearMsg()} />
+      {this.props.topicData.topic !== null
         ? <Paper zDepth={this.props.zDepth}>
-          <TopicData topic={this.state.topic} />
+          <TopicData topic={this.props.topicData.topic} />
         </Paper>
         : null}
     </Paper>;
   }
-});
+})));
 
 export function TopicDataPage() {
   return <Page><TopicDataBase /></Page>;
