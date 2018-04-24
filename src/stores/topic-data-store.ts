@@ -9,6 +9,7 @@ export class TopicDataStore {
   @observable msg: null | string = null;
 
   async load(id: string) {
+    this.topic = null;
     try {
       this.topic = await apiClient.findTopicOne({
         id: id,

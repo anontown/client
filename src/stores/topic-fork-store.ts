@@ -9,6 +9,7 @@ export class TopicForkStore {
   @observable msg: null | string = null;
 
   async load(id: string) {
+    this.topic = null
     try {
       const topic = await apiClient.findTopicOne({
         id: id,
