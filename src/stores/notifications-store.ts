@@ -1,6 +1,5 @@
 import { UserStore } from "./user-store";
 import * as Im from "immutable";
-import * as api from "@anontown/api-types";
 import { observable } from "mobx";
 import {
   apiClient,
