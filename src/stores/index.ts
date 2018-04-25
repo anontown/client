@@ -4,6 +4,7 @@ export * from "./profiles-store";
 export * from "./res-store";
 export * from "./topic-fork-store";
 export * from "./topic-data-store";
+export * from "./notifications-store";
 
 import { inject } from "mobx-react";
 import * as React from "react";
@@ -14,6 +15,7 @@ import { ProfilesStore } from "./profiles-store";
 import { ResStore } from "./res-store";
 import { TopicForkStore } from "./topic-fork-store";
 import { TopicDataStore } from "./topic-data-store";
+import { NotificationsStore } from "./notifications-store";
 
 const userStore = new UserStore();
 
@@ -23,7 +25,8 @@ export const stores = {
   profiles: new ProfilesStore(userStore),
   res: new ResStore(userStore),
   topicFork: new TopicForkStore(),
-  topicData: new TopicDataStore()
+  topicData: new TopicDataStore(),
+  notifications: new NotificationsStore(userStore)
 };
 
 export type Stores = typeof stores;

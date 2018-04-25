@@ -1,4 +1,3 @@
-import * as Im from "immutable";
 import {
   Paper,
   RaisedButton,
@@ -16,37 +15,25 @@ import {
   Snack,
 } from "../components";
 import {
-  ResSeted,
-} from "../models";
-import { myInject, UserStore } from "../stores";
-import {
-  apiClient,
-  list,
-  resSetedCreate,
-} from "../utils";
+  myInject,
+  UserStore,
+  NotificationsStore
+} from "../stores";
+
 
 interface NotificationsPageProps extends RouteComponentProps<{}> {
   user: UserStore;
+  notifications: NotificationsStore;
 }
 
 export interface NotificationsPageState {
-  reses: Im.List<ResSeted>;
-  snackMsg: null | string;
 }
 
 export const NotificationsPage =
   withRouter(
-    myInject(["user"], observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
-      private limit = 50;
-
+    myInject(["user", "notifications"], observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
       constructor(props: NotificationsPageProps) {
         super(props);
-        this.state = {
-          reses: Im.List(),
-          snackMsg: null,
-        };
-
-        this.findNew();
       }
 
       render() {
@@ -56,22 +43,22 @@ export const NotificationsPage =
               <title>通知</title>
             </Helmet>
             <Snack
-              msg={this.state.snackMsg}
-              onHide={() => this.setState({ snackMsg: null })} />
+              msg={this.props.notifications.msg}
+              onHide={() => this.props.notifications.clearMsg()} />
             {this.props.user.data !== null
               ? <div>
                 <div>
-                  <RaisedButton label="最新" onClick={() => this.readNew()} />
+                  <RaisedButton label="最新" onClick={() => this.props.notifications.readNew()} />
                 </div>
                 <div>
-                  {this.state.reses.map(r => <Paper key={r.id}>
+                  {this.props.notifications.reses.map(r => <Paper key={r.id}>
                     <Res
                       res={r}
-                      update={newRes => this.update(newRes)} />
+                      update={newRes => this.props.notifications.update(newRes)} />
                   </Paper>)}
                 </div>
                 <div>
-                  <RaisedButton label="前" onClick={() => this.readOld()} />
+                  <RaisedButton label="前" onClick={() => this.props.notifications.readOld()} />
                 </div>
               </div>
               : <Paper>
@@ -80,78 +67,5 @@ export const NotificationsPage =
             }
           </Page>
         );
-      }
-
-      update(res: ResSeted) {
-        this.setState({ reses: list.update(this.state.reses, res) });
-      }
-
-      async findNew() {
-        if (this.props.user.data === null) {
-          return;
-        }
-        const token = this.props.user.data.token;
-        try {
-          const reses = await resSetedCreate.resSet(token, await apiClient.findResNoticeNew(token,
-            {
-              limit: this.limit,
-            }));
-          this.setState({ reses: Im.List(reses) });
-        } catch {
-          this.setState({ snackMsg: "レス取得に失敗" });
-        }
-      }
-
-      async readNew() {
-        if (this.props.user.data === null) {
-          return;
-        }
-
-        const token = this.props.user.data.token;
-
-        const first = this.state.reses.first();
-        if (first === undefined) {
-          await this.findNew();
-        } else {
-          try {
-            const reses = await resSetedCreate.resSet(token, await apiClient.findResNotice(token,
-              {
-                type: "after",
-                equal: false,
-                date: first.date,
-                limit: this.limit,
-              }));
-            this.setState({ reses: Im.List(reses).concat(this.state.reses) });
-          } catch {
-            this.setState({ snackMsg: "レス取得に失敗" });
-          }
-        }
-      }
-
-      async readOld() {
-        if (this.props.user.data === null) {
-          return;
-        }
-
-        const token = this.props.user.data.token;
-
-        const last = this.state.reses.last();
-
-        if (last === undefined) {
-          await this.findNew();
-        } else {
-          try {
-            const reses = await resSetedCreate.resSet(token, await apiClient.findResNotice(token,
-              {
-                type: "before",
-                equal: false,
-                date: last.date,
-                limit: this.limit,
-              }));
-            this.setState({ reses: this.state.reses.concat(reses) });
-          } catch {
-            this.setState({ snackMsg: "レス取得に失敗" });
-          }
-        }
       }
     })));
