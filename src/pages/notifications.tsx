@@ -34,6 +34,7 @@ export const NotificationsPage =
     myInject(["user", "notifications"], observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
       constructor(props: NotificationsPageProps) {
         super(props);
+        this.props.notifications.load();
       }
 
       render() {
