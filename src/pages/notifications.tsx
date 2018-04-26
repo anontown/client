@@ -16,10 +16,9 @@ import {
 } from "../components";
 import {
   myInject,
+  NotificationsStore,
   UserStore,
-  NotificationsStore
 } from "../stores";
-
 
 interface NotificationsPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -31,42 +30,43 @@ export interface NotificationsPageState {
 
 export const NotificationsPage =
   withRouter(
-    myInject(["user", "notifications"], observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
-      constructor(props: NotificationsPageProps) {
-        super(props);
-        this.props.notifications.load();
-      }
+    myInject(["user", "notifications"],
+      observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
+        constructor(props: NotificationsPageProps) {
+          super(props);
+          this.props.notifications.load();
+        }
 
-      render() {
-        return (
-          <Page>
-            <Helmet>
-              <title>通知</title>
-            </Helmet>
-            <Snack
-              msg={this.props.notifications.msg}
-              onHide={() => this.props.notifications.clearMsg()} />
-            {this.props.user.data !== null
-              ? <div>
-                <div>
-                  <RaisedButton label="最新" onClick={() => this.props.notifications.readNew()} />
+        render() {
+          return (
+            <Page>
+              <Helmet>
+                <title>通知</title>
+              </Helmet>
+              <Snack
+                msg={this.props.notifications.msg}
+                onHide={() => this.props.notifications.clearMsg()} />
+              {this.props.user.data !== null
+                ? <div>
+                  <div>
+                    <RaisedButton label="最新" onClick={() => this.props.notifications.readNew()} />
+                  </div>
+                  <div>
+                    {this.props.notifications.reses.map(r => <Paper key={r.id}>
+                      <Res
+                        res={r}
+                        update={newRes => this.props.notifications.update(newRes)} />
+                    </Paper>)}
+                  </div>
+                  <div>
+                    <RaisedButton label="前" onClick={() => this.props.notifications.readOld()} />
+                  </div>
                 </div>
-                <div>
-                  {this.props.notifications.reses.map(r => <Paper key={r.id}>
-                    <Res
-                      res={r}
-                      update={newRes => this.props.notifications.update(newRes)} />
-                  </Paper>)}
-                </div>
-                <div>
-                  <RaisedButton label="前" onClick={() => this.props.notifications.readOld()} />
-                </div>
-              </div>
-              : <Paper>
-                ログインしてください。
+                : <Paper>
+                  ログインしてください。
     </Paper>
-            }
-          </Page>
-        );
-      }
-    })));
+              }
+            </Page>
+          );
+        }
+      })));

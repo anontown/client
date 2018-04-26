@@ -9,10 +9,10 @@ export class TopicForkStore {
   @observable msg: null | string = null;
 
   async load(id: string) {
-    this.topic = null
+    this.topic = null;
     try {
       const topic = await apiClient.findTopicOne({
-        id: id,
+        id,
       });
       if (topic.type === "normal") {
         this.topic = topic;

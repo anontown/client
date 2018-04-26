@@ -1,4 +1,5 @@
 import { Paper } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -11,45 +12,45 @@ import {
   TopicFork,
 } from "../components";
 import {
+  myInject,
+  TopicForkStore,
+} from "../stores";
+import {
   withModal,
 } from "../utils";
-import {
-  myInject,
-  TopicForkStore
-} from "../stores";
-import { observer } from "mobx-react";
 
 interface TopicForkBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
-  topicFork: TopicForkStore
+  topicFork: TopicForkStore;
 }
 
 interface TopicForkBaseState {
 }
 
-const TopicForkBase = withRouter(myInject(["topicFork"], observer(class extends React.Component<TopicForkBaseProps, TopicForkBaseState> {
-  constructor(props: TopicForkBaseProps) {
-    super(props);
+const TopicForkBase = withRouter(myInject(["topicFork"],
+  observer(class extends React.Component<TopicForkBaseProps, TopicForkBaseState> {
+    constructor(props: TopicForkBaseProps) {
+      super(props);
 
-    this.props.topicFork.load(this.props.match.params.id);
-  }
+      this.props.topicFork.load(this.props.match.params.id);
+    }
 
-  render() {
-    return <Paper zDepth={this.props.zDepth}>
-      <Helmet>
-        <title>派生トピック</title>
-      </Helmet>
-      <Snack
-        msg={this.props.topicFork.msg}
-        onHide={() => this.props.topicFork.clearMsg()} />
-      {this.props.topicFork.topic !== null && this.props.topicFork.topic.type === "normal"
-        ? <TopicFork topic={this.props.topicFork.topic} onCreate={topic => {
-          this.props.history.push(`/topic/${topic.id}`);
-        }} />
-        : null}
-    </Paper>;
-  }
-})));
+    render() {
+      return <Paper zDepth={this.props.zDepth}>
+        <Helmet>
+          <title>派生トピック</title>
+        </Helmet>
+        <Snack
+          msg={this.props.topicFork.msg}
+          onHide={() => this.props.topicFork.clearMsg()} />
+        {this.props.topicFork.topic !== null && this.props.topicFork.topic.type === "normal"
+          ? <TopicFork topic={this.props.topicFork.topic} onCreate={topic => {
+            this.props.history.push(`/topic/${topic.id}`);
+          }} />
+          : null}
+      </Paper>;
+    }
+  })));
 
 export function TopicForkPage() {
   return <Page><TopicForkBase /></Page>;

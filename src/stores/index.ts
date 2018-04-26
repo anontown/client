@@ -9,13 +9,13 @@ export * from "./notifications-store";
 import { inject } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
-import { UserStore } from "./user-store";
-import { TopicSearchStore } from "./topic-search-store";
+import { NotificationsStore } from "./notifications-store";
 import { ProfilesStore } from "./profiles-store";
 import { ResStore } from "./res-store";
-import { TopicForkStore } from "./topic-fork-store";
 import { TopicDataStore } from "./topic-data-store";
-import { NotificationsStore } from "./notifications-store";
+import { TopicForkStore } from "./topic-fork-store";
+import { TopicSearchStore } from "./topic-search-store";
+import { UserStore } from "./user-store";
 
 const userStore = new UserStore();
 
@@ -26,7 +26,7 @@ export const stores = {
   res: new ResStore(userStore),
   topicFork: new TopicForkStore(),
   topicData: new TopicDataStore(),
-  notifications: new NotificationsStore(userStore)
+  notifications: new NotificationsStore(userStore),
 };
 
 export type Stores = typeof stores;

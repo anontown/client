@@ -1,14 +1,14 @@
-import { UserStore } from "./user-store";
 import * as Im from "immutable";
 import { observable } from "mobx";
 import {
-  apiClient,
-  list,
-  resSetedCreate
-} from "../utils";
-import {
   ResSeted,
 } from "../models";
+import {
+  apiClient,
+  list,
+  resSetedCreate,
+} from "../utils";
+import { UserStore } from "./user-store";
 
 export class NotificationsStore {
   @observable reses: Im.List<ResSeted> = Im.List();

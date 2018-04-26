@@ -12,7 +12,7 @@ export class TopicDataStore {
     this.topic = null;
     try {
       this.topic = await apiClient.findTopicOne({
-        id: id,
+        id,
       });
     } catch {
       this.msg = "トピック取得に失敗しました";

@@ -15,11 +15,11 @@ import {
   ProfileEditor,
   Snack,
 } from "../components";
-import { myInject, UserStore, ProfilesStore } from "../stores";
+import { myInject, ProfilesStore, UserStore } from "../stores";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
   user: UserStore;
-  profiles: ProfilesStore
+  profiles: ProfilesStore;
 }
 
 export interface ProfilesPageState {

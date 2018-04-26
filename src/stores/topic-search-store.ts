@@ -1,6 +1,6 @@
-import { observable, computed } from "mobx";
-import * as Im from "immutable";
 import * as api from "@anontown/api-types";
+import * as Im from "immutable";
+import { computed, observable } from "mobx";
 import { apiClient } from "../utils";
 
 export class TopicSearchStore {

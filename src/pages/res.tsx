@@ -7,7 +7,7 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
-import { myInject, UserStore, ResStore } from "../stores";
+import { myInject, ResStore, UserStore } from "../stores";
 import {
   withModal,
 } from "../utils";
@@ -15,39 +15,40 @@ import {
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   zDepth?: number;
-  res: ResStore
+  res: ResStore;
 }
 
 interface ResBaseState {
 }
 
-const ResBase = withRouter(myInject(["user", "res"], observer(class extends React.Component<ResBaseProps, ResBaseState> {
-  constructor(props: ResBaseProps) {
-    super(props);
-    this.state = {
-      res: null,
-      snackMsg: null,
-    };
+const ResBase = withRouter(myInject(["user", "res"],
+  observer(class extends React.Component<ResBaseProps, ResBaseState> {
+    constructor(props: ResBaseProps) {
+      super(props);
+      this.state = {
+        res: null,
+        snackMsg: null,
+      };
 
-    this.props.res.load(this.props.match.params.id);
-  }
+      this.props.res.load(this.props.match.params.id);
+    }
 
-  render() {
-    return <div>
-      <Helmet>
-        <title>レス</title>
-      </Helmet>
-      <Snack
-        msg={this.props.res.msg}
-        onHide={() => this.props.res.clearMsg()} />
-      {this.props.res.res !== null
-        ? <Paper zDepth={this.props.zDepth}>
-          <Res res={this.props.res.res} update={res => this.props.res.update(res)} />
-        </Paper>
-        : null}
-    </div>;
-  }
-})));
+    render() {
+      return <div>
+        <Helmet>
+          <title>レス</title>
+        </Helmet>
+        <Snack
+          msg={this.props.res.msg}
+          onHide={() => this.props.res.clearMsg()} />
+        {this.props.res.res !== null
+          ? <Paper zDepth={this.props.zDepth}>
+            <Res res={this.props.res.res} update={res => this.props.res.update(res)} />
+          </Paper>
+          : null}
+      </div>;
+    }
+  })));
 
 export function ResPage() {
   return <Page><ResBase /></Page>;
