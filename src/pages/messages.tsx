@@ -56,7 +56,7 @@ export const MessagesPage = withRouter(myInject(["user"],
               </div>
               <div>
                 {this.state.msgs.map(m =>
-                  <Paper>
+                  <Paper key={m.id}>
                     <div>{dateFormat.format(m.date)}</div>
                     <Md text={m.text} />
                   </Paper>)}
