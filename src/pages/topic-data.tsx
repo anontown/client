@@ -28,7 +28,11 @@ const TopicDataBase = withRouter(myInject(["topicData"],
         snackMsg: null,
       };
 
-      this.props.topicData.load(this.props.match.params.id);
+      this.componentWillReceiveProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps: TopicDataBaseProps) {
+      this.props.topicData.load(nextProps.match.params.id);
     }
 
     render() {

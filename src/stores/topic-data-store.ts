@@ -9,13 +9,15 @@ export class TopicDataStore {
   @observable msg: null | string = null;
 
   async load(id: string) {
-    this.topic = null;
-    try {
-      this.topic = await apiClient.findTopicOne({
-        id,
-      });
-    } catch {
-      this.msg = "トピック取得に失敗しました";
+    if (this.topic === null || this.topic.id !== id) {
+      this.topic = null;
+      try {
+        this.topic = await apiClient.findTopicOne({
+          id,
+        });
+      } catch {
+        this.msg = "トピック取得に失敗しました";
+      }
     }
   }
 
