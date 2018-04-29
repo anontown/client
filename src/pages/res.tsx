@@ -30,7 +30,11 @@ const ResBase = withRouter(myInject(["user", "res"],
         snackMsg: null,
       };
 
-      this.props.res.load(this.props.match.params.id);
+      this.componentWillReceiveProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps: ResBaseProps) {
+      this.props.res.load(nextProps.match.params.id);
     }
 
     render() {

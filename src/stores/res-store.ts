@@ -10,14 +10,16 @@ export class ResStore {
   constructor(private user: UserStore) { }
 
   async load(id: string) {
-    this.res = null;
-    const token = this.user.data !== null ? this.user.data.token : null;
-    try {
-      this.res = (await resSetedCreate.resSet(token, [await apiClient.findResOne(token, {
-        id,
-      })]))[0];
-    } catch {
-      this.msg = "レス取得に失敗しました";
+    if (this.res === null || this.res.id !== id) {
+      this.res = null;
+      const token = this.user.data !== null ? this.user.data.token : null;
+      try {
+        this.res = (await resSetedCreate.resSet(token, [await apiClient.findResOne(token, {
+          id,
+        })]))[0];
+      } catch {
+        this.msg = "レス取得に失敗しました";
+      }
     }
   }
 
