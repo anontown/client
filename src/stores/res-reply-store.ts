@@ -9,26 +9,31 @@ import {
 } from "../utils";
 
 export class ResReplyStore {
-  @observable reses: Im.List<ResSeted> | null = null;
+  @observable data: { id: string, reses: Im.List<ResSeted> } | null = null;
   @observable msg: null | string = null;
 
   constructor(private user: UserStore) { }
 
   async load(id: string) {
-    this.reses = null;
-    try {
-      const token = this.user.data !== null ? this.user.data.token : null;
-      this.reses = Im.List(await resSetedCreate.resSet(token, await apiClient.findResReply(token, {
-        reply: id,
-      })));
-    } catch {
-      this.msg = "レス取得に失敗しました";
+    if (this.data === null || this.data.id !== id) {
+      this.data = null;
+      try {
+        const token = this.user.data !== null ? this.user.data.token : null;
+        this.data = {
+          reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findResReply(token, {
+            reply: id,
+          }))),
+          id: id
+        };
+      } catch {
+        this.msg = "レス取得に失敗しました";
+      }
     }
   }
 
   update(res: ResSeted) {
-    if (this.reses !== null) {
-      this.reses = list.update(this.reses, res);
+    if (this.data !== null) {
+      this.data.reses = list.update(this.data.reses, res);
     };
   }
 

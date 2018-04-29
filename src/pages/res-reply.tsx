@@ -29,7 +29,11 @@ const ResReplyBase = withRouter(myInject(["user", "resReply"],
     constructor(props: ResReplyBaseProps) {
       super(props);
 
-      this.props.resReply.load(this.props.match.params.id);
+      this.componentWillReceiveProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps: ResReplyBaseProps) {
+      this.props.resReply.load(nextProps.match.params.id);
     }
 
     render() {
@@ -40,8 +44,8 @@ const ResReplyBase = withRouter(myInject(["user", "resReply"],
         <Snack
           msg={this.props.resReply.msg}
           onHide={() => this.props.resReply.clearMsg()} />
-        {this.props.resReply.reses !== null
-          ? this.props.resReply.reses.map(res => <Paper key={res.id}>
+        {this.props.resReply.data !== null
+          ? this.props.resReply.data.reses.map(res => <Paper key={res.id}>
             <Res
               res={res}
               update={updateRes => this.props.resReply.update(updateRes)} />
