@@ -32,7 +32,11 @@ const TopicForkBase = withRouter(myInject(["topicFork"],
     constructor(props: TopicForkBaseProps) {
       super(props);
 
-      this.props.topicFork.load(this.props.match.params.id);
+      this.componentWillReceiveProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps: TopicForkBaseProps) {
+      this.props.topicFork.load(nextProps.match.params.id);
     }
 
     render() {
