@@ -12,14 +12,16 @@ export class ProfileStore {
   constructor(private user: UserStore) { }
 
   async load(id: string) {
-    this.profile = null;
-    try {
-      const token = this.user.data !== null ? this.user.data.token : null;
-      this.profile = await apiClient.findProfileOne(token, {
-        id: id,
-      });
-    } catch {
-      this.msg = "プロフィール取得に失敗しました";
+    if (this.profile === null || this.profile.id !== id) {
+      this.profile = null;
+      try {
+        const token = this.user.data !== null ? this.user.data.token : null;
+        this.profile = await apiClient.findProfileOne(token, {
+          id: id,
+        });
+      } catch {
+        this.msg = "プロフィール取得に失敗しました";
+      }
     }
   }
 

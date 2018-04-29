@@ -29,8 +29,10 @@ const ProfileBase = withRouter(myInject(["user", "profile"],
   observer(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
     constructor(props: ProfileBaseProps) {
       super(props);
+    }
 
-      this.props.profile.load(this.props.match.params.id);
+    componentWillReceiveProps(nextProps: ProfileBaseProps) {
+      this.props.profile.load(nextProps.match.params.id);
     }
 
     render() {
