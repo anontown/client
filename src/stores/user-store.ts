@@ -1,6 +1,9 @@
 import { action, observable } from "mobx";
 import * as mobxUtils from "mobx-utils";
-import { Observable } from "rxjs";
+import {
+  Observable,
+  ReplaySubject
+} from "rxjs";
 import { UserData } from "../models";
 import {
   storageAPI,
@@ -8,6 +11,7 @@ import {
 
 export class UserStore {
   @observable data: UserData | null = null;
+  onChangeUser: ReplaySubject<void> = new ReplaySubject(1);
 
   constructor() {
     Observable
@@ -28,6 +32,11 @@ export class UserStore {
   }
 
   @action.bound setData(data: UserData | null) {
+    const oldID = this.data !== null ? this.data.token.user : null;
+    const newID = data !== null ? data.token.user : null;
     this.data = data;
+    if (oldID !== newID) {
+      this.onChangeUser.next(undefined);
+    }
   }
 }
