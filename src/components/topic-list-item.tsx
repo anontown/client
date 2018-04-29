@@ -30,7 +30,7 @@ export const TopicListItem =
       if (this.props.user.data !== null) {
         const topicData = this.props.user.data.storage.topicRead.get(this.props.topic.id);
         if (topicData !== undefined) {
-          newRes = this.props.topic.resCount - topicData.count;
+          newRes = Math.max(0, this.props.topic.resCount - topicData.count);
         }
       }
 

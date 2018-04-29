@@ -105,8 +105,11 @@ export const TopicPage = withRouter(myInject(["user"],
       })
         .do(x => {
           if (this.state.topic !== null) {
-            this.setState({ topic: { ...this.state.topic, resCount: x.count } });
-            this.storageSaveDate(null);
+            this.setState({
+              topic: { ...this.state.topic, resCount: x.count }
+            }, () => {
+              this.storageSaveDate(null);
+            });
           }
         })
         .flatMap(x => resSetedCreate.resSet(user !== null ? user.token : null, [x.res]).then(reses => reses[0]));
