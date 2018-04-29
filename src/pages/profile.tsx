@@ -29,6 +29,7 @@ const ProfileBase = withRouter(myInject(["user", "profile"],
   observer(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
     constructor(props: ProfileBaseProps) {
       super(props);
+      this.componentWillReceiveProps(this.props);
     }
 
     componentWillReceiveProps(nextProps: ProfileBaseProps) {
