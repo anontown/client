@@ -76,6 +76,9 @@ function sleep(ms: number) {
 
 export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<T>, ScrollState> {
   subscriptions: Subscription[] = [];
+  newItemSubs: Subscription | null = null;
+  scrollNewItemSubs: Subscription | null = null;
+  updateItemSubs: Subscription | null = null;
   _isLock = false;
 
   constructor(props: ScrollProps<T>) {
@@ -286,7 +289,17 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
       }));
 
-    this.subscriptions.push(this.props.scrollNewItem.subscribe(date => {
+    this.subscribeScrollNewItem(this.props.scrollNewItem);
+    this.subscribeUpdateItem(this.props.updateItem);
+    this.subscribeNewItem(this.props.newItem);
+  }
+
+  componentWillUnmount() {
+    this.subscriptions.forEach(x => x.unsubscribe());
+  }
+
+  subscribeScrollNewItem(obs: Observable<string | null>) {
+    this.scrollNewItemSubs = obs.subscribe(date => {
       if (date !== null) {
         this._lock(async () => {
           this.onChangeItems(await this.props.findItem("before", date, true));
@@ -302,17 +315,42 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       } else {
         this.findNew();
       }
-    }));
-    this.subscriptions.push(this.props.updateItem.subscribe(item => {
-      this.onChangeItems(list.update(this.props.items, item));
-    }));
-    this.subscriptions.push(this.props.newItem.subscribe(item => {
-      this.onChangeItems(this.props.items.push(item));
-    }));
+    });
   }
 
-  componentWillUnmount() {
-    this.subscriptions.forEach(x => x.unsubscribe());
+  subscribeNewItem(obs: Observable<T>) {
+    this.newItemSubs = obs.subscribe(item => {
+      this.onChangeItems(this.props.items.push(item));
+    });
+  }
+
+  subscribeUpdateItem(obs: Observable<T>) {
+    this.updateItemSubs = obs.subscribe(item => {
+      this.onChangeItems(list.update(this.props.items, item));
+    });
+  }
+
+  componentWillReceiveProps(nextProps: ScrollProps<T>) {
+    if (this.props.newItem !== nextProps.newItem) {
+      if (this.newItemSubs !== null) {
+        this.newItemSubs.unsubscribe();
+      }
+      this.subscribeNewItem(nextProps.newItem);
+    }
+
+    if (this.props.scrollNewItem !== nextProps.scrollNewItem) {
+      if (this.scrollNewItemSubs !== null) {
+        this.scrollNewItemSubs.unsubscribe();
+      }
+      this.subscribeScrollNewItem(nextProps.scrollNewItem);
+    }
+
+    if (this.props.updateItem !== nextProps.updateItem) {
+      if (this.updateItemSubs !== null) {
+        this.updateItemSubs.unsubscribe();
+      }
+      this.subscribeUpdateItem(nextProps.updateItem);
+    }
   }
 
   async _lock(call: () => Promise<void>) {
