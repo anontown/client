@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import { Paper } from "material-ui";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -8,23 +7,25 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Page, Profile, Snack } from "../components";
-import { myInject, UserStore } from "../stores";
 import {
-  apiClient,
+  myInject,
+  UserStore,
+  ProfileStore
+} from "../stores";
+import {
   withModal,
 } from "../utils";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   zDepth?: number;
+  profile: ProfileStore;
 }
 
 interface ProfileBaseState {
-  profile: api.Profile | null;
-  snackMsg: null | string;
 }
 
-const ProfileBase = withRouter(myInject(["user"],
+const ProfileBase = withRouter(myInject(["user", "profile"],
   observer(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
     constructor(props: ProfileBaseProps) {
       super(props);
@@ -33,19 +34,7 @@ const ProfileBase = withRouter(myInject(["user"],
         snackMsg: null,
       };
 
-      const token = this.props.user.data !== null ? this.props.user.data.token : null;
-
-      (async () => {
-        try {
-          this.setState({
-            profile: await apiClient.findProfileOne(token, {
-              id: this.props.match.params.id,
-            }),
-          });
-        } catch {
-          this.setState({ snackMsg: "プロフィール取得に失敗しました" });
-        }
-      })();
+      this.props.profile.load(this.props.match.params.id);
     }
 
     render() {
@@ -54,14 +43,14 @@ const ProfileBase = withRouter(myInject(["user"],
           <title>プロフィール</title>
         </Helmet>
         <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.state.profile !== null
+          msg={this.props.profile.msg}
+          onHide={() => this.props.profile.clearMsg()} />
+        {this.props.profile.profile !== null
           ? <Paper zDepth={this.props.zDepth}>
             <Helmet>
-              <title>●{this.state.profile.sn}</title>
+              <title>●{this.props.profile.profile.sn}</title>
             </Helmet>
-            <Profile profile={this.state.profile} />
+            <Profile profile={this.props.profile.profile} />
           </Paper>
           : null}
       </div>;
