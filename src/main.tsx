@@ -7,13 +7,14 @@ import * as ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { App } from "./components/app";
 import * as dialogStyle from "./dialog.scss";
+import { PROD } from "./env";
 import { stores } from "./stores";
 
 (Dialog as any).defaultProps.className = dialogStyle.dialog;
 (Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;
 
 // Installing ServiceWorker
-if ( process.env.__PROD__ )  {
+if ( PROD ) {
   OfflinePluginRuntime.install();
 }
 
