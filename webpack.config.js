@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const OfflinePlugin = require("offline-plugin");
 
 module.exports = {
     entry: [
@@ -15,7 +16,18 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             __PROD__: JSON.stringify(process.env.NODE_ENV === "PROD"),
-        })
+        }),
+        new OfflinePlugin({
+            caches: {
+                main: [":rest:"],
+            },
+            ServiceWorker: {
+                output: "sw.js",
+                publicPath: "/sw.js",
+                cacheName: "anontown",
+                minify: true,
+            },
+        }),
     ],
     module: {
         rules: [
