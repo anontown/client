@@ -40,7 +40,7 @@ export const Config = __PROD__ ?
             origin: "ws://localhost:8080",
         },
         recaptcha: {
-            siteKey: "6LeoFBQUAAAAAB0fiXvXvaBO9VyFC7igegEOlD7a",
+            siteKey: "6LdoFBQUAAAAACc3lhPhbkEANEAHsmNd6UDN2vKo",
         },
         imgur: {
             clientID: "042fd78266ccaaf",
