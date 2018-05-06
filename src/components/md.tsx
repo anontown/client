@@ -45,6 +45,7 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
   render() {
     return <>
       <img
+        className={style.preview}
         src={`https://i.ytimg.com/vi/${this.props.videoID}/maxresdefault.jpg`}
         title={this.props.title || undefined}
         onClick={() => this.setState({ slow: true })} />
@@ -102,6 +103,7 @@ function MdLink(props: { node: mdParser.Link }) {
       }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
       return <img
+        className={style.preview}
         src={safeURL(camo.getCamoUrl(props.node.url))}
         title={props.node.title || undefined} />;
     case "youtube":
@@ -227,16 +229,20 @@ class MdImg extends React.Component<MdImgProps, MdImgState>{
   render() {
     return <>
       <img
+        className={style.preview}
         src={camo.getCamoUrl(this.props.url)}
         title={this.props.title}
         alt={this.props.alt}
         onClick={() => this.setState({ dialog: true })} />
       <Dialog
-        title="画像"
         open={this.state.dialog}
         autoScrollBodyContent={true}
         onRequestClose={() => this.setState({ dialog: false })}>
         <img
+          style={{
+            width: "65vw",
+            height: "auto"
+          }}
           src={camo.getCamoUrl(this.props.url)}
           title={this.props.title}
           alt={this.props.alt}
