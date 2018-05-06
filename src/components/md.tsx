@@ -194,8 +194,8 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
       case "link":
         return <MdLink node={this.props.node} />;
       case "image":
-        return <img
-          src={camo.getCamoUrl(this.props.node.url)}
+        return <MdImg
+          url={camo.getCamoUrl(this.props.node.url)}
           title={this.props.node.title || undefined}
           alt={this.props.node.alt || undefined} />;
       case "text":
@@ -203,5 +203,45 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
       default:
         return null;
     }
+  }
+}
+
+interface MdImgProps {
+  url: string;
+  title?: string;
+  alt?: string;
+}
+
+interface MdImgState {
+  dialog: boolean;
+}
+
+class MdImg extends React.Component<MdImgProps, MdImgState>{
+  constructor(props: MdImgProps) {
+    super(props);
+    this.state = {
+      dialog: false,
+    }
+  }
+
+  render() {
+    return <>
+      <img
+        src={camo.getCamoUrl(this.props.url)}
+        title={this.props.title}
+        alt={this.props.alt}
+        onClick={() => this.setState({ dialog: true })} />
+      <Dialog
+        title="画像"
+        open={this.state.dialog}
+        autoScrollBodyContent={true}
+        onRequestClose={() => this.setState({ dialog: false })}>
+        <img
+          src={camo.getCamoUrl(this.props.url)}
+          title={this.props.title}
+          alt={this.props.alt}
+          onClick={() => this.setState({ dialog: true })} />
+      </Dialog>
+    </>
   }
 }
