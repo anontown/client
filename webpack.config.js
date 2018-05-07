@@ -1,5 +1,7 @@
 const webpack = require("webpack");
 const OfflinePlugin = require("offline-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: [
@@ -7,7 +9,7 @@ module.exports = {
         './src/global.scss'
     ],
     output: {
-        filename: "bundle.js",
+        filename: "bundle.[chunkhash].js",
         path: __dirname + "/dist",
     },
     resolve: {
@@ -28,12 +30,21 @@ module.exports = {
                 minify: true,
             },
         }),
+        new HtmlWebpackPlugin({
+            inject: true,
+            template: 'index.html'
+        }),
+        new CleanWebpackPlugin(['dist']),
     ],
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
                 loader: "ts-loader"
+            },
+            {
+                test: /\.html?$/,
+                loader: "html-loader"
             },
             {
                 enforce: "pre",
