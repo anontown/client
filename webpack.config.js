@@ -4,12 +4,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: [
-        './src/main.tsx',
-        './src/global.scss'
-    ],
+    entry: {
+        main: [
+            './src/main.tsx',
+            './src/global.scss'
+        ]
+    },
     output: {
-        filename: "bundle.[chunkhash].js",
+        filename: "[name].[chunkhash].js",
         path: __dirname + "/dist",
     },
     resolve: {
@@ -76,4 +78,10 @@ module.exports = {
         host: '0.0.0.0',
         disableHostCheck: true
     },
+    optimization: {
+        splitChunks: {
+            name: 'vendor',
+            chunks: 'initial',
+        }
+    }
 };
