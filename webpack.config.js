@@ -13,6 +13,7 @@ module.exports = {
     output: {
         filename: "[name].[chunkhash].js",
         path: __dirname + "/dist",
+        publicPath: '/'
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"]
@@ -34,7 +35,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             inject: true,
-            template: 'index.html'
+            template: 'index.html',
         }),
         new CleanWebpackPlugin(['dist']),
     ],
@@ -72,11 +73,9 @@ module.exports = {
     devServer: {
         contentBase: 'public',
         port: 3000,
-        historyApiFallback: {
-            index: 'index.html'
-        },
         host: '0.0.0.0',
-        disableHostCheck: true
+        disableHostCheck: true,
+        historyApiFallback: true
     },
     optimization: {
         splitChunks: {
