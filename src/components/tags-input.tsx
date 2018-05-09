@@ -96,6 +96,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
         }}
         listStyle={{
           maxHeight: "30vh",
+          overflow: 'auto'
         }}
       />
     </>;
