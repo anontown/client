@@ -21,6 +21,7 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             __PROD__: JSON.stringify(process.env.NODE_ENV === "PROD"),
+            __BUILD_DATE__: JSON.stringify(Date.now()),
         }),
         new OfflinePlugin({
             caches: {

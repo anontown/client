@@ -1,6 +1,8 @@
 declare var __PROD__: boolean;
+declare var __BUILD_DATE__: number;
 
 export const PROD = __PROD__;
+export const BUILD_DATE = __BUILD_DATE__;
 
 export const Config = __PROD__ ?
     {

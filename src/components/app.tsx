@@ -22,12 +22,13 @@ import {
   Switch,
   withRouter,
 } from "react-router-dom";
-import { gaID } from "../env";
+import { gaID, BUILD_DATE } from "../env";
 import * as pages from "../pages";
 import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   createUserData,
+  dateFormat
 } from "../utils";
 import * as style from "./app.scss";
 
@@ -114,6 +115,9 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
             <Toolbar className={style.header}>
               <ToolbarGroup firstChild={true}>
                 <ToolbarTitle text="Anontown" />
+                <ToolbarTitle
+                  text={`build:${dateFormat.format(BUILD_DATE)}`}
+                  style={{fontSize:"0.5rem"}} />
               </ToolbarGroup>
               <ToolbarGroup>
                 <IconButton containerElement={<Link to="/" />}>
