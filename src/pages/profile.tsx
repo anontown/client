@@ -9,8 +9,8 @@ import {
 import { Page, Profile, Snack } from "../components";
 import {
   myInject,
+  ProfileStore,
   UserStore,
-  ProfileStore
 } from "../stores";
 import {
   withModal,

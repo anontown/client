@@ -12,16 +12,16 @@ export * from "./res-reply-store";
 import { inject } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
+import { AuthStore } from "./auth-store";
 import { NotificationsStore } from "./notifications-store";
+import { ProfileStore } from "./profile-store";
 import { ProfilesStore } from "./profiles-store";
+import { ResReplyStore } from "./res-reply-store";
 import { ResStore } from "./res-store";
 import { TopicDataStore } from "./topic-data-store";
 import { TopicForkStore } from "./topic-fork-store";
 import { TopicSearchStore } from "./topic-search-store";
 import { UserStore } from "./user-store";
-import { AuthStore } from "./auth-store";
-import { ProfileStore } from "./profile-store";
-import { ResReplyStore } from "./res-reply-store";
 
 const userStore = new UserStore();
 

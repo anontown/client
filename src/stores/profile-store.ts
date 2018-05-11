@@ -17,7 +17,7 @@ export class ProfileStore {
       try {
         const token = this.user.data !== null ? this.user.data.token : null;
         this.profile = await apiClient.findProfileOne(token, {
-          id: id,
+          id,
         });
       } catch {
         this.msg = "プロフィール取得に失敗しました";

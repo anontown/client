@@ -9,8 +9,8 @@ import {
 import { Page, Res, Snack } from "../components";
 import {
   myInject,
+  ResReplyStore,
   UserStore,
-  ResReplyStore
 } from "../stores";
 import {
   withModal,

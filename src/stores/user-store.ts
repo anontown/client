@@ -2,7 +2,7 @@ import { action, observable } from "mobx";
 import * as mobxUtils from "mobx-utils";
 import {
   Observable,
-  ReplaySubject
+  ReplaySubject,
 } from "rxjs";
 import { UserData } from "../models";
 import {

@@ -218,12 +218,12 @@ interface MdImgState {
   dialog: boolean;
 }
 
-class MdImg extends React.Component<MdImgProps, MdImgState>{
+class MdImg extends React.Component<MdImgProps, MdImgState> {
   constructor(props: MdImgProps) {
     super(props);
     this.state = {
       dialog: false,
-    }
+    };
   }
 
   render() {
@@ -241,13 +241,13 @@ class MdImg extends React.Component<MdImgProps, MdImgState>{
         <img
           style={{
             width: "65vw",
-            height: "auto"
+            height: "auto",
           }}
           src={camo.getCamoUrl(this.props.url)}
           title={this.props.title}
           alt={this.props.alt}
           onClick={() => this.setState({ dialog: true })} />
       </Dialog>
-    </>
+    </>;
   }
 }

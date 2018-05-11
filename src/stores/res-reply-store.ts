@@ -1,12 +1,12 @@
-import { observable } from "mobx";
-import { UserStore } from "./user-store";
 import * as Im from "immutable";
+import { observable } from "mobx";
 import { ResSeted } from "../models";
 import {
   apiClient,
   list,
   resSetedCreate,
 } from "../utils";
+import { UserStore } from "./user-store";
 
 export class ResReplyStore {
   @observable data: { id: string, reses: Im.List<ResSeted> } | null = null;
@@ -23,7 +23,7 @@ export class ResReplyStore {
           reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findResReply(token, {
             reply: id,
           }))),
-          id: id
+          id,
         };
       } catch {
         this.msg = "レス取得に失敗しました";
@@ -34,7 +34,7 @@ export class ResReplyStore {
   update(res: ResSeted) {
     if (this.data !== null) {
       this.data.reses = list.update(this.data.reses, res);
-    };
+    }
   }
 
   clearMsg() {

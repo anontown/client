@@ -10,9 +10,9 @@ import {
 import { Snack } from "../components";
 import { Page } from "../components";
 import {
+  AuthStore,
   myInject,
   UserStore,
-  AuthStore
 } from "../stores";
 
 interface AuthPageProps extends RouteComponentProps<{}> {
