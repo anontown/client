@@ -143,6 +143,7 @@ export class TopicStore {
   constructor(private user: UserStore) { }
 
   async load(id: string) {
+    this.data = null;
     this.data = await TopicStateData.create(id, this.user, x => this.msg = x);
   }
 
