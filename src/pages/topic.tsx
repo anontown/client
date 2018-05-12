@@ -48,7 +48,7 @@ export interface TopicPageState {
   isNGDialog: boolean;
 }
 
-export const TopicPage = withRouter(myInject(["user"],
+export const TopicPage = withRouter(myInject(["user","topic"],
   observer(class extends React.Component<TopicPageProps, TopicPageState> {
     initState: TopicPageState = {
       isResWrite: false,

@@ -9,12 +9,12 @@ import { ReplaySubject, Subject, Observable } from "rxjs";
 export class TopicStateData {
   readonly limit = 50;
 
-  reses: Im.List<ResSeted> = Im.List();
-  autoScrollSpeed = 15;
-  isAutoScroll = false;
-  scrollNewItem = new ReplaySubject<string | null>(1);
-  updateItem = new Subject<ResSeted>();
-  newItem = Observable.empty<ResSeted>();
+  @observable reses: Im.List<ResSeted> = Im.List();
+  @observable autoScrollSpeed = 15;
+  @observable isAutoScroll = false;
+  @observable scrollNewItem = new ReplaySubject<string | null>(1);
+  @observable updateItem = new Subject<ResSeted>();
+  @observable newItem = Observable.empty<ResSeted>();
   private constructor(public setMsg: (x: string) => void,
     public user: UserStore,
     public topic: api.Topic) {
