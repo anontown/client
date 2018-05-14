@@ -9,6 +9,7 @@ export * from "./auth-store";
 export * from "./profile-store";
 export * from "./res-reply-store";
 export * from "./topic-store";
+export * from "./cache-store";
 
 import { inject } from "mobx-react";
 import * as React from "react";
@@ -24,8 +25,10 @@ import { TopicForkStore } from "./topic-fork-store";
 import { TopicSearchStore } from "./topic-search-store";
 import { UserStore } from "./user-store";
 import { TopicStore } from "./topic-store";
+import { CacheStore } from "./cache-store";
 
 const userStore = new UserStore();
+const cacheStore = new CacheStore();
 
 export const stores = {
   user: userStore,
@@ -38,7 +41,8 @@ export const stores = {
   auth: new AuthStore(userStore),
   profile: new ProfileStore(userStore),
   resReply: new ResReplyStore(userStore),
-  topic: new TopicStore(userStore)
+  topic: new TopicStore(userStore),
+  cache: cacheStore
 };
 
 export type Stores = typeof stores;
