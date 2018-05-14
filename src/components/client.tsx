@@ -30,8 +30,8 @@ export const Client = myInject(["user"], observer(class extends React.Component<
   }
 
   render() {
-    const clientEditor = this.state.edit
-      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} />
+    const clientEditor = this.state.edit && this.props.user.data !== null
+      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} userData={this.props.user.data} />
       : null;
 
     const edit = this.props.user.data !== null && this.props.user.data.token.user === this.props.client.user
