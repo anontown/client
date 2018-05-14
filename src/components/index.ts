@@ -26,3 +26,4 @@ export * from "./scroll";
 export * from "./ng";
 export * from "./ng-editor";
 export * from "./ng-node-editor";
+export * from "./user-switch.tsx";
