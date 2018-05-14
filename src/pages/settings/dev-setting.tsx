@@ -13,6 +13,7 @@ import {
 import {
   ClientEditor,
   Snack,
+  UserSwitch
 } from "../../components";
 import { myInject, UserStore } from "../../stores";
 import {
@@ -52,8 +53,9 @@ export const DevSettingPage =
     }
 
     render() {
-      return this.props.user.data !== null
-        ? <Paper>
+      return <UserSwitch
+        userData={this.props.user.data}
+        render={userData => <Paper>
           <Helmet>
             <title>開発者向け</title>
           </Helmet>
@@ -61,12 +63,14 @@ export const DevSettingPage =
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
           {this.state.clients.map(c => <ClientEditor
+            key={c.id}
             client={c}
-            onUpdate={newClient => this.setState({ clients: list.update(this.state.clients, newClient) })} />)}
+            onUpdate={newClient => this.setState({ clients: list.update(this.state.clients, newClient) })}
+            userData={userData} />)}
           <ClientEditor
             client={null}
-            onAdd={c => this.setState({ clients: this.state.clients.push(c) })} />
-        </Paper>
-        : <div>ログインして下さい。</div>;
+            onAdd={c => this.setState({ clients: this.state.clients.push(c) })}
+            userData={userData} />
+        </Paper>} />;
     }
   })));
