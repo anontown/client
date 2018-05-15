@@ -10,6 +10,7 @@ export * from "./profile-store";
 export * from "./res-reply-store";
 export * from "./topic-store";
 export * from "./cache-store";
+export * from "./res-hash-store";
 
 import { inject } from "mobx-react";
 import * as React from "react";
@@ -26,6 +27,7 @@ import { TopicSearchStore } from "./topic-search-store";
 import { UserStore } from "./user-store";
 import { TopicStore } from "./topic-store";
 import { CacheStore } from "./cache-store";
+import { ResHashStore } from "./res-hash-store";
 
 const userStore = new UserStore();
 const cacheStore = new CacheStore();
@@ -42,7 +44,8 @@ export const stores = {
   profile: new ProfileStore(userStore),
   resReply: new ResReplyStore(userStore),
   topic: new TopicStore(userStore),
-  cache: cacheStore
+  cache: cacheStore,
+  resHash: new ResHashStore(userStore)
 };
 
 export type Stores = typeof stores;

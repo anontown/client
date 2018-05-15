@@ -173,6 +173,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
                 <Route exact path="/" component={pages.HomePage} />
                 <Route exact path="/res/:id" component={pages.ResPage} />
                 <Route exact path="/res/:id/reply" component={pages.ResReplyPage} />
+                <Route exact path="/hash/:hash" component={pages.ResHashPage} />
                 <Route exact path="/topic/search" component={pages.TopicSearchPage} />
                 <Route exact path="/topic/create" component={pages.TopicCreatePage} />
                 <Route exact path="/topic/:id" component={pages.TopicPage} />
@@ -194,6 +195,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
               {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
               {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
               {isModal ? <Route path="/topic/:id/edit" component={pages.TopicEditModal} /> : null}
+              {isModal ? <Route path="/hash/:hash" component={pages.ResHashModal} /> : null}
             </div>
           </div>
           : null}
