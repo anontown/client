@@ -33,13 +33,13 @@ const ResHashBase = withRouter(myInject(["user", "resHash"],
     }
 
     componentWillReceiveProps(nextProps: ResHashBaseProps) {
-      this.props.resHash.load(nextProps.match.params.hash);
+      this.props.resHash.load(decodeURIComponent(nextProps.match.params.hash));
     }
 
     render() {
       return <div>
         <Helmet>
-          <title>HASH:{this.props.match.params.hash}</title>
+          <title>HASH:{decodeURIComponent(this.props.match.params.hash)}</title>
         </Helmet>
         <Snack
           msg={this.props.resHash.msg}

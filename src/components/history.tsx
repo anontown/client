@@ -61,7 +61,7 @@ export const History = myInject(["user"],
             </IconButton>
             {dateFormat.format(this.props.history.date)}
             <Link to={{
-              pathname: `/hash/${this.props.history.hash}`,
+              pathname: `/hash/${encodeURIComponent(this.props.history.hash)}`,
               state: {
                 modal: true,
               },

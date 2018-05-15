@@ -208,7 +208,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
             }}>{dateFormat.format(this.props.res.date)}</Link>
             &nbsp;
             <Link to={{
-              pathname: `/hash/${this.props.res.hash}`,
+              pathname: `/hash/${encodeURIComponent(this.props.res.hash)}`,
               state: {
                 modal: true,
               },
