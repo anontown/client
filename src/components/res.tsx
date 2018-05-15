@@ -105,28 +105,6 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
     }
   }
 
-  async onHashClock() {
-    const token = this.props.user.data !== null ? this.props.user.data.token : null;
-    if (this.state.children === null) {
-      try {
-        const reses = await resSetedCreate.resSet(token, await apiClient.findResHash(token, {
-          hash: this.props.res.hash,
-        }));
-
-        this.setState({
-          children: {
-            reses: Im.List(reses),
-            msg: `HASH抽出:${this.props.res.hash}`,
-          },
-        });
-      } catch {
-        this.setState({ snackMsg: "レス取得に失敗しました" });
-      }
-    } else {
-      this.setState({ children: null });
-    }
-  }
-
   async onDeleteClick() {
     if (this.props.user.data === null) {
       return;
@@ -229,7 +207,14 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
               state: { modal: true },
             }}>{dateFormat.format(this.props.res.date)}</Link>
             &nbsp;
-              <a onClick={() => this.onHashClock()}>HASH:{this.props.res.hash.substr(0, 6)}</a>
+            <Link to={{
+              pathname: `/hash/${this.props.res.hash}`,
+              state: {
+                modal: true,
+              },
+            }}>
+              HASH:{this.props.res.hash.substr(0, 6)}
+            </Link>
             &nbsp;
             <span>
               {this.props.res.uv - this.props.res.dv}ポイント

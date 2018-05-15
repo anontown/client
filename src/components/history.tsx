@@ -13,15 +13,14 @@ import {
 } from "../models";
 import { myInject, UserStore } from "../stores";
 import {
-  apiClient,
   dateFormat,
   list,
-  resSetedCreate,
 } from "../utils";
 import { Md } from "./md";
 import { Res } from "./res";
 import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
+import { Link } from "react-router-dom";
 
 interface UnconnectedHistoryProps {
   history: api.History;
@@ -61,7 +60,14 @@ export const History = myInject(["user"],
                 : <FontIcon className="material-icons">arrow_drop_down</FontIcon>}
             </IconButton>
             {dateFormat.format(this.props.history.date)}
-            <a onClick={() => this.onHashClick()} > HASH:{this.props.history.hash}</a>
+            <Link to={{
+              pathname: `/hash/${this.props.history.hash}`,
+              state: {
+                modal: true,
+              },
+            }}>
+              HASH:{this.props.history.hash.substr(0, 6)}
+            </Link>
           </div>
           {this.state.detail ?
             <dl>
@@ -87,21 +93,5 @@ export const History = myInject(["user"],
           }
         </div >
       );
-    }
-
-    async onHashClick() {
-      if (this.state.hashReses === null) {
-        try {
-          const token = this.props.user.data !== null ? this.props.user.data.token : null;
-          const reses = await apiClient.findResHash(token, {
-            hash: this.props.history.hash,
-          });
-          this.setState({ hashReses: Im.List(await resSetedCreate.resSet(token, reses)) });
-        } catch (_e) {
-          this.setState({ snackMsg: "レスの取得に失敗しました" });
-        }
-      } else {
-        this.setState({ hashReses: Im.List() });
-      }
     }
   }));
