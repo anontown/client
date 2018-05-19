@@ -11,7 +11,7 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Errors, Snack } from "../../components";
+import { Errors, Snack, UserSwitch } from "../../components";
 import { myInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
 
@@ -76,28 +76,26 @@ export const AccountSettingPage =
       }
 
       render() {
-        return this.props.user.data !== null
-          ? <Paper>
-            <Helmet>
-              <title>アカウント設定</title>
-            </Helmet>
-            <Snack
-              msg={this.state.snackMsg}
-              onHide={() => this.setState({ snackMsg: null })} />
-            <form>
-              <Errors errors={this.state.errors} />
-              <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
-              <TextField
-                floatingLabelText="新しいパスワード"
-                value={this.state.newPass}
-                onChange={(_e, v) => this.setState({ newPass: v })} />
-              <TextField
-                floatingLabelText="現在のパスワード"
-                value={this.state.oldPass}
-                onChange={(_e, v) => this.setState({ oldPass: v })} />
-              <RaisedButton onClick={() => this.onSubmit()} label="OK" />
-            </form>
-          </Paper>
-          : <div>ログインして下さい。</div>;
+        return <UserSwitch userData={this.props.user.data} render={() => <Paper>
+          <Helmet>
+            <title>アカウント設定</title>
+          </Helmet>
+          <Snack
+            msg={this.state.snackMsg}
+            onHide={() => this.setState({ snackMsg: null })} />
+          <form>
+            <Errors errors={this.state.errors} />
+            <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
+            <TextField
+              floatingLabelText="新しいパスワード"
+              value={this.state.newPass}
+              onChange={(_e, v) => this.setState({ newPass: v })} />
+            <TextField
+              floatingLabelText="現在のパスワード"
+              value={this.state.oldPass}
+              onChange={(_e, v) => this.setState({ oldPass: v })} />
+            <RaisedButton onClick={() => this.onSubmit()} label="OK" />
+          </form>
+        </Paper>} />;
       }
     })));
