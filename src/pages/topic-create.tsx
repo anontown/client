@@ -13,7 +13,6 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
-  Redirect,
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
@@ -36,7 +35,6 @@ export interface TopicCreatePageState {
   text: string;
   type: api.TopicType;
   errors?: string[];
-  redirect: string | null;
   openDialog: boolean;
 }
 
@@ -49,66 +47,63 @@ export const TopicCreatePage =
         tags: Im.Set(),
         text: "",
         type: "one",
-        redirect: null,
         openDialog: false,
       };
     }
 
     render() {
-      return this.state.redirect === null
-        ? <Page>
-          <Helmet>
-            <title>トピック作成</title>
-          </Helmet>
-          {this.props.user.data !== null
-            ? <Paper>
-              <Dialog
-                title="確認"
-                open={this.state.openDialog}
-                autoScrollBodyContent={true}
-                onRequestClose={() => this.setState({ openDialog: false })}
-                actions={[
-                  <RaisedButton label={"はい"} onClick={() => {
-                    this.setState({ openDialog: false });
-                    this.create();
-                  }} />,
-                  <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
-                ]}>
-                ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
-                本当に建てますか？
+      return <Page>
+        <Helmet>
+          <title>トピック作成</title>
+        </Helmet>
+        {this.props.user.data !== null
+          ? <Paper>
+            <Dialog
+              title="確認"
+              open={this.state.openDialog}
+              autoScrollBodyContent={true}
+              onRequestClose={() => this.setState({ openDialog: false })}
+              actions={[
+                <RaisedButton label={"はい"} onClick={() => {
+                  this.setState({ openDialog: false });
+                  this.create();
+                }} />,
+                <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
+              ]}>
+              ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
+              本当に建てますか？
             </Dialog>
-              <form>
-                <Errors errors={this.state.errors} />
-                <div>
-                  <SelectField
-                    floatingLabelText="種類"
-                    value={this.state.type}
-                    onChange={(_e, _i, v) => this.setState({ type: v })}>
-                    <MenuItem value="one" primaryText="単発" />
-                    <MenuItem value="normal" primaryText="通常" />
-                  </SelectField>
-                </div>
-                <div>
-                  <TextField
-                    floatingLabelText="タイトル"
-                    value={this.state.title}
-                    onChange={(_e, v) => this.setState({ title: v })} />
-                </div>
-                <div>
-                  <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
-                </div>
-                <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
-                <div>
-                  <RaisedButton onClick={() => this.submit()} label="トピック作成" />
-                </div>
-              </form>
-            </Paper>
-            : <Paper>
-              ログインしてください。
+            <form>
+              <Errors errors={this.state.errors} />
+              <div>
+                <SelectField
+                  floatingLabelText="種類"
+                  value={this.state.type}
+                  onChange={(_e, _i, v) => this.setState({ type: v })}>
+                  <MenuItem value="one" primaryText="単発" />
+                  <MenuItem value="normal" primaryText="通常" />
+                </SelectField>
+              </div>
+              <div>
+                <TextField
+                  floatingLabelText="タイトル"
+                  value={this.state.title}
+                  onChange={(_e, v) => this.setState({ title: v })} />
+              </div>
+              <div>
+                <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
+              </div>
+              <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
+              <div>
+                <RaisedButton onClick={() => this.submit()} label="トピック作成" />
+              </div>
+            </form>
+          </Paper>
+          : <Paper>
+            ログインしてください。
         </Paper>
-          }
-        </Page>
-        : <Redirect to={`/topic/${this.state.redirect}`} />;
+        }
+      </Page>;
     }
 
     async submit() {
@@ -133,7 +128,8 @@ export const TopicCreatePage =
         const topic = this.state.type === "one" ?
           await apiClient.createTopicOne(this.props.user.data.token, params) :
           await apiClient.createTopicNormal(this.props.user.data.token, params);
-        this.setState({ errors: undefined, redirect: topic.id });
+        this.setState({ errors: undefined });
+        this.props.history.push(`/topic/${topic.id}`);
       } catch (e) {
         if (e instanceof AtError) {
           this.setState({ errors: e.errors.map(e => e.message) });
