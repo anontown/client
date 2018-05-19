@@ -75,7 +75,7 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
       return <Page
         disableScroll={true}
         sidebar={this.props.user.data !== null
-          ? <TopicFavo detail={false} />
+          ? <TopicFavo detail={false} userData={this.props.user.data} />
           : undefined}>
         <Helmet>
           <title>トピック</title>

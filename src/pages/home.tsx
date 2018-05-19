@@ -31,7 +31,7 @@ export const HomePage = withRouter(myInject(["user"], observer
       {props.user.data !== null
         ? <Tabs>
           <Tab label="トピック">
-            <TopicFavo detail={true} />
+            <TopicFavo detail={true} userData={props.user.data} />
           </Tab>
           <Tab label="タグ">
             <TagFavo userData={props.user.data} />
