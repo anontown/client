@@ -3,26 +3,23 @@ import {
   FontIcon,
   IconButton,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
-import { ObjectOmit } from "typelevel-ts";
-import { myInject, UserStore } from "../stores";
 import { ClientEditor } from "./client-editor";
+import { UserData } from "../models";
 
-interface UnconnectedClientProps {
+
+interface ClientProps {
   client: api.Client;
   onUpdate?: (client: api.Client) => void;
-  user: UserStore;
+  userData: UserData | null;
 }
-
-export type ClientProps = ObjectOmit<UnconnectedClientProps, "user">;
 
 interface ClientState {
   edit: boolean;
 }
 
-export const Client = myInject(["user"], observer(class extends React.Component<UnconnectedClientProps, ClientState> {
-  constructor(props: UnconnectedClientProps) {
+export class Client extends React.Component<ClientProps, ClientState> {
+  constructor(props: ClientProps) {
     super(props);
     this.state = {
       edit: false,
@@ -30,11 +27,11 @@ export const Client = myInject(["user"], observer(class extends React.Component<
   }
 
   render() {
-    const clientEditor = this.state.edit && this.props.user.data !== null
-      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} userData={this.props.user.data} />
+    const clientEditor = this.state.edit && this.props.userData !== null
+      ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} userData={this.props.userData} />
       : null;
 
-    const edit = this.props.user.data !== null && this.props.user.data.token.user === this.props.client.user
+    const edit = this.props.userData !== null && this.props.userData.token.user === this.props.client.user
       ? <div>
         <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
           <FontIcon className="material-icons">edit</FontIcon>
@@ -52,4 +49,4 @@ export const Client = myInject(["user"], observer(class extends React.Component<
       </div>
     );
   }
-}));
+}
