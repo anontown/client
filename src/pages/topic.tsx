@@ -48,7 +48,7 @@ export interface TopicPageState {
   isNGDialog: boolean;
 }
 
-export const TopicPage = withRouter(myInject(["user","topic"],
+export const TopicPage = withRouter(myInject(["user", "topic"],
   observer(class extends React.Component<TopicPageProps, TopicPageState> {
     initState: TopicPageState = {
       isResWrite: false,
@@ -101,13 +101,16 @@ export const TopicPage = withRouter(myInject(["user","topic"],
                   value={data.autoScrollSpeed}
                   onChange={(_e, v) => data.setAutoScrollSpeed(v)} />
               </Dialog>
-              <Dialog
-                title="NG"
-                open={this.state.isNGDialog}
-                autoScrollBodyContent={true}
-                onRequestClose={() => this.setState({ isNGDialog: false })}>
-                <NG />
-              </Dialog>
+              {this.props.user.data !== null ?
+                <Dialog
+                  title="NG"
+                  open={this.state.isNGDialog}
+                  autoScrollBodyContent={true}
+                  onRequestClose={() => this.setState({ isNGDialog: false })}>
+                  <NG userData={this.props.user.data} onChangeUserData={data => this.props.user.setData(data)} />
+                </Dialog>
+                : null
+              }
               <div className={style.main}>
                 <Helmet>
                   <title>{data.topic.title}</title>
