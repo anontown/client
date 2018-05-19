@@ -13,6 +13,7 @@ import {
   Page,
   Res,
   Snack,
+  UserSwitch,
 } from "../components";
 import {
   myInject,
@@ -46,26 +47,21 @@ export const NotificationsPage =
               <Snack
                 msg={this.props.notifications.msg}
                 onHide={() => this.props.notifications.clearMsg()} />
-              {this.props.user.data !== null
-                ? <div>
-                  <div>
-                    <RaisedButton label="最新" onClick={() => this.props.notifications.readNew()} />
-                  </div>
-                  <div>
-                    {this.props.notifications.reses.map(r => <Paper key={r.id}>
-                      <Res
-                        res={r}
-                        update={newRes => this.props.notifications.update(newRes)} />
-                    </Paper>)}
-                  </div>
-                  <div>
-                    <RaisedButton label="前" onClick={() => this.props.notifications.readOld()} />
-                  </div>
+              <UserSwitch userData={this.props.user.data} render={() => <div>
+                <div>
+                  <RaisedButton label="最新" onClick={() => this.props.notifications.readNew()} />
                 </div>
-                : <Paper>
-                  ログインしてください。
-    </Paper>
-              }
+                <div>
+                  {this.props.notifications.reses.map(r => <Paper key={r.id}>
+                    <Res
+                      res={r}
+                      update={newRes => this.props.notifications.update(newRes)} />
+                  </Paper>)}
+                </div>
+                <div>
+                  <RaisedButton label="前" onClick={() => this.props.notifications.readOld()} />
+                </div>
+              </div>} />
             </Page>
           );
         }
