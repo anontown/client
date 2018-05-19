@@ -1,5 +1,4 @@
 import {
-  Paper,
   Tab,
   Tabs,
 } from "material-ui";
@@ -14,6 +13,7 @@ import {
   Page,
   ProfileEditor,
   Snack,
+  UserSwitch,
 } from "../components";
 import { myInject, ProfilesStore, UserStore } from "../stores";
 
@@ -42,25 +42,22 @@ export const ProfilesPage = withRouter(myInject(["user", "profiles"],
           <Snack
             msg={this.props.profiles.msg}
             onHide={() => this.props.profiles.clearMsg()} />
-          {this.props.user.data !== null
-            ? <Tabs>
-              <Tab label="編集">
-                {this.props.profiles.profiles.map(p =>
-                  <ProfileEditor
-                    key={p.id}
-                    profile={p}
-                    onUpdate={newProfile => this.props.profiles.update(newProfile)} />)}
-              </Tab>
-              <Tab label="新規">
+          <UserSwitch userData={this.props.user.data} render={userData => <Tabs>
+            <Tab label="編集">
+              {this.props.profiles.profiles.map(p =>
                 <ProfileEditor
-                  profile={null}
-                  onAdd={p => this.props.profiles.add(p)} />
-              </Tab>
-            </Tabs>
-            : <Paper>
-              ログインしてください。
-        </Paper>
-          }
+                  key={p.id}
+                  profile={p}
+                  onUpdate={newProfile => this.props.profiles.update(newProfile)}
+                  userData={userData} />)}
+            </Tab>
+            <Tab label="新規">
+              <ProfileEditor
+                profile={null}
+                onAdd={p => this.props.profiles.add(p)}
+                userData={userData} />
+            </Tab>
+          </Tabs>} />
         </Page>
       );
     }
