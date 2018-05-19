@@ -65,7 +65,6 @@ export const MessagesPage = withRouter(myInject(["user"],
               <RaisedButton label="前" onClick={() => this.readOld()} />
             </div>
           </div>} />
-          }
         </Page>
       );
     }
