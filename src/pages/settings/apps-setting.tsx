@@ -12,7 +12,7 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack } from "../../components";
+import { Snack, UserSwitch } from "../../components";
 import { myInject, UserStore } from "../../stores";
 import { apiClient } from "../../utils";
 
@@ -53,22 +53,20 @@ export const AppsSettingPage =
     }
 
     render() {
-      return this.props.user.data !== null
-        ? <div>
-          <Helmet>
-            <title>連携アプリ管理</title>
-          </Helmet>
-          <Snack
-            msg={this.state.snackMsg}
-            onHide={() => this.setState({ snackMsg: null })} />
-          {this.state.clients.map(c => <Paper>
-            {c.name}
-            <IconButton type="button" onClick={() => this.del(c)} >
-              <FontIcon className="material-icons">delete</FontIcon>
-            </IconButton>
-          </Paper>)}
-        </div>
-        : <div>ログインして下さい。</div>;
+      return <UserSwitch userData={this.props.user.data} render={() => <div>
+        <Helmet>
+          <title>連携アプリ管理</title>
+        </Helmet>
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        {this.state.clients.map(c => <Paper>
+          {c.name}
+          <IconButton type="button" onClick={() => this.del(c)} >
+            <FontIcon className="material-icons">delete</FontIcon>
+          </IconButton>
+        </Paper>)}
+      </div>} />;
     }
 
     async del(client: api.Client) {
