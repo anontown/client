@@ -2,22 +2,18 @@ import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import { RaisedButton, TextField } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
-import { ObjectOmit } from "typelevel-ts";
-import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
+import { UserData } from "../models";
 
-interface UnconnectedTopicEditorProps {
+interface TopicEditorProps {
   topic: api.TopicNormal;
   onUpdate?: (topic: api.TopicNormal) => void;
-  user: UserStore;
+  userData: UserData;
 }
-
-export type TopicEditorProps = ObjectOmit<UnconnectedTopicEditorProps, "user">;
 
 interface TopicEditorState {
   errors: string[];
@@ -26,63 +22,56 @@ interface TopicEditorState {
   text: string;
 }
 
-export const TopicEditor = myInject(["user"],
-  observer(class extends React.Component<UnconnectedTopicEditorProps, TopicEditorState> {
-    constructor(props: UnconnectedTopicEditorProps) {
-      super(props);
-      this.state = {
-        errors: [],
-        title: this.props.topic.title,
-        tags: Im.Set(this.props.topic.tags),
-        text: this.props.topic.text,
-      };
-    }
+export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorState> {
+  constructor(props: TopicEditorProps) {
+    super(props);
+    this.state = {
+      errors: [],
+      title: this.props.topic.title,
+      tags: Im.Set(this.props.topic.tags),
+      text: this.props.topic.text,
+    };
+  }
 
-    render() {
-      return this.props.user.data !== null
-        ? <form>
-          <Errors errors={this.state.errors} />
-          <TextField
-            fullWidth
-            floatingLabelText="タイトル"
-            value={this.state.title}
-            onChange={(_e, v) => this.setState({ title: v })} />
-          <TagsInput
-            value={this.state.tags}
-            onChange={v => this.setState({ tags: v })}
-            fullWidth />
-          <MdEditor
-            fullWidth
-            value={this.state.text}
-            onChange={v => this.setState({ text: v })} />
-          <RaisedButton onClick={() => this.submit()} label="OK" />
-        </form>
-        : <div>ログインして下さい</div>;
-    }
+  render() {
+    return <form>
+      <Errors errors={this.state.errors} />
+      <TextField
+        fullWidth
+        floatingLabelText="タイトル"
+        value={this.state.title}
+        onChange={(_e, v) => this.setState({ title: v })} />
+      <TagsInput
+        value={this.state.tags}
+        onChange={v => this.setState({ tags: v })}
+        fullWidth />
+      <MdEditor
+        fullWidth
+        value={this.state.text}
+        onChange={v => this.setState({ text: v })} />
+      <RaisedButton onClick={() => this.submit()} label="OK" />
+    </form>;
+  }
 
-    async submit() {
-      if (this.props.user.data === null) {
-        return;
+  async submit() {
+    try {
+      const topic = await apiClient.updateTopic(this.props.userData.token, {
+        id: this.props.topic.id,
+        title: this.state.title,
+        text: this.state.text,
+        tags: this.state.tags.toArray(),
+      });
+
+      if (this.props.onUpdate) {
+        this.props.onUpdate(topic);
       }
-
-      try {
-        const topic = await apiClient.updateTopic(this.props.user.data.token, {
-          id: this.props.topic.id,
-          title: this.state.title,
-          text: this.state.text,
-          tags: this.state.tags.toArray(),
-        });
-
-        if (this.props.onUpdate) {
-          this.props.onUpdate(topic);
-        }
-        this.setState({ errors: [] });
-      } catch (e) {
-        if (e instanceof AtError) {
-          this.setState({ errors: e.errors.map(e => e.message) });
-        } else {
-          this.setState({ errors: ["エラーが発生しました"] });
-        }
+      this.setState({ errors: [] });
+    } catch (e) {
+      if (e instanceof AtError) {
+        this.setState({ errors: e.errors.map(e => e.message) });
+      } else {
+        this.setState({ errors: ["エラーが発生しました"] });
       }
     }
-  }));
+  }
+}

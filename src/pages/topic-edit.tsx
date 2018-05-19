@@ -10,14 +10,18 @@ import {
   Page,
   Snack,
   TopicEditor,
+  UserSwitch,
 } from "../components";
 import {
   apiClient,
   withModal,
 } from "../utils";
+import { UserStore, myInject } from "../stores";
+import { observer } from "mobx-react";
 
 interface TopicEditBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
+  user: UserStore;
 }
 
 interface TopicEditBaseState {
@@ -25,48 +29,50 @@ interface TopicEditBaseState {
   snackMsg: null | string;
 }
 
-const TopicEditBase = withRouter(class extends React.Component<TopicEditBaseProps, TopicEditBaseState> {
-  constructor(props: TopicEditBaseProps) {
-    super(props);
-    this.state = {
-      topic: null,
-      snackMsg: null,
-    };
-    (async () => {
-      try {
-        const topic = await apiClient.findTopicOne({
-          id: this.props.match.params.id,
-        });
-        if (topic.type === "normal") {
-          this.setState({ topic });
-        } else {
-          this.setState({ snackMsg: "通常トピックではありません。" });
+const TopicEditBase = withRouter(myInject(["user"],
+  observer(class extends React.Component<TopicEditBaseProps, TopicEditBaseState> {
+    constructor(props: TopicEditBaseProps) {
+      super(props);
+      this.state = {
+        topic: null,
+        snackMsg: null,
+      };
+      (async () => {
+        try {
+          const topic = await apiClient.findTopicOne({
+            id: this.props.match.params.id,
+          });
+          if (topic.type === "normal") {
+            this.setState({ topic });
+          } else {
+            this.setState({ snackMsg: "通常トピックではありません。" });
+          }
+        } catch {
+          this.setState({ snackMsg: "トピック取得に失敗しました" });
         }
-      } catch {
-        this.setState({ snackMsg: "トピック取得に失敗しました" });
-      }
-    })();
-  }
+      })();
+    }
 
-  render() {
-    return <Paper zDepth={this.props.zDepth}>
-      <Helmet>
-        <title>トピック編集</title>
-      </Helmet>
-      <Snack
-        msg={this.state.snackMsg}
-        onHide={() => this.setState({ snackMsg: null })} />
-      {this.state.topic !== null && this.state.topic.type === "normal"
-        ? <TopicEditor topic={this.state.topic} onUpdate={topic => {
-          this.setState({ topic });
-        }} />
-        : null}
-    </Paper>;
-  }
-});
+    render() {
+      return <UserSwitch userData={this.props.user.data} render={userData => <Paper zDepth={this.props.zDepth}>
+        <Helmet>
+          <title>トピック編集</title>
+        </Helmet>
+        <Snack
+          msg={this.state.snackMsg}
+          onHide={() => this.setState({ snackMsg: null })} />
+        {this.state.topic !== null && this.state.topic.type === "normal"
+          ? <TopicEditor topic={this.state.topic} onUpdate={topic => {
+            this.setState({ topic });
+          }} userData={userData} />
+          : null}
+      </Paper>} />;
+    }
+  })));
 
 export function TopicEditPage() {
   return <Page><TopicEditBase /></Page>;
 }
 
 export const TopicEditModal = withModal(() => <TopicEditBase zDepth={0} />, "トピック編集");
+
