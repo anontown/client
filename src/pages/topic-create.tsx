@@ -21,6 +21,7 @@ import {
   MdEditor,
   Page,
   TagsInput,
+  UserSwitch
 } from "../components";
 import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
@@ -56,53 +57,48 @@ export const TopicCreatePage =
         <Helmet>
           <title>トピック作成</title>
         </Helmet>
-        {this.props.user.data !== null
-          ? <Paper>
-            <Dialog
-              title="確認"
-              open={this.state.openDialog}
-              autoScrollBodyContent={true}
-              onRequestClose={() => this.setState({ openDialog: false })}
-              actions={[
-                <RaisedButton label={"はい"} onClick={() => {
-                  this.setState({ openDialog: false });
-                  this.create();
-                }} />,
-                <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
-              ]}>
-              ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
-              本当に建てますか？
+        <UserSwitch userData={this.props.user.data} render={() => <Paper>
+          <Dialog
+            title="確認"
+            open={this.state.openDialog}
+            autoScrollBodyContent={true}
+            onRequestClose={() => this.setState({ openDialog: false })}
+            actions={[
+              <RaisedButton label={"はい"} onClick={() => {
+                this.setState({ openDialog: false });
+                this.create();
+              }} />,
+              <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
+            ]}>
+            ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
+            本当に建てますか？
             </Dialog>
-            <form>
-              <Errors errors={this.state.errors} />
-              <div>
-                <SelectField
-                  floatingLabelText="種類"
-                  value={this.state.type}
-                  onChange={(_e, _i, v) => this.setState({ type: v })}>
-                  <MenuItem value="one" primaryText="単発" />
-                  <MenuItem value="normal" primaryText="通常" />
-                </SelectField>
-              </div>
-              <div>
-                <TextField
-                  floatingLabelText="タイトル"
-                  value={this.state.title}
-                  onChange={(_e, v) => this.setState({ title: v })} />
-              </div>
-              <div>
-                <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
-              </div>
-              <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
-              <div>
-                <RaisedButton onClick={() => this.submit()} label="トピック作成" />
-              </div>
-            </form>
-          </Paper>
-          : <Paper>
-            ログインしてください。
-        </Paper>
-        }
+          <form>
+            <Errors errors={this.state.errors} />
+            <div>
+              <SelectField
+                floatingLabelText="種類"
+                value={this.state.type}
+                onChange={(_e, _i, v) => this.setState({ type: v })}>
+                <MenuItem value="one" primaryText="単発" />
+                <MenuItem value="normal" primaryText="通常" />
+              </SelectField>
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="タイトル"
+                value={this.state.title}
+                onChange={(_e, v) => this.setState({ title: v })} />
+            </div>
+            <div>
+              <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
+            </div>
+            <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
+            <div>
+              <RaisedButton onClick={() => this.submit()} label="トピック作成" />
+            </div>
+          </form>
+        </Paper>} />
       </Page>;
     }
 
