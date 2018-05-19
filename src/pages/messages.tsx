@@ -13,6 +13,7 @@ import {
   Md,
   Page,
   Snack,
+  UserSwitch,
 } from "../components";
 import { myInject, UserStore } from "../stores";
 import { apiClient, dateFormat } from "../utils";
@@ -49,25 +50,21 @@ export const MessagesPage = withRouter(myInject(["user"],
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
-          {this.props.user.data !== null
-            ? <div>
-              <div>
-                <RaisedButton label="最新" onClick={() => this.readNew()} />
-              </div>
-              <div>
-                {this.state.msgs.map(m =>
-                  <Paper key={m.id}>
-                    <div>{dateFormat.format(m.date)}</div>
-                    <Md text={m.text} />
-                  </Paper>)}
-              </div>
-              <div>
-                <RaisedButton label="前" onClick={() => this.readOld()} />
-              </div>
+          <UserSwitch userData={this.props.user.data} render={() => <div>
+            <div>
+              <RaisedButton label="最新" onClick={() => this.readNew()} />
             </div>
-            : <Paper>
-              ログインしてください。
-    </Paper>
+            <div>
+              {this.state.msgs.map(m =>
+                <Paper key={m.id}>
+                  <div>{dateFormat.format(m.date)}</div>
+                  <Md text={m.text} />
+                </Paper>)}
+            </div>
+            <div>
+              <RaisedButton label="前" onClick={() => this.readOld()} />
+            </div>
+          </div>} />
           }
         </Page>
       );
