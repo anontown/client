@@ -1,6 +1,5 @@
 import * as api from "@anontown/api-types";
 import * as classNames from "classnames";
-import * as Im from "immutable";
 import {
   FontIcon,
   IconButton,
@@ -19,7 +18,6 @@ import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   dateFormat,
-  list,
   resSetedCreate,
 } from "../utils";
 import { Md } from "./md";
@@ -37,7 +35,6 @@ export type ResProps = ObjectOmit<UnconnectedResProps, "user">;
 
 interface ResState {
   isReply: boolean;
-  children: { reses: Im.List<ResSeted>, msg: string | null } | null;
   snackMsg: null | string;
   disableNG: boolean;
 }
@@ -47,7 +44,6 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
     super(props);
     this.state = {
       isReply: false,
-      children: null,
       snackMsg: null,
       disableNG: false,
     };
@@ -119,12 +115,6 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
       }
     } catch {
       this.setState({ snackMsg: "レス削除に失敗しました" });
-    }
-  }
-
-  updateChildren(res: ResSeted) {
-    if (this.state.children !== null) {
-      this.setState({ children: { ...this.state.children, reses: list.update(this.state.children.reses, res) } });
     }
   }
 
@@ -347,21 +337,6 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
             ? <Paper>
               <ResWrite topic={this.props.res.topic} reply={this.props.res.id} userData={this.props.user.data} />
             </Paper>
-            : null}
-          {this.state.children !== null
-            ? <div>
-              {this.state.children.msg !== null
-                ? <Paper>
-                  <strong>{this.state.children.msg}</strong>
-                </Paper>
-                : null}
-              {this.state.children.reses.map(r =>
-                <Paper key={r.id}>
-                  <Res
-                    res={r}
-                    update={res => this.updateChildren(res)} />
-                </Paper>)}
-            </div>
             : null}
         </div>
       </div >;
