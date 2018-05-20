@@ -1,21 +1,13 @@
 import * as api from "@anontown/api-types";
-import * as Im from "immutable";
 import {
   FontIcon,
   IconButton,
-  Paper,
 } from "material-ui";
 import * as React from "react";
 import {
-  ResSeted,
-} from "../models";
-import {
   dateFormat,
-  list,
 } from "../utils";
 import { Md } from "./md";
-import { Res } from "./res";
-import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
 import { Link } from "react-router-dom";
 
@@ -25,8 +17,6 @@ interface HistoryProps {
 
 interface HistoryState {
   detail: boolean;
-  hashReses: Im.List<ResSeted>;
-  snackMsg: null | string;
 }
 
 export class History extends React.Component<HistoryProps, HistoryState> {
@@ -35,17 +25,12 @@ export class History extends React.Component<HistoryProps, HistoryState> {
 
     this.state = {
       detail: false,
-      hashReses: Im.List(),
-      snackMsg: null,
     };
   }
 
   render() {
     return (
       <div>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
         <div>
           <IconButton onClick={() => this.setState({ detail: !this.state.detail })}>
             {this.state.detail
@@ -74,17 +59,7 @@ export class History extends React.Component<HistoryProps, HistoryState> {
             </dd >
           </dl > : null
         }
-        {
-          !this.state.hashReses.isEmpty()
-            ? this.state.hashReses.map(res =>
-              <Paper>
-                <Res
-                  res={res}
-                  update={newRes => this.setState({ hashReses: list.update(this.state.hashReses, newRes) })} />
-              </Paper>)
-            : null
-        }
-      </div >
+      </div>
     );
   }
 }
