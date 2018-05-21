@@ -70,6 +70,7 @@ interface StorageJSON9 {
       name: string,
       profile: string | null,
       body: string,
+      age: boolean,
       replyBody: { [key: string]: string },
     }
   };
@@ -106,6 +107,7 @@ export interface Storage {
     profile: string | null,
     body: string,
     replyBody: Im.Map<string, string>,
+    age: boolean,
   }>;
   readonly ng: Im.List<ng.NG>;
 }
@@ -124,7 +126,7 @@ export function toJSON(storage: Storage): StorageJSONLatest {
     ver: "9",
     topicFavo: storage.topicFavo.toArray(),
     tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
-    topicRead: storage.topicRead.map(x => ({ ...x, replyBody: x.replyBody.toObject() })).toObject(),
+    topicRead: storage.topicRead.map(x => ({ ...x, replyBody: x.replyBody.toObject(), age: x.age })).toObject(),
     ng: storage.ng.map(x => ng.toJSON(x)).toArray(),
   };
 }
@@ -218,6 +220,7 @@ function convert8To9(val: StorageJSON8): StorageJSON9 {
         profile: null,
         body: "",
         replyBody: {},
+        age: true
       })).toObject()
   };
 }
