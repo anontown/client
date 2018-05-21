@@ -68,14 +68,16 @@ export class TopicStateData {
         date = first.date;
       }
     }
+    const dateNonNull = date;
     this.user.setData({
       ...this.user.data,
       storage: {
         ...storage,
-        topicRead: storage.topicRead.set(this.topic.id, {
-          date,
+        topicRead: storage.topicRead.update(this.topic.id, x => ({
+          ...x,
+          date: dateNonNull,
           count: this.topic.resCount,
-        }),
+        })),
       },
     });
   }
