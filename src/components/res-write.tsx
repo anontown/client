@@ -14,6 +14,7 @@ import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { UserData, Storage } from "../models";
 import * as Im from "immutable";
+import { Subscription, Subject } from "rxjs";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -26,12 +27,34 @@ interface ResWriteProps {
 
 interface ResWriteState {
   errors?: string[];
+  textCache: string;
 }
 
 export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
   constructor(props: ResWriteProps) {
     super(props);
-    this.state = {};
+    const text = this.props.reply === null
+      ? this.getData().text
+      : this.getData().replyText.get(this.props.reply, "");
+    this.state = {
+      textCache: text
+    };
+    this.subscriptions.push(this.textUpdate
+      .debounceTime(1000)
+      .subscribe(text => {
+        if (this.props.reply === null) {
+          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+            ...x,
+            text: text
+          })));
+        } else {
+          const reply = this.props.reply;
+          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+            ...x,
+            replyText: x.replyText.set(reply, text)
+          })));
+        }
+      }));
   }
 
   formDefualt = {
@@ -42,16 +65,14 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
     age: true,
   };
 
-  getData() {
-    return this.props.userData.storage.topicWrite.get(this.props.topic, this.formDefualt);
+  textUpdate = new Subject<string>();
+  subscriptions: Subscription[] = [];
+  componentWillUnmount() {
+    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
-  getText() {
-    if (this.props.reply === null) {
-      return this.getData().text;
-    } else {
-      return this.getData().replyText.get(this.props.reply, "");
-    }
+  getData() {
+    return this.props.userData.storage.topicWrite.get(this.props.topic, this.formDefualt);
   }
 
   setStorage(data: Storage["topicWrite"]) {
@@ -65,18 +86,8 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
   }
 
   setText(text: string) {
-    if (this.props.reply === null) {
-      this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
-        ...x,
-        text: text
-      })));
-    } else {
-      const reply = this.props.reply;
-      this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
-        ...x,
-        replyText: x.replyText.set(reply, text)
-      })));
-    }
+    this.setState({ textCache: text });
+    this.textUpdate.next(text);
   }
 
   async onSubmit() {
@@ -85,7 +96,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       const res = await apiClient.createRes(this.props.userData.token, {
         topic: this.props.topic,
         name: data.name.length !== 0 ? data.name : null,
-        text: data.text,
+        text: this.state.textCache,
         reply: this.props.reply,
         profile: data.profile,
         age: data.age,
@@ -128,7 +139,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
         label="age"
         checked={data.age}
         onCheck={(_e, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, age: v })))} />
-      <MdEditor value={this.getText()}
+      <MdEditor value={this.state.textCache}
         onChange={v => this.setText(v)}
         maxRows={5}
         minRows={1}
