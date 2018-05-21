@@ -12,50 +12,90 @@ import * as React from "react";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
-import { UserData } from "../models";
+import { UserData, Storage } from "../models";
+import * as Im from "immutable";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
   topic: string;
   reply: string | null;
   userData: UserData;
+  changeUserData: (data: UserData) => void;
 }
 
 
 interface ResWriteState {
   errors?: string[];
-  text: string;
-  name: string;
-  profile: string | null;
-  age: boolean;
 }
 
 export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
   constructor(props: ResWriteProps) {
     super(props);
-    this.state = {
-      text: "",
-      name: "",
-      profile: null,
-      age: true,
-    };
+    this.state = {};
+  }
+
+  formDefualt = {
+    name: "",
+    profile: null as string | null,
+    text: "",
+    replyText: Im.Map<string, string>(),
+    age: true,
+  };
+
+  getData() {
+    return this.props.userData.storage.topicWrite.get(this.props.topic, this.formDefualt);
+  }
+
+  getText() {
+    if (this.props.reply === null) {
+      return this.getData().text;
+    } else {
+      return this.getData().replyText.get(this.props.reply, "");
+    }
+  }
+
+  setStorage(data: Storage["topicWrite"]) {
+    this.props.changeUserData({
+      ...this.props.userData,
+      storage: {
+        ...this.props.userData.storage,
+        topicWrite: data
+      }
+    })
+  }
+
+  setText(text: string) {
+    if (this.props.reply === null) {
+      this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+        ...x,
+        text: text
+      })));
+    } else {
+      const reply = this.props.reply;
+      this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+        ...x,
+        replyText: x.replyText.set(reply, text)
+      })));
+    }
   }
 
   async onSubmit() {
+    const data = this.getData();
     try {
       const res = await apiClient.createRes(this.props.userData.token, {
         topic: this.props.topic,
-        name: this.state.name.length !== 0 ? this.state.name : null,
-        text: this.state.text,
+        name: data.name.length !== 0 ? data.name : null,
+        text: data.text,
         reply: this.props.reply,
-        profile: this.state.profile,
-        age: this.state.age,
+        profile: data.profile,
+        age: data.age,
       });
 
       if (this.props.onSubmit) {
         this.props.onSubmit(res);
       }
-      this.setState({ errors: [], text: "" });
+      this.setState({ errors: [] });
+      this.setText("");
     } catch (e) {
       if (e instanceof AtError) {
         this.setState({ errors: e.errors.map(e => e.message) });
@@ -66,16 +106,17 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
   }
 
   render() {
+    const data = this.getData();
     return <form>
       <Errors errors={this.state.errors} />
       <TextField
         floatingLabelText="名前"
-        value={this.state.name}
-        onChange={(_e, v) => this.setState({ name: v })} />
+        value={data.name}
+        onChange={(_e, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, name: v })))} />
       <SelectField
         floatingLabelText="プロフ"
-        value={this.state.profile}
-        onChange={(_e, _i, v) => this.setState({ profile: v })}>
+        value={data.profile}
+        onChange={(_e, _i, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, profile: v })))}>
         <MenuItem value={null} primaryText="なし" />
         {this.props.userData.profiles.map(p =>
           <MenuItem
@@ -85,10 +126,10 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       </SelectField>
       <Checkbox
         label="age"
-        checked={this.state.age}
-        onCheck={(_e, v) => this.setState({ age: v })} />
-      <MdEditor value={this.state.text}
-        onChange={v => this.setState({ text: v })}
+        checked={data.age}
+        onCheck={(_e, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, age: v })))} />
+      <MdEditor value={this.getText()}
+        onChange={v => this.setText(v)}
         maxRows={5}
         minRows={1}
         onKeyDown={e => {

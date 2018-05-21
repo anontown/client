@@ -335,7 +335,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
           </div>
           {this.state.isReply && this.props.user.data !== null
             ? <Paper>
-              <ResWrite topic={this.props.res.topic} reply={this.props.res.id} userData={this.props.user.data} />
+              <ResWrite topic={this.props.res.topic} reply={this.props.res.id} userData={this.props.user.data} changeUserData={x => this.props.user.setData(x)} />
             </Paper>
             : null}
         </div>

@@ -191,14 +191,14 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                     </Paper>} />
                 {this.state.isResWrite && this.props.user.data !== null
                   ? <Paper className={style.resWrite}>
-                    <ResWrite topic={data.topic.id} reply={null} userData={this.props.user.data} />
+                    <ResWrite topic={data.topic.id} reply={null} userData={this.props.user.data} changeUserData={x => this.props.user.setData(x)} />
                   </Paper>
-                  : null}
+                    : null}
               </div>
             </>;
-          })()
-          : null
-        }
+              })()
+              : null
+            }
       </Page>;
-    }
-  })));
+            }
+          })));
