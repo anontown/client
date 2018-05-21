@@ -67,13 +67,17 @@ interface StorageJSON9 {
     [key: string]: {
       date: string,
       count: number,
+    },
+  };
+  readonly topicWrite: {
+    [key: string]: {
       name: string,
       profile: string | null,
       body: string,
       age: boolean,
       replyBody: { [key: string]: string },
     }
-  };
+  }
   readonly ng: ngJson.NGJson[];
 }
 
@@ -93,6 +97,7 @@ export const initStorage: StorageJSONLatest = {
   topicFavo: [],
   tagsFavo: [],
   topicRead: {},
+  topicWrite: {},
   ng: [],
 };
 export const verArray: Array<StorageJSON["ver"]> = ["9", "8", "7", "6", "5", "4", "3", "2", "1.0.0"];
@@ -102,13 +107,15 @@ export interface Storage {
   readonly tagsFavo: Im.Set<Im.Set<string>>;
   readonly topicRead: Im.Map<string, {
     date: string,
-    count: number,
+    count: number
+  }>;
+  readonly topicWrite: Im.Map<string, {
     name: string,
     profile: string | null,
     body: string,
     replyBody: Im.Map<string, string>,
     age: boolean,
-  }>;
+  }>,
   readonly ng: Im.List<ng.NG>;
 }
 
@@ -116,7 +123,8 @@ export function toStorage(json: StorageJSONLatest): Storage {
   return {
     topicFavo: Im.Set(json.topicFavo),
     tagsFavo: Im.Set(json.tagsFavo.map(tags => Im.Set(tags))),
-    topicRead: Im.Map(json.topicRead).map(x => ({ ...x, replyBody: Im.Map(x.replyBody) })),
+    topicRead: Im.Map(json.topicRead),
+    topicWrite: Im.Map(json.topicWrite).map(x => ({ ...x, replyBody: Im.Map(x.replyBody) })),
     ng: Im.List(json.ng.map(x => ng.fromJSON(x))),
   };
 }
@@ -126,7 +134,8 @@ export function toJSON(storage: Storage): StorageJSONLatest {
     ver: "9",
     topicFavo: storage.topicFavo.toArray(),
     tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
-    topicRead: storage.topicRead.map(x => ({ ...x, replyBody: x.replyBody.toObject(), age: x.age })).toObject(),
+    topicRead: storage.topicRead.toObject(),
+    topicWrite: storage.topicWrite.map(x => ({ ...x, replyBody: x.replyBody.toObject() })).toObject(),
     ng: storage.ng.map(x => ng.toJSON(x)).toArray(),
   };
 }
@@ -213,15 +222,7 @@ function convert8To9(val: StorageJSON8): StorageJSON9 {
   return {
     ...val,
     ver: "9",
-    topicRead: Im.Map(val.topicRead)
-      .map(x => ({
-        ...x,
-        name: "",
-        profile: null,
-        body: "",
-        replyBody: {},
-        age: true
-      })).toObject()
+    topicWrite: {}
   };
 }
 
