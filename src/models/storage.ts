@@ -59,6 +59,23 @@ interface StorageJSON8 {
   readonly ng: ngJson.NGJson[];
 }
 
+interface StorageJSON9 {
+  readonly ver: "9";
+  readonly topicFavo: string[];
+  readonly tagsFavo: string[][];
+  readonly topicRead: {
+    [key: string]: {
+      date: string,
+      count: number,
+      name: string,
+      profile: string | null,
+      body: string,
+      replyBody: { [key: string]: string },
+    }
+  };
+  readonly ng: ngJson.NGJson[];
+}
+
 export type StorageJSON = StorageJSON1 |
   StorageJSON2 |
   StorageJSON3 |
@@ -66,22 +83,30 @@ export type StorageJSON = StorageJSON1 |
   StorageJSON5 |
   StorageJSON6 |
   StorageJSON7 |
-  StorageJSON8;
+  StorageJSON8 |
+  StorageJSON9;
 
-export type StorageJSONLatest = StorageJSON8;
+export type StorageJSONLatest = StorageJSON9;
 export const initStorage: StorageJSONLatest = {
-  ver: "8",
+  ver: "9",
   topicFavo: [],
   tagsFavo: [],
   topicRead: {},
   ng: [],
 };
-export const verArray: Array<StorageJSON["ver"]> = ["8", "7", "6", "5", "4", "3", "2", "1.0.0"];
+export const verArray: Array<StorageJSON["ver"]> = ["9", "8", "7", "6", "5", "4", "3", "2", "1.0.0"];
 
 export interface Storage {
   readonly topicFavo: Im.Set<string>;
   readonly tagsFavo: Im.Set<Im.Set<string>>;
-  readonly topicRead: Im.Map<string, { date: string, count: number }>;
+  readonly topicRead: Im.Map<string, {
+    date: string,
+    count: number,
+    name: string,
+    profile: string | null,
+    body: string,
+    replyBody: Im.Map<string, string>,
+  }>;
   readonly ng: Im.List<ng.NG>;
 }
 
@@ -89,17 +114,17 @@ export function toStorage(json: StorageJSONLatest): Storage {
   return {
     topicFavo: Im.Set(json.topicFavo),
     tagsFavo: Im.Set(json.tagsFavo.map(tags => Im.Set(tags))),
-    topicRead: Im.Map(json.topicRead),
+    topicRead: Im.Map(json.topicRead).map(x => ({ ...x, replyBody: Im.Map(x.replyBody) })),
     ng: Im.List(json.ng.map(x => ng.fromJSON(x))),
   };
 }
 
 export function toJSON(storage: Storage): StorageJSONLatest {
   return {
-    ver: "8",
+    ver: "9",
     topicFavo: storage.topicFavo.toArray(),
     tagsFavo: storage.tagsFavo.map(tags => tags.toArray()).toArray(),
-    topicRead: storage.topicRead.toObject(),
+    topicRead: storage.topicRead.map(x => ({ ...x, replyBody: x.replyBody.toObject() })).toObject(),
     ng: storage.ng.map(x => ng.toJSON(x)).toArray(),
   };
 }
@@ -182,6 +207,21 @@ async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
   };
 }
 
+function convert8To9(val: StorageJSON8): StorageJSON9 {
+  return {
+    ...val,
+    ver: "9",
+    topicRead: Im.Map(val.topicRead)
+      .map(x => ({
+        ...x,
+        name: "",
+        profile: null,
+        body: "",
+        replyBody: {},
+      })).toObject()
+  };
+}
+
 export async function convert(storage: StorageJSON): Promise<StorageJSONLatest> {
   const s1 = storage;
   const s2 = s1.ver === "1.0.0" ? convert1To2(s1) : s1;
@@ -191,8 +231,9 @@ export async function convert(storage: StorageJSON): Promise<StorageJSONLatest> 
   const s6 = s5.ver === "5" ? convert5To6(s5) : s5;
   const s7 = s6.ver === "6" ? convert6To7(s6) : s6;
   const s8 = s7.ver === "7" ? await convert7To8(s7) : s7;
+  const s9 = s8.ver === "8" ? convert8To9(s8) : s8;
 
-  const json = s8.ver === "8" ? s8 : initStorage;
+  const json = s9.ver === "9" ? s9 : initStorage;
 
   return json;
 }
