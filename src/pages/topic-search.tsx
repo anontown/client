@@ -1,6 +1,7 @@
 import * as Im from "immutable";
 import {
   Checkbox,
+  CircularProgress,
   FontIcon,
   IconButton,
   Paper,
@@ -174,6 +175,7 @@ export const TopicSearchPage =
               <FontIcon className="material-icons">refresh</FontIcon>
             </IconButton>
           </div>
+          {this.props.topicSearch.topics.count() > 0 ?
           <div>
             {this.props.topicSearch.topics.map(t =>
               <Paper key={t.id}>
@@ -181,6 +183,10 @@ export const TopicSearchPage =
               </Paper>,
             )}
           </div>
+          :
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1 }}>
+            <CircularProgress color="gray" size={ 70 } />
+          </div> }
           {this.props.topicSearch.isMore
             ? <div>
               <RaisedButton onClick={() => this.props.topicSearch.more()} label="もっと" />

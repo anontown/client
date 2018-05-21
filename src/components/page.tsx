@@ -28,6 +28,8 @@ export class Page extends React.Component<PageProps, PageState> {
         <main
           style={{
             height: "100%",
+            display: "flex",
+            flexFlow: "column",
           }}
           className={!this.props.disableScroll ? style.mainScroll : undefined}>
           {this.props.children}
