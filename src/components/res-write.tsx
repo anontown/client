@@ -61,7 +61,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
         ...this.props.userData.storage,
         topicWrite: data
       }
-    })
+    });
   }
 
   setText(text: string) {
