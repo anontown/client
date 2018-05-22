@@ -3,7 +3,6 @@ import {
   FontIcon,
   IconButton,
   TextField,
-  Toggle,
 } from "material-ui";
 import * as React from "react";
 import { Observable } from "rxjs";
@@ -11,6 +10,7 @@ import { imgur } from "../utils";
 import { Errors } from "./errors";
 import { Md } from "./md";
 import { Oekaki } from "./oekaki";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 export interface MdEditorProps {
   value: string;
@@ -25,7 +25,6 @@ export interface MdEditorProps {
 interface MdEditorState {
   oekakiErrors?: string[];
   imageErrors?: string[];
-  preview: boolean;
   slowOekaki: boolean;
   slowImage: boolean;
 }
@@ -36,7 +35,6 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
   constructor(props: MdEditorProps) {
     super(props);
     this.state = {
-      preview: false,
       slowOekaki: false,
       slowImage: false,
     };
@@ -108,30 +106,35 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             <FontIcon className="material-icons">create</FontIcon>
           </IconButton>
         </div>
-        <Toggle
-          label="Preview"
-          toggled={this.state.preview}
-          onToggle={(_e, v) => this.setState({ preview: v })} />
-        <TextField
-          name="text"
-          multiLine={true}
-          rows={this.props.minRows || this.defaltMinRows}
-          rowsMax={this.props.maxRows || this.defaltMinRows}
-          value={this.props.value}
-          style={{ backgroundColor: "#fff" }}
-          onChange={(_, v) => {
-            if (this.props.onChange) {
-              this.props.onChange(v);
-            }
-          }}
-          onKeyPress={this.props.onKeyPress}
-          onKeyDown={this.props.onKeyDown}
-          fullWidth={this.props.fullWidth} />
-        {this.state.preview
-          ? <div style={{ backgroundColor: "#fff" }}>
-            <Md text={this.props.value} />
-          </div>
-          : null}
+        <Tabs>
+          <TabList>
+            <Tab>Edit</Tab>
+            <Tab>Preview</Tab>
+          </TabList>
+
+          <TabPanel>
+            <TextField
+              name="text"
+              multiLine={true}
+              rows={this.props.minRows || this.defaltMinRows}
+              rowsMax={this.props.maxRows || this.defaltMinRows}
+              value={this.props.value}
+              style={{ backgroundColor: "#fff" }}
+              onChange={(_, v) => {
+                if (this.props.onChange) {
+                  this.props.onChange(v);
+                }
+              }}
+              onKeyPress={this.props.onKeyPress}
+              onKeyDown={this.props.onKeyDown}
+              fullWidth={this.props.fullWidth} />
+          </TabPanel>
+          <TabPanel>
+            <div style={{ backgroundColor: "#fff" }}>
+              <Md text={this.props.value} />
+            </div>
+          </TabPanel>
+        </Tabs>
       </div>
     );
   }
