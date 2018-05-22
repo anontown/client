@@ -38,17 +38,17 @@ export class ProfileEditor extends React.Component<ProfileEditorProps, ProfileEd
       <form>
         <Errors errors={this.state.errors} />
         <TextField
-          fullWidth
+          fullWidth={true}
           floatingLabelText="ID"
           value={this.state.sn}
           onChange={(_e, v) => this.setState({ sn: v })} />
         <TextField
-          fullWidth
+          fullWidth={true}
           floatingLabelText="名前"
           value={this.state.name}
           onChange={(_e, v) => this.setState({ name: v })} />
         <MdEditor
-          fullWidth
+          fullWidth={true}
           value={this.state.text}
           onChange={v => this.setState({ text: v })} />
         <RaisedButton onClick={() => this.submit()} label="OK" />

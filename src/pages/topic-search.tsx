@@ -144,14 +144,14 @@ export const TopicSearchPage =
               : null}
             <div>
               <TagsInput
-                fullWidth
+                fullWidth={true}
                 value={this.state.formTags}
                 onChange={v => {
                   this.setState({ formTags: v });
                   this.formChange$.next();
                 }} />
               <TextField
-                fullWidth
+                fullWidth={true}
                 floatingLabelText="タイトル"
                 value={this.state.formTitle}
                 onChange={(_e, v) => {

@@ -16,7 +16,7 @@ export const withModal = <P extends {}>(Page: React.ComponentType<P>, title: str
       onRequestClose={() => {
         props.history.goBack();
       }}>
-      <Page { ...props } />
+      <Page {...props} />
     </Dialog>;
   });
 };

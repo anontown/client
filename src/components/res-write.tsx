@@ -164,7 +164,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
             this.onSubmit();
           }
         }}
-        fullWidth />
+        fullWidth={true} />
       <IconButton onClick={() => this.onSubmit()}>
         <FontIcon className="material-icons">arrow_forward</FontIcon>
       </IconButton>

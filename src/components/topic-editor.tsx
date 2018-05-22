@@ -37,16 +37,16 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
     return <form>
       <Errors errors={this.state.errors} />
       <TextField
-        fullWidth
+        fullWidth={true}
         floatingLabelText="タイトル"
         value={this.state.title}
         onChange={(_e, v) => this.setState({ title: v })} />
       <TagsInput
         value={this.state.tags}
         onChange={v => this.setState({ tags: v })}
-        fullWidth />
+        fullWidth={true} />
       <MdEditor
-        fullWidth
+        fullWidth={true}
         value={this.state.text}
         onChange={v => this.setState({ text: v })} />
       <RaisedButton onClick={() => this.submit()} label="OK" />

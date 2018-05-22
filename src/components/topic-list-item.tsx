@@ -47,7 +47,7 @@ export const TopicListItem =
             ? <div>
               {this.props.topic.type !== "fork"
                 ? <div>
-                  <TagsLink tags={this.props.topic.tags} mini />
+                  <TagsLink tags={this.props.topic.tags} mini={true} />
                 </div >
                 : <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>}
 

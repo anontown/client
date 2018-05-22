@@ -135,8 +135,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
                   iconButtonElement={
                     <IconButton touch={true}>
                       <FontIcon className="material-icons">people</FontIcon>
-                    </IconButton>
-                  }>
+                    </IconButton>}>
                   {this.props.user.data !== null
                     ? [
                       <MenuItem
@@ -170,23 +169,23 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
             </Toolbar>
             <div className={style.main}>
               <Switch location={isModal ? this.previousLocation : location}>
-                <Route exact path="/" component={pages.HomePage} />
-                <Route exact path="/res/:id" component={pages.ResPage} />
-                <Route exact path="/res/:id/reply" component={pages.ResReplyPage} />
-                <Route exact path="/hash/:hash" component={pages.ResHashPage} />
-                <Route exact path="/topic/search" component={pages.TopicSearchPage} />
-                <Route exact path="/topic/create" component={pages.TopicCreatePage} />
-                <Route exact path="/topic/:id" component={pages.TopicPage} />
-                <Route exact path="/topic/:id/data" component={pages.TopicDataPage} />
-                <Route exact path="/topic/:id/fork" component={pages.TopicForkPage} />
-                <Route exact path="/topic/:id/edit" component={pages.TopicEditPage} />
-                <Route exact path="/profiles" component={pages.ProfilesPage} />
-                <Route exact path="/notifications" component={pages.NotificationsPage} />
-                <Route exact path="/messages" component={pages.MessagesPage} />
-                <Route exact path="/in" component={pages.InPage} />
-                <Route exact path="/auth" component={pages.AuthPage} />
+                <Route exact={true} path="/" component={pages.HomePage} />
+                <Route exact={true} path="/res/:id" component={pages.ResPage} />
+                <Route exact={true} path="/res/:id/reply" component={pages.ResReplyPage} />
+                <Route exact={true} path="/hash/:hash" component={pages.ResHashPage} />
+                <Route exact={true} path="/topic/search" component={pages.TopicSearchPage} />
+                <Route exact={true} path="/topic/create" component={pages.TopicCreatePage} />
+                <Route exact={true} path="/topic/:id" component={pages.TopicPage} />
+                <Route exact={true} path="/topic/:id/data" component={pages.TopicDataPage} />
+                <Route exact={true} path="/topic/:id/fork" component={pages.TopicForkPage} />
+                <Route exact={true} path="/topic/:id/edit" component={pages.TopicEditPage} />
+                <Route exact={true} path="/profiles" component={pages.ProfilesPage} />
+                <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
+                <Route exact={true} path="/messages" component={pages.MessagesPage} />
+                <Route exact={true} path="/in" component={pages.InPage} />
+                <Route exact={true} path="/auth" component={pages.AuthPage} />
                 <Route path="/settings" component={pages.SettingsPage} />
-                <Route exact path="/profile/:id" component={pages.ProfilePage} />
+                <Route exact={true} path="/profile/:id" component={pages.ProfilePage} />
                 <Route component={pages.NotFoundPage} />
               </Switch>
               {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
