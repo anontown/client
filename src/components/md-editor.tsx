@@ -82,21 +82,25 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           title="画像アップロード"
           open={this.state.slowImage}
           autoScrollBodyContent={true}
-          onRequestClose={() => this.setState({ slowImage: false })}>
+          onRequestClose={() => this.setState({ slowImage: false })}
+        >
           <Errors errors={this.state.imageErrors} />
-          <input type="file" onChange={e => {
-            const target = e.target as HTMLInputElement;
-            const files = target.files;
-            if (files !== null) {
-              const datas = Array.from(files)
-                .map(file => {
-                  const formData = new FormData();
-                  formData.append("image", file);
-                  return formData;
-                });
-              this.upload(datas);
-            }
-          }} />
+          <input
+            type="file"
+            onChange={e => {
+              const target = e.target as HTMLInputElement;
+              const files = target.files;
+              if (files !== null) {
+                const datas = Array.from(files)
+                  .map(file => {
+                    const formData = new FormData();
+                    formData.append("image", file);
+                    return formData;
+                  });
+                this.upload(datas);
+              }
+            }}
+          />
         </Dialog>
         <div>
           <IconButton onClick={() => this.setState({ slowImage: true })}>
@@ -127,7 +131,8 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
               }}
               onKeyPress={this.props.onKeyPress}
               onKeyDown={this.props.onKeyDown}
-              fullWidth={this.props.fullWidth} />
+              fullWidth={this.props.fullWidth}
+            />
           </TabPanel>
           <TabPanel>
             <div style={{ backgroundColor: "#fff" }}>

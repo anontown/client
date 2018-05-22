@@ -24,30 +24,36 @@ interface HomePageProps extends RouteComponentProps<{}> {
 
 export const HomePage = withRouter(myInject(["user"], observer
   ((props: HomePageProps) => {
-    return <Page>
-      <Helmet>
-        <title>Anontown</title>
-      </Helmet>
-      {props.user.data !== null
-        ? <Tabs>
-          <Tab label="トピック">
-            <TopicFavo detail={true} userData={props.user.data} />
-          </Tab>
-          <Tab label="タグ">
-            <TagFavo userData={props.user.data} />
-          </Tab>
-        </Tabs>
-        : <Paper>
-          <h1>匿名掲示板Anontownへようこそ</h1>
-          <ul>
-            <li>
-              <Link to="/topic/search">トピック一覧</Link>
-            </li>
-            <li>
-              <a href="https://document.anontown.com/"
-                target="_blank">説明書</a>
-            </li>
-          </ul>
-        </Paper>}
-    </Page>;
+    return (
+      <Page>
+        <Helmet>
+          <title>Anontown</title>
+        </Helmet>
+        {props.user.data !== null
+          ? <Tabs>
+            <Tab label="トピック">
+              <TopicFavo detail={true} userData={props.user.data} />
+            </Tab>
+            <Tab label="タグ">
+              <TagFavo userData={props.user.data} />
+            </Tab>
+          </Tabs>
+          : <Paper>
+            <h1>匿名掲示板Anontownへようこそ</h1>
+            <ul>
+              <li>
+                <Link to="/topic/search">トピック一覧</Link>
+              </li>
+              <li>
+                <a
+                  href="https://document.anontown.com/"
+                  target="_blank"
+                >
+                  説明書
+                </a>
+              </li>
+            </ul>
+          </Paper>}
+      </Page>
+    );
   })));
