@@ -34,39 +34,57 @@ export class NGNodesEditor extends React.Component<NGNodesEditorProps, NGNodesEd
     this.state = {};
   }
 
+  handleDialogClose = () => {
+    this.props.changeOpenDialog(false);
+  }
+
+  handleDialogOpen = () => {
+    this.props.changeOpenDialog(true);
+  }
+
+  handleAddNode = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+    this.props.onChange(this.props.values.insert(0, ng.createDefaultNode()));
+  }
+
+  handleChangeNode = (x: ng.NGNode) => {
+    this.props.onChange(list.update(this.props.values, x));
+  }
+
   render() {
-    return <>
-      <Dialog
-        open={this.props.openDialog}
-        autoScrollBodyContent={true}
-        onRequestClose={() => this.props.changeOpenDialog(false)}>
-        {this.props.select}
-      </Dialog>
-      <ListItem
-        nestedLevel={this.props.nestedLevel}
-        rightIconButton={this.props.rightIconButton}
-        onClick={() => this.props.changeOpenDialog(true)}
-        open={true}
-        primaryText={<>
-          <a onClick={e => {
-            e.stopPropagation();
-            this.props.onChange(this.props.values.insert(0, ng.createDefaultNode()));
-          }}>[+]</a>
-          {this.props.primaryText}
-        </>}
-        autoGenerateNestedIndicator={false}
-        nestedItems={this.props.values.map(value => <NGNodeEditor
-          key={value.id}
-          value={value}
-          onChange={x => this.props.onChange(list.update(this.props.values, x))}
-          nestedLevel={this.props.nestedLevel + 1}
-          rightIconButton={<IconButton
-            onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== value.id))}>
-            <FontIcon className="material-icons">close</FontIcon>
-          </IconButton>}
-        />)
-          .toArray()} />
-    </>;
+    return (
+      <>
+        <Dialog
+          open={this.props.openDialog}
+          autoScrollBodyContent={true}
+          onRequestClose={this.handleDialogClose}
+        >
+          {this.props.select}
+        </Dialog>
+        <ListItem
+          nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
+          onClick={this.handleDialogOpen}
+          open={true}
+          primaryText={<>
+            <a onClick={this.handleAddNode}>[+]</a>
+            {this.props.primaryText}
+          </>}
+          autoGenerateNestedIndicator={false}
+          nestedItems={this.props.values.map(value => <NGNodeEditor
+            key={value.id}
+            value={value}
+            onChange={this.handleChangeNode}
+            nestedLevel={this.props.nestedLevel + 1}
+            rightIconButton={<IconButton
+              onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== value.id))}>
+              <FontIcon className="material-icons">close</FontIcon>
+            </IconButton>}
+          />)
+            .toArray()}
+        />
+      </>
+    );
   }
 }
 
@@ -369,31 +387,37 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
   }
 
   render() {
-    return <>
-      <Dialog
-        open={this.props.openDialog}
-        autoScrollBodyContent={true}
-        onRequestClose={() => this.props.changeOpenDialog(false)}>
-        {this.props.select}
-      </Dialog>
-      <ListItem
-        nestedLevel={this.props.nestedLevel}
-        rightIconButton={this.props.rightIconButton}
-        onClick={() => this.props.changeOpenDialog(true)}
-        open={true}
-        primaryText="Not"
-        autoGenerateNestedIndicator={false}
-        nestedItems={[
-          <NGNodeEditor
-            nestedLevel={this.props.nestedLevel + 1}
-            key="node"
-            value={this.props.value.child} onChange={node => {
-              this.props.onChange({
-                ...this.props.value,
-                child: node,
-              });
-            }} />,
-        ]} />
-    </>;
+    return (
+      <>
+        <Dialog
+          open={this.props.openDialog}
+          autoScrollBodyContent={true}
+          onRequestClose={() => this.props.changeOpenDialog(false)}
+        >
+          {this.props.select}
+        </Dialog>
+        <ListItem
+          nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
+          onClick={() => this.props.changeOpenDialog(true)}
+          open={true}
+          primaryText="Not"
+          autoGenerateNestedIndicator={false}
+          nestedItems={[
+            <NGNodeEditor
+              nestedLevel={this.props.nestedLevel + 1}
+              key="node"
+              value={this.props.value.child}
+              onChange={node => {
+                this.props.onChange({
+                  ...this.props.value,
+                  child: node,
+                });
+              }}
+            />,
+          ]}
+        />
+      </>
+    );
   }
 }

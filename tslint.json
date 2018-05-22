@@ -33,7 +33,8 @@
             "spaces",
             2
         ],
-        "no-floating-promises": false
+        "no-floating-promises": false,
+        "jsx-no-multiline-js": false
     },
     "rulesDirectory": []
 }
