@@ -3,11 +3,10 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Checkbox,
-  FontIcon,
-  IconButton,
   MenuItem,
   SelectField,
   TextField,
+  RaisedButton,
 } from "material-ui";
 import * as React from "react";
 import { Subject, Subscription } from "rxjs";
@@ -165,9 +164,9 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
           }
         }}
         fullWidth={true} />
-      <IconButton onClick={() => this.onSubmit()}>
-        <FontIcon className="material-icons">arrow_forward</FontIcon>
-      </IconButton>
+      <RaisedButton onClick={() => this.onSubmit()}>
+        書き込む
+      </RaisedButton>
     </form>;
   }
 }
