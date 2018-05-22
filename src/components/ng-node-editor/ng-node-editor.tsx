@@ -89,152 +89,183 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
     };
   }
 
+  handleChangeOpenDialog = (v: boolean) => {
+    this.setState({ openDialog: v });
+  }
+
+  handleChangeType = (_e: any, _i: any, type: ng.NGNode["type"]) => {
+    switch (type) {
+      case "not":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "not",
+          child: ng.createDefaultNode(),
+        });
+        break;
+      case "and":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "and",
+          children: Im.List(),
+        });
+        break;
+      case "or":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "or",
+          children: Im.List(),
+        });
+        break;
+      case "profile":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "profile",
+          profile: "",
+        });
+        break;
+      case "hash":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "hash",
+          hash: "",
+        });
+        break;
+      case "text":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "text",
+          matcher: {
+            type: "text",
+            i: false,
+            source: "",
+          },
+        });
+        break;
+      case "name":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "name",
+          matcher: {
+            type: "text",
+            i: false,
+            source: "",
+          },
+        });
+        break;
+      case "vote":
+        this.props.onChange({
+          id: this.props.value.id,
+          type: "vote",
+          value: -5,
+        });
+        break;
+    }
+  }
+
   render(): React.ReactNode {
-    const select = <SelectField
-      floatingLabelText="タイプ"
-      value={this.props.value.type}
-      onChange={(_e, _i, type) => {
-        switch (type) {
-          case "not":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "not",
-              child: ng.createDefaultNode(),
-            });
-            break;
-          case "and":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "and",
-              children: Im.List(),
-            });
-            break;
-          case "or":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "or",
-              children: Im.List(),
-            });
-            break;
-          case "profile":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "profile",
-              profile: "",
-            });
-            break;
-          case "hash":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "hash",
-              hash: "",
-            });
-            break;
-          case "text":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "text",
-              matcher: {
-                type: "text",
-                i: false,
-                source: "",
-              },
-            });
-            break;
-          case "name":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "name",
-              matcher: {
-                type: "text",
-                i: false,
-                source: "",
-              },
-            });
-            break;
-          case "vote":
-            this.props.onChange({
-              id: this.props.value.id,
-              type: "vote",
-              value: -5,
-            });
-            break;
-        }
-      }}
-    >
-      <MenuItem value={"not"} primaryText="not" />
-      <MenuItem value={"and"} primaryText="and" />
-      <MenuItem value={"or"} primaryText="or" />
-      <MenuItem value={"profile"} primaryText="profile" />
-      <MenuItem value={"hash"} primaryText="hash" />
-      <MenuItem value={"text"} primaryText="text" />
-      <MenuItem value={"name"} primaryText="name" />
-      <MenuItem value={"vote"} primaryText="vote" />
-    </SelectField>;
-    return this.props.value.type === "not" ? <NGNotNodeEditor
-      nestedLevel={this.props.nestedLevel}
-      rightIconButton={this.props.rightIconButton}
-      openDialog={this.state.openDialog}
-      changeOpenDialog={v => this.setState({ openDialog: v })}
-      value={this.props.value}
-      select={select}
-      onChange={v => this.props.onChange(v)} />
-      : this.props.value.type === "and" ? <NGAndNodeEditor
-        nestedLevel={this.props.nestedLevel}
-        rightIconButton={this.props.rightIconButton}
-        select={select}
-        openDialog={this.state.openDialog}
-        changeOpenDialog={v => this.setState({ openDialog: v })}
-        value={this.props.value}
-        onChange={v => this.props.onChange(v)} />
-        : this.props.value.type === "or" ? <NGOrNodeEditor
+    const select = (
+      <SelectField
+        floatingLabelText="タイプ"
+        value={this.props.value.type}
+        onChange={this.handleChangeType}
+      >
+        <MenuItem value={"not"} primaryText="not" />
+        <MenuItem value={"and"} primaryText="and" />
+        <MenuItem value={"or"} primaryText="or" />
+        <MenuItem value={"profile"} primaryText="profile" />
+        <MenuItem value={"hash"} primaryText="hash" />
+        <MenuItem value={"text"} primaryText="text" />
+        <MenuItem value={"name"} primaryText="name" />
+        <MenuItem value={"vote"} primaryText="vote" />
+      </SelectField>
+    );
+    return this.props.value.type === "not"
+      ? (
+        <NGNotNodeEditor
+          nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
+          openDialog={this.state.openDialog}
+          changeOpenDialog={this.handleChangeOpenDialog}
+          value={this.props.value}
+          select={select}
+          onChange={this.props.onChange}
+        />
+      )
+      : this.props.value.type === "and" ? (
+        <NGAndNodeEditor
           nestedLevel={this.props.nestedLevel}
           rightIconButton={this.props.rightIconButton}
           select={select}
           openDialog={this.state.openDialog}
-          changeOpenDialog={v => this.setState({ openDialog: v })}
+          changeOpenDialog={this.handleChangeOpenDialog}
           value={this.props.value}
-          onChange={v => this.props.onChange(v)} />
-          : this.props.value.type === "profile" ? <NGProfileNodeEditor
+          onChange={this.props.onChange} />
+      )
+        : this.props.value.type === "or" ? (
+          <NGOrNodeEditor
             nestedLevel={this.props.nestedLevel}
             rightIconButton={this.props.rightIconButton}
             select={select}
             openDialog={this.state.openDialog}
-            changeOpenDialog={v => this.setState({ openDialog: v })}
+            changeOpenDialog={this.handleChangeOpenDialog}
             value={this.props.value}
-            onChange={v => this.props.onChange(v)} />
-            : this.props.value.type === "hash" ? <NGHashNodeEditor
+            onChange={this.props.onChange} />
+        )
+          : this.props.value.type === "profile" ? (
+            <NGProfileNodeEditor
               nestedLevel={this.props.nestedLevel}
               rightIconButton={this.props.rightIconButton}
               select={select}
               openDialog={this.state.openDialog}
-              changeOpenDialog={v => this.setState({ openDialog: v })}
+              changeOpenDialog={this.handleChangeOpenDialog}
               value={this.props.value}
-              onChange={v => this.props.onChange(v)} />
-              : this.props.value.type === "text" ? <NGTextNodeEditor
+              onChange={this.props.onChange}
+            />
+          )
+            : this.props.value.type === "hash" ? (
+              <NGHashNodeEditor
                 nestedLevel={this.props.nestedLevel}
                 rightIconButton={this.props.rightIconButton}
-                openDialog={this.state.openDialog}
-                changeOpenDialog={v => this.setState({ openDialog: v })}
                 select={select}
+                openDialog={this.state.openDialog}
+                changeOpenDialog={this.handleChangeOpenDialog}
                 value={this.props.value}
-                onChange={v => this.props.onChange(v)} />
-                : this.props.value.type === "name" ? <NGNameNodeEditor
+                onChange={this.props.onChange}
+              />
+            )
+              : this.props.value.type === "text" ? (
+                <NGTextNodeEditor
                   nestedLevel={this.props.nestedLevel}
                   rightIconButton={this.props.rightIconButton}
                   openDialog={this.state.openDialog}
-                  changeOpenDialog={v => this.setState({ openDialog: v })}
+                  changeOpenDialog={this.handleChangeOpenDialog}
                   select={select}
                   value={this.props.value}
-                  onChange={v => this.props.onChange(v)} />
-                  : this.props.value.type === "vote" ? <NGVoteNodeEditor
+                  onChange={this.props.onChange}
+                />
+              )
+                : this.props.value.type === "name" ? (
+                  <NGNameNodeEditor
                     nestedLevel={this.props.nestedLevel}
                     rightIconButton={this.props.rightIconButton}
-                    select={select}
                     openDialog={this.state.openDialog}
-                    changeOpenDialog={v => this.setState({ openDialog: v })}
+                    changeOpenDialog={this.handleChangeOpenDialog}
+                    select={select}
                     value={this.props.value}
-                    onChange={v => this.props.onChange(v)} />
+                    onChange={this.props.onChange}
+                  />
+                )
+                  : this.props.value.type === "vote" ? (
+                    <NGVoteNodeEditor
+                      nestedLevel={this.props.nestedLevel}
+                      rightIconButton={this.props.rightIconButton}
+                      select={select}
+                      openDialog={this.state.openDialog}
+                      changeOpenDialog={this.handleChangeOpenDialog}
+                      value={this.props.value}
+                      onChange={this.props.onChange}
+                    />
+                  )
                     : null;
   }
 }
@@ -260,19 +291,22 @@ export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNod
   }
 
   render() {
-    return <NGNodesEditor
-      openDialog={this.props.openDialog}
-      changeOpenDialog={this.props.changeOpenDialog}
-      select={this.props.select}
-      nestedLevel={this.props.nestedLevel}
-      rightIconButton={this.props.rightIconButton}
-      primaryText="Or"
-      values={this.props.value.children} onChange={nodes => {
-        this.props.onChange({
-          ...this.props.value,
-          children: nodes,
-        });
-      }} />;
+    return (
+      <NGNodesEditor
+        openDialog={this.props.openDialog}
+        changeOpenDialog={this.props.changeOpenDialog}
+        select={this.props.select}
+        nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
+        primaryText="Or"
+        values={this.props.value.children}
+        onChange={nodes => {
+          this.props.onChange({
+            ...this.props.value,
+            children: nodes,
+          });
+        }} />
+    );
   }
 }
 
