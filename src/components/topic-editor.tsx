@@ -3,11 +3,11 @@ import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import { UserData } from "../models";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
-import { UserData } from "../models";
 
 interface TopicEditorProps {
   topic: api.TopicNormal;

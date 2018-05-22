@@ -21,7 +21,7 @@ import {
   MdEditor,
   Page,
   TagsInput,
-  UserSwitch
+  UserSwitch,
 } from "../components";
 import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";

@@ -6,16 +6,15 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { UserData } from "../models";
 import { apiClient } from "../utils";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import { UserData } from "../models";
 
 interface TopicFavoProps {
   userData: UserData;
   detail: boolean;
 }
-
 
 interface TopicFavoState {
   topicFavo: api.Topic[] | null;

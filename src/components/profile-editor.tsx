@@ -2,11 +2,11 @@ import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import { UserData } from "../models";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
-import { UserData } from "../models";
 
 interface ProfileEditorProps {
   profile: api.Profile | null;

@@ -26,8 +26,8 @@ import {
 import { ResSeted } from "../models";
 import {
   myInject,
+  TopicStore,
   UserStore,
-  TopicStore
 } from "../stores";
 import * as style from "./topic.scss";
 
@@ -70,7 +70,6 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
       }
     }
 
-
     render() {
       return <Page
         disableScroll={true}
@@ -107,7 +106,9 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                   open={this.state.isNGDialog}
                   autoScrollBodyContent={true}
                   onRequestClose={() => this.setState({ isNGDialog: false })}>
-                  <NG userData={this.props.user.data} onChangeUserData={data => this.props.user.setData(data)} />
+                  <NG
+                    userData={this.props.user.data}
+                    onChangeUserData={v => this.props.user.setData(v)} />
                 </Dialog>
                 : null
               }
@@ -191,14 +192,18 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                     </Paper>} />
                 {this.state.isResWrite && this.props.user.data !== null
                   ? <Paper className={style.resWrite}>
-                    <ResWrite topic={data.topic.id} reply={null} userData={this.props.user.data} changeUserData={x => this.props.user.setData(x)} />
+                    <ResWrite
+                      topic={data.topic.id}
+                      reply={null}
+                      userData={this.props.user.data}
+                      changeUserData={x => this.props.user.setData(x)} />
                   </Paper>
-                    : null}
+                  : null}
               </div>
             </>;
-              })()
-              : null
-            }
+          })()
+          : null
+        }
       </Page>;
-            }
-          })));
+    }
+  })));

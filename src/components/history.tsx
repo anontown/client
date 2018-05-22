@@ -4,12 +4,12 @@ import {
   IconButton,
 } from "material-ui";
 import * as React from "react";
+import { Link } from "react-router-dom";
 import {
   dateFormat,
 } from "../utils";
 import { Md } from "./md";
 import { TagsLink } from "./tags-link";
-import { Link } from "react-router-dom";
 
 interface HistoryProps {
   history: api.History;

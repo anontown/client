@@ -1,5 +1,5 @@
-import { observable } from "mobx";
 import * as api from "@anontown/api-types";
+import { observable } from "mobx";
 
 export class CacheStore {
   @observable clients = new Map<string, api.Client>();

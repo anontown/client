@@ -21,7 +21,7 @@ export class ResHashStore {
         const token = this.user.data !== null ? this.user.data.token : null;
         this.data = {
           reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findResHash(token, {
-            hash: hash,
+            hash,
           }))),
           hash,
         };

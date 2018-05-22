@@ -16,18 +16,18 @@ import { inject } from "mobx-react";
 import * as React from "react";
 import { ObjectOmit } from "typelevel-ts";
 import { AuthStore } from "./auth-store";
+import { CacheStore } from "./cache-store";
 import { NotificationsStore } from "./notifications-store";
 import { ProfileStore } from "./profile-store";
 import { ProfilesStore } from "./profiles-store";
+import { ResHashStore } from "./res-hash-store";
 import { ResReplyStore } from "./res-reply-store";
 import { ResStore } from "./res-store";
 import { TopicDataStore } from "./topic-data-store";
 import { TopicForkStore } from "./topic-fork-store";
 import { TopicSearchStore } from "./topic-search-store";
-import { UserStore } from "./user-store";
 import { TopicStore } from "./topic-store";
-import { CacheStore } from "./cache-store";
-import { ResHashStore } from "./res-hash-store";
+import { UserStore } from "./user-store";
 
 const userStore = new UserStore();
 const cacheStore = new CacheStore();
@@ -45,7 +45,7 @@ export const stores = {
   resReply: new ResReplyStore(userStore),
   topic: new TopicStore(userStore),
   cache: cacheStore,
-  resHash: new ResHashStore(userStore)
+  resHash: new ResHashStore(userStore),
 };
 
 export type Stores = typeof stores;

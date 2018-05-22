@@ -1,5 +1,6 @@
 import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
+import * as Im from "immutable";
 import {
   Checkbox,
   FontIcon,
@@ -9,12 +10,11 @@ import {
   TextField,
 } from "material-ui";
 import * as React from "react";
+import { Subject, Subscription } from "rxjs";
+import { Storage, UserData } from "../models";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
-import { UserData, Storage } from "../models";
-import * as Im from "immutable";
-import { Subscription, Subject } from "rxjs";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -24,39 +24,12 @@ interface ResWriteProps {
   changeUserData: (data: UserData) => void;
 }
 
-
 interface ResWriteState {
   errors?: string[];
   textCache: string;
 }
 
 export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
-  constructor(props: ResWriteProps) {
-    super(props);
-    const text = this.props.reply === null
-      ? this.getData().text
-      : this.getData().replyText.get(this.props.reply, "");
-    this.state = {
-      textCache: text
-    };
-    this.subscriptions.push(this.textUpdate
-      .debounceTime(1000)
-      .subscribe(text => {
-        if (this.props.reply === null) {
-          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
-            ...x,
-            text: text
-          })));
-        } else {
-          const reply = this.props.reply;
-          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
-            ...x,
-            replyText: x.replyText.set(reply, text)
-          })));
-        }
-      }));
-  }
-
   formDefualt = {
     name: "",
     profile: null as string | null,
@@ -67,6 +40,33 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
 
   textUpdate = new Subject<string>();
   subscriptions: Subscription[] = [];
+
+  constructor(props: ResWriteProps) {
+    super(props);
+    const text = this.props.reply === null
+      ? this.getData().text
+      : this.getData().replyText.get(this.props.reply, "");
+    this.state = {
+      textCache: text,
+    };
+    this.subscriptions.push(this.textUpdate
+      .debounceTime(1000)
+      .subscribe(value => {
+        if (this.props.reply === null) {
+          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+            ...x,
+            value,
+          })));
+        } else {
+          const reply = this.props.reply;
+          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+            ...x,
+            replyText: x.replyText.set(reply, value),
+          })));
+        }
+      }));
+  }
+
   componentWillUnmount() {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
@@ -80,8 +80,8 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       ...this.props.userData,
       storage: {
         ...this.props.userData.storage,
-        topicWrite: data
-      }
+        topicWrite: data,
+      },
     });
   }
 
@@ -123,11 +123,21 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       <TextField
         floatingLabelText="名前"
         value={data.name}
-        onChange={(_e, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, name: v })))} />
+        onChange={(_e, v) =>
+          this.setStorage(this.props.userData.storage.topicWrite
+            .update(this.props.topic, this.formDefualt, x => ({
+              ...x,
+              name: v,
+            })))} />
       <SelectField
         floatingLabelText="プロフ"
         value={data.profile}
-        onChange={(_e, _i, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, profile: v })))}>
+        onChange={(_e, _i, v) =>
+          this.setStorage(this.props.userData.storage.topicWrite
+            .update(this.props.topic, this.formDefualt, x => ({
+              ...x,
+              profile: v,
+            })))}>
         <MenuItem value={null} primaryText="なし" />
         {this.props.userData.profiles.map(p =>
           <MenuItem
@@ -138,7 +148,12 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       <Checkbox
         label="age"
         checked={data.age}
-        onCheck={(_e, v) => this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({ ...x, age: v })))} />
+        onCheck={(_e, v) =>
+          this.setStorage(this.props.userData.storage.topicWrite
+            .update(this.props.topic, this.formDefualt, x => ({
+              ...x,
+              age: v,
+            })))} />
       <MdEditor value={this.state.textCache}
         onChange={v => this.setText(v)}
         maxRows={5}

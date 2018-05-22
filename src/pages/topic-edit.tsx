@@ -1,5 +1,6 @@
 import * as api from "@anontown/api-types";
 import { Paper } from "material-ui";
+import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -12,12 +13,11 @@ import {
   TopicEditor,
   UserSwitch,
 } from "../components";
+import { myInject, UserStore } from "../stores";
 import {
   apiClient,
   withModal,
 } from "../utils";
-import { UserStore, myInject } from "../stores";
-import { observer } from "mobx-react";
 
 interface TopicEditBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -75,4 +75,3 @@ export function TopicEditPage() {
 }
 
 export const TopicEditModal = withModal(() => <TopicEditBase zDepth={0} />, "トピック編集");
-

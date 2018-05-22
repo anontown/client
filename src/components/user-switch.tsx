@@ -1,5 +1,5 @@
-import { UserData } from "../models";
 import * as React from "react";
+import { UserData } from "../models";
 
 interface UserSwitchProps {
   userData: UserData | null;
@@ -10,7 +10,7 @@ interface UserSwitchState {
 
 }
 
-export class UserSwitch extends React.Component<UserSwitchProps, UserSwitchState>{
+export class UserSwitch extends React.Component<UserSwitchProps, UserSwitchState> {
   constructor(props: UserSwitchProps) {
     super(props);
   }

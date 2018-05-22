@@ -3,14 +3,13 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { UserData } from "../models";
 import * as style from "./tag-favo.scss";
 import { TagsLink } from "./tags-link";
-import { UserData } from "../models";
 
 interface TagFavoProps {
   userData: UserData;
 }
-
 
 interface TagFavoState {
 }

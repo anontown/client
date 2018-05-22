@@ -1,12 +1,23 @@
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import { observable } from "mobx";
+import { Observable, ReplaySubject, Subject } from "rxjs";
+import { ResSeted } from "../models";
 import { apiClient, resSetedCreate } from "../utils";
 import { UserStore } from "./user-store";
-import { ResSeted } from "../models";
-import { ReplaySubject, Subject, Observable } from "rxjs";
 
 export class TopicStateData {
+  static async create(topicID: string,
+                      user: UserStore,
+                      setMsg: (x: string) => void): Promise<TopicStateData | null> {
+    try {
+      return new TopicStateData(setMsg, user, await apiClient.findTopicOne({ id: topicID }));
+    } catch {
+      setMsg("トピック取得に失敗");
+      return null;
+    }
+  }
+
   readonly limit = 50;
 
   @observable reses: Im.List<ResSeted> = Im.List();
@@ -15,9 +26,10 @@ export class TopicStateData {
   @observable scrollNewItem = new ReplaySubject<string | null>(1);
   @observable updateItem = new Subject<ResSeted>();
   @observable newItem = Observable.empty<ResSeted>();
+
   private constructor(public setMsg: (x: string) => void,
-    public user: UserStore,
-    public topic: api.Topic) {
+                      public user: UserStore,
+                      public topic: api.Topic) {
     this.storageSaveDate(null);
 
     if (user.data !== null) {
@@ -31,7 +43,6 @@ export class TopicStateData {
       this.scrollNewItem.next(null);
     }
 
-
     this.newItem = apiClient.streamUpdateTopic(user.data !== null ? user.data.token : null, {
       id: topic.id,
     })
@@ -39,16 +50,10 @@ export class TopicStateData {
         this.topic = { ...this.topic, resCount: x.count };
         this.storageSaveDate(null);
       })
-      .flatMap(x => resSetedCreate.resSet(user.data !== null ? user.data.token : null, [x.res]).then(reses => reses[0]));
-  }
-
-  static async create(topicID: string, user: UserStore, setMsg: (x: string) => void): Promise<TopicStateData | null> {
-    try {
-      return new TopicStateData(setMsg, user, await apiClient.findTopicOne({ id: topicID }));
-    } catch {
-      setMsg("トピック取得に失敗");
-      return null;
-    }
+      .flatMap(x => resSetedCreate.resSet(user.data !== null
+        ? user.data.token
+        : null, [x.res])
+        .then(reses => reses[0]));
   }
 
   storageSaveDate(date: string | null) {

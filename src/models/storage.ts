@@ -76,8 +76,8 @@ interface StorageJSON9 {
       text: string,
       age: boolean,
       replyText: { [key: string]: string },
-    }
-  }
+    },
+  };
   readonly ng: ngJson.NGJson[];
 }
 
@@ -107,7 +107,7 @@ export interface Storage {
   readonly tagsFavo: Im.Set<Im.Set<string>>;
   readonly topicRead: Im.Map<string, {
     date: string,
-    count: number
+    count: number,
   }>;
   readonly topicWrite: Im.Map<string, {
     name: string,
@@ -115,7 +115,7 @@ export interface Storage {
     text: string,
     replyText: Im.Map<string, string>,
     age: boolean,
-  }>,
+  }>;
   readonly ng: Im.List<ng.NG>;
 }
 
@@ -222,7 +222,7 @@ function convert8To9(val: StorageJSON8): StorageJSON9 {
   return {
     ...val,
     ver: "9",
-    topicWrite: {}
+    topicWrite: {},
   };
 }
 

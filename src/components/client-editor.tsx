@@ -2,9 +2,9 @@ import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import { UserData } from "../models";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
-import { UserData } from "../models";
 
 interface ClientEditorProps {
   client: api.Client | null;
@@ -70,4 +70,4 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
       }
     }
   }
-};
+}

@@ -4,9 +4,8 @@ import {
   IconButton,
 } from "material-ui";
 import * as React from "react";
-import { ClientEditor } from "./client-editor";
 import { UserData } from "../models";
-
+import { ClientEditor } from "./client-editor";
 
 interface ClientProps {
   client: api.Client;
