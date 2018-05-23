@@ -20,6 +20,7 @@ export interface MdEditorProps {
   fullWidth?: boolean;
   onKeyPress?: React.KeyboardEventHandler<{}>;
   onKeyDown?: React.KeyboardEventHandler<{}>;
+  actions?: React.ReactNode
 }
 
 interface MdEditorState {
@@ -102,14 +103,6 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             }}
           />
         </Dialog>
-        <div>
-          <IconButton onClick={() => this.setState({ slowImage: true })}>
-            <FontIcon className="material-icons">add_a_photo</FontIcon>
-          </IconButton>
-          <IconButton onClick={() => this.setState({ slowOekaki: true })}>
-            <FontIcon className="material-icons">create</FontIcon>
-          </IconButton>
-        </div>
         <Tabs>
           <TabList>
             <Tab>Edit</Tab>
@@ -140,6 +133,15 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
             </div>
           </TabPanel>
         </Tabs>
+        <div>
+          <IconButton onClick={() => this.setState({ slowImage: true })}>
+            <FontIcon className="material-icons">add_a_photo</FontIcon>
+          </IconButton>
+          <IconButton onClick={() => this.setState({ slowOekaki: true })}>
+            <FontIcon className="material-icons">create</FontIcon>
+          </IconButton>
+          {this.props.actions}
+        </div>
       </div>
     );
   }

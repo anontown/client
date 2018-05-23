@@ -169,10 +169,10 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
             this.onSubmit();
           }
         }}
-        fullWidth={true} />
-      <RaisedButton onClick={() => this.onSubmit()}>
-        書き込む
-      </RaisedButton>
+        fullWidth={true}
+        actions={<RaisedButton onClick={() => this.onSubmit()}>
+          書き込む
+      </RaisedButton>} />
     </form>;
   }
 }
