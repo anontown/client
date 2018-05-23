@@ -2,10 +2,6 @@ import { AtError } from "@anontown/api-client";
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
-  Checkbox,
-  MenuItem,
-  SelectField,
-  TextField,
   RaisedButton,
 } from "material-ui";
 import * as React from "react";
@@ -119,40 +115,50 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
     const data = this.getData();
     return <form>
       <Errors errors={this.state.errors} />
-      <TextField
-        floatingLabelText="名前"
+      <input
+        style={{
+          marginRight: "3px"
+        }}
+        type="text"
+        placeholder="名前"
         value={data.name}
-        onChange={(_e, v) =>
+        onChange={e =>
           this.setStorage(this.props.userData.storage.topicWrite
             .update(this.props.topic, this.formDefualt, x => ({
               ...x,
-              name: v,
+              name: e.target.value,
             })))} />
-      <SelectField
-        floatingLabelText="プロフ"
-        value={data.profile}
-        onChange={(_e, _i, v) =>
+      <select
+        style={{
+          marginRight: "3px",
+          backgroundColor: "#fff"
+        }}
+        value={data.profile || ""}
+        onChange={e => {
           this.setStorage(this.props.userData.storage.topicWrite
             .update(this.props.topic, this.formDefualt, x => ({
               ...x,
-              profile: v,
-            })))}>
-        <MenuItem value={null} primaryText="なし" />
-        {this.props.userData.profiles.map(p =>
-          <MenuItem
-            key={p.id}
-            value={p.id}
-            primaryText={`●${p.sn} ${p.name}`} />)}
-      </SelectField>
-      <Checkbox
-        label="age"
-        checked={data.age}
-        onCheck={(_e, v) =>
-          this.setStorage(this.props.userData.storage.topicWrite
-            .update(this.props.topic, this.formDefualt, x => ({
-              ...x,
-              age: v,
-            })))} />
+              profile: e.target.value || null,
+            })))
+        }}>
+        <option value="">(プロフなし)</option>
+        {this.props.userData.profiles.map(p => <option value={p.id} key={p.id}>{`●${p.sn} ${p.name}`}</option>)}
+      </select>
+      <label
+        style={{
+          marginRight: "3px"
+        }}>
+        <input
+          type="checkbox"
+          checked={data.age}
+          onChange={e =>
+            this.setStorage(this.props.userData.storage.topicWrite
+              .update(this.props.topic, this.formDefualt, x => ({
+                ...x,
+                age: e.target.checked,
+              })))} />
+        Age
+      </label>
       <MdEditor value={this.state.textCache}
         onChange={v => this.setText(v)}
         maxRows={5}
