@@ -113,11 +113,10 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
         {this.state.isInit
           ? <div className={style.container}>
             <Toolbar className={style.header}>
-              <ToolbarGroup firstChild={true}>
+              <ToolbarGroup firstChild={true}  className={style.big}>
                 <ToolbarTitle text="Anontown" />
-                <ToolbarTitle
-                  text={`build:${dateFormat.format(BUILD_DATE)}`}
-                  style={{fontSize: "0.5rem"}} />
+                <ToolbarTitle text={`build:${dateFormat.format(BUILD_DATE)}`}
+                  style={{ fontSize: "0.5rem" }} />
               </ToolbarGroup>
               <ToolbarGroup>
                 <IconButton containerElement={<Link to="/" />}>
