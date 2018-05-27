@@ -28,3 +28,4 @@ export * from "./ng-editor";
 export * from "./ng-node-editor";
 export * from "./user-switch";
 export * from "./text-field";
+export * from "./select";
