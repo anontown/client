@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const OfflinePlugin = require("offline-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const path=require("path");
 
 module.exports = {
     entry: {
@@ -16,7 +17,10 @@ module.exports = {
         publicPath: '/'
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js"],
+        alias: {
+            style$: path.resolve(__dirname, 'src/style')
+        }
     },
     plugins: [
         new webpack.DefinePlugin({

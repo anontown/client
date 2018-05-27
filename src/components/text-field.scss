@@ -1,8 +1,5 @@
-.input{
-  border-radius: 4px;
-  box-shadow: 1px 1px #ccc inset;
+@import "style$/input.scss";
 
-  &:focus {
-    outline:solid 1px #ffcc55;
-  }
+.input{
+  @include input();
 }
