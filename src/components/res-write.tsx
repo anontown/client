@@ -12,6 +12,7 @@ import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TextField } from "./text-field";
 import { Select } from "./select";
+import { CheckBox } from "./check-box";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -146,21 +147,16 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
           { value: "", text: "(プロフなし)" },
           ...this.props.userData.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` }))
         ]} />
-      <label
-        style={{
-          marginRight: "3px"
-        }}>
-        <input
-          type="checkbox"
-          checked={data.age}
-          onChange={e =>
-            this.setStorage(this.props.userData.storage.topicWrite
-              .update(this.props.topic, this.formDefualt, x => ({
-                ...x,
-                age: e.target.checked,
-              })))} />
-        Age
-      </label>
+      <CheckBox
+        value={data.age}
+        onChange={v =>
+          this.setStorage(this.props.userData.storage.topicWrite
+            .update(this.props.topic, this.formDefualt, x => ({
+              ...x,
+              age: v,
+            })))}
+        label="Age"
+      />
       <MdEditor value={this.state.textCache}
         onChange={v => this.setText(v)}
         maxRows={5}
