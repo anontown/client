@@ -11,6 +11,7 @@ import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TextField } from "./text-field";
+import { Select } from "./select";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -128,22 +129,23 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
               ...x,
               name: v,
             })))} />
-      <select
+      <Select
         style={{
           marginRight: "3px",
           backgroundColor: "#fff"
         }}
         value={data.profile || ""}
-        onChange={e => {
+        onChange={v => {
           this.setStorage(this.props.userData.storage.topicWrite
             .update(this.props.topic, this.formDefualt, x => ({
               ...x,
-              profile: e.target.value || null,
+              profile: v || null,
             })))
-        }}>
-        <option value="">(プロフなし)</option>
-        {this.props.userData.profiles.map(p => <option value={p.id} key={p.id}>{`●${p.sn} ${p.name}`}</option>)}
-      </select>
+        }}
+        options={[
+          { value: "", text: "(プロフなし)" },
+          ...this.props.userData.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` }))
+        ]} />
       <label
         style={{
           marginRight: "3px"
