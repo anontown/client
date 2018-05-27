@@ -10,6 +10,7 @@ import { Storage, UserData } from "../models";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
+import { TextField } from "./text-field";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -115,18 +116,17 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
     const data = this.getData();
     return <form>
       <Errors errors={this.state.errors} />
-      <input
+      <TextField
         style={{
           marginRight: "3px"
         }}
-        type="text"
         placeholder="名前"
         value={data.name}
-        onChange={e =>
+        onChange={v =>
           this.setStorage(this.props.userData.storage.topicWrite
             .update(this.props.topic, this.formDefualt, x => ({
               ...x,
-              name: e.target.value,
+              name: v,
             })))} />
       <select
         style={{
