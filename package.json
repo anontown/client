@@ -60,6 +60,7 @@
     "query-string": "^5.0.1",
     "react": "^16.2.0",
     "react-async-script": "^0.9.1",
+    "react-autosize-textarea": "^3.0.3",
     "react-color": "^2.13.8",
     "react-dom": "^16.2.0",
     "react-google-recaptcha": "^0.9.9",
