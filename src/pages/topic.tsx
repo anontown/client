@@ -33,10 +33,6 @@ import * as style from "./topic.scss";
 
 // TODO:NGのtransparent
 
-// ジェネリクス解除
-interface ResScroll { new(): Scroll<ResSeted>; }
-const ResScroll = Scroll as ResScroll;
-
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   topic: TopicStore;
@@ -169,7 +165,7 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                       : null}
                   </div>
                 </Paper>
-                <ResScroll
+                <Scroll<ResSeted>
                   className={style.reses}
                   items={data.reses}
                   onChangeItems={x => data.onChangeItems(x)}

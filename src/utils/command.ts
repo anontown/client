@@ -14,7 +14,7 @@ export class Command<T> {
     return this.history.get(this.index)!;
   }
 
-  undo() {
+  undo(): Command<T> {
     if (this.index === 0) {
       return this;
     } else {
@@ -22,7 +22,7 @@ export class Command<T> {
     }
   }
 
-  redo() {
+  redo(): Command<T> {
     if (this.index === this.history.size - 1) {
       return this;
     } else {
