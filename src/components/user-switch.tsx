@@ -1,5 +1,6 @@
 import * as React from "react";
 import { UserData } from "../models";
+import { observer } from "mobx-react";
 
 interface UserSwitchProps {
   userData: UserData | null;
@@ -10,7 +11,7 @@ interface UserSwitchState {
 
 }
 
-export class UserSwitch extends React.Component<UserSwitchProps, UserSwitchState> {
+export const UserSwitch=observer(class extends React.Component<UserSwitchProps, UserSwitchState> {
   constructor(props: UserSwitchProps) {
     super(props);
   }
@@ -20,4 +21,4 @@ export class UserSwitch extends React.Component<UserSwitchProps, UserSwitchState
       ? this.props.render(this.props.userData)
       : <div>ログインして下さい</div>;
   }
-}
+});
