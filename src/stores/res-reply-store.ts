@@ -9,8 +9,8 @@ import {
 import { UserStore } from "./user-store";
 
 export class ResReplyStore {
-  @observable data: { id: string, reses: Im.List<ResSeted> } | null = null;
-  @observable msg: null | string = null;
+  @observable.ref data: { id: string, reses: Im.List<ResSeted> } | null = null;
+  @observable.ref msg: null | string = null;
 
   constructor(private user: UserStore) { }
 

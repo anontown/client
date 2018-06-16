@@ -11,8 +11,8 @@ import {
 import { UserStore } from "./user-store";
 
 export class NotificationsStore {
-  @observable reses: Im.List<ResSeted> = Im.List();
-  @observable msg: null | string = null;
+  @observable.ref reses: Im.List<ResSeted> = Im.List();
+  @observable.ref msg: null | string = null;
 
   private limit = 50;
 

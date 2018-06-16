@@ -10,7 +10,7 @@ import {
 } from "../utils";
 
 export class UserStore {
-  @observable data: UserData | null = null;
+  @observable.ref data: UserData | null = null;
   onChangeUser: ReplaySubject<void> = new ReplaySubject(1);
 
   constructor() {

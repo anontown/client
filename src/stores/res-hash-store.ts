@@ -9,8 +9,8 @@ import {
 import { UserStore } from "./user-store";
 
 export class ResHashStore {
-  @observable data: { hash: string, reses: Im.List<ResSeted> } | null = null;
-  @observable msg: null | string = null;
+  @observable.ref data: { hash: string, reses: Im.List<ResSeted> } | null = null;
+  @observable.ref msg: null | string = null;
 
   constructor(private user: UserStore) { }
 

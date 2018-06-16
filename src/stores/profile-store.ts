@@ -6,8 +6,8 @@ import {
 import { UserStore } from "./user-store";
 
 export class ProfileStore {
-  @observable profile: api.Profile | null = null;
-  @observable msg: null | string = null;
+  @observable.ref profile: api.Profile | null = null;
+  @observable.ref msg: null | string = null;
 
   constructor(private user: UserStore) { }
 

@@ -20,12 +20,12 @@ export class TopicStateData {
 
   readonly limit = 50;
 
-  @observable reses: Im.List<ResSeted> = Im.List();
-  @observable autoScrollSpeed = 15;
-  @observable isAutoScroll = false;
-  @observable scrollNewItem = new ReplaySubject<string | null>(1);
-  @observable updateItem = new Subject<ResSeted>();
-  @observable newItem = Observable.empty<ResSeted>();
+  @observable.ref reses: Im.List<ResSeted> = Im.List();
+  @observable.ref autoScrollSpeed = 15;
+  @observable.ref isAutoScroll = false;
+  @observable.ref scrollNewItem = new ReplaySubject<string | null>(1);
+  @observable.ref updateItem = new Subject<ResSeted>();
+  @observable.ref newItem = Observable.empty<ResSeted>();
 
   private constructor(public setMsg: (x: string) => void,
     public user: UserStore,
@@ -137,7 +137,7 @@ export class TopicStateData {
 
 export class TopicStore {
 
-  @observable msg: string | null = null;
+  @observable.ref msg: string | null = null;
   @observable data: TopicStateData | null = null;
 
   constructor(private user: UserStore) { }

@@ -5,8 +5,8 @@ import {
 } from "../utils";
 
 export class TopicDataStore {
-  @observable topic: api.Topic | null = null;
-  @observable msg: null | string = null;
+  @observable.ref topic: api.Topic | null = null;
+  @observable.ref msg: null | string = null;
 
   async load(id: string) {
     if (this.topic === null || this.topic.id !== id) {

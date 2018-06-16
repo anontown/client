@@ -4,13 +4,13 @@ import { computed, observable } from "mobx";
 import { apiClient } from "../utils";
 
 export class TopicSearchStore {
-  @observable msg: null | string = null;
-  @observable topics: Im.List<api.Topic> = Im.List();
-  @observable tags: string[] = [];
-  @observable title = "";
-  @observable dead = false;
-  @observable count = 0;
-  @observable page = 0;
+  @observable.ref msg: null | string = null;
+  @observable.ref topics: Im.List<api.Topic> = Im.List();
+  @observable.ref tags: string[] = [];
+  @observable.ref title = "";
+  @observable.ref dead = false;
+  @observable.ref count = 0;
+  @observable.ref page = 0;
 
   readonly limit = 100;
 

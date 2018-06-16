@@ -4,8 +4,8 @@ import { apiClient } from "../utils";
 import { UserStore } from "./user-store";
 
 export class AuthStore {
-  @observable msg: string | null = null;
-  @observable client: api.Client | null = null;
+  @observable.ref msg: string | null = null;
+  @observable.ref client: api.Client | null = null;
 
   constructor(private user: UserStore) { }
 

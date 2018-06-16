@@ -4,8 +4,8 @@ import { apiClient, resSetedCreate } from "../utils";
 import { UserStore } from "./user-store";
 
 export class ResStore {
-  @observable msg: string | null = null;
-  @observable res: ResSeted | null = null;
+  @observable.ref msg: string | null = null;
+  @observable.ref res: ResSeted | null = null;
 
   constructor(private user: UserStore) { }
 

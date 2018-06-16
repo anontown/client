@@ -5,8 +5,8 @@ import { apiClient, list } from "../utils";
 import { UserStore } from "./user-store";
 
 export class ProfilesStore {
-  @observable msg: string | null = null;
-  @observable profiles: Im.List<api.Profile> = Im.List();
+  @observable.ref msg: string | null = null;
+  @observable.ref profiles: Im.List<api.Profile> = Im.List();
 
   constructor(private user: UserStore) { }
 
