@@ -20,8 +20,11 @@ export class ResReplyStore {
       try {
         const token = this.user.data !== null ? this.user.data.token : null;
         this.data = {
-          reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findResReply(token, {
-            reply: id,
+          reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findRes(token, {
+            type: "lt",
+            date: new Date().toISOString(),
+            query: { reply: id },
+            limit: 100
           }))),
           id,
         };

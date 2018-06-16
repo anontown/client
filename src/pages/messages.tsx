@@ -75,9 +75,11 @@ export const MessagesPage = withRouter(myInject(["user"],
       }
 
       try {
-        const msgs = await apiClient.findMsgNew(this.props.user.data.token,
+        const msgs = await apiClient.findMsg(this.props.user.data.token,
           {
             limit: this.limit,
+            date: new Date().toISOString(),
+            type: "lte"
           });
         this.setState({ msgs: Im.List(msgs) });
       } catch {
@@ -97,8 +99,7 @@ export const MessagesPage = withRouter(myInject(["user"],
         try {
           const msgs = await apiClient.findMsg(this.props.user.data.token,
             {
-              type: "after",
-              equal: false,
+              type: "gt",
               date: first.date,
               limit: this.limit,
             });
@@ -121,8 +122,7 @@ export const MessagesPage = withRouter(myInject(["user"],
         try {
           const msgs = await apiClient.findMsg(this.props.user.data.token,
             {
-              type: "before",
-              equal: false,
+              type: "lt",
               date: last.date,
               limit: this.limit,
             });

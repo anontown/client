@@ -8,8 +8,8 @@ import { UserStore } from "./user-store";
 
 export class TopicStateData {
   static async create(topicID: string,
-                      user: UserStore,
-                      setMsg: (x: string) => void): Promise<TopicStateData | null> {
+    user: UserStore,
+    setMsg: (x: string) => void): Promise<TopicStateData | null> {
     try {
       return new TopicStateData(setMsg, user, await apiClient.findTopicOne({ id: topicID }));
     } catch {
@@ -28,8 +28,8 @@ export class TopicStateData {
   @observable newItem = Observable.empty<ResSeted>();
 
   private constructor(public setMsg: (x: string) => void,
-                      public user: UserStore,
-                      public topic: api.Topic) {
+    public user: UserStore,
+    public topic: api.Topic) {
     this.storageSaveDate(null);
 
     if (user.data !== null) {
@@ -110,20 +110,13 @@ export class TopicStateData {
     return this.user.data.storage.topicFavo.has(this.topic.id);
   }
 
-  async findNewItem() {
-    const token = this.user.data !== null ? this.user.data.token : null;
-    return Im.List(await resSetedCreate.resSet(token, await apiClient.findResNew(token, {
-      topic: this.topic.id,
-      limit: this.limit,
-    })));
-  }
-
-  async findItem(type: "before" | "after", date: string, equal: boolean) {
+  async findItem(type: "gt" | "lt" | "gte" | "lte", date: string) {
     const token = this.user.data !== null ? this.user.data.token : null;
     return Im.List(await resSetedCreate.resSet(token, await apiClient.findRes(token, {
-      topic: this.topic.id,
+      query: {
+        topic: this.topic.id
+      },
       type,
-      equal,
       date,
       limit: this.limit,
     })));

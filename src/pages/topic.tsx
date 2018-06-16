@@ -174,8 +174,7 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                   items={data.reses}
                   onChangeItems={x => data.onChangeItems(x)}
                   newItemOrder="bottom"
-                  findNewItem={() => data.findNewItem()}
-                  findItem={(type, date, equal) => data.findItem(type, date, equal)}
+                  findItem={(type, date) => data.findItem(type, date)}
                   width={10}
                   debounceTime={500}
                   autoScrollSpeed={data.autoScrollSpeed}

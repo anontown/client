@@ -28,8 +28,7 @@ export interface ScrollProps<T extends ListItemData> {
   items: Im.List<T>;
   onChangeItems: (items: Im.List<T>) => void;
   newItemOrder: "top" | "bottom";
-  findNewItem: () => Promise<Im.List<T>>;
-  findItem: (type: "before" | "after", date: string, equal: boolean) => Promise<Im.List<T>>;
+  findItem: (type: "gt" | "lt" | "gte" | "lte", date: string) => Promise<Im.List<T>>;
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
@@ -302,7 +301,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.scrollNewItemSubs = obs.subscribe(date => {
       if (date !== null) {
         this._lock(async () => {
-          this.onChangeItems(await this.props.findItem("before", date, true));
+          this.onChangeItems(await this.props.findItem("lte", date));
           switch (this.props.newItemOrder) {
             case "top":
               await this.toTop();
@@ -393,7 +392,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.onChangeItems(this.props.items
-          .concat(await this.props.findItem("after", last.date, false)));
+          .concat(await this.props.findItem("gt", last.date)));
 
         switch (this.props.newItemOrder) {
           case "bottom":
@@ -432,7 +431,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
 
         this.onChangeItems(this.props.items
-          .concat(await this.props.findItem("before", first.date, false)));
+          .concat(await this.props.findItem("lt", first.date)));
         switch (this.props.newItemOrder) {
           case "bottom":
             await this.setTopElement(ise);
@@ -447,7 +446,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   async findNew() {
     await this._lock(async () => {
-      this.onChangeItems(await this.props.findNewItem());
+      this.onChangeItems(await this.props.findItem("lte", new Date().toISOString()));
       switch (this.props.newItemOrder) {
         case "bottom":
           await this.toBottom();
