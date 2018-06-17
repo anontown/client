@@ -104,7 +104,7 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                   onRequestClose={() => this.setState({ isNGDialog: false })}>
                   <NG
                     userData={this.props.user.data}
-                    onChangeUserData={v => this.props.user.setData(v)} />
+                    onChangeStorage={v => this.props.user.setStorage(v)} />
                 </Dialog>
                 : null
               }
@@ -191,7 +191,7 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                       topic={data.topic.id}
                       reply={null}
                       userData={this.props.user.data}
-                      changeUserData={x => this.props.user.setData(x)} />
+                      changeStorage={x => this.props.user.setStorage(x)} />
                   </Paper>
                   : null}
               </div>

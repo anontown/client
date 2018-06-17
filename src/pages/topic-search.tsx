@@ -117,12 +117,9 @@ export const TopicSearchPage =
         const storage = this.props.user.data.storage;
         const tf = storage.tagsFavo;
         const tags = Im.Set(this.props.topicSearch.tags);
-        this.props.user.setData({
-          ...this.props.user.data,
-          storage: {
-            ...storage,
-            tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
-          },
+        this.props.user.setStorage({
+          ...storage,
+          tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
         });
       }
 

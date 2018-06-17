@@ -23,7 +23,6 @@ import { Config } from "../env";
 import { myInject, UserStore } from "../stores";
 import {
   apiClient,
-  createUserData,
 } from "../utils";
 
 interface InPageProps extends RouteComponentProps<{}> {
@@ -106,8 +105,7 @@ export const InPage = withRouter(myInject(["user"], observer(class extends React
           })
           .then(user => user.id);
       const token = await apiClient.createTokenMaster({ id, pass: this.state.pass });
-      const userData = await createUserData(token);
-      this.props.user.setData(userData);
+      this.props.user.userChange(token);
     } catch (e) {
       const rc = this.refs.recaptcha as any;
       if (rc) {

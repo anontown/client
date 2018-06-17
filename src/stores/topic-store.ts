@@ -74,16 +74,13 @@ export class TopicStateData {
       }
     }
     const dateNonNull = date;
-    this.user.setData({
-      ...this.user.data,
-      storage: {
-        ...storage,
-        topicRead: storage.topicRead.update(this.topic.id, x => ({
-          ...x,
-          date: dateNonNull,
-          count: this.topic.resCount,
-        })),
-      },
+    this.user.setStorage({
+      ...storage,
+      topicRead: storage.topicRead.update(this.topic.id, x => ({
+        ...x,
+        date: dateNonNull,
+        count: this.topic.resCount,
+      })),
     });
   }
 
@@ -93,12 +90,9 @@ export class TopicStateData {
     }
     const storage = this.user.data.storage;
     const tf = storage.topicFavo;
-    this.user.setData({
-      ...this.user.data,
-      storage: {
-        ...storage,
-        topicFavo: this.isFavo ? tf.delete(this.topic.id) : tf.add(this.topic.id),
-      },
+    this.user.setStorage({
+      ...storage,
+      topicFavo: this.isFavo ? tf.delete(this.topic.id) : tf.add(this.topic.id),
     });
   }
 

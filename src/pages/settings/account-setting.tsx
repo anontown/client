@@ -64,7 +64,7 @@ export const AccountSettingPage =
             sn: this.state.sn,
           });
           const token = await apiClient.createTokenMaster({ id: user.token.user, pass: this.state.newPass });
-          this.props.user.setData({ ...user, token });
+          this.props.user.updateToken(token);
           this.setState({ errors: [] });
         } catch (e) {
           if (e instanceof AtError) {

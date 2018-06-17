@@ -2,16 +2,15 @@ import { action, observable } from "mobx";
 import * as mobxUtils from "mobx-utils";
 import {
   Observable,
-  ReplaySubject,
 } from "rxjs";
-import { UserData } from "../models";
+import { UserData, Storage } from "../models";
 import {
   storageAPI,
 } from "../utils";
+import * as api from "@anontown/api-types";
 
 export class UserStore {
   @observable.ref data: UserData | null = null;
-  onChangeUser: ReplaySubject<void> = new ReplaySubject(1);
 
   constructor() {
     Observable
@@ -19,24 +18,53 @@ export class UserStore {
       .debounceTime(5000)
       .subscribe(data => {
         if (data !== null) {
-          localStorage.setItem("token", JSON.stringify({
-            id: data.token.id,
-            key: data.token.key,
-          }));
           storageAPI
             .save(data.token, data.storage);
-        } else {
-          localStorage.removeItem("token");
         }
       });
   }
 
-  @action.bound setData(data: UserData | null) {
-    const oldID = this.data !== null ? this.data.token.user : null;
-    const newID = data !== null ? data.token.user : null;
-    this.data = data;
-    if (oldID !== newID) {
-      this.onChangeUser.next(undefined);
+  updateToken(token: api.TokenMaster) {
+    if (this.data !== null) {
+      localStorage.setItem("token", JSON.stringify({
+        id: token.id,
+        key: token.key,
+      }));
+      this.data = { ...this.data, token: token };
     }
+  }
+
+  @action.bound initData(userData: UserData | null) {
+    this.data = userData;
+  }
+
+  @action.bound setStorage(storage: Storage) {
+    if (this.data !== null) {
+      this.data = {
+        ...this.data,
+        storage: storage
+      }
+    }
+  }
+
+  @action.bound setProfiles(profiles: api.Profile[]) {
+    if (this.data !== null) {
+      this.data = {
+        ...this.data,
+        profiles: profiles
+      }
+    }
+  }
+
+  @action.bound userChange(token: api.TokenMaster | null) {
+    if (token !== null) {
+      localStorage.setItem("token", JSON.stringify({
+        id: token.id,
+        key: token.key,
+      }));
+    } else {
+      localStorage.removeItem("token");
+    }
+    location.reload();
   }
 }

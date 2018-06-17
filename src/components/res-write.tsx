@@ -19,7 +19,7 @@ interface ResWriteProps {
   topic: string;
   reply: string | null;
   userData: UserData;
-  changeUserData: (data: UserData) => void;
+  changeStorage: (data: Storage) => void;
 }
 
 interface ResWriteState {
@@ -74,12 +74,9 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
   }
 
   setStorage(data: Storage["topicWrite"]) {
-    this.props.changeUserData({
-      ...this.props.userData,
-      storage: {
-        ...this.props.userData.storage,
-        topicWrite: data,
-      },
+    this.props.changeStorage({
+      ...this.props.userData.storage,
+      topicWrite: data,
     });
   }
 

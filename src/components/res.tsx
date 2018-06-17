@@ -223,24 +223,22 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                 <MenuItem primaryText="NG HASH" onClick={() => {
                   const user = this.props.user.data;
                   if (user !== null) {
-                    this.props.user.setData({
-                      ...user, storage: {
-                        ...user.storage,
-                        ng: user.storage.ng.insert(0, {
+                    this.props.user.setStorage({
+                      ...user.storage,
+                      ng: user.storage.ng.insert(0, {
+                        id: uuid.v4(),
+                        name: `HASH:${this.props.res.hash}`,
+                        topic: this.props.res.topic,
+                        date: new Date(),
+                        expirationDate: null,
+                        chain: 1,
+                        transparent: false,
+                        node: {
+                          type: "hash",
                           id: uuid.v4(),
-                          name: `HASH:${this.props.res.hash}`,
-                          topic: this.props.res.topic,
-                          date: new Date(),
-                          expirationDate: null,
-                          chain: 1,
-                          transparent: false,
-                          node: {
-                            type: "hash",
-                            id: uuid.v4(),
-                            hash: this.props.res.hash,
-                          },
-                        }),
-                      },
+                          hash: this.props.res.hash,
+                        },
+                      }),
                     });
                   }
                 }} />
@@ -248,24 +246,22 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                   ? <MenuItem primaryText="NG Profile" onClick={() => {
                     const user = this.props.user.data;
                     if (user !== null && this.props.res.type === "normal" && this.props.res.profile !== null) {
-                      this.props.user.setData({
-                        ...user, storage: {
-                          ...user.storage,
-                          ng: user.storage.ng.insert(0, {
+                      this.props.user.setStorage({
+                        ...user.storage,
+                        ng: user.storage.ng.insert(0, {
+                          id: uuid.v4(),
+                          name: `Profile:${this.props.res.profile.id}`,
+                          topic: null,
+                          date: new Date(),
+                          expirationDate: null,
+                          chain: 1,
+                          transparent: false,
+                          node: {
+                            type: "profile",
                             id: uuid.v4(),
-                            name: `Profile:${this.props.res.profile.id}`,
-                            topic: null,
-                            date: new Date(),
-                            expirationDate: null,
-                            chain: 1,
-                            transparent: false,
-                            node: {
-                              type: "profile",
-                              id: uuid.v4(),
-                              profile: this.props.res.profile.id,
-                            },
-                          }),
-                        },
+                            profile: this.props.res.profile.id,
+                          },
+                        }),
                       });
                     }
                   }} />
@@ -339,7 +335,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                 topic={this.props.res.topic}
                 reply={this.props.res.id}
                 userData={this.props.user.data}
-                changeUserData={x => this.props.user.setData(x)} />
+                changeStorage={x => this.props.user.setStorage(x)} />
             </Paper>
             : null}
         </div>

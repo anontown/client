@@ -78,10 +78,10 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
       } else {
         throw Error();
       }
-      this.props.user.setData(await createUserData(await apiClient.findTokenOne(token)));
+      this.props.user.initData(await createUserData(await apiClient.findTokenOne(token)));
       this.setState({ isInit: true });
     } catch {
-      this.props.user.setData(null);
+      this.props.user.initData(null);
       this.setState({ isInit: true });
     }
   }
@@ -97,7 +97,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
   }
 
   logout() {
-    this.props.user.setData(null);
+    this.props.user.userChange(null);
   }
 
   render() {
@@ -113,7 +113,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
         {this.state.isInit
           ? <div className={style.container}>
             <Toolbar className={style.header}>
-              <ToolbarGroup firstChild={true}  className={style.big}>
+              <ToolbarGroup firstChild={true} className={style.big}>
                 <ToolbarTitle text="Anontown" />
                 <ToolbarTitle text={`build:${dateFormat.format(BUILD_DATE)}`}
                   style={{ fontSize: "0.5rem" }} />
