@@ -33,7 +33,7 @@ export class NotificationsStore {
           limit: this.limit,
           type: "lte",
           date: new Date().toISOString(),
-          query: { notice: true }
+          query: { notice: true },
         }));
       this.reses = Im.List(reses);
     } catch {
@@ -58,7 +58,7 @@ export class NotificationsStore {
             type: "gt",
             date: first.date,
             limit: this.limit,
-            query: { notice: true }
+            query: { notice: true },
           }));
         this.reses = Im.List(reses).concat(this.reses);
       } catch {
@@ -85,7 +85,7 @@ export class NotificationsStore {
             type: "lt",
             date: last.date,
             limit: this.limit,
-            query: { notice: true }
+            query: { notice: true },
           }));
         this.reses = this.reses.concat(reses);
       } catch {

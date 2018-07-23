@@ -4,12 +4,12 @@ import {
   IconButton,
 } from "material-ui";
 import * as React from "react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { Observable } from "rxjs";
 import { imgur } from "../utils";
 import { Errors } from "./errors";
 import { Md } from "./md";
 import { Oekaki } from "./oekaki";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { TextArea } from "./text-area";
 
 export interface MdEditorProps {
@@ -20,7 +20,7 @@ export interface MdEditorProps {
   fullWidth?: boolean;
   onKeyPress?: React.KeyboardEventHandler<{}>;
   onKeyDown?: React.KeyboardEventHandler<{}>;
-  actions?: React.ReactNode
+  actions?: React.ReactNode;
 }
 
 interface MdEditorState {

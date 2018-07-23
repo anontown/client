@@ -23,8 +23,8 @@ export class ResHashStore {
           reses: Im.List(await resSetedCreate.resSet(token, await apiClient.findRes(token, {
             type: "lt",
             date: new Date().toISOString(),
-            query: { hash: hash },
-            limit: 100
+            query: { hash },
+            limit: 100,
           }))),
           hash,
         };

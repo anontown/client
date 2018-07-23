@@ -8,8 +8,8 @@ import { UserStore } from "./user-store";
 
 export class TopicStateData {
   static async create(topicID: string,
-    user: UserStore,
-    setMsg: (x: string) => void): Promise<TopicStateData | null> {
+                      user: UserStore,
+                      setMsg: (x: string) => void): Promise<TopicStateData | null> {
     try {
       return new TopicStateData(setMsg, user, await apiClient.findTopicOne({ id: topicID }));
     } catch {
@@ -28,8 +28,8 @@ export class TopicStateData {
   @observable.ref newItem = Observable.empty<ResSeted>();
 
   private constructor(public setMsg: (x: string) => void,
-    public user: UserStore,
-    public topic: api.Topic) {
+                      public user: UserStore,
+                      public topic: api.Topic) {
     this.storageSaveDate(null);
 
     if (user.data !== null) {
@@ -108,7 +108,7 @@ export class TopicStateData {
     const token = this.user.data !== null ? this.user.data.token : null;
     return Im.List(await resSetedCreate.resSet(token, await apiClient.findRes(token, {
       query: {
-        topic: this.topic.id
+        topic: this.topic.id,
       },
       type,
       date,

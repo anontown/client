@@ -2,10 +2,10 @@ import * as React from "react";
 import * as style from "./text-field.scss";
 
 interface TextFieldProps {
-  value: string,
+  value: string;
   onChange: (v: string) => void;
-  style?: React.CSSProperties,
-  placeholder?: string
+  style?: React.CSSProperties;
+  placeholder?: string;
 }
 
 export function TextField(props: TextFieldProps) {

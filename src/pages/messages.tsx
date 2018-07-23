@@ -79,7 +79,7 @@ export const MessagesPage = withRouter(myInject(["user"],
           {
             limit: this.limit,
             date: new Date().toISOString(),
-            type: "lte"
+            type: "lte",
           });
         this.setState({ msgs: Im.List(msgs) });
       } catch {

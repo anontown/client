@@ -8,11 +8,11 @@ import * as React from "react";
 import { Subject, Subscription } from "rxjs";
 import { Storage, UserData } from "../models";
 import { apiClient } from "../utils";
+import { CheckBox } from "./check-box";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
-import { TextField } from "./text-field";
 import { Select } from "./select";
-import { CheckBox } from "./check-box";
+import { TextField } from "./text-field";
 
 interface ResWriteProps {
   onSubmit?: (value: api.Res) => void;
@@ -117,7 +117,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       <Errors errors={this.state.errors} />
       <TextField
         style={{
-          marginRight: "3px"
+          marginRight: "3px",
         }}
         placeholder="名前"
         value={data.name}
@@ -130,7 +130,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       <Select
         style={{
           marginRight: "3px",
-          backgroundColor: "#fff"
+          backgroundColor: "#fff",
         }}
         value={data.profile || ""}
         onChange={v => {
@@ -138,11 +138,11 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
             .update(this.props.topic, this.formDefualt, x => ({
               ...x,
               profile: v || null,
-            })))
+            })));
         }}
         options={[
           { value: "", text: "(プロフなし)" },
-          ...this.props.userData.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` }))
+          ...this.props.userData.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` })),
         ]} />
       <CheckBox
         value={data.age}

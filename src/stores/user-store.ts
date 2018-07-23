@@ -1,13 +1,13 @@
+import * as api from "@anontown/api-types";
 import { action, observable } from "mobx";
 import * as mobxUtils from "mobx-utils";
 import {
   Observable,
 } from "rxjs";
-import { UserData, Storage } from "../models";
+import { Storage, UserData } from "../models";
 import {
   storageAPI,
 } from "../utils";
-import * as api from "@anontown/api-types";
 
 export class UserStore {
   @observable.ref data: UserData | null = null;
@@ -30,7 +30,7 @@ export class UserStore {
         id: token.id,
         key: token.key,
       }));
-      this.data = { ...this.data, token: token };
+      this.data = { ...this.data, token };
     }
   }
 
@@ -42,8 +42,8 @@ export class UserStore {
     if (this.data !== null) {
       this.data = {
         ...this.data,
-        storage: storage
-      }
+        storage,
+      };
     }
   }
 
@@ -51,8 +51,8 @@ export class UserStore {
     if (this.data !== null) {
       this.data = {
         ...this.data,
-        profiles: profiles
-      }
+        profiles,
+      };
     }
   }
 

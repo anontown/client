@@ -24,7 +24,7 @@ export class ResReplyStore {
             type: "lt",
             date: new Date().toISOString(),
             query: { reply: id },
-            limit: 100
+            limit: 100,
           }))),
           id,
         };

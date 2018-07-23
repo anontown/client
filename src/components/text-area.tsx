@@ -1,14 +1,14 @@
 import * as React from "react";
+import TextareaAutosize from "react-autosize-textarea";
 import * as style from "./text-area.scss";
-import TextareaAutosize from 'react-autosize-textarea';
 
 interface TextAreaProps {
-  value: string,
+  value: string;
   onChange: (v: string) => void;
-  style?: React.CSSProperties,
-  placeholder?: string,
-  rows?: number,
-  rowsMax?: number,
+  style?: React.CSSProperties;
+  placeholder?: string;
+  rows?: number;
+  rowsMax?: number;
   onKeyDown?: React.KeyboardEventHandler<{}>;
   onKeyUp?: React.KeyboardEventHandler<{}>;
   onKeyPress?: React.KeyboardEventHandler<{}>;
