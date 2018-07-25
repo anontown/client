@@ -46,6 +46,7 @@ export const ProfilesPage = withRouter(myInject(["user", "profiles"],
             <Tab label="編集">
               {this.props.profiles.profiles.map(p =>
                 <ProfileEditor
+                  style={{ marginBottom: 10 }}
                   key={p.id}
                   profile={p}
                   onUpdate={newProfile => this.props.profiles.update(newProfile)}
