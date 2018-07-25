@@ -13,6 +13,7 @@ interface ProfileEditorProps {
   onUpdate?: (profile: api.Profile) => void;
   onAdd?: (profile: api.Profile) => void;
   userData: UserData;
+  style?: React.CSSProperties
 }
 
 interface ProfileEditorState {
@@ -34,7 +35,7 @@ export class ProfileEditor extends React.Component<ProfileEditorProps, ProfileEd
   }
 
   render() {
-    return <Paper className={style.container}>
+    return <Paper className={style.container} style={this.props.style}>
       <form>
         <Errors errors={this.state.errors} />
         <TextField
