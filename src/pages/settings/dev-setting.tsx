@@ -62,6 +62,12 @@ export const DevSettingPage =
           <Snack
             msg={this.state.snackMsg}
             onHide={() => this.setState({ snackMsg: null })} />
+          <Paper>
+            クライアント管理
+          </Paper>
+          {this.state.clients.size === 0
+            ? <Paper>クライアントがありません</Paper>
+            : null}
           {this.state.clients.map(c => <ClientEditor
             key={c.id}
             client={c}
