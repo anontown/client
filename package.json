@@ -71,8 +71,8 @@
     "react-tabs": "^2.2.2",
     "remark-breaks": "^1.0.0",
     "remark-parse": "^5.0.0",
-    "rxjs": "^6.2.2",
-    "typelevel-ts": "^0.3.1",
+    "rxjs": "^5.5.11",
+    "typelevel-ts": "^0.2.2",
     "unified": "^7.0.0",
     "uuid": "^3.2.1"
   }
