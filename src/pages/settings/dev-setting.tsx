@@ -65,6 +65,11 @@ export const DevSettingPage =
           <Paper>
             クライアント管理
           </Paper>
+          <ClientEditor
+            client={null}
+            onAdd={c => this.setState({ clients: this.state.clients.push(c) })}
+            userData={userData} />
+
           {this.state.clients.size === 0
             ? <Paper>クライアントがありません</Paper>
             : null}
@@ -73,10 +78,6 @@ export const DevSettingPage =
             client={c}
             onUpdate={newClient => this.setState({ clients: list.update(this.state.clients, newClient) })}
             userData={userData} />)}
-          <ClientEditor
-            client={null}
-            onAdd={c => this.setState({ clients: this.state.clients.push(c) })}
-            userData={userData} />
         </Paper>} />;
     }
   })));
