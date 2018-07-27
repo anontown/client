@@ -5,7 +5,9 @@ import {
   RaisedButton,
 } from "material-ui";
 import * as React from "react";
-import { Subject, Subscription } from "rxjs";
+import * as rx from "rxjs";
+import * as op from "rxjs/operators";
+
 import { Storage, UserData } from "../models";
 import { apiClient } from "../utils";
 import { CheckBox } from "./check-box";
@@ -36,8 +38,8 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
     age: true,
   };
 
-  textUpdate = new Subject<string>();
-  subscriptions: Subscription[] = [];
+  textUpdate = new rx.Subject<string>();
+  subscriptions: rx.Subscription[] = [];
 
   constructor(props: ResWriteProps) {
     super(props);
@@ -48,7 +50,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
       textCache: text,
     };
     this.subscriptions.push(this.textUpdate
-      .debounceTime(1000)
+      .pipe(op.debounceTime(1000))
       .subscribe(value => {
         if (this.props.reply === null) {
           this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({

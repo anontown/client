@@ -1,10 +1,8 @@
 import * as Im from "immutable";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {
-  Observable,
-  Subscription,
-} from "rxjs";
+import * as rx from "rxjs";
+import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
 import { list } from "../utils";
 
@@ -34,9 +32,9 @@ export interface ScrollProps<T extends ListItemData> {
   autoScrollSpeed: number;
   isAutoScroll: boolean;
   scrollNewItemChange: (item: T) => void;
-  scrollNewItem: Observable<string | null>;
-  updateItem: Observable<T>;
-  newItem: Observable<T>;
+  scrollNewItem: rx.Observable<string | null>;
+  updateItem: rx.Observable<T>;
+  newItem: rx.Observable<T>;
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
   className?: string;
@@ -74,10 +72,10 @@ function sleep(ms: number) {
 }
 
 export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<T>, ScrollState> {
-  subscriptions: Subscription[] = [];
-  newItemSubs: Subscription | null = null;
-  scrollNewItemSubs: Subscription | null = null;
-  updateItemSubs: Subscription | null = null;
+  subscriptions: rx.Subscription[] = [];
+  newItemSubs: rx.Subscription | null = null;
+  scrollNewItemSubs: rx.Subscription | null = null;
+  updateItemSubs: rx.Subscription | null = null;
   _isLock = false;
 
   constructor(props: ScrollProps<T>) {
@@ -240,10 +238,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   componentDidMount() {
-    this.subscriptions.push(Observable.fromEvent(this.el!, "scroll")
-      .map(() => this.el!.scrollTop)
-      .filter(top => top <= this.props.width)
-      .debounceTime(this.props.debounceTime)
+    this.subscriptions.push(rx.fromEvent(this.el!, "scroll")
+      .pipe(op.map(() => this.el!.scrollTop),
+        op.filter(top => top <= this.props.width),
+        op.debounceTime(this.props.debounceTime))
       .subscribe(() => {
         switch (this.props.newItemOrder) {
           case "top":
@@ -255,10 +253,10 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
       }));
 
-    this.subscriptions.push(Observable.fromEvent(this.el!, "scroll")
-      .map(() => this.el!.scrollTop + this.el!.clientHeight)
-      .filter(bottom => bottom >= this.el!.scrollHeight - this.props.width)
-      .debounceTime(this.props.debounceTime)
+    this.subscriptions.push(rx.fromEvent(this.el!, "scroll")
+      .pipe(op.map(() => this.el!.scrollTop + this.el!.clientHeight),
+        op.filter(bottom => bottom >= this.el!.scrollHeight - this.props.width),
+        op.debounceTime(this.props.debounceTime))
       .subscribe(() => {
         switch (this.props.newItemOrder) {
           case "bottom":
@@ -270,16 +268,17 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
         }
       }));
 
-    this.subscriptions.push(Observable.fromEvent(this.el!, "scroll")
-      .debounceTime(this.props.debounceTime)
-      .mergeMap(() => this.props.newItemOrder === "top" ? this.getTopElement() : this.getBottomElement())
+    this.subscriptions.push(rx.fromEvent(this.el!, "scroll")
+      .pipe(op.debounceTime(this.props.debounceTime),
+        op.mergeMap(() => this.props.newItemOrder === "top" ? this.getTopElement() : this.getBottomElement())
+      )
       .subscribe(newItem => {
         if (newItem !== null) {
           this.props.scrollNewItemChange(newItem.item.data);
         }
       }));
 
-    this.subscriptions.push(Observable
+    this.subscriptions.push(rx
       .interval(100)
       .subscribe(() => {
         const el = this.el;
@@ -297,7 +296,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     this.subscriptions.forEach(x => x.unsubscribe());
   }
 
-  subscribeScrollNewItem(obs: Observable<string | null>) {
+  subscribeScrollNewItem(obs: rx.Observable<string | null>) {
     this.scrollNewItemSubs = obs.subscribe(date => {
       if (date !== null) {
         this._lock(async () => {
@@ -317,13 +316,13 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     });
   }
 
-  subscribeNewItem(obs: Observable<T>) {
+  subscribeNewItem(obs: rx.Observable<T>) {
     this.newItemSubs = obs.subscribe(item => {
       this.onChangeItems(this.props.items.push(item));
     });
   }
 
-  subscribeUpdateItem(obs: Observable<T>) {
+  subscribeUpdateItem(obs: rx.Observable<T>) {
     this.updateItemSubs = obs.subscribe(item => {
       this.onChangeItems(list.update(this.props.items, item));
     });

@@ -5,7 +5,8 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { Observable } from "rxjs";
+import * as rx from "rxjs";
+import * as op from "rxjs/operators";
 import { imgur } from "../utils";
 import { Errors } from "./errors";
 import { Md } from "./md";
@@ -42,10 +43,10 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
   }
 
   upload(datas: FormData[]) {
-    Observable.of(...datas)
-      .mergeMap(form => imgur.upload(form))
-      .map(url => `![](${url})`)
-      .reduce((tags, tag) => tags + tag + "\n", "")
+    rx.of(...datas)
+      .pipe(op.mergeMap(form => imgur.upload(form)),
+        op.map(url => `![](${url})`),
+        op.reduce((tags, tag) => tags + tag + "\n", ""))
       .subscribe(tags => {
         this.setState({ slowImage: false, oekakiErrors: undefined });
         if (this.props.onChange) {

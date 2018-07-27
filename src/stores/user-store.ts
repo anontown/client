@@ -1,9 +1,9 @@
 import * as api from "@anontown/api-types";
 import { action, observable } from "mobx";
 import * as mobxUtils from "mobx-utils";
-import {
-  Observable,
-} from "rxjs";
+import * as rx from "rxjs";
+import * as op from "rxjs/operators";
+
 import { Storage, UserData } from "../models";
 import {
   storageAPI,
@@ -13,9 +13,9 @@ export class UserStore {
   @observable.ref data: UserData | null = null;
 
   constructor() {
-    Observable
+    rx
       .from(mobxUtils.toStream(() => this.data))
-      .debounceTime(5000)
+      .pipe(op.debounceTime(5000))
       .subscribe(data => {
         if (data !== null) {
           storageAPI

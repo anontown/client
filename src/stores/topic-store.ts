@@ -1,15 +1,17 @@
 import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import { observable } from "mobx";
-import { Observable, ReplaySubject, Subject } from "rxjs";
+import * as rx from "rxjs";
+import * as op from "rxjs/operators";
+
 import { ResSeted } from "../models";
 import { apiClient, resSetedCreate } from "../utils";
 import { UserStore } from "./user-store";
 
 export class TopicStateData {
   static async create(topicID: string,
-                      user: UserStore,
-                      setMsg: (x: string) => void): Promise<TopicStateData | null> {
+    user: UserStore,
+    setMsg: (x: string) => void): Promise<TopicStateData | null> {
     try {
       return new TopicStateData(setMsg, user, await apiClient.findTopicOne({ id: topicID }));
     } catch {
@@ -23,13 +25,13 @@ export class TopicStateData {
   @observable.ref reses: Im.List<ResSeted> = Im.List();
   @observable.ref autoScrollSpeed = 15;
   @observable.ref isAutoScroll = false;
-  @observable.ref scrollNewItem = new ReplaySubject<string | null>(1);
-  @observable.ref updateItem = new Subject<ResSeted>();
-  @observable.ref newItem = Observable.empty<ResSeted>();
+  @observable.ref scrollNewItem = new rx.ReplaySubject<string | null>(1);
+  @observable.ref updateItem = new rx.Subject<ResSeted>();
+  @observable.ref newItem = rx.of<ResSeted>();
 
   private constructor(public setMsg: (x: string) => void,
-                      public user: UserStore,
-                      public topic: api.Topic) {
+    public user: UserStore,
+    public topic: api.Topic) {
     this.storageSaveDate(null);
 
     if (user.data !== null) {
@@ -46,14 +48,17 @@ export class TopicStateData {
     this.newItem = apiClient.streamUpdateTopic(user.data !== null ? user.data.token : null, {
       id: topic.id,
     })
-      .do(x => {
-        this.topic = { ...this.topic, resCount: x.count };
-        this.storageSaveDate(null);
-      })
-      .flatMap(x => resSetedCreate.resSet(user.data !== null
-        ? user.data.token
-        : null, [x.res])
-        .then(reses => reses[0]));
+      .pipe(
+        op.tap(x => {
+          this.topic = { ...this.topic, resCount: x.count };
+          this.storageSaveDate(null);
+        }),
+        op.flatMap(x => resSetedCreate.resSet(user.data !== null
+          ? user.data.token
+          : null, [x.res])
+        ),
+        op.map(x => x[0])
+      );
   }
 
   storageSaveDate(date: string | null) {

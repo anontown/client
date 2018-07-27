@@ -16,10 +16,8 @@ import {
   Link,
   RouteComponentProps,
 } from "react-router-dom";
-import {
-  Subject,
-  Subscription,
-} from "rxjs";
+import * as rx from "rxjs";
+import * as op from "rxjs/operators";
 import { isArray } from "util";
 import {
   Page,
@@ -48,8 +46,8 @@ export interface TopicSearchPageState {
 export const TopicSearchPage =
   withRouter(myInject(["user", "topicSearch"],
     observer(class extends React.Component<TopicSearchPageProps, TopicSearchPageState> {
-      subs: Subscription[] = [];
-      formChange$ = new Subject<void>();
+      subs: rx.Subscription[] = [];
+      formChange$ = new rx.Subject<void>();
 
       constructor(props: TopicSearchPageProps) {
         super(props);
@@ -65,7 +63,7 @@ export const TopicSearchPage =
         this.props.topicSearch.search(query.tags, query.title, query.dead);
 
         this.subs.push(this.formChange$
-          .debounceTime(500)
+          .pipe(op.debounceTime(500))
           .subscribe(() => {
             this.props.history.push({
               pathname: "/topic/search",

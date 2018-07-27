@@ -1,8 +1,10 @@
-import { Observable } from "rxjs";
+import * as op from "rxjs/operators";
+import * as rx from "rxjs/ajax";
+
 import { Config } from "../env";
 
 export function upload(data: FormData): Promise<string> {
-  return Observable.ajax({
+  return rx.ajax({
     url: "https://api.imgur.com/3/image",
     method: "POST",
     headers: {
@@ -11,6 +13,6 @@ export function upload(data: FormData): Promise<string> {
     body: data,
     crossDomain: true,
   })
-    .map(r => r.response.data.link)
+    .pipe(op.map(r => r.response.data.link))
     .toPromise();
 }
