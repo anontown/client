@@ -34,7 +34,8 @@
             2
         ],
         "no-floating-promises": false,
-        "jsx-no-multiline-js": false
+        "jsx-no-multiline-js": false,
+        "strict-type-predicates": true,
     },
     "rulesDirectory": []
 }

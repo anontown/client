@@ -7,7 +7,7 @@ import {
 } from "material-ui";
 import { observer } from "mobx-react";
 import * as React from "react";
-import { ObjectOmit } from "typelevel-ts";
+import { Omit } from "type-zoo";
 import { myInject, UserStore } from "../stores";
 import { apiClient } from "../utils";
 import { Errors } from "./errors";
@@ -20,7 +20,7 @@ interface UnconnectedTopicForkProps {
   user: UserStore;
 }
 
-export type TopicForkProps = ObjectOmit<UnconnectedTopicForkProps, "user">;
+export type TopicForkProps = Omit<UnconnectedTopicForkProps, "user">;
 
 interface TopicForkState {
   errors: string[];

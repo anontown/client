@@ -10,7 +10,7 @@ import {
 import { observer } from "mobx-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { ObjectOmit } from "typelevel-ts";
+import { Omit } from "type-zoo";
 import * as uuid from "uuid";
 import { ResSeted } from "../models";
 import { ng } from "../models";
@@ -31,7 +31,7 @@ interface UnconnectedResProps {
   update?: (res: ResSeted) => void;
 }
 
-export type ResProps = ObjectOmit<UnconnectedResProps, "user">;
+export type ResProps = Omit<UnconnectedResProps, "user">;
 
 interface ResState {
   isReply: boolean;

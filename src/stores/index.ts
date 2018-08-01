@@ -14,7 +14,7 @@ export * from "./res-hash-store";
 
 import { inject } from "mobx-react";
 import * as React from "react";
-import { ObjectOmit } from "typelevel-ts";
+import { Omit } from "type-zoo";
 import { AuthStore } from "./auth-store";
 import { CacheStore } from "./cache-store";
 import { NotificationsStore } from "./notifications-store";
@@ -52,4 +52,4 @@ export type Stores = typeof stores;
 
 export const myInject =
   (<P, N extends keyof Stores>(names: N[], c: React.ComponentType<P>) =>
-    inject(...names)(c) as any as React.ComponentType<ObjectOmit<P, N>>);
+    inject(...names)(c) as any as React.ComponentType<Omit<P, N>>);

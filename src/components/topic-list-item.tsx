@@ -3,7 +3,7 @@ import { FontIcon } from "material-ui";
 import { observer } from "mobx-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { ObjectOmit } from "typelevel-ts";
+import { Omit } from "type-zoo";
 import { myInject, UserStore } from "../stores";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
@@ -14,7 +14,7 @@ interface UnconnectedTopicListItemProps {
   user: UserStore;
   detail: boolean;
 }
-export type TopicListItemProps = ObjectOmit<UnconnectedTopicListItemProps, "user">;
+export type TopicListItemProps = Omit<UnconnectedTopicListItemProps, "user">;
 
 interface TopicListItemState {
 }
