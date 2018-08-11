@@ -19,7 +19,16 @@ import { Config } from "./env";
 OfflinePluginRuntime.install();
 
 const client = new ApolloClient({
-  uri: Config.api.origin
+  uri: Config.api.origin,
+  request: async opt => {
+    if (stores.user.data !== null) {
+      opt.setContext({
+        headers: {
+          "X-Token": `${stores.user.data.token.id},${stores.user.data.token.key}`
+        }
+      });
+    }
+  }
 });
 
 ReactDOM.render(
