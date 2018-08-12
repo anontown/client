@@ -1,4 +1,3 @@
-import { TokenMaster } from "@anontown/api-client";
 import {
   FontIcon,
   IconButton,
@@ -26,7 +25,6 @@ import { BUILD_DATE, gaID } from "../env";
 import * as pages from "../pages";
 import { myInject, UserStore } from "../stores";
 import {
-  apiClient,
   createUserData,
   dateFormat,
 } from "../utils";

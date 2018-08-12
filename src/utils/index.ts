@@ -17,8 +17,8 @@ export {
 };
 
 export { Command } from "./command";
-export { apiClient } from "./api-client";
 export { createUserData } from "./create-user-data";
 export { safeURL } from "./safe-url";
 export { toColorString } from "./to-color-string";
 export { withModal } from "./with-modal";
+export { gqlClient } from "./gql-client";

@@ -8,9 +8,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { App } from "./components/app";
 import * as dialogStyle from "./dialog.scss";
 import { stores } from "./stores";
-import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import { Config } from "./env";
+import { gqlClient } from "./utils";
 
 (Dialog as any).defaultProps.className = dialogStyle.dialog;
 (Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;
@@ -18,23 +17,10 @@ import { Config } from "./env";
 // Installing ServiceWorker
 OfflinePluginRuntime.install();
 
-const client = new ApolloClient({
-  uri: Config.api.origin,
-  request: async opt => {
-    if (stores.user.data !== null) {
-      opt.setContext({
-        headers: {
-          "X-Token": `${stores.user.data.token.id},${stores.user.data.token.key}`
-        }
-      });
-    }
-  }
-});
-
 ReactDOM.render(
   <BrowserRouter>
     <Provider {...stores}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={gqlClient}>
         <Switch>
           <Route path="/" component={App} />
         </Switch>
