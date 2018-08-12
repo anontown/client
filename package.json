@@ -9,7 +9,9 @@
     "lint": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}'",
     "lint:fix": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}' --fix",
     "loc": "sloc --format cli-table ./src",
-    "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL _gql"
+    "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL _gql",
+    "postinstall": "npm run apollo:generate",
+    "apollo:clean": "rm -rf ./**/_gql"
   },
   "author": "",
   "license": "ISC",
