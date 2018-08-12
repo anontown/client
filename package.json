@@ -9,12 +9,12 @@
     "lint": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}'",
     "lint:fix": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}' --fix",
     "loc": "sloc --format cli-table ./src",
-    "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL _gql",
-    "apollo:download": "apollo schema:download"
+    "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL _gql"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@anontown/graphql": "^1.0.0",
     "@types/classnames": "^2.2.3",
     "@types/crypto-js": "^3.1.38",
     "@types/material-ui": "^0.21.5",

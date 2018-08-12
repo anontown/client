@@ -1,13 +1,12 @@
 module.exports = {
   schemas: {
-    myPrimaryBackend: {
-      "endpoint": "../server/resources/app.gql",
-      "schema": "schema.json"
+    app: {
+      "schema": "./node_modules/@anontown/graphql/schema.json"
     }
   },
   queries: [
     {
-      schema: "myPrimaryBackend",
+      schema: "app",
       includes: ["./src/**/*.gql"],
     }
   ]
