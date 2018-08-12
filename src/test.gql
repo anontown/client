@@ -1,8 +1,0 @@
-query Test{
-    profiles(query:{}){
-    id
-    name
-    sn
-    date
-    }
-}

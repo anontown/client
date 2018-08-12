@@ -9,7 +9,7 @@
     "lint": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}'",
     "lint:fix": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}' --fix",
     "loc": "sloc --format cli-table ./src",
-    "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL --outputFlat src/gql",
+    "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL",
     "apollo:download": "apollo schema:download"
   },
   "author": "",

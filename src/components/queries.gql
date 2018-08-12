@@ -1,0 +1,8 @@
+query Test($q:ProfileQuery!){
+    profiles(query:$q){
+    id
+    name
+    sn
+    date
+    }
+}
