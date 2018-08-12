@@ -1,7 +1,7 @@
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 
-import { ProfileQuery } from "../../../__generated__/globalTypes";
+import { ProfileQuery } from "../../../_gql/globalTypes";
 
 // ====================================================
 // GraphQL query operation: Test
