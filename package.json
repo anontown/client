@@ -11,7 +11,7 @@
     "loc": "sloc --format cli-table ./src",
     "apollo:generate": "apollo codegen:generate --target typescript --addTypename --customScalarsPrefix GQL _gql",
     "postinstall": "npm run apollo:generate",
-    "apollo:clean": "rm -rf ./**/_gql"
+    "apollo:clean": "find -name _gql -type d -exec rm -rf {} +"
   },
   "author": "",
   "license": "ISC",
