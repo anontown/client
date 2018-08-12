@@ -27,8 +27,12 @@ import { myInject, UserStore } from "../stores";
 import {
   createUserData,
   dateFormat,
+  gqlClient,
+  createHeaders,
 } from "../utils";
 import * as style from "./app.scss";
+import { getToken } from "./app.gql";
+import * as getTokenType from "./_gql/getToken";
 
 declare const gtag: any;
 
@@ -39,7 +43,6 @@ interface AppProps extends RouteComponentProps<{}> {
 }
 
 interface AppState {
-  isInit: boolean;
 }
 
 export const App = myInject(["user"], observer(withRouter(class extends React.Component<AppProps, AppState> {
@@ -48,7 +51,6 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      isInit: false,
     };
     this.changeLocation(this.props);
   }
@@ -72,10 +74,16 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
       const tokenStr = localStorage.getItem("token");
       let token;
       if (tokenStr !== null) {
-        token = { ...JSON.parse(tokenStr), type: "master" } as TokenMaster;
+        token = JSON.parse(tokenStr) as { id: string, key: string };
       } else {
         throw Error();
       }
+      gqlClient.query<getTokenType.getToken>({
+        query: getToken,
+        context: {
+          headers: createHeaders(token.id, token.key)
+        }
+      });
       this.props.user.initData(await createUserData(await apiClient.findTokenOne(token)));
       this.setState({ isInit: true });
     } catch {

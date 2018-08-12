@@ -7,10 +7,14 @@ export const gqlClient = new ApolloClient({
   request: async opt => {
     if (stores.user.data !== null) {
       opt.setContext({
-        headers: {
-          "X-Token": `${stores.user.data.token.id},${stores.user.data.token.key}`
-        }
+        headers: createHeaders(stores.user.data.token.id, stores.user.data.token.key)
       });
     }
   }
 });
+
+export function createHeaders(id: string, key: string): {} {
+  return {
+    "X-Token": `${id},${key}`
+  };
+}

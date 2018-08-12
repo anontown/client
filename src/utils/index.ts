@@ -21,4 +21,4 @@ export { createUserData } from "./create-user-data";
 export { safeURL } from "./safe-url";
 export { toColorString } from "./to-color-string";
 export { withModal } from "./with-modal";
-export { gqlClient } from "./gql-client";
+export { gqlClient, createHeaders } from "./gql-client";
