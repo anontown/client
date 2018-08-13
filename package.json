@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@anontown/graphql": "^1.0.0",
+    "@anontown/graphql": "^1.0.1",
     "@types/classnames": "^2.2.3",
     "@types/crypto-js": "^3.1.38",
     "@types/material-ui": "^0.21.5",
