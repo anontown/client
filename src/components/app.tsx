@@ -80,13 +80,16 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
       } else {
         throw Error();
       }
-      gqlClient.query<getTokenType.getToken>({
+      let res = await gqlClient.query<getTokenType.getToken>({
         query: getToken,
         context: {
           headers: createHeaders(token.id, token.key)
         }
       });
-      this.props.user.initData(await createUserData(await apiClient.findTokenOne(token)));
+      if (res.data.token.__typename === "TokenGeneral") {
+        throw Error();
+      }
+      this.props.user.initData(await createUserData(res.data.token));
       this.setState({ isInit: true });
     } catch {
       this.props.user.initData(null);
