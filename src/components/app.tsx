@@ -43,6 +43,7 @@ interface AppProps extends RouteComponentProps<{}> {
 }
 
 interface AppState {
+  isInit: boolean
 }
 
 export const App = myInject(["user"], observer(withRouter(class extends React.Component<AppProps, AppState> {
@@ -51,6 +52,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
   constructor(props: AppProps) {
     super(props);
     this.state = {
+      isInit: false
     };
     this.changeLocation(this.props);
   }

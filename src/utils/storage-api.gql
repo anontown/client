@@ -1,0 +1,10 @@
+query getAllStorage{
+    storages(query:{}){
+        key
+        value
+    }
+}
+
+mutation setStorage($key:String!,$value:String!){
+    setStorage(key:$key,value:$value)
+}
