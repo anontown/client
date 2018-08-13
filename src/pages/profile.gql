@@ -1,0 +1,11 @@
+query getProfile($id:ID!){
+    profiles(query:{id:[$id]}){
+        id
+        self
+        name
+        text
+        date
+        update
+        sn
+    }
+}

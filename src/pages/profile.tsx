@@ -1,5 +1,4 @@
 import { Paper } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -8,53 +7,49 @@ import {
 } from "react-router-dom";
 import { Page, Profile, Snack } from "../components";
 import {
-  myInject,
-  ProfileStore,
-  UserStore,
-} from "../stores";
-import {
   withModal,
 } from "../utils";
+import { getProfile } from "./profile.gql";
+import { getProfile as getProfileResult, getProfileVariables } from "./_gql/getProfile";
+import { Query } from "react-apollo";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
-  user: UserStore;
   zDepth?: number;
-  profile: ProfileStore;
 }
 
 interface ProfileBaseState {
 }
 
-const ProfileBase = withRouter(myInject(["user", "profile"],
-  observer(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
-    constructor(props: ProfileBaseProps) {
-      super(props);
-      this.componentWillReceiveProps(this.props);
-    }
+const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, ProfileBaseState> {
+  constructor(props: ProfileBaseProps) {
+    super(props);
+  }
 
-    componentWillReceiveProps(nextProps: ProfileBaseProps) {
-      this.props.profile.load(nextProps.match.params.id);
-    }
+  render() {
+    return <div>
+      <Helmet>
+        <title>プロフィール</title>
+      </Helmet>
+      <Query<getProfileResult, getProfileVariables>
+        query={getProfile}
+        variables={{ id: this.props.match.params.id }}>
+        {({ loading, error, data }) => {
+          if (loading) return "Loading...";
+          if (error || !data || data.profiles.length === 0) return (<Snack msg="プロフィール取得に失敗しました" />);
 
-    render() {
-      return <div>
-        <Helmet>
-          <title>プロフィール</title>
-        </Helmet>
-        <Snack
-          msg={this.props.profile.msg}
-          onHide={() => this.props.profile.clearMsg()} />
-        {this.props.profile.profile !== null
-          ? <Paper zDepth={this.props.zDepth}>
-            <Helmet>
-              <title>●{this.props.profile.profile.sn}</title>
-            </Helmet>
-            <Profile profile={this.props.profile.profile} />
-          </Paper>
-          : null}
-      </div>;
-    }
-  })));
+          return (
+            <Paper zDepth={this.props.zDepth}>
+              <Helmet>
+                <title>●{data.profiles[0].sn}</title>
+              </Helmet>
+              <Profile profile={data.profiles[0]} />
+            </Paper>
+          );
+        }}
+      </Query>
+    </div>;
+  }
+});
 
 export function ProfilePage() {
   return <Page><ProfileBase /></Page>;
