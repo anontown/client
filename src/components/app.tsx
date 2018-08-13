@@ -32,7 +32,7 @@ import {
 } from "../utils";
 import * as style from "./app.scss";
 import { getToken } from "./app.gql";
-import * as getTokenType from "./_gql/getToken";
+import { getToken as getTokenResult } from "./_gql/getToken";
 
 declare const gtag: any;
 
@@ -80,7 +80,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
       } else {
         throw Error();
       }
-      let res = await gqlClient.query<getTokenType.getToken>({
+      let res = await gqlClient.query<getTokenResult>({
         query: getToken,
         context: {
           headers: createHeaders(token.id, token.key)

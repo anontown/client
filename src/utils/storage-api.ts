@@ -10,11 +10,11 @@ import {
 import { gqlClient, createHeaders } from "../utils";
 import { getToken_token_TokenMaster } from "../components/_gql/getToken";
 import { getAllStorage, setStorage } from "./storage-api.gql";
-import * as getAllStorageType from "./_gql/getAllStorage";
-import * as setStorageType from "./_gql/setStorage";
+import { getAllStorage as getAllStorageResult } from "./_gql/getAllStorage";
+import { setStorage as setStorageResult, setStorageVariables } from "./_gql/setStorage";
 
 export async function load(token: getToken_token_TokenMaster) {
-  const storages = await gqlClient.query<getAllStorageType.getAllStorage>({
+  const storages = await gqlClient.query<getAllStorageResult>({
     query: getAllStorage,
     context: {
       headers: createHeaders(token.id, token.key)
@@ -29,7 +29,7 @@ export async function load(token: getToken_token_TokenMaster) {
 
 export async function save(storage: Storage) {
   const json = toJSON(storage);
-  await gqlClient.query<setStorageType.setStorage, setStorageType.setStorageVariables>({
+  await gqlClient.query<setStorageResult, setStorageVariables>({
     query: setStorage,
     variables: {
       key: json.ver,
