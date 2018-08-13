@@ -6,7 +6,6 @@ export * from "./topic-fork-store";
 export * from "./topic-data-store";
 export * from "./notifications-store";
 export * from "./auth-store";
-export * from "./profile-store";
 export * from "./res-reply-store";
 export * from "./topic-store";
 export * from "./cache-store";
@@ -18,7 +17,6 @@ import { Omit } from "type-zoo";
 import { AuthStore } from "./auth-store";
 import { CacheStore } from "./cache-store";
 import { NotificationsStore } from "./notifications-store";
-import { ProfileStore } from "./profile-store";
 import { ProfilesStore } from "./profiles-store";
 import { ResHashStore } from "./res-hash-store";
 import { ResReplyStore } from "./res-reply-store";
@@ -41,7 +39,6 @@ export const stores = {
   topicData: new TopicDataStore(),
   notifications: new NotificationsStore(userStore),
   auth: new AuthStore(userStore),
-  profile: new ProfileStore(userStore),
   resReply: new ResReplyStore(userStore),
   topic: new TopicStore(userStore),
   cache: cacheStore,
