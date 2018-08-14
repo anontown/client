@@ -9,12 +9,9 @@ mutation createToken($client:ID!){
     createTokenGeneral(client:$client){
         id
         key
-    }
-}
-
-mutation createTokenReq{
-    createTokenReq{
-        token
-        key
+        createReq{
+            token
+            key
+        }
     }
 }

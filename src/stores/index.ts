@@ -5,7 +5,6 @@ export * from "./res-store";
 export * from "./topic-fork-store";
 export * from "./topic-data-store";
 export * from "./notifications-store";
-export * from "./auth-store";
 export * from "./res-reply-store";
 export * from "./topic-store";
 export * from "./cache-store";
@@ -14,7 +13,6 @@ export * from "./res-hash-store";
 import { inject } from "mobx-react";
 import * as React from "react";
 import { Omit } from "type-zoo";
-import { AuthStore } from "./auth-store";
 import { CacheStore } from "./cache-store";
 import { NotificationsStore } from "./notifications-store";
 import { ProfilesStore } from "./profiles-store";
@@ -38,7 +36,6 @@ export const stores = {
   topicFork: new TopicForkStore(),
   topicData: new TopicDataStore(),
   notifications: new NotificationsStore(userStore),
-  auth: new AuthStore(userStore),
   resReply: new ResReplyStore(userStore),
   topic: new TopicStore(userStore),
   cache: cacheStore,

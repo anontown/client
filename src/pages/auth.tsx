@@ -14,10 +14,9 @@ import {
   UserStore,
 } from "../stores";
 import { Query, Mutation } from "react-apollo";
-import { getClient, createToken, createTokenReq } from "./auth.gql";
+import { getClient, createToken } from "./auth.gql";
 import { getClient as getClientResult, getClientVariables } from "./_gql/getClient";
 import { createToken as createTokenResult, createTokenVariables } from "./_gql/createToken";
-import { createTokenReq as createTokenReqResult } from "./_gql/createTokenReq";
 
 interface AuthPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -47,14 +46,20 @@ export const AuthPage = withRouter(myInject(["user"],
             {({ loading, error, data }) => {
               if (loading) return "Loading...";
               if (error || !data || data.clients.length === 0) return (<Snack msg="クライアント取得に失敗しました。" />);
-
+              const client = data.clients[0];
               return (<Mutation<createTokenResult, createTokenVariables>
                 mutation={createToken}
-                variables={{ client: data.clients[0].id }}>
-                {(create, { data, error, loading }) => {
+                variables={{ client: client.id }}>
+                {(create, { error }) => {
                   return <div>
                     認証しますか？
-                  <RaisedButton type="button" label="OK" onClick={() => create()} />
+                  <RaisedButton type="button" label="OK" onClick={async () => {
+                      const data = await create();
+                      if (data && data.data) {
+                        location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.createReq.token + "&key=" + encodeURI(data.data.createTokenGeneral.createReq.key);
+                      }
+                    }} />
+                    {error && <Snack msg="エラーが発生しました" />}
                   </div>;
                 }}
               </Mutation>);
