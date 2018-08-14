@@ -1,0 +1,20 @@
+query getClient($id:ID!){
+    clients(query:{id:[$id]}){
+        id
+        url
+    }
+}
+
+mutation createToken($client:ID!){
+    createTokenGeneral(client:$client){
+        id
+        key
+    }
+}
+
+mutation createTokenReq{
+    createTokenReq{
+        token
+        key
+    }
+}
