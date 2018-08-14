@@ -7,13 +7,11 @@ export * from "./topic-data-store";
 export * from "./notifications-store";
 export * from "./res-reply-store";
 export * from "./topic-store";
-export * from "./cache-store";
 export * from "./res-hash-store";
 
 import { inject } from "mobx-react";
 import * as React from "react";
 import { Omit } from "type-zoo";
-import { CacheStore } from "./cache-store";
 import { NotificationsStore } from "./notifications-store";
 import { ProfilesStore } from "./profiles-store";
 import { ResHashStore } from "./res-hash-store";
@@ -26,7 +24,6 @@ import { TopicStore } from "./topic-store";
 import { UserStore } from "./user-store";
 
 const userStore = new UserStore();
-const cacheStore = new CacheStore();
 
 export const stores = {
   user: userStore,
@@ -38,7 +35,6 @@ export const stores = {
   notifications: new NotificationsStore(userStore),
   resReply: new ResReplyStore(userStore),
   topic: new TopicStore(userStore),
-  cache: cacheStore,
   resHash: new ResHashStore(userStore),
 };
 
