@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@trainline/react-skeletor": "^1.0.2",
-    "apollo-boost": "^0.1.12",
+    "apollo-boost": "^0.1.13",
     "classnames": "^2.2.5",
     "core-js": "^2.5.2",
     "crypto-js": "^3.1.9-1",

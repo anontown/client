@@ -1,4 +1,3 @@
-import { AtError } from "@anontown/api-client";
 import {
   MenuItem,
   Paper,
@@ -21,9 +20,11 @@ import {
 } from "../components";
 import { Config } from "../env";
 import { myInject, UserStore } from "../stores";
-import {
-  apiClient,
-} from "../utils";
+import { findUserID, createUser, createTokenMaster } from "./in.gql";
+import { findUserID as findUserIDResult, findUserIDVariables } from "./_gql/findUserID";
+import { createUser as createUserResult, createUserVariables } from "./_gql/createUser";
+import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "./_gql/createTokenMaster";
+import { gqlClient } from "../utils";
 
 interface InPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -95,10 +96,21 @@ export const InPage = withRouter(myInject(["user"], observer(class extends React
   }
 
   async ok() {
+    gqlClient.mutate<createUserResult, createUserVariables>({
+      mutation: createUser,
+      variables: {
+        sn: this.state.sn, pass: this.state.pass,
+        recaptcha: this.state.recaptcha!
+      }
+    }).then(x => {
+      if (x.data) {
+        x.context!.createUser
+      }
+    });
     try {
       const id = this.state.isLogin
-        ? await apiClient.findUserID({ sn: this.state.sn })
-        : await apiClient.createUser(this.state.recaptcha as string, // TODO:キャストじゃなくて綺麗に書きたいけど面倒だからとりあえず
+        ? await gqlClient.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID)
+        : await apiClient.createUser(this.state.recaptcha!
           {
             sn: this.state.sn,
             pass: this.state.pass,
