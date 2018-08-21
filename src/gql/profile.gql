@@ -1,0 +1,9 @@
+fragment profile on Profile{
+    id
+    self
+    name
+    text
+    date
+    update
+    sn
+}

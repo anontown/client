@@ -1,0 +1,7 @@
+#import "./gql/topic.gql"
+
+query findResHash($hash:String!){
+    reses(query:{hash:$hash}){
+
+    }
+}

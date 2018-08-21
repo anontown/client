@@ -1,0 +1,43 @@
+fragment topicBase on Topic{
+    id
+    title
+    update
+    date
+    resCount
+    active
+} 
+
+fragment topicSearchBase on TopicSearch{
+    tags
+    text
+}
+
+fragment topicSearch on TopicSearch{
+    ...topicBase
+    ...topicSearchBase
+}
+
+fragment topicNormal on TopicNormal{
+    ...topicSearch
+}
+
+fragment topicOne on TopicOne{
+    ...topicSearch
+}
+
+fragment topicForkBase on TopicFork{
+    parent{
+        ...topicSearch
+    }
+}
+
+fragment topicFork on TopicFork{
+    ...topicBase
+    ...topicForkBase
+}
+
+fragment topic on Topic{
+    ...topicBase
+    ...topicSearchBase
+    ...topicForkBase
+} 

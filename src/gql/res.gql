@@ -1,0 +1,75 @@
+#import "./gql/topic.gql"
+#import "./gql/profile.gql"
+#import "./gql/history.gql"
+
+fragment resBase on Res{
+    id
+    topic{
+        ...topic
+    }
+    date
+    self
+    uv
+    dv
+    hash
+    replyCount
+    voteFlag
+}
+
+fragment res on Res{
+    ...resBase
+    ...resNormalBase
+    ...resHistoryBase
+    ...resForkBase
+    ...resDeleteBase
+}
+
+fragment resNormalBase on ResNormal{
+    name
+    text
+    reply{id}
+    profile{
+        ...profile
+    }
+    isReply
+}
+
+fragment resNormal on ResNormal{
+    ...resBase
+    ...resNormalBase
+}
+
+fragment resHistoryBase on ResHistory{
+    history{
+        ...history
+    }
+}
+
+fragment resHistory on ResHistory{
+    ...resBase
+    ...resHistoryBase
+}
+
+fragment resTopic on ResTopic{
+    ...resBase
+}
+
+fragment resForkBase on ResFork{
+    fork{
+        ...topicFork
+    }
+}
+
+fragment resFork on ResFork{
+    ...resBase
+    ...resForkBase
+}
+
+fragment resDeleteBase on ResDelete{
+    flag
+}
+
+fragment resDelete on ResDelete{
+    ...resBase
+    ...resDeleteBase
+}
