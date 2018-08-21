@@ -7,34 +7,26 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
-import { myInject, ResStore, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
 import {
   withModal,
 } from "../utils";
+import { getRes } from "./res.gql";
+import { getRes as getResResult, getResVariables } from "./_gql/getRes";
+import { Query } from "react-apollo";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
   zDepth?: number;
-  res: ResStore;
 }
 
 interface ResBaseState {
 }
 
-const ResBase = withRouter(myInject(["user", "res"],
+const ResBase = withRouter(myInject(["user"],
   observer(class extends React.Component<ResBaseProps, ResBaseState> {
     constructor(props: ResBaseProps) {
       super(props);
-      this.state = {
-        res: null,
-        snackMsg: null,
-      };
-
-      this.componentWillReceiveProps(this.props);
-    }
-
-    componentWillReceiveProps(nextProps: ResBaseProps) {
-      this.props.res.load(nextProps.match.params.id);
     }
 
     render() {
@@ -42,14 +34,20 @@ const ResBase = withRouter(myInject(["user", "res"],
         <Helmet>
           <title>レス</title>
         </Helmet>
-        <Snack
-          msg={this.props.res.msg}
-          onHide={() => this.props.res.clearMsg()} />
-        {this.props.res.res !== null
-          ? <Paper zDepth={this.props.zDepth}>
-            <Res res={this.props.res.res} update={res => this.props.res.update(res)} />
-          </Paper>
-          : null}
+        <Query<getResResult, getResVariables>
+          query={getRes}
+          variables={{ id: this.props.match.params.id }}>
+          {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error || !data || data.reses.length === 0) return (<Snack msg="レス取得に失敗しました" />);
+
+            return (
+              <Paper zDepth={this.props.zDepth}>
+                <Res res={data.reses[0]} />
+              </Paper>
+            );
+          }}
+        </Query>
       </div>;
     }
   })));
