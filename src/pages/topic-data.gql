@@ -1,0 +1,25 @@
+query findTopic($id:ID!){
+    topics(query:{id:[$id]},limit:1){
+        ...topicSearch
+        ... on TopicFork{
+            parent{
+                ...topicSearch
+            }
+        }
+    }
+}
+
+fragment topic on Topic{
+    id
+    title
+    update
+    date
+    resCount
+    active
+} 
+
+fragment topicSearch on TopicSearch{
+    ...topic
+    tags
+    text
+} 

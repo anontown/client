@@ -3,7 +3,6 @@ export * from "./topic-search-store";
 export * from "./profiles-store";
 export * from "./res-store";
 export * from "./topic-fork-store";
-export * from "./topic-data-store";
 export * from "./notifications-store";
 export * from "./res-reply-store";
 export * from "./topic-store";
@@ -17,7 +16,6 @@ import { ProfilesStore } from "./profiles-store";
 import { ResHashStore } from "./res-hash-store";
 import { ResReplyStore } from "./res-reply-store";
 import { ResStore } from "./res-store";
-import { TopicDataStore } from "./topic-data-store";
 import { TopicForkStore } from "./topic-fork-store";
 import { TopicSearchStore } from "./topic-search-store";
 import { TopicStore } from "./topic-store";
@@ -31,7 +29,6 @@ export const stores = {
   profiles: new ProfilesStore(userStore),
   res: new ResStore(userStore),
   topicFork: new TopicForkStore(),
-  topicData: new TopicDataStore(),
   notifications: new NotificationsStore(userStore),
   resReply: new ResReplyStore(userStore),
   topic: new TopicStore(userStore),

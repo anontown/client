@@ -1,53 +1,48 @@
 import { Paper } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
 import { Page, Snack, TopicData } from "../components";
-import { myInject, TopicDataStore } from "../stores";
 import {
   withModal,
 } from "../utils";
+import { findTopic } from "./topic-data.gql";
+import { findTopic as findTopicResult, findTopicVariables } from "./_gql/findTopic";
+import { Query } from "react-apollo";
 
 interface TopicDataBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
-  topicData: TopicDataStore;
 }
 
 interface TopicDataBaseState {
 }
 
-const TopicDataBase = withRouter(myInject(["topicData"],
-  observer(class extends React.Component<TopicDataBaseProps, TopicDataBaseState> {
-    constructor(props: TopicDataBaseProps) {
-      super(props);
-      this.state = {
-        topic: null,
-        snackMsg: null,
-      };
+const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProps, TopicDataBaseState> {
+  constructor(props: TopicDataBaseProps) {
+    super(props);
+  }
 
-      this.componentWillReceiveProps(this.props);
-    }
+  render() {
+    this.props.match.params.id
 
-    componentWillReceiveProps(nextProps: TopicDataBaseProps) {
-      this.props.topicData.load(nextProps.match.params.id);
-    }
+    return <Paper zDepth={this.props.zDepth}>
+      <Query<findTopicResult, findTopicVariables>
+        query={findTopic}
+        variables={{ id: this.props.match.params.id }}>{
+          ({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error || !data || data.topics.length === 0) return (<Snack msg="トピック取得に失敗しました" />);
 
-    render() {
-      return <Paper zDepth={this.props.zDepth}>
-        <Snack
-          msg={this.props.topicData.msg}
-          onHide={() => this.props.topicData.clearMsg()} />
-        {this.props.topicData.topic !== null
-          ? <Paper zDepth={this.props.zDepth}>
-            <TopicData topic={this.props.topicData.topic} />
-          </Paper>
-          : null}
-      </Paper>;
-    }
-  })));
+            return (<Paper zDepth={this.props.zDepth}>
+              <TopicData topic={data.topics[0]} />
+            </Paper>);
+          }
+        }</Query>
+    </Paper>;
+  }
+});
 
 export function TopicDataPage() {
   return <Page><TopicDataBase /></Page>;
