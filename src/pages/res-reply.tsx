@@ -9,31 +9,26 @@ import {
 import { Page, Res, Snack } from "../components";
 import {
   myInject,
-  ResReplyStore,
   UserStore,
 } from "../stores";
 import {
   withModal,
 } from "../utils";
+import { findResReply } from "./res-reply.gql";
+import { findResReply as findResReplyResult, findResReplyVariables } from "./_gql/findResReply";
+import { Query } from "react-apollo";
 
 interface ResReplyBaseProps extends RouteComponentProps<{ id: string }> {
   user: UserStore;
-  resReply: ResReplyStore;
 }
 
 interface ResReplyBaseState {
 }
 
-const ResReplyBase = withRouter(myInject(["user", "resReply"],
+const ResReplyBase = withRouter(myInject(["user"],
   observer(class extends React.Component<ResReplyBaseProps, ResReplyBaseState> {
     constructor(props: ResReplyBaseProps) {
       super(props);
-
-      this.componentWillReceiveProps(this.props);
-    }
-
-    componentWillReceiveProps(nextProps: ResReplyBaseProps) {
-      this.props.resReply.load(nextProps.match.params.id);
     }
 
     render() {
@@ -41,16 +36,17 @@ const ResReplyBase = withRouter(myInject(["user", "resReply"],
         <Helmet>
           <title>リプライ</title>
         </Helmet>
-        <Snack
-          msg={this.props.resReply.msg}
-          onHide={() => this.props.resReply.clearMsg()} />
-        {this.props.resReply.data !== null
-          ? this.props.resReply.data.reses.map(res => <Paper key={res.id}>
-            <Res
-              res={res}
-              update={updateRes => this.props.resReply.update(updateRes)} />
-          </Paper>)
-          : null}
+        <Query<findResReplyResult, findResReplyVariables>
+          query={findResReply}
+          variables={{ reply: this.props.match.params.id }}>
+          {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error || !data) return (<Snack msg="レス取得に失敗しました" />);
+            return data.reses.map(res => <Paper key={res.id}>
+              <Res res={res} />
+            </Paper>)
+          }}
+        </Query>
       </div>;
     }
   })));
