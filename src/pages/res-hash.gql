@@ -1,7 +1,7 @@
-#import "./gql/topic.gql"
+#import "./gql/res.gql"
 
 query findResHash($hash:String!){
     reses(query:{hash:$hash}){
-
+        ...res
     }
 }

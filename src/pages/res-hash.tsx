@@ -9,48 +9,46 @@ import {
 import { Page, Res, Snack } from "../components";
 import {
   myInject,
-  ResHashStore,
   UserStore,
 } from "../stores";
 import {
   withModal,
 } from "../utils";
+import { findResHash } from "./res-hash.gql";
+import { findResHash as findResHashResult, findResHashVariables } from "./_gql/findResHash";
+import { Query } from "react-apollo";
 
 interface ResHashBaseProps extends RouteComponentProps<{ hash: string }> {
   user: UserStore;
-  resHash: ResHashStore;
 }
 
 interface ResHashBaseState {
 }
 
-const ResHashBase = withRouter(myInject(["user", "resHash"],
+const ResHashBase = withRouter(myInject(["user"],
   observer(class extends React.Component<ResHashBaseProps, ResHashBaseState> {
     constructor(props: ResHashBaseProps) {
       super(props);
-
-      this.componentWillReceiveProps(this.props);
-    }
-
-    componentWillReceiveProps(nextProps: ResHashBaseProps) {
-      this.props.resHash.load(decodeURIComponent(nextProps.match.params.hash));
     }
 
     render() {
+      const hash = decodeURIComponent(this.props.match.params.hash);
+
       return <div>
         <Helmet>
-          <title>HASH:{decodeURIComponent(this.props.match.params.hash)}</title>
+          <title>HASH:{hash}</title>
         </Helmet>
-        <Snack
-          msg={this.props.resHash.msg}
-          onHide={() => this.props.resHash.clearMsg()} />
-        {this.props.resHash.data !== null
-          ? this.props.resHash.data.reses.map(res => <Paper key={res.id}>
-            <Res
-              res={res}
-              update={updateRes => this.props.resHash.update(updateRes)} />
-          </Paper>)
-          : null}
+        <Query<findResHashResult, findResHashVariables>
+          query={findResHash}
+          variables={{ hash }}>
+          {({ loading, error, data }) => {
+            if (loading) return "Loading...";
+            if (error || !data) return (<Snack msg="レス取得に失敗しました" />);
+            return data.reses.map(res => <Paper key={res.id}>
+              <Res res={res} />
+            </Paper>)
+          }}
+        </Query>
       </div>;
     }
   })));
