@@ -102,9 +102,8 @@ function MdLink(props: { node: mdParser.Link }) {
         title: props.node.title || undefined,
       }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
-      return <img
-        className={style.preview}
-        src={safeURL(camo.getCamoUrl(props.node.url))}
+      return <MdImg
+        url={safeURL(props.node.url)}
         title={props.node.title || undefined} />;
     case "youtube":
       return <MdYouTube videoID={link.videoID} title={props.node.title || undefined} />;
