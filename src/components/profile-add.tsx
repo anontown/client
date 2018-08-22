@@ -3,31 +3,30 @@ import * as React from "react";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
-import * as style from "./profile-editor.scss";
+import * as style from "./profile-add.scss";
 import { profile } from "../gql/_gql/profile";
 
-interface ProfileEditorProps {
-  profile: profile;
-  onUpdate?: (profile: profile) => void;
+interface ProfileAddProps {
+  onAdd?: (profile: profile) => void;
   userData: UserData;
   style?: React.CSSProperties
 }
 
-interface ProfileEditorState {
+interface ProfileAddState {
   errors: string[];
   sn: string;
   name: string;
   text: string;
 }
 
-export class ProfileEditor extends React.Component<ProfileEditorProps, ProfileEditorState> {
-  constructor(props: ProfileEditorProps) {
+export class ProfileAdd extends React.Component<ProfileAddProps, ProfileAddState> {
+  constructor(props: ProfileAddProps) {
     super(props);
     this.state = {
       errors: [],
-      sn: props.profile.sn,
-      name: props.profile.name,
-      text: props.profile.text,
+      sn: "",
+      name: "",
+      text: "",
     };
   }
 
@@ -56,14 +55,14 @@ export class ProfileEditor extends React.Component<ProfileEditorProps, ProfileEd
 
   async submit() {
     try {
-      const profile = await apiClient.updateProfile(this.props.userData.token, {
-        id: this.props.profile.id,
+      const profile = await apiClient.createProfile(this.props.userData.token, {
         name: this.state.name,
         text: this.state.text,
         sn: this.state.sn,
       });
-      if (this.props.onUpdate) {
-        this.props.onUpdate(profile);
+
+      if (this.props.onAdd) {
+        this.props.onAdd(profile);
       }
       this.setState({ errors: [] });
     } catch (e) {

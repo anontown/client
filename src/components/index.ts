@@ -9,6 +9,7 @@ export * from "./md-editor";
 export * from "./md";
 export * from "./oekaki";
 export * from "./profile-editor";
+export * from "./profile-add";
 export * from "./res-write";
 export * from "./res";
 export * from "./topic-list-item";
