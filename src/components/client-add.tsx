@@ -4,24 +4,23 @@ import { UserData } from "../models";
 import { Errors } from "./errors";
 import { client } from "../gql/_gql/client";
 
-interface ClientEditorProps {
-  client: client;
-  onUpdate?: (client: client) => void;
+interface ClientAddProps {
+  onAdd?: (client: client) => void;
   userData: UserData;
 }
 
-interface ClientEditorState {
+interface ClientAddState {
   url: string;
   name: string;
   errors: string[];
 }
 
-export class ClientEditor extends React.Component<ClientEditorProps, ClientEditorState> {
-  constructor(props: ClientEditorProps) {
+export class ClientAdd extends React.Component<ClientAddProps, ClientAddState> {
+  constructor(props: ClientAddProps) {
     super(props);
     this.state = {
-      url: props.client.url,
-      name: props.client.name,
+      url: "",
+      name: "",
       errors: [],
     };
   }
@@ -37,14 +36,13 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
 
   async submit() {
     try {
-      const client = await apiClient.updateClient(this.props.userData.token, {
-        id: this.props.client.id,
+      const client = await apiClient.createClient(this.props.userData.token, {
         name: this.state.name,
         url: this.state.url,
       });
 
-      if (this.props.onUpdate) {
-        this.props.onUpdate(client);
+      if (this.props.onAdd) {
+        this.props.onAdd(client);
       }
       this.setState({ errors: [] });
     } catch (e) {
