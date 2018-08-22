@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import {
   FontIcon,
   IconButton,
@@ -6,10 +5,11 @@ import {
 import * as React from "react";
 import { UserData } from "../models";
 import { ClientEditor } from "./client-editor";
+import { client } from "../gql/_gql/client";
 
 interface ClientProps {
-  client: api.Client;
-  onUpdate?: (client: api.Client) => void;
+  client: client;
+  onUpdate?: (client: client) => void;
   userData: UserData | null;
 }
 
@@ -30,7 +30,7 @@ export class Client extends React.Component<ClientProps, ClientState> {
       ? <ClientEditor client={this.props.client} onUpdate={this.props.onUpdate} userData={this.props.userData} />
       : null;
 
-    const edit = this.props.userData !== null && this.props.userData.token.user === this.props.client.user
+    const edit = this.props.client.self
       ? <div>
         <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
           <FontIcon className="material-icons">edit</FontIcon>
