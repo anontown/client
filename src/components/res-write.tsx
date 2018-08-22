@@ -1,5 +1,3 @@
-import { AtError } from "@anontown/api-client";
-import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   RaisedButton,
@@ -9,15 +7,15 @@ import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 
 import { Storage, UserData } from "../models";
-import { apiClient } from "../utils";
 import { CheckBox } from "./check-box";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { Select } from "./select";
 import { TextField } from "./text-field";
+import { res } from "../gql/_gql/res";
 
 interface ResWriteProps {
-  onSubmit?: (value: api.Res) => void;
+  onSubmit?: (value: res) => void;
   topic: string;
   reply: string | null;
   userData: UserData;

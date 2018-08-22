@@ -1,0 +1,6 @@
+query findTags{
+    topicTags{
+        name
+        count
+    }
+}
