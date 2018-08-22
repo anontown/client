@@ -1,9 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { dateFormat } from "../utils";
-import { History } from "./history";
 import { Md } from "./md";
-import { Snack } from "./snack";
 import { TagsLink } from "./tags-link";
 import { topic } from "../gql/_gql/topic";
 
