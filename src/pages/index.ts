@@ -3,7 +3,7 @@ export * from "./not-found";
 export * from "./res";
 export * from "./auth";
 export * from "./home";
-export * from "./in";
+export * from "./signup";
 export * from "./login";
 export * from "./messages";
 export * from "./not-found";

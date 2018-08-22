@@ -10,6 +10,7 @@ import {
   Redirect,
   RouteComponentProps,
   withRouter,
+  Link,
 } from "react-router-dom";
 import {
   Errors,
@@ -73,17 +74,16 @@ export const LoginPage = withRouter(myInject(["user"], observer(class extends Re
                   onError={() => {
                     this.setState({ errors: ["ログインに失敗しました。"] });
                   }}>
-                  {submit => {
-                    return (
-                      <div><RaisedButton label="ログイン" onClick={async () => {
-                        const id = await client.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID);
-                        await submit({ variables: { id, pass: this.state.pass } });
-                      }} /></div>
-                    );
-                  }}
+                  {submit => (
+                    <div><RaisedButton label="ログイン" onClick={async () => {
+                      const id = await client.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID);
+                      await submit({ variables: { id, pass: this.state.pass } });
+                    }} /></div>
+                  )}
                 </Mutation>
               )}
             </ApolloConsumer>
+            <Link to="/signup">登録</Link>
           </form>
         </Paper>}
     </Page>;

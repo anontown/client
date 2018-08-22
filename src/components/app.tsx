@@ -192,7 +192,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
                 <Route exact={true} path="/profiles" component={pages.ProfilesPage} />
                 <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
                 <Route exact={true} path="/messages" component={pages.MessagesPage} />
-                <Route exact={true} path="/in" component={pages.InPage} />
+                <Route exact={true} path="/signup" component={pages.SignupPage} />
                 <Route exact={true} path="/login" component={pages.LoginPage} />
                 <Route exact={true} path="/auth" component={pages.AuthPage} />
                 <Route path="/settings" component={pages.SettingsPage} />
