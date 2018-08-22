@@ -7,7 +7,6 @@ import {
 } from "material-ui";
 import { observer } from "mobx-react";
 import * as React from "react";
-import Recaptcha from "react-google-recaptcha";
 import { Helmet } from "react-helmet";
 import {
   Redirect,
@@ -22,10 +21,8 @@ import { Config } from "../env";
 import { myInject, UserStore } from "../stores";
 import { findUserID, createUser, createTokenMaster } from "./in.gql";
 import { findUserID as findUserIDResult, findUserIDVariables } from "./_gql/findUserID";
-import { createUser as createUserResult, createUserVariables } from "./_gql/createUser";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "./_gql/createTokenMaster";
-import { gqlClient } from "../utils";
-import { Mutation } from "react-apollo";
+import { Mutation, ApolloConsumer } from "react-apollo";
 
 interface LoginPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -55,36 +52,42 @@ export const LoginPage = withRouter(myInject(["user"], observer(class extends Re
         ? <Redirect to="/" />
         : <Paper>
           <Errors errors={this.state.errors} />
-          <Mutation<createTokenMasterResult, createTokenMasterVariables>
-            mutation={createTokenMaster}
-            onCompleted={x => {
-              this.props.user.userChange(x);
-            }}
-            onError={x => {
-              this.setState({ errors: ["ログインに失敗しました。"] });
-            }}>
-            {submit => {
-              return (<form>
-                <div>
-                  <TextField
-                    floatingLabelText="ID"
-                    value={this.state.sn}
-                    onChange={(_e, v) => this.setState({ sn: v })} />
-                </div>
-                <div>
-                  <TextField
-                    floatingLabelText="パスワード"
-                    value={this.state.pass}
-                    onChange={(_e, v) => this.setState({ pass: v })}
-                    type="password" />
-                </div>
-                <div><RaisedButton label="ログイン" onClick={async () => {
-                  const id = await gqlClient.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID);
-                  await submit({ variables: { id, pass: this.state.pass } });
-                }} /></div>
-              </form>);
-            }}
-          </Mutation>
+          <form>
+            <div>
+              <TextField
+                floatingLabelText="ID"
+                value={this.state.sn}
+                onChange={(_e, v) => this.setState({ sn: v })} />
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="パスワード"
+                value={this.state.pass}
+                onChange={(_e, v) => this.setState({ pass: v })}
+                type="password" />
+            </div>
+            <ApolloConsumer>
+              {client => (
+                <Mutation<createTokenMasterResult, createTokenMasterVariables>
+                  mutation={createTokenMaster}
+                  onCompleted={x => {
+                    this.props.user.userChange(x);
+                  }}
+                  onError={() => {
+                    this.setState({ errors: ["ログインに失敗しました。"] });
+                  }}>
+                  {submit => {
+                    return (
+                      <div><RaisedButton label="ログイン" onClick={async () => {
+                        const id = await client.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID);
+                        await submit({ variables: { id, pass: this.state.pass } });
+                      }} /></div>
+                    );
+                  }}
+                </Mutation>
+              )}
+            </ApolloConsumer>
+          </form>
         </Paper>}
     </Page>;
   }
