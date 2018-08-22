@@ -166,8 +166,8 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
                         onClick={() => this.logout()} />,
                     ]
                     : <MenuItem
-                      primaryText="ログイン/登録"
-                      containerElement={<Link to="/in" />} />}
+                      primaryText="ログイン"
+                      containerElement={<Link to="/login" />} />}
 
                 </IconMenu>
                 <IconButton containerElement={<a
@@ -193,6 +193,7 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
                 <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
                 <Route exact={true} path="/messages" component={pages.MessagesPage} />
                 <Route exact={true} path="/in" component={pages.InPage} />
+                <Route exact={true} path="/login" component={pages.LoginPage} />
                 <Route exact={true} path="/auth" component={pages.AuthPage} />
                 <Route path="/settings" component={pages.SettingsPage} />
                 <Route exact={true} path="/profile/:id" component={pages.ProfilePage} />
