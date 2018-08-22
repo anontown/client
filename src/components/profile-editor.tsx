@@ -1,17 +1,15 @@
-import { AtError } from "@anontown/api-client";
-import * as api from "@anontown/api-types";
 import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { UserData } from "../models";
-import { apiClient } from "../utils";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
+import { profile } from "../gql/_gql/profile";
 
 interface ProfileEditorProps {
-  profile: api.Profile | null;
-  onUpdate?: (profile: api.Profile) => void;
-  onAdd?: (profile: api.Profile) => void;
+  profile: profile;
+  onUpdate?: (profile: profile) => void;
+  onAdd?: (profile: profile) => void;
   userData: UserData;
   style?: React.CSSProperties
 }

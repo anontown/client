@@ -1,9 +1,9 @@
-import * as api from "@anontown/api-types";
 import * as React from "react";
 import { Md } from "./md";
+import { profile } from "../gql/_gql/profile";
 
 export interface ProfileProps {
-  profile: api.Profile;
+  profile: profile;
 }
 
 interface ProfileState {
