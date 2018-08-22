@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { UserData } from "../models";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import { topic } from "../gql/_gql/topic";
 import { findTopicID } from "./topic-favo.gql";
 import { findTopicID as findTopicIDResult, findTopicIDVariables } from "./_gql/findTopicID";
 import { Query } from "react-apollo";
