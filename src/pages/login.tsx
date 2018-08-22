@@ -1,8 +1,6 @@
 import {
-  MenuItem,
   Paper,
   RaisedButton,
-  SelectField,
   TextField,
 } from "material-ui";
 import { observer } from "mobx-react";
@@ -17,9 +15,8 @@ import {
   Errors,
   Page,
 } from "../components";
-import { Config } from "../env";
 import { myInject, UserStore } from "../stores";
-import { findUserID, createUser, createTokenMaster } from "./in.gql";
+import { findUserID, createTokenMaster } from "./in.gql";
 import { findUserID as findUserIDResult, findUserIDVariables } from "./_gql/findUserID";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "./_gql/createTokenMaster";
 import { Mutation, ApolloConsumer } from "react-apollo";
