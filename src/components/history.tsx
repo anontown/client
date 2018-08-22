@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import {
   FontIcon,
   IconButton,
@@ -10,9 +9,10 @@ import {
 } from "../utils";
 import { Md } from "./md";
 import { TagsLink } from "./tags-link";
+import { history } from "../gql/_gql/history";
 
 interface HistoryProps {
-  history: api.History;
+  history: history;
 }
 
 interface HistoryState {
