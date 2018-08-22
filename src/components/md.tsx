@@ -10,9 +10,9 @@ import {
 import * as style from "./md.scss";
 
 type URLType = { type: "normal", url: string } |
-  { type: "router", path: string } |
-  { type: "youtube", videoID: string } |
-  { type: "image", url: string };
+{ type: "router", path: string } |
+{ type: "youtube", videoID: string } |
+{ type: "image", url: string };
 
 export interface MdProps {
   text: string;
@@ -240,7 +240,7 @@ class MdImg extends React.Component<MdImgProps, MdImgState> {
         onRequestClose={() => this.setState({ dialog: false })}>
         <img
           style={{
-            width: "65vw",
+            width: "50vw",
             height: "auto",
           }}
           src={camo.getCamoUrl(this.props.url)}

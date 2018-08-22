@@ -16,9 +16,9 @@
 
 .dialogContent{
   @include dialog();
-  width: 75vw !important;
+  min-width: 75vw !important;
   &>div{
-    width: 100% !important;
+    min-width: 100% !important;
   }
   -webkit-overflow-scrolling: touch;
 }
