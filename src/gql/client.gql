@@ -1,0 +1,8 @@
+fragment client on Client{
+  id
+  name
+  url
+  self
+  date
+  update
+} 

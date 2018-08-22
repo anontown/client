@@ -1,15 +1,13 @@
-import { AtError } from "@anontown/api-client";
-import * as api from "@anontown/api-types";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { UserData } from "../models";
-import { apiClient } from "../utils";
 import { Errors } from "./errors";
+import { client } from "../gql/_gql/client";
 
 interface ClientEditorProps {
-  client: api.Client | null;
-  onUpdate?: (client: api.Client) => void;
-  onAdd?: (client: api.Client) => void;
+  client: client | null;
+  onUpdate?: (client: client) => void;
+  onAdd?: (client: client) => void;
   userData: UserData;
 }
 
