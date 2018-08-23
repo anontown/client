@@ -49,6 +49,9 @@ export class TopicStateData {
       id: topic.id,
     })
       .pipe(
+        op.retryWhen(errors =>
+          errors.pipe(op.delay(1000))
+        ),
         op.tap(x => {
           this.topic = { ...this.topic, resCount: x.count };
           this.storageSaveDate(null);
