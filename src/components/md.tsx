@@ -1,4 +1,4 @@
-import { Dialog } from "material-ui";
+import { Dialog, IconButton, FontIcon } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { Config } from "../env";
@@ -8,6 +8,7 @@ import {
   safeURL,
 } from "../utils";
 import * as style from "./md.scss";
+import { Rnd } from "react-rnd";
 
 type URLType = { type: "normal", url: string } |
 { type: "router", path: string } |
@@ -49,18 +50,28 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
         src={`https://i.ytimg.com/vi/${this.props.videoID}/maxresdefault.jpg`}
         title={this.props.title || undefined}
         onClick={() => this.setState({ slow: true })} />
-      <Dialog
-        title="YouTube"
-        open={this.state.slow}
-        autoScrollBodyContent={true}
-        onRequestClose={() => this.setState({ slow: false })}>
-        <div className={style.youtube}>
-          <iframe
-            src={`https://www.youtube.com/embed/${this.props.videoID}`}
-            frameBorder="0">
-          </iframe>
-        </div>
-      </Dialog>
+      {this.state.slow
+        ? <Rnd
+          default={{
+            x: 0,
+            y: 0,
+            width: window.innerWidth / 3 * 2,
+            height: window.innerWidth / 3,
+          }}
+          style={{
+            backgroundColor: "#555"
+          }}>
+          <IconButton type="button" onClick={() => this.setState({ slow: false })} >
+            <FontIcon className="material-icons">close</FontIcon>
+          </IconButton>
+          <div className={style.youtube}>
+            <iframe
+              src={`https://www.youtube.com/embed/${this.props.videoID}`}
+              frameBorder="0">
+            </iframe>
+          </div>
+        </Rnd>
+        : null}
     </>;
   }
 }
