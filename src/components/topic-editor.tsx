@@ -40,6 +40,11 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
         title: this.state.title,
         text: this.state.text,
         tags: this.state.tags.toArray()
+      }}
+      onCompleted={data => {
+        if (this.props.onUpdate) {
+          this.props.onUpdate(data.updateTopic);
+        }
       }}>{
         (submit, { error }) => {
           return (<form>
