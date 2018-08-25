@@ -26,7 +26,7 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
   constructor(props: TopicEditorProps) {
     super(props);
     this.state = {
-      \      title: this.props.topic.title,
+      title: this.props.topic.title,
       tags: Im.Set(this.props.topic.tags),
       text: this.props.topic.text,
     };
