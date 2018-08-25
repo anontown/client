@@ -1,0 +1,13 @@
+#import "../gql/res.gql"
+
+mutation voteRes($res:ID!,$type:VoteType!){
+    voteRes(res:$res,type:$type){
+        ...res
+    }
+}
+
+mutation delRes($res:ID!){
+    delRes(res:$res){
+        ...res
+    }
+}
