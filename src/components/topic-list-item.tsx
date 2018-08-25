@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import { FontIcon } from "material-ui";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -8,9 +7,10 @@ import { myInject, UserStore } from "../stores";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
+import { topic } from "../gql/_gql/topic";
 
 interface UnconnectedTopicListItemProps {
-  topic: api.Topic;
+  topic: topic;
   user: UserStore;
   detail: boolean;
 }
@@ -38,14 +38,14 @@ export const TopicListItem =
         <div className={style.container}>
           <div>
             {!this.props.topic.active ? <FontIcon className="material-icons">not_interested</FontIcon> : null}
-            {this.props.topic.type === "one" ? <FontIcon className="material-icons">looks_one</FontIcon> : null}
-            {this.props.topic.type === "fork" ? <FontIcon className="material-icons">call_split</FontIcon> : null}
+            {this.props.topic.__typename === "TopicOne" ? <FontIcon className="material-icons">looks_one</FontIcon> : null}
+            {this.props.topic.__typename === "TopicFork" ? <FontIcon className="material-icons">call_split</FontIcon> : null}
             {newRes !== null && newRes !== 0 ? <FontIcon className="material-icons">fiber_new</FontIcon> : null}
             <Link className={style.title} to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
           </div >
           {this.props.detail
             ? <div>
-              {this.props.topic.type !== "fork"
+              {this.props.topic.__typename !== "TopicFork"
                 ? <div>
                   <TagsLink tags={this.props.topic.tags} mini={true} />
                 </div >
