@@ -3,7 +3,6 @@ import * as dateFormat from "./date-format";
 import * as imgur from "./imgur";
 import * as list from "./list";
 import * as mdParser from "./md-parser";
-import * as resSetedCreate from "./res-seted-create";
 import * as storageAPI from "./storage-api";
 export * from "./props-type";
 
@@ -12,7 +11,7 @@ export {
   mdParser,
   camo,
   imgur,
-  resSetedCreate, storageAPI,
+  storageAPI,
   list,
 };
 
