@@ -50,7 +50,14 @@
   },
   "dependencies": {
     "@trainline/react-skeletor": "^1.0.2",
-    "apollo-boost": "^0.1.13",
+    "apollo-cache-inmemory": "^1.2.8",
+    "apollo-client": "^2.4.0",
+    "apollo-link": "^1.2.2",
+    "apollo-link-error": "^1.1.0",
+    "apollo-link-http": "^1.5.4",
+    "apollo-link-state": "^0.4.1",
+    "apollo-link-ws": "^1.0.8",
+    "apollo-utilities": "^1.0.19",
     "classnames": "^2.2.5",
     "core-js": "^2.5.2",
     "crypto-js": "^3.1.9-1",
@@ -80,8 +87,10 @@
     "remark-breaks": "^1.0.0",
     "remark-parse": "^5.0.0",
     "rxjs": "^6.2.2",
+    "subscriptions-transport-ws": "^0.9.14",
     "type-zoo": "^3.1.0",
     "unified": "^7.0.0",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "zen-observable-ts": "^0.8.9"
   }
 }
