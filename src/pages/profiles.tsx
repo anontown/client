@@ -14,23 +14,24 @@ import {
   ProfileEditor,
   Snack,
   UserSwitch,
+  ProfileAdd,
 } from "../components";
-import { myInject, ProfilesStore, UserStore } from "../stores";
+import { myInject, UserStore } from "../stores";
+import { getProfileAll as getProfileAllResult } from "./_gql/getProfileAll";
+import { getProfileAll } from "./profiles.gql";
+import { Query } from "react-apollo";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
   user: UserStore;
-  profiles: ProfilesStore;
 }
 
 export interface ProfilesPageState {
 }
 
-export const ProfilesPage = withRouter(myInject(["user", "profiles"],
+export const ProfilesPage = withRouter(myInject(["user"],
   observer(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
     constructor(props: ProfilesPageProps) {
       super(props);
-
-      this.props.profiles.load();
     }
 
     render() {
@@ -39,23 +40,25 @@ export const ProfilesPage = withRouter(myInject(["user", "profiles"],
           <Helmet>
             <title>プロフィール管理</title>
           </Helmet>
-          <Snack
-            msg={this.props.profiles.msg}
-            onHide={() => this.props.profiles.clearMsg()} />
           <UserSwitch userData={this.props.user.data} render={userData => <Tabs>
             <Tab label="編集">
-              {this.props.profiles.profiles.map(p =>
-                <ProfileEditor
-                  style={{ marginBottom: 10 }}
-                  key={p.id}
-                  profile={p}
-                  onUpdate={newProfile => this.props.profiles.update(newProfile)}
-                  userData={userData} />)}
+              <Query<getProfileAllResult> query={getProfileAll}>
+                {({ loading, error, data }) => {
+                  if (loading) return "Loading...";
+                  if (error || !data) return (<Snack msg="プロフィール取得に失敗しました" />);
+
+                  return (
+                    data.profiles.map(p =>
+                      <ProfileEditor
+                        style={{ marginBottom: 10 }}
+                        key={p.id}
+                        profile={p}
+                        userData={userData} />)
+                  );
+                }}</Query>
             </Tab>
             <Tab label="新規">
-              <ProfileEditor
-                profile={null}
-                onAdd={p => this.props.profiles.add(p)}
+              <ProfileAdd
                 userData={userData} />
             </Tab>
           </Tabs>} />
