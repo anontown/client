@@ -1,6 +1,6 @@
-#import "./gql/topic.gql"
-#import "./gql/profile.gql"
-#import "./gql/history.gql"
+#import "./topic.gql"
+#import "./profile.gql"
+#import "./history.gql"
 
 fragment resBase on Res{
     id

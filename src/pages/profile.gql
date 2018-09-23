@@ -1,4 +1,4 @@
-#import "./gql/profile.gql"
+#import "../gql/profile.gql"
 
 
 query getProfile($id:ID!){

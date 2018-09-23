@@ -1,4 +1,4 @@
-#import "./gql/topic.gql"
+#import "./topic.gql"
 
 fragment history on History{
     id
