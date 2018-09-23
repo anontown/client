@@ -3,6 +3,9 @@ import * as React from "react";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { client } from "../gql/_gql/client";
+import { updateClient } from "./client-editor.gql";
+import { updateClient as updateClientResult, updateClientVariables } from "./_gql/updateClient";
+import { Mutation } from "react-apollo";
 
 interface ClientEditorProps {
   client: client;
@@ -13,7 +16,6 @@ interface ClientEditorProps {
 interface ClientEditorState {
   url: string;
   name: string;
-  errors: string[];
 }
 
 export class ClientEditor extends React.Component<ClientEditorProps, ClientEditorState> {
@@ -22,37 +24,30 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
     this.state = {
       url: props.client.url,
       name: props.client.name,
-      errors: [],
     };
   }
 
   render() {
-    return <form>
-      <Errors errors={this.state.errors} />
-      <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-      <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
-      <RaisedButton onClick={() => this.submit()} label="OK" />
-    </form>;
-  }
-
-  async submit() {
-    try {
-      const client = await apiClient.updateClient(this.props.userData.token, {
+    return (<Mutation<updateClientResult, updateClientVariables>
+      mutation={updateClient}
+      variables={{
         id: this.props.client.id,
         name: this.state.name,
         url: this.state.url,
-      });
-
-      if (this.props.onUpdate) {
-        this.props.onUpdate(client);
-      }
-      this.setState({ errors: [] });
-    } catch (e) {
-      if (e instanceof AtError) {
-        this.setState({ errors: e.errors.map(e => e.message) });
-      } else {
-        this.setState({ errors: ["エラーが発生しました"] });
-      }
-    }
+      }}
+      onCompleted={data => {
+        if (this.props.onUpdate) {
+          this.props.onUpdate(data);
+        }
+      }}>{
+        (submit, { error }) => {
+          return (<form>
+            {error && <Errors errors={["更新に失敗"]} />}
+            <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
+            <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
+            <RaisedButton onClick={() => submit()} label="OK" />
+          </form>);
+        }
+      }</Mutation>);
   }
 }

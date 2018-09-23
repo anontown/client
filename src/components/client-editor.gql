@@ -1,0 +1,7 @@
+#import "../gql/client.gql"
+
+mutation updateClient($id:ID!,$name:String!,$url:String!){
+    updateClient(id:$id,name:$name,url:$url){
+        ...client
+    }
+}
