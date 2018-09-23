@@ -3,6 +3,9 @@ import * as React from "react";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { client } from "../gql/_gql/client";
+import { createClient } from "./client-add.gql";
+import { createClient as createClientResult, createClientVariables } from "./_gql/createClient";
+import { Mutation } from "react-apollo";
 
 interface ClientAddProps {
   onAdd?: (client: client) => void;
@@ -26,31 +29,25 @@ export class ClientAdd extends React.Component<ClientAddProps, ClientAddState> {
   }
 
   render() {
-    return <form>
-      <Errors errors={this.state.errors} />
-      <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-      <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
-      <RaisedButton onClick={() => this.submit()} label="OK" />
-    </form>;
-  }
-
-  async submit() {
-    try {
-      const client = await apiClient.createClient(this.props.userData.token, {
+    return (<Mutation<createClientResult, createClientVariables>
+      mutation={createClient}
+      variables={{
         name: this.state.name,
-        url: this.state.url,
-      });
-
-      if (this.props.onAdd) {
-        this.props.onAdd(client);
-      }
-      this.setState({ errors: [] });
-    } catch (e) {
-      if (e instanceof AtError) {
-        this.setState({ errors: e.errors.map(e => e.message) });
-      } else {
-        this.setState({ errors: ["エラーが発生しました"] });
-      }
-    }
+        url: this.state.url
+      }}
+      onCompleted={data => {
+        if (this.props.onAdd) {
+          this.props.onAdd(data.createClient);
+        }
+      }}>{
+        (submit, { error }) => {
+          return (<form>
+            {error && <Errors errors={["作成に失敗"]} />}
+            <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
+            <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
+            <RaisedButton onClick={() => submit()} label="OK" />
+          </form>);
+        }
+      }</Mutation>);
   }
 }

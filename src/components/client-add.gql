@@ -1,0 +1,7 @@
+#import "../gql/client.gql"
+
+mutation createClient($name:String!,$url:String!){
+    createClient(name:$name,url:$url){
+        ...client
+    }
+}
