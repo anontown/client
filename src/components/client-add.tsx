@@ -15,7 +15,6 @@ interface ClientAddProps {
 interface ClientAddState {
   url: string;
   name: string;
-  errors: string[];
 }
 
 export class ClientAdd extends React.Component<ClientAddProps, ClientAddState> {
@@ -24,7 +23,6 @@ export class ClientAdd extends React.Component<ClientAddProps, ClientAddState> {
     this.state = {
       url: "",
       name: "",
-      errors: [],
     };
   }
 
