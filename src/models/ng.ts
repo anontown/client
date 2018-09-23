@@ -1,7 +1,7 @@
 import * as Im from "immutable";
 import * as uuid from "uuid";
 import * as ngJson from "./ng-json";
-import { ResSeted } from "./res-seted";
+import { res } from "../gql/_gql/res";
 
 export function createDefaultNode(): NGNode {
   return {
@@ -25,8 +25,8 @@ export function createDefaultNG(): NG {
 }
 
 // TODO:chain
-export function isNG(ng: NG, res: ResSeted) {
-  if (ng.topic !== null && ng.topic !== res.topic) {
+export function isNG(ng: NG, res: res) {
+  if (ng.topic !== null && ng.topic !== res.topic.id) {
     return false;
   }
 
@@ -37,7 +37,7 @@ export function isNG(ng: NG, res: ResSeted) {
   return !!isNodeNG(ng.node, res);
 }
 
-function isNodeNG(node: NGNode, res: ResSeted): boolean | null {
+function isNodeNG(node: NGNode, res: res): boolean | null {
   switch (node.type) {
     case "not":
       const b = isNodeNG(node.child, res);
@@ -47,13 +47,13 @@ function isNodeNG(node: NGNode, res: ResSeted): boolean | null {
     case "or":
       return node.children.filter(x => x !== null).size === 0 ? null : node.children.some(x => !!isNodeNG(x, res));
     case "profile":
-      return res.type === "normal" && res.profile !== null && node.profile === res.profile.id;
+      return res.__typename === "ResNormal" && res.profile !== null && node.profile === res.profile.id;
     case "hash":
       return res.hash === node.hash;
     case "text":
-      return res.type === "normal" && textMatcherTest(node.matcher, res.text);
+      return res.__typename === "ResNormal" && textMatcherTest(node.matcher, res.text);
     case "name":
-      return res.type === "normal" && res.name !== null && textMatcherTest(node.matcher, res.name);
+      return res.__typename === "ResNormal" && res.name !== null && textMatcherTest(node.matcher, res.name);
     case "vote":
       return res.uv - res.dv < node.value;
   }
