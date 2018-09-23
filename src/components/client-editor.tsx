@@ -37,7 +37,7 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
       }}
       onCompleted={data => {
         if (this.props.onUpdate) {
-          this.props.onUpdate(data);
+          this.props.onUpdate(data.updateClient);
         }
       }}>{
         (submit, { error }) => {
