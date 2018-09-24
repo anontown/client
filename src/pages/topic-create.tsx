@@ -1,5 +1,3 @@
-import { AtError } from "@anontown/api-client";
-import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   Dialog,
@@ -24,7 +22,10 @@ import {
   UserSwitch,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { apiClient } from "../utils";
+import { createTopicNormal, createTopicOne } from "./topic-create.gql";
+import { createTopicNormal as createTopicNormalResult, createTopicNormalVariables } from "./_gql/createTopicNormal";
+import { createTopicOne as createTopicOneResult, createTopicOneVariables } from "./_gql/createTopicOne";
+import { Mutation } from "react-apollo";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -34,8 +35,7 @@ export interface TopicCreatePageState {
   title: string;
   tags: Im.Set<string>;
   text: string;
-  type: api.TopicType;
-  errors?: string[];
+  type: "TopicNormal" | "TopicOne";
   openDialog: boolean;
 }
 
@@ -47,7 +47,7 @@ export const TopicCreatePage =
         title: "",
         tags: Im.Set(),
         text: "",
-        type: "one",
+        type: "TopicOne",
         openDialog: false,
       };
     }
@@ -58,80 +58,67 @@ export const TopicCreatePage =
           <title>トピック作成</title>
         </Helmet>
         <UserSwitch userData={this.props.user.data} render={() => <Paper>
-          <Dialog
-            title="確認"
-            open={this.state.openDialog}
-            autoScrollBodyContent={true}
-            onRequestClose={() => this.setState({ openDialog: false })}
-            actions={[
-              <RaisedButton label={"はい"} onClick={() => {
-                this.setState({ openDialog: false });
-                this.create();
-              }} />,
-              <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
-            ]}>
-            ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
-            本当に建てますか？
+          <Mutation<createTopicNormalResult | createTopicOneResult, createTopicNormalVariables | createTopicOneVariables>
+            mutation={this.state.type === "TopicNormal" ? createTopicNormal : createTopicOne}
+            variables={{
+              title: this.state.title,
+              tags: this.state.tags.toArray(),
+              text: this.state.text,
+            }}
+            onCompleted={x => {
+              this.props.history.push(`/topic/${("createTopicNormal" in x ? x.createTopicNormal : x.createTopicOne).id}`);
+            }}
+          >
+            {(submit, { error }) => {
+              return (<form>
+                <Dialog
+                  title="確認"
+                  open={this.state.openDialog}
+                  autoScrollBodyContent={true}
+                  onRequestClose={() => this.setState({ openDialog: false })}
+                  actions={[
+                    <RaisedButton label={"はい"} onClick={() => {
+                      this.setState({ openDialog: false });
+                      submit();
+                    }} />,
+                    <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
+                  ]}>
+                  ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
+                  本当に建てますか？
             </Dialog>
-          <form>
-            <Errors errors={this.state.errors} />
-            <div>
-              <SelectField
-                floatingLabelText="種類"
-                value={this.state.type}
-                onChange={(_e, _i, v) => this.setState({ type: v })}>
-                <MenuItem value="one" primaryText="単発" />
-                <MenuItem value="normal" primaryText="通常" />
-              </SelectField>
-            </div>
-            <div>
-              <TextField
-                floatingLabelText="タイトル"
-                value={this.state.title}
-                onChange={(_e, v) => this.setState({ title: v })} />
-            </div>
-            <div>
-              <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
-            </div>
-            <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
-            <div>
-              <RaisedButton onClick={() => this.submit()} label="トピック作成" />
-            </div>
-          </form>
+                {error && <Errors errors={["エラーが発生しました"]} />}
+                <div>
+                  <SelectField
+                    floatingLabelText="種類"
+                    value={this.state.type}
+                    onChange={(_e, _i, v) => this.setState({ type: v })}>
+                    <MenuItem value="TopicOne" primaryText="単発" />
+                    <MenuItem value="TopicNormal" primaryText="通常" />
+                  </SelectField>
+                </div>
+                <div>
+                  <TextField
+                    floatingLabelText="タイトル"
+                    value={this.state.title}
+                    onChange={(_e, v) => this.setState({ title: v })} />
+                </div>
+                <div>
+                  <TagsInput value={this.state.tags} onChange={v => this.setState({ tags: v })} />
+                </div>
+                <MdEditor value={this.state.text} onChange={v => this.setState({ text: v })} />
+                <div>
+                  <RaisedButton onClick={() => {
+                    if (this.state.type === "TopicNormal") {
+                      this.setState({ openDialog: true });
+                    } else {
+                      submit();
+                    }
+                  }} label="トピック作成" />
+                </div>
+              </form>);
+            }}
+          </Mutation>
         </Paper>} />
       </Page>;
-    }
-
-    async submit() {
-      if (this.state.type === "normal") {
-        this.setState({ openDialog: true });
-      } else {
-        await this.create();
-      }
-    }
-
-    async create() {
-      if (this.props.user.data === null) {
-        return;
-      }
-      const params = {
-        title: this.state.title,
-        tags: this.state.tags.toArray(),
-        text: this.state.text,
-      };
-
-      try {
-        const topic = this.state.type === "one" ?
-          await apiClient.createTopicOne(this.props.user.data.token, params) :
-          await apiClient.createTopicNormal(this.props.user.data.token, params);
-        this.setState({ errors: undefined });
-        this.props.history.push(`/topic/${topic.id}`);
-      } catch (e) {
-        if (e instanceof AtError) {
-          this.setState({ errors: e.errors.map(e => e.message) });
-        } else {
-          this.setState({ errors: ["エラーが発生しました"] });
-        }
-      }
     }
   })));
