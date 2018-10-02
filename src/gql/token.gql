@@ -29,3 +29,9 @@ fragment tokenGeneral on TokenGeneral{
     ...tokenBase
     ...tokenGeneralBase
 }
+
+mutation createTokenMaster($auth:AuthUser!){
+    createTokenMaster(auth:$auth){
+        ...token
+    }
+}

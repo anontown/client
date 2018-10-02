@@ -2,3 +2,13 @@ fragment user on User{
     id
     sn
 } 
+
+query findUserSN($id:ID!){
+    userSN(id:$id)
+}
+
+mutation updateUser($sn:String!,$pass:String!,$auth:AuthUser!){
+    updateUser(sn:$sn,pass:$pass,auth:$auth){
+        ...user
+    }
+}
