@@ -1,8 +1,0 @@
-#import "../gql/topic.gql"
-
-query findTopic($id:ID!){
-    topics(query:{id:[$id]},limit:1){
-        ...topic
-    }
-}
-

@@ -8,8 +8,8 @@ import { Page, Snack, TopicData } from "../components";
 import {
   withModal,
 } from "../utils";
-import { findTopic } from "./topic-data.gql";
-import { findTopic as findTopicResult, findTopicVariables } from "./_gql/findTopic";
+import { findTopics } from "../gql/topic.gql";
+import { findTopics as findTopicsResult, findTopicsVariables } from "../gql/_gql/findTopics";
 import { Query } from "react-apollo";
 
 interface TopicDataBaseProps extends RouteComponentProps<{ id: string }> {
@@ -28,9 +28,9 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
     this.props.match.params.id
 
     return <Paper zDepth={this.props.zDepth}>
-      <Query<findTopicResult, findTopicVariables>
-        query={findTopic}
-        variables={{ id: this.props.match.params.id }}>{
+      <Query<findTopicsResult, findTopicsVariables>
+        query={findTopics}
+        variables={{ query: { id: [this.props.match.params.id] } }}>{
           ({ loading, error, data }) => {
             if (loading) return "Loading...";
             if (error || !data || data.topics.length === 0) return (<Snack msg="トピック取得に失敗しました" />);
