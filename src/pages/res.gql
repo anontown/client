@@ -1,7 +1,0 @@
-#import "../gql/res.gql"
-
-query getRes($id:ID!){
-    reses(query:{id:[$id]}){
-        ...res
-    }
-}

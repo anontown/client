@@ -11,8 +11,8 @@ import { myInject, UserStore } from "../stores";
 import {
   withModal,
 } from "../utils";
-import { getRes } from "./res.gql";
-import { getRes as getResResult, getResVariables } from "./_gql/getRes";
+import { findReses } from "../gql/res.gql";
+import { findReses as findResesResult, findResesVariables } from "../gql/_gql/findReses";
 import { Query } from "react-apollo";
 
 interface ResBaseProps extends RouteComponentProps<{ id: string }> {
@@ -34,9 +34,9 @@ const ResBase = withRouter(myInject(["user"],
         <Helmet>
           <title>レス</title>
         </Helmet>
-        <Query<getResResult, getResVariables>
-          query={getRes}
-          variables={{ id: this.props.match.params.id }}>
+        <Query<findResesResult, findResesVariables>
+          query={findReses}
+          variables={{ query: { id: this.props.match.params.id } }}>
           {({ loading, error, data }) => {
             if (loading) return "Loading...";
             if (error || !data || data.reses.length === 0) return (<Snack msg="レス取得に失敗しました" />);
