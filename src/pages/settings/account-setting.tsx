@@ -1,4 +1,3 @@
-import { AtError } from "@anontown/api-client";
 import {
   Paper,
   RaisedButton,
@@ -13,7 +12,6 @@ import {
 } from "react-router-dom";
 import { Errors, Snack, UserSwitch } from "../../components";
 import { myInject, UserStore } from "../../stores";
-import { apiClient } from "../../utils";
 
 interface AccountSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -23,8 +21,6 @@ interface AccountSettingPageState {
   newPass: string;
   oldPass: string;
   sn: string;
-  errors: string[];
-  snackMsg: string | null;
 }
 
 export const AccountSettingPage =
@@ -33,11 +29,9 @@ export const AccountSettingPage =
       constructor(props: AccountSettingPageProps) {
         super(props);
         this.state = {
-          snackMsg: null,
           newPass: "",
           oldPass: "",
           sn: "",
-          errors: [],
         };
 
         (async () => {
