@@ -14,8 +14,8 @@ import {
 import {
   withModal,
 } from "../utils";
-import { findResHash } from "./res-hash.gql";
-import { findResHash as findResHashResult, findResHashVariables } from "./_gql/findResHash";
+import { findReses } from "../gql/res.gql";
+import { findReses as findResesResult, findResesVariables } from "../gql/_gql/findReses";
 import { Query } from "react-apollo";
 
 interface ResHashBaseProps extends RouteComponentProps<{ hash: string }> {
@@ -38,9 +38,9 @@ const ResHashBase = withRouter(myInject(["user"],
         <Helmet>
           <title>HASH:{hash}</title>
         </Helmet>
-        <Query<findResHashResult, findResHashVariables>
-          query={findResHash}
-          variables={{ hash }}>
+        <Query<findResesResult, findResesVariables>
+          query={findReses}
+          variables={{ query: { hash } }}>
           {({ loading, error, data }) => {
             if (loading) return "Loading...";
             if (error || !data) return (<Snack msg="レス取得に失敗しました" />);

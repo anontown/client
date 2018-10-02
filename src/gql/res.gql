@@ -73,3 +73,9 @@ fragment resDelete on ResDelete{
     ...resBase
     ...resDeleteBase
 }
+
+query findReses($query:ResQuery!){
+    reses(query:$query){
+        ...res
+    }
+}
