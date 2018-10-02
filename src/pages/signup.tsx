@@ -19,9 +19,10 @@ import {
 } from "../components";
 import { Config } from "../env";
 import { myInject, UserStore } from "../stores";
-import { createUser, createTokenMaster } from "./in.gql";
-import { createUser as createUserResult, createUserVariables } from "./_gql/createUser";
-import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "./_gql/createTokenMaster";
+import { createUser } from "../gql/user.gql";
+import { createTokenMaster } from "../gql/token.gql";
+import { createUser as createUserResult, createUserVariables } from "../gql/_gql/createUser";
+import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../gql/_gql/createTokenMaster";
 import { Mutation } from "react-apollo";
 
 interface SignupPageProps extends RouteComponentProps<{}> {
@@ -92,7 +93,7 @@ export const SignupPage = withRouter(myInject(["user"], observer(class extends R
                     this.setState({ errors: ["アカウント作成に失敗しました"] });
                   }}
                   onCompleted={user => {
-                    createToken({ variables: { id: user.createUser.id, pass: this.state.pass } });
+                    createToken({ variables: { auth: { id: user.createUser.id, pass: this.state.pass } } });
                   }}
                   variables={{
                     sn: this.state.sn, pass: this.state.pass,

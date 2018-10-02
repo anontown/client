@@ -17,9 +17,10 @@ import {
   Page,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { findUserID, createTokenMaster } from "./in.gql";
-import { findUserID as findUserIDResult, findUserIDVariables } from "./_gql/findUserID";
-import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "./_gql/createTokenMaster";
+import { findUserID } from "../gql/user.gql";
+import { createTokenMaster } from "../gql/token.gql";
+import { findUserID as findUserIDResult, findUserIDVariables } from "../gql/_gql/findUserID";
+import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../gql/_gql/createTokenMaster";
 import { Mutation, ApolloConsumer } from "react-apollo";
 
 interface LoginPageProps extends RouteComponentProps<{}> {
@@ -77,7 +78,7 @@ export const LoginPage = withRouter(myInject(["user"], observer(class extends Re
                   {submit => (
                     <div><RaisedButton label="ログイン" onClick={async () => {
                       const id = await client.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID);
-                      await submit({ variables: { id, pass: this.state.pass } });
+                      await submit({ variables: { auth: { id, pass: this.state.pass } } });
                     }} /></div>
                   )}
                 </Mutation>

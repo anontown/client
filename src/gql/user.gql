@@ -12,3 +12,13 @@ mutation updateUser($sn:String!,$pass:String!,$auth:AuthUser!){
         ...user
     }
 }
+
+query findUserID($sn:String!){
+    userID(sn:$sn)
+}
+
+mutation createUser($sn:String!,$pass:String!,$recaptcha:String!){
+    createUser(sn:$sn,pass:$pass,recaptcha:$recaptcha){
+        ...user
+    }
+}
