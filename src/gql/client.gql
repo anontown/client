@@ -6,3 +6,9 @@ fragment client on Client{
   date
   update
 } 
+
+query findClients($id:ID!){
+    clients(query:{id:[$id]}){
+        ...client
+    }
+}

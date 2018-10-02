@@ -35,3 +35,14 @@ mutation createTokenMaster($auth:AuthUser!){
         ...token
     }
 }
+
+mutation createTokenGeneral($client:ID!){
+    createTokenGeneral(client:$client){
+        id
+        key
+        createReq{
+            token
+            key
+        }
+    }
+}

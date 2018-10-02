@@ -14,9 +14,10 @@ import {
   UserStore,
 } from "../stores";
 import { Query, Mutation } from "react-apollo";
-import { getClient, createToken } from "./auth.gql";
-import { getClient as getClientResult, getClientVariables } from "./_gql/getClient";
-import { createToken as createTokenResult, createTokenVariables } from "./_gql/createToken";
+import { findClients } from "../gql/client.gql";
+import { createTokenGeneral } from "../gql/token.gql";
+import { findClients as findClientsResult, findClientsVariables } from "../gql/_gql/findClients";
+import { createTokenGeneral as createTokenGeneralResult, createTokenGeneralVariables } from "../gql/_gql/createTokenGeneral";
 
 interface AuthPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -40,15 +41,15 @@ export const AuthPage = withRouter(myInject(["user"],
           <title>アプリ認証</title>
         </Helmet>
         {this.props.user.data !== null ? typeof id === "string"
-          ? <Query<getClientResult, getClientVariables>
-            query={getClient}
+          ? <Query<findClientsResult, findClientsVariables>
+            query={findClients}
             variables={{ id: id }}>
             {({ loading, error, data }) => {
               if (loading) return "Loading...";
               if (error || !data || data.clients.length === 0) return (<Snack msg="クライアント取得に失敗しました。" />);
               const client = data.clients[0];
-              return (<Mutation<createTokenResult, createTokenVariables>
-                mutation={createToken}
+              return (<Mutation<createTokenGeneralResult, createTokenGeneralVariables>
+                mutation={createTokenGeneral}
                 variables={{ client: client.id }}>
                 {(create, { error }) => {
                   return <div>
