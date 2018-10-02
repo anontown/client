@@ -14,8 +14,8 @@ import {
 import {
   withModal,
 } from "../utils";
-import { findResReply } from "./res-reply.gql";
-import { findResReply as findResReplyResult, findResReplyVariables } from "./_gql/findResReply";
+import { findReses } from "../gql/res.gql";
+import { findReses as findResesResult, findResesVariables } from "../gql/_gql/findReses";
 import { Query } from "react-apollo";
 
 interface ResReplyBaseProps extends RouteComponentProps<{ id: string }> {
@@ -36,9 +36,9 @@ const ResReplyBase = withRouter(myInject(["user"],
         <Helmet>
           <title>リプライ</title>
         </Helmet>
-        <Query<findResReplyResult, findResReplyVariables>
-          query={findResReply}
-          variables={{ reply: this.props.match.params.id }}>
+        <Query<findResesResult, findResesVariables>
+          query={findReses}
+          variables={{ query: { reply: this.props.match.params.id } }}>
           {({ loading, error, data }) => {
             if (loading) return "Loading...";
             if (error || !data) return (<Snack msg="レス取得に失敗しました" />);

@@ -1,7 +1,0 @@
-#import "../gql/res.gql"
-
-query findResReply($reply:ID!){
-    reses(query:{reply:$reply}){
-        ...res
-    }
-}
