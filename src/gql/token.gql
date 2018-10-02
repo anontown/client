@@ -1,4 +1,5 @@
 #import "./client.gql"
+#import "./token-req.gql"
 
 fragment tokenBase on Token{
     id
@@ -18,6 +19,9 @@ fragment tokenMaster on TokenMaster{
 fragment tokenGeneralBase on TokenGeneral{
     client{
         ...client
+    }
+    createReq{
+        ...tokenReq
     }
 }
 
