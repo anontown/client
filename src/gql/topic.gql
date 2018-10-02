@@ -41,3 +41,15 @@ fragment topic on Topic{
     ...topicSearchBase
     ...topicForkBase
 } 
+
+mutation createTopicNormal($title:String!,$tags:[String!]!,$text:String!){
+    createTopicNormal(title:$title,tags:$tags,text:$text){
+        ...topic
+    }
+}
+
+mutation createTopicOne($title:String!,$tags:[String!]!,$text:String!){
+    createTopicOne(title:$title,tags:$tags,text:$text){
+        ...topic
+    }
+}

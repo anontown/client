@@ -22,9 +22,9 @@ import {
   UserSwitch,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { createTopicNormal, createTopicOne } from "./topic-create.gql";
-import { createTopicNormal as createTopicNormalResult, createTopicNormalVariables } from "./_gql/createTopicNormal";
-import { createTopicOne as createTopicOneResult, createTopicOneVariables } from "./_gql/createTopicOne";
+import { createTopicNormal, createTopicOne } from "../gql/topic.gql";
+import { createTopicNormal as createTopicNormalResult, createTopicNormalVariables } from "../gql/_gql/createTopicNormal";
+import { createTopicOne as createTopicOneResult, createTopicOneVariables } from "../gql/_gql/createTopicOne";
 import { Mutation } from "react-apollo";
 
 interface TopicCreatePageProps extends RouteComponentProps<{}> {
