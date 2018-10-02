@@ -1,8 +1,0 @@
-#import "../gql/profile.gql"
-
-
-query getProfileAll{
-    profiles(query:{self:true}){
-        ...profile
-    }
-}

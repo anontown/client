@@ -17,8 +17,8 @@ import {
   ProfileAdd,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { getProfileAll as getProfileAllResult } from "./_gql/getProfileAll";
-import { getProfileAll } from "./profiles.gql";
+import { findProfiles } from "../gql/profile.gql";
+import { findProfiles as findProfilesResult, findProfilesVariables } from "../gql/_gql/findProfiles";
 import { Query } from "react-apollo";
 
 interface ProfilesPageProps extends RouteComponentProps<{}> {
@@ -42,7 +42,7 @@ export const ProfilesPage = withRouter(myInject(["user"],
           </Helmet>
           <UserSwitch userData={this.props.user.data} render={userData => <Tabs>
             <Tab label="編集">
-              <Query<getProfileAllResult> query={getProfileAll}>
+              <Query<findProfilesResult, findProfilesVariables> query={findProfiles} variables={{ query: { self: true } }}>
                 {({ loading, error, data }) => {
                   if (loading) return "Loading...";
                   if (error || !data) return (<Snack msg="プロフィール取得に失敗しました" />);
