@@ -1,0 +1,29 @@
+fragment tokenBase on Token{
+    id
+    key
+    date
+}
+
+fragment token on Token{
+    ...tokenBase
+    ...tokenMasterBase
+    ...tokenGeneralBase
+}
+
+fragment tokenMasterBase on TokenMaster{
+}
+
+fragment tokenMaster on TokenMaster{
+    ...tokenBase
+    ...tokenMasterBase
+}
+
+fragment tokenGeneralBase on TokenGeneral{
+    client
+    createReq
+}
+
+fragment tokenGeneral on TokenGeneral{
+    ...tokenBase
+    ...tokenGeneralBase
+}
