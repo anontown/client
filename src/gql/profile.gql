@@ -7,3 +7,9 @@ fragment profile on Profile{
     update
     sn
 }
+
+query findProfiles($query:ProfileQuery!){
+    profiles(query:$query){
+        ...profile
+    }
+}

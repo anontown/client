@@ -9,8 +9,8 @@ import { Page, Profile, Snack } from "../components";
 import {
   withModal,
 } from "../utils";
-import { getProfile } from "./profile.gql";
-import { getProfile as getProfileResult, getProfileVariables } from "./_gql/getProfile";
+import { findProfiles } from "../gql/profile.gql";
+import { findProfiles as findProfilesResult, findProfilesVariables } from "../gql/_gql/findProfiles";
 import { Query } from "react-apollo";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
@@ -30,9 +30,9 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
       <Helmet>
         <title>プロフィール</title>
       </Helmet>
-      <Query<getProfileResult, getProfileVariables>
-        query={getProfile}
-        variables={{ id: this.props.match.params.id }}>
+      <Query<findProfilesResult, findProfilesVariables>
+        query={findProfiles}
+        variables={{ query: { id: this.props.match.params.id } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
           if (error || !data || data.profiles.length === 0) return (<Snack msg="プロフィール取得に失敗しました" />);

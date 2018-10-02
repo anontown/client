@@ -1,8 +1,0 @@
-#import "../gql/profile.gql"
-
-
-query getProfile($id:ID!){
-    profiles(query:{id:[$id]}){
-        ...profile
-    }
-}
