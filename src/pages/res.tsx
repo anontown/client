@@ -36,7 +36,7 @@ const ResBase = withRouter(myInject(["user"],
         </Helmet>
         <Query<findResesResult, findResesVariables>
           query={findReses}
-          variables={{ query: { id: this.props.match.params.id } }}>
+          variables={{ query: { id: [this.props.match.params.id] } }}>
           {({ loading, error, data }) => {
             if (loading) return "Loading...";
             if (error || !data || data.reses.length === 0) return (<Snack msg="レス取得に失敗しました" />);
