@@ -7,10 +7,3 @@ mutation createUser($sn:String!,$pass:String!,$recaptcha:String!){
         id
     }
 }
-
-mutation createTokenMaster($id:String!,$pass:String!){
-    createTokenMaster(auth:{id:$id,pass:$pass}){
-        id
-        key
-    }
-}
