@@ -7,6 +7,12 @@ query findUserSN($id:ID!){
     userSN(id:$id)
 }
 
+query findUser{
+    user{
+        ...user
+    }
+}
+
 mutation updateUser($sn:String!,$pass:String!,$auth:AuthUser!){
     updateUser(sn:$sn,pass:$pass,auth:$auth){
         ...user
