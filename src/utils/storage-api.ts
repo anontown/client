@@ -9,13 +9,14 @@ import {
 } from "../models";
 import { gqlClient, createHeaders } from "../utils";
 import { getToken_token_TokenMaster } from "../components/_gql/getToken";
-import { getAllStorage, setStorage } from "./storage-api.gql";
-import { getAllStorage as getAllStorageResult } from "./_gql/getAllStorage";
-import { setStorage as setStorageResult, setStorageVariables } from "./_gql/setStorage";
+import { findStorages, setStorage } from "../gql/storage.gql";
+import { findStorages as findStoragesResult, findStoragesVariables } from "../gql/_gql/findStorages";
+import { setStorage as setStorageResult, setStorageVariables } from "../gql/_gql/setStorage";
 
 export async function load(token: getToken_token_TokenMaster) {
-  const storages = await gqlClient.query<getAllStorageResult>({
-    query: getAllStorage,
+  const storages = await gqlClient.query<findStoragesResult, findStoragesVariables>({
+    query: findStorages,
+    variables: { query: {} },
     context: {
       headers: createHeaders(token.id, token.key)
     }
