@@ -32,7 +32,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
       </Helmet>
       <Query<findProfilesResult, findProfilesVariables>
         query={findProfiles}
-        variables={{ query: { id: this.props.match.params.id } }}>
+        variables={{ query: { id: [this.props.match.params.id] } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
           if (error || !data || data.profiles.length === 0) return (<Snack msg="プロフィール取得に失敗しました" />);
