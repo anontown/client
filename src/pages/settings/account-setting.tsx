@@ -10,7 +10,7 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Errors, Snack, UserSwitch } from "../../components";
+import { Snack, UserSwitch } from "../../components";
 import { myInject, UserStore } from "../../stores";
 import { Query, Mutation } from "react-apollo";
 import { findUser, updateUser } from "../../gql/user.gql";
