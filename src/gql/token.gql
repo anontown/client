@@ -20,9 +20,6 @@ fragment tokenGeneralBase on TokenGeneral{
     client{
         ...client
     }
-    createReq{
-        ...tokenReq
-    }
 }
 
 fragment tokenGeneral on TokenGeneral{
@@ -38,11 +35,11 @@ mutation createTokenMaster($auth:AuthUser!){
 
 mutation createTokenGeneral($client:ID!){
     createTokenGeneral(client:$client){
-        id
-        key
-        createReq{
-            token
-            key
+        token{
+            ...tokenGeneral
+        }
+        req{
+            ...tokenReq
         }
     }
 }

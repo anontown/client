@@ -1,3 +1,5 @@
+#import "./token.gql"
+
 fragment user on User{
     id
     sn
@@ -15,7 +17,12 @@ query findUser{
 
 mutation updateUser($sn:String!,$pass:String!,$auth:AuthUser!){
     updateUser(sn:$sn,pass:$pass,auth:$auth){
-        ...user
+        user{
+            ...user
+        }
+        token{
+            ...tokenMaster
+        }
     }
 }
 
@@ -25,6 +32,11 @@ query findUserID($sn:String!){
 
 mutation createUser($sn:String!,$pass:String!,$recaptcha:String!){
     createUser(sn:$sn,pass:$pass,recaptcha:$recaptcha){
-        ...user
+        user{
+            ...user
+        }
+        token{
+            ...tokenMaster
+        }
     }
 }

@@ -1,14 +1,16 @@
-fragment stoage on Storage{
+fragment storage on Storage{
     key
     value
 }
 
 query findStorages($query:StorageQuery!){
     storages(query:$query){
-        ...stoage
+        ...storage
     }
 }
 
 mutation setStorage($key:String!,$value:String!){
-    setStorage(key:$key,value:$value)
+    setStorage(key:$key,value:$value){
+        ...storage
+    }
 }
