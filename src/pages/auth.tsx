@@ -57,7 +57,7 @@ export const AuthPage = withRouter(myInject(["user"],
                   <RaisedButton type="button" label="OK" onClick={async () => {
                       const data = await create();
                       if (data && data.data) {
-                        location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.createReq.token + "&key=" + encodeURI(data.data.createTokenGeneral.createReq.key);
+                        location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.req.token + "&key=" + encodeURI(data.data.createTokenGeneral.req.key);
                       }
                     }} />
                     {error && <Snack msg="エラーが発生しました" />}
