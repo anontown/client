@@ -20,9 +20,7 @@ import {
 import { Config } from "../env";
 import { myInject, UserStore } from "../stores";
 import { createUser } from "../gql/user.gql";
-import { createTokenMaster } from "../gql/token.gql";
 import { createUser as createUserResult, createUserVariables } from "../gql/_gql/createUser";
-import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../gql/_gql/createTokenMaster";
 import { Mutation } from "react-apollo";
 
 interface SignupPageProps extends RouteComponentProps<{}> {
@@ -74,35 +72,25 @@ export const SignupPage = withRouter(myInject(["user"], observer(class extends R
               ref="recaptcha"
               onChange={(v: string) => this.setState({ recaptcha: v })} />
             <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
-            <Mutation<createTokenMasterResult, createTokenMasterVariables>
-              mutation={createTokenMaster}
-              onCompleted={x => {
-                this.props.user.userChange(x);
-              }}
+
+            <Mutation<createUserResult, createUserVariables>
+              mutation={createUser}
               onError={() => {
-                this.setState({ errors: ["ログインに失敗しました。"] });
+                const rc = this.refs.recaptcha as any;
+                if (rc) {
+                  rc.reset();
+                }
+                this.setState({ errors: ["アカウント作成に失敗しました"] });
+              }}
+              onCompleted={x => {
+                this.props.user.userChange(x.createUser.token);
+              }}
+              variables={{
+                sn: this.state.sn, pass: this.state.pass,
+                recaptcha: this.state.recaptcha!
               }}>
-              {createToken => (
-                <Mutation<createUserResult, createUserVariables>
-                  mutation={createUser}
-                  onError={() => {
-                    const rc = this.refs.recaptcha as any;
-                    if (rc) {
-                      rc.reset();
-                    }
-                    this.setState({ errors: ["アカウント作成に失敗しました"] });
-                  }}
-                  onCompleted={user => {
-                    createToken({ variables: { auth: { id: user.createUser.id, pass: this.state.pass } } });
-                  }}
-                  variables={{
-                    sn: this.state.sn, pass: this.state.pass,
-                    recaptcha: this.state.recaptcha!
-                  }}>
-                  {create =>
-                    (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}
-                </Mutation>
-              )}
+              {create =>
+                (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}
             </Mutation>
             <Link to="/login">ログイン</Link>
           </form>
