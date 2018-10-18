@@ -17,11 +17,9 @@ import {
   Page,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { findUserID } from "../gql/user.gql";
 import { createTokenMaster } from "../gql/token.gql";
-import { findUserID as findUserIDResult, findUserIDVariables } from "../gql/_gql/findUserID";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../gql/_gql/createTokenMaster";
-import { Mutation, ApolloConsumer } from "react-apollo";
+import { Mutation } from "react-apollo";
 
 interface LoginPageProps extends RouteComponentProps<{}> {
   user: UserStore;
@@ -65,25 +63,25 @@ export const LoginPage = withRouter(myInject(["user"], observer(class extends Re
                 onChange={(_e, v) => this.setState({ pass: v })}
                 type="password" />
             </div>
-            <ApolloConsumer>
-              {client => (
-                <Mutation<createTokenMasterResult, createTokenMasterVariables>
-                  mutation={createTokenMaster}
-                  onCompleted={x => {
-                    this.props.user.userChange(x);
-                  }}
-                  onError={() => {
-                    this.setState({ errors: ["ログインに失敗しました。"] });
-                  }}>
-                  {submit => (
-                    <div><RaisedButton label="ログイン" onClick={async () => {
-                      const id = await client.query<findUserIDResult, findUserIDVariables>({ query: findUserID, variables: { sn: this.state.sn } }).then(x => x.data.userID);
-                      await submit({ variables: { auth: { id, pass: this.state.pass } } });
-                    }} /></div>
-                  )}
-                </Mutation>
+            <Mutation<createTokenMasterResult, createTokenMasterVariables>
+              mutation={createTokenMaster}
+              onCompleted={x => {
+                this.props.user.userChange(x);
+              }}
+              onError={() => {
+                this.setState({ errors: ["ログインに失敗しました。"] });
+              }}
+              variables={{
+                auth: {
+                  sn: this.state.sn, pass: this.state.pass
+                }
+              }}>
+              {submit => (
+                <div><RaisedButton label="ログイン" onClick={() => {
+                  submit();
+                }} /></div>
               )}
-            </ApolloConsumer>
+            </Mutation>
             <Link to="/signup">登録</Link>
           </form>
         </Paper>}
