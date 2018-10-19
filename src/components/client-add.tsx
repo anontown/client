@@ -3,8 +3,8 @@ import * as React from "react";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { client } from "../gql/_gql/client";
-import { createClient } from "./client-add.gql";
-import { createClient as createClientResult, createClientVariables } from "./_gql/createClient";
+import { createClient } from "../gql/client.gql";
+import { createClient as createClientResult, createClientVariables } from "../gql/_gql/createClient";
 import { Mutation } from "react-apollo";
 
 interface ClientAddProps {

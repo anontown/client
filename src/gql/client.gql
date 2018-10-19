@@ -12,3 +12,9 @@ query findClients($id:ID!){
         ...client
     }
 }
+
+mutation createClient($name:String!,$url:String!){
+    createClient(name:$name,url:$url){
+        ...client
+    }
+}
