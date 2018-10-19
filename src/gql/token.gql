@@ -27,6 +27,15 @@ fragment tokenGeneral on TokenGeneral{
     ...tokenGeneralBase
 }
 
+query findToken{
+    token{
+        ... on TokenMaster{
+            id
+            key
+        }
+    }
+}
+
 mutation createTokenMaster($auth:AuthUser!){
     createTokenMaster(auth:$auth){
         ...token

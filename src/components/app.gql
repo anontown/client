@@ -1,8 +1,0 @@
-query getToken{
-    token{
-        ... on TokenMaster{
-            id
-            key
-        }
-    }
-}
