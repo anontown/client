@@ -72,3 +72,9 @@ mutation updateTopic($id:ID!,$title:String!,$tags:[String!]!,$text:String!){
         ...topicNormal
     }
 }
+
+mutation createTopicFork($title:String!,$parent:ID!){
+    createTopicFork(title:$title,parent:$parent){
+        ...topicFork
+    }
+}

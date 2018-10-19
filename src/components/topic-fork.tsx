@@ -11,9 +11,9 @@ import { Errors } from "./errors";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
 import { topic_TopicFork_parent, topic_TopicFork } from "../gql/_gql/topic";
-import { findTopicFork, createTopicFork } from "./topic-fork.gql";
-import { findTopicFork as findTopicForkResult, findTopicForkVariables, findTopicFork_topics_TopicFork } from "./_gql/findTopicFork";
-import { createTopicFork as createTopicForkResult, createTopicForkVariables } from "./_gql/createTopicFork";
+import { findTopics, createTopicFork } from "../gql/topic.gql";
+import { findTopics as findTopicsResult, findTopicsVariables } from "../gql/_gql/findTopics";
+import { createTopicFork as createTopicForkResult, createTopicForkVariables } from "../gql/_gql/createTopicFork";
 import { Query, Mutation } from "react-apollo";
 
 interface UnconnectedTopicForkProps {
@@ -64,14 +64,14 @@ export const TopicFork = myInject(["user"],
             }</Mutation>
           : null}
         <hr />
-        <Query<findTopicForkResult, findTopicForkVariables>
-          query={findTopicFork}
-          variables={{ parent: this.props.topic.id }}>{
+        <Query<findTopicsResult, findTopicsVariables>
+          query={findTopics}
+          variables={{ query: { parent: this.props.topic.id } }}>{
             ({ loading, error, data }) => {
               if (loading) return "Loading...";
               if (error || !data) return (<Snack msg="派生トピック取得に失敗しました" />);
               return (<div>
-                {(data.topics as findTopicFork_topics_TopicFork[]).map(t => <Paper key={t.id}>
+                {(data.topics as topic_TopicFork[]).map(t => <Paper key={t.id}>
                   <TopicListItem
                     topic={t}
                     detail={false} />
