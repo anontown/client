@@ -1,7 +1,0 @@
-#import "../gql/profile.gql"
-
-mutation createProfile($name:String!,$text:String!,$sn:String!){
-    createProfile(name:$name,text:$text,sn:$sn){
-        ...profile
-    }
-}

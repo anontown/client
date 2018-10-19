@@ -5,8 +5,8 @@ import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-add.scss";
 import { profile } from "../gql/_gql/profile";
-import { createProfile } from "./profile-add.gql";
-import { createProfile as createProfileResult, createProfileVariables } from "./_gql/createProfile";
+import { createProfile } from "../gql/profile.gql";
+import { createProfile as createProfileResult, createProfileVariables } from "../gql/_gql/createProfile";
 import { Mutation } from "react-apollo";
 
 interface ProfileAddProps {
