@@ -1,7 +1,0 @@
-#import "../gql/topic.gql"
-
-query findTopicID($id:[ID!]!){
-    topics(query:{id:$id}){
-        ...topic
-    }
-}

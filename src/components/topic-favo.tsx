@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 import { UserData } from "../models";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import { findTopicID } from "./topic-favo.gql";
-import { findTopicID as findTopicIDResult, findTopicIDVariables } from "./_gql/findTopicID";
+import { findTopics } from "../gql/topic.gql";
+import { findTopics as findTopicsResult, findTopicsVariables } from "../gql/_gql/findTopics";
 import { Query } from "react-apollo";
 
 interface TopicFavoProps {
@@ -29,9 +29,9 @@ export class TopicFavo extends React.Component<TopicFavoProps, TopicFavoState> {
 
   render() {
     return <div>
-      <Query<findTopicIDResult, findTopicIDVariables>
-        query={findTopicID}
-        variables={{ id: this.props.userData.storage.topicFavo.toArray() }}>
+      <Query<findTopicsResult, findTopicsVariables>
+        query={findTopics}
+        variables={{ query: { id: this.props.userData.storage.topicFavo.toArray() } }}>
         {({ loading, error, data, refetch }) => {
           return <>
             <IconButton onClick={() => refetch()} >
