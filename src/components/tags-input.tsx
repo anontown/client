@@ -6,8 +6,8 @@ import {
 import * as React from "react";
 import { Snack } from "./snack";
 import * as style from "./tags-input.scss";
-import { findTags } from "./tags-input.gql";
-import { findTags as findTagsResult } from "./_gql/findTags";
+import { findTopicTags } from "../gql/topic.gql";
+import { findTopicTags as findTopicTagsResult } from "../gql/_gql/findTopicTags";
 import { Query } from "react-apollo";
 
 export interface TagsInputProps {
@@ -51,8 +51,8 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           {t}
         </span>).toArray()}
       </div>
-      <Query<findTagsResult>
-        query={findTags}>{
+      <Query<findTopicTagsResult>
+        query={findTopicTags}>{
           ({ loading, error, data }) => {
             if (loading) return "Loading...";
             if (error || !data) return (<Snack msg="タグ候補取得に失敗しました" />);
