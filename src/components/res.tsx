@@ -21,9 +21,9 @@ import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
 import { res } from "../gql/_gql/res";
-import { voteRes, delRes } from "./res.gql";
-import { voteRes as voteResResult, voteResVariables } from "./_gql/voteRes";
-import { delRes as delResResult, delResVariables } from "./_gql/delRes";
+import { voteRes, delRes } from "../gql/res.gql";
+import { voteRes as voteResResult, voteResVariables } from "../gql/_gql/voteRes";
+import { delRes as delResResult, delResVariables } from "../gql/_gql/delRes";
 import { Mutation } from "react-apollo";
 import { VoteType } from "_gql/globalTypes";
 

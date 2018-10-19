@@ -79,3 +79,15 @@ query findReses($query:ResQuery!){
         ...res
     }
 }
+
+mutation voteRes($res:ID!,$type:VoteType!){
+    voteRes(res:$res,type:$type){
+        ...res
+    }
+}
+
+mutation delRes($res:ID!){
+    delRes(res:$res){
+        ...res
+    }
+}
