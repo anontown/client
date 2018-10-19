@@ -7,8 +7,8 @@ import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
 import { Mutation } from "react-apollo";
 import { topic_TopicNormal } from "../gql/_gql/topic";
-import { updateTopic } from "./topic-editor.gql";
-import { updateTopic as updateTopicResult, updateTopicVariables } from "./_gql/updateTopic";
+import { updateTopic } from "../gql/topic.gql";
+import { updateTopic as updateTopicResult, updateTopicVariables } from "../gql/_gql/updateTopic";
 
 interface TopicEditorProps {
   topic: topic_TopicNormal;

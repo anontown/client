@@ -1,7 +1,0 @@
-#import "../gql/topic.gql"
-
-mutation updateTopic($id:ID!,$title:String!,$tags:[String!]!,$text:String!){
-    updateTopic(id:$id,title:$title,tags:$tags,text:$text){
-        ...topicNormal
-    }
-}
