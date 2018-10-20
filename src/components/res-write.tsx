@@ -50,18 +50,7 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
     this.subscriptions.push(this.textUpdate
       .pipe(op.debounceTime(1000))
       .subscribe(value => {
-        if (this.props.reply === null) {
-          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
-            ...x,
-            value,
-          })));
-        } else {
-          const reply = this.props.reply;
-          this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
-            ...x,
-            replyText: x.replyText.set(reply, value),
-          })));
-        }
+        this.setStorageValue(value);
       }));
   }
 
@@ -71,6 +60,21 @@ export class ResWrite extends React.Component<ResWriteProps, ResWriteState> {
 
   getData() {
     return this.props.userData.storage.topicWrite.get(this.props.topic, this.formDefualt);
+  }
+
+  setStorageValue(value: string) {
+    if (this.props.reply === null) {
+      this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+        ...x,
+        value,
+      })));
+    } else {
+      const reply = this.props.reply;
+      this.setStorage(this.props.userData.storage.topicWrite.update(this.props.topic, this.formDefualt, x => ({
+        ...x,
+        replyText: x.replyText.set(reply, value),
+      })));
+    }
   }
 
   setStorage(data: Storage["topicWrite"]) {
