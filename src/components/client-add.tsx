@@ -12,40 +12,28 @@ interface ClientAddProps {
   userData: UserData;
 }
 
-interface ClientAddState {
-  url: string;
-  name: string;
-}
+export const ClientAdd = (props: ClientAddProps) => {
+  const [url, updateUrl] = React.useState("");
+  const [name, updateName] = React.useState("");
 
-export class ClientAdd extends React.Component<ClientAddProps, ClientAddState> {
-  constructor(props: ClientAddProps) {
-    super(props);
-    this.state = {
-      url: "",
-      name: "",
-    };
-  }
-
-  render() {
-    return (<Mutation<createClientResult, createClientVariables>
-      mutation={createClient}
-      variables={{
-        name: this.state.name,
-        url: this.state.url
-      }}
-      onCompleted={data => {
-        if (this.props.onAdd) {
-          this.props.onAdd(data.createClient);
-        }
-      }}>{
-        (submit, { error }) => {
-          return (<form>
-            {error && <Errors errors={["作成に失敗"]} />}
-            <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-            <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
-            <RaisedButton onClick={() => submit()} label="OK" />
-          </form>);
-        }
-      }</Mutation>);
-  }
-}
+  return (<Mutation<createClientResult, createClientVariables>
+    mutation={createClient}
+    variables={{
+      name: name,
+      url: url
+    }}
+    onCompleted={data => {
+      if (props.onAdd) {
+        props.onAdd(data.createClient);
+      }
+    }}>{
+      (submit, { error }) => {
+        return (<form>
+          {error && <Errors errors={["作成に失敗"]} />}
+          <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => updateName(v)} />
+          <TextField floatingLabelText="url" value={url} onChange={(_e, v) => updateUrl(v)} />
+          <RaisedButton onClick={() => submit()} label="OK" />
+        </form>);
+      }
+    }</Mutation>);
+};
