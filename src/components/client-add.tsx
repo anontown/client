@@ -23,8 +23,6 @@ export const ClientAdd = (props: ClientAddProps) => {
     },
   });
 
-
-
   return (<form>
     {error && <Errors errors={["作成に失敗"]} />}
     <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => updateName(v)} />
