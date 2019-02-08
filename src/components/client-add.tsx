@@ -5,7 +5,7 @@ import { Errors } from "./errors";
 import { client } from "../gql/_gql/client";
 import { createClient } from "../gql/client.gql";
 import { createClient as createClientResult, createClientVariables } from "../gql/_gql/createClient";
-import { Mutation } from "react-apollo";
+import { useMutation } from "react-apollo-hooks";
 
 interface ClientAddProps {
   onAdd?: (client: client) => void;
@@ -15,25 +15,24 @@ interface ClientAddProps {
 export const ClientAdd = (props: ClientAddProps) => {
   const [url, updateUrl] = React.useState("");
   const [name, updateName] = React.useState("");
-
-  return (<Mutation<createClientResult, createClientVariables>
-    mutation={createClient}
-    variables={{
+  const [error, updateError] = React.useState<any>(null);
+  const submit = useMutation<createClientResult, createClientVariables>(createClient, {
+    variables: {
       name: name,
       url: url
-    }}
-    onCompleted={data => {
+    },
+  });
+
+
+
+  return (<form>
+    {error && <Errors errors={["作成に失敗"]} />}
+    <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => updateName(v)} />
+    <TextField floatingLabelText="url" value={url} onChange={(_e, v) => updateUrl(v)} />
+    <RaisedButton onClick={() => submit().then(data => {
       if (props.onAdd) {
-        props.onAdd(data.createClient);
+        props.onAdd(data.data!.createClient);
       }
-    }}>{
-      (submit, { error }) => {
-        return (<form>
-          {error && <Errors errors={["作成に失敗"]} />}
-          <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => updateName(v)} />
-          <TextField floatingLabelText="url" value={url} onChange={(_e, v) => updateUrl(v)} />
-          <RaisedButton onClick={() => submit()} label="OK" />
-        </form>);
-      }
-    }</Mutation>);
+    }).catch(e => updateError(e))} label="OK" />
+  </form>);;
 };
