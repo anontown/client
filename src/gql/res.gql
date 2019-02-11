@@ -91,3 +91,9 @@ mutation delRes($res:ID!){
         ...res
     }
 }
+
+mutation createRes($topic:String!,$name:String,$text:String!,$reply:String,$profile:String,$age:Boolean!){
+    createRes(topic:$topic,name:$name,text:$text,reply:$reply,profile:$profile,age:$age){
+        ...resNormal
+    }
+}
