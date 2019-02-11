@@ -16,7 +16,7 @@ import { findProfiles } from "../gql/profile.gql";
 import { findProfilesVariables, findProfiles as findProfilesResult } from "../gql/_gql/findProfiles";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { createRes as createResResult, createResVariables } from "../gql/_gql/createRes";
-import { createRes } from "../gql/createRes.gql";
+import { createRes } from "../gql/res.gql";
 
 
 interface ResWriteProps {
