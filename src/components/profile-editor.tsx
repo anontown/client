@@ -5,7 +5,9 @@ import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
 import { profile } from "../gql/_gql/profile";
-
+import { useMutation } from "react-apollo-hooks";
+import { updateProfile } from "../gql/profile.gql";
+import { updateProfile as updateProfileResult, updateProfileVariables } from "../gql/_gql/updateProfile";
 interface ProfileEditorProps {
   profile: profile;
   onUpdate?: (profile: profile) => void;
@@ -13,65 +15,45 @@ interface ProfileEditorProps {
   style?: React.CSSProperties
 }
 
-interface ProfileEditorState {
-  errors: string[];
-  sn: string;
-  name: string;
-  text: string;
-}
+export const ProfileEditor = (props: ProfileEditorProps) => {
+  const [errors, setErrors] = React.useState<string[]>([]);
+  const [sn, setSn] = React.useState(props.profile.sn);
+  const [name, setName] = React.useState(props.profile.name);
+  const [text, setText] = React.useState(props.profile.text);
+  const submit = useMutation<updateProfileResult, updateProfileVariables>(updateProfile, {
+    variables: {
+      id: props.profile.id,
+      name: name,
+      text: text,
+      sn: sn,
+    },
+  });
 
-export class ProfileEditor extends React.Component<ProfileEditorProps, ProfileEditorState> {
-  constructor(props: ProfileEditorProps) {
-    super(props);
-    this.state = {
-      errors: [],
-      sn: props.profile.sn,
-      name: props.profile.name,
-      text: props.profile.text,
-    };
-  }
-
-  render() {
-    return <Paper className={style.container} style={this.props.style}>
-      <form>
-        <Errors errors={this.state.errors} />
-        <TextField
-          fullWidth={true}
-          floatingLabelText="ID"
-          value={this.state.sn}
-          onChange={(_e, v) => this.setState({ sn: v })} />
-        <TextField
-          fullWidth={true}
-          floatingLabelText="名前"
-          value={this.state.name}
-          onChange={(_e, v) => this.setState({ name: v })} />
-        <MdEditor
-          fullWidth={true}
-          value={this.state.text}
-          onChange={v => this.setState({ text: v })} />
-        <RaisedButton onClick={() => this.submit()} label="OK" />
-      </form>
-    </Paper>;
-  }
-
-  async submit() {
-    try {
-      const profile = await apiClient.updateProfile(this.props.userData.token, {
-        id: this.props.profile.id,
-        name: this.state.name,
-        text: this.state.text,
-        sn: this.state.sn,
-      });
-      if (this.props.onUpdate) {
-        this.props.onUpdate(profile);
-      }
-      this.setState({ errors: [] });
-    } catch (e) {
-      if (e instanceof AtError) {
-        this.setState({ errors: e.errors.map(e => e.message) });
-      } else {
-        this.setState({ errors: ["エラーが発生しました"] });
-      }
-    }
-  }
-}
+  return <Paper className={style.container} style={props.style}>
+    <form>
+      <Errors errors={errors} />
+      <TextField
+        fullWidth={true}
+        floatingLabelText="ID"
+        value={sn}
+        onChange={(_e, v) => setSn(v)} />
+      <TextField
+        fullWidth={true}
+        floatingLabelText="名前"
+        value={name}
+        onChange={(_e, v) => setName(v)} />
+      <MdEditor
+        fullWidth={true}
+        value={text}
+        onChange={v => setText(v)} />
+      <RaisedButton onClick={() => submit().then(data => {
+        if (props.onUpdate) {
+          props.onUpdate(data.data!.updateProfile);
+        }
+        setErrors([]);
+      }).catch(_e => {
+        setErrors(["エラーが発生しました"]);
+      })} label="OK" />
+    </form>
+  </Paper>;
+};

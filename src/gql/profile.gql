@@ -19,3 +19,9 @@ mutation createProfile($name:String!,$text:String!,$sn:String!){
         ...profile
     }
 }
+
+mutation updateProfile($id:ID!,$name:String,$text:String,$sn:String){
+    updateProfile(id:$id,name:$name,text:$text,sn:$sn){
+        ...profile
+    }
+}
