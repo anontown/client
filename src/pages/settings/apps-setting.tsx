@@ -1,4 +1,3 @@
-import * as api from "@anontown/api-types";
 import * as Im from "immutable";
 import {
   FontIcon,
@@ -14,11 +13,16 @@ import {
 } from "react-router-dom";
 import { Snack, UserSwitch } from "../../components";
 import { myInject, UserStore } from "../../stores";
-import { apiClient } from "../../utils";
+import { client } from "../../gql/_gql/client";
 
 interface AppsSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
 }
+
+export const _AppsSettingPage = (props: AppsSettingPageProps) => {
+  const [clients, setClients] = React.useState<Im.List<client>>(Im.List());
+  const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
+};
 
 interface AppsSettingPageState {
   clients: Im.List<api.Client>;
