@@ -13,9 +13,9 @@ interface ClientAddProps {
 }
 
 export const ClientAdd = (props: ClientAddProps) => {
-  const [url, updateUrl] = React.useState("");
-  const [name, updateName] = React.useState("");
-  const [error, updateError] = React.useState<any>(null);
+  const [url, setUrl] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [error, setError] = React.useState<any>(null);
   const submit = useMutation<createClientResult, createClientVariables>(createClient, {
     variables: {
       name: name,
@@ -25,12 +25,12 @@ export const ClientAdd = (props: ClientAddProps) => {
 
   return (<form>
     {error && <Errors errors={["作成に失敗"]} />}
-    <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => updateName(v)} />
-    <TextField floatingLabelText="url" value={url} onChange={(_e, v) => updateUrl(v)} />
+    <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => setName(v)} />
+    <TextField floatingLabelText="url" value={url} onChange={(_e, v) => setUrl(v)} />
     <RaisedButton onClick={() => submit().then(data => {
       if (props.onAdd) {
         props.onAdd(data.data!.createClient);
       }
-    }).catch(e => updateError(e))} label="OK" />
+    }).catch(e => setError(e))} label="OK" />
   </form>);;
 };
