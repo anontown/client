@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 import { Snack, UserSwitch } from "../../components";
 import { myInject, UserStore } from "../../stores";
-import { client } from "../../gql/_gql/client";
+import { client } from "../../gql/_gql/client"
 
 interface AppsSettingPageProps extends RouteComponentProps<{}> {
   user: UserStore;
