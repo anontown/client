@@ -1,13 +1,6 @@
 module.exports = {
-  schemas: {
-    app: {
-      "schema": "./node_modules/@anontown/graphql/schema.json"
-    }
+  client: {
+    service: "anontown",
+    includes: ["./src/**/*.gql"]
   },
-  queries: [
-    {
-      schema: "app",
-      includes: ["./src/**/*.gql"],
-    }
-  ]
 }
