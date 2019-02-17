@@ -63,7 +63,7 @@ export const ResWrite = (props: ResWriteProps) => {
       }
     });
 
-  const { data: profiles } = useQuery<findProfilesResult, findProfilesVariables>(findProfiles, {
+  const { data: profiles, error } = useQuery<findProfilesResult, findProfilesVariables>(findProfiles, {
     variables: {
       query: {
         self: true
