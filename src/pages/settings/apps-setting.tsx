@@ -4,84 +4,69 @@ import {
   IconButton,
   Paper,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack, UserSwitch } from "../../components";
-import { myInject, UserStore } from "../../stores";
+import { Snack } from "../../components";
 import { client } from "../../gql/_gql/client"
+import { userSwitch, UserSwitchProps } from "src/utils";
+import { findClients } from "../../gql/client.gql";
+import { findTokens, delTokenClient } from "../../gql/token.gql";
+import { findClients as findClientsResult, findClientsVariables } from "../../gql/_gql/findClients";
+import { findTokens as findTokensResult } from "../../gql/_gql/findTokens";
+import { delTokenClient as delTokenClientResult, delTokenClientVariables } from "../../gql/_gql/delTokenClient";
+import { useMutation, useQuery, useApolloClient } from "react-apollo-hooks";
+import { tokenGeneral } from "src/gql/_gql/tokenGeneral";
 
-interface AppsSettingPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 
-export const _AppsSettingPage = (props: AppsSettingPageProps) => {
+export const AppsSettingPage = userSwitch(withRouter((props: AppsSettingPageProps) => {
   const [clients, setClients] = React.useState<Im.List<client>>(Im.List());
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
-};
-
-interface AppsSettingPageState {
-  clients: Im.List<api.Client>;
-  snackMsg: string | null;
-}
-
-export const AppsSettingPage =
-  withRouter(myInject(["user"], observer(class extends React.Component<AppsSettingPageProps, AppsSettingPageState> {
-    constructor(props: AppsSettingPageProps) {
-      super(props);
-      this.state = {
-        snackMsg: null,
-        clients: Im.List(),
-      };
-
-      (async () => {
-        try {
-          if (this.props.user.data !== null) {
-            const token = this.props.user.data.token;
-            const tokens = await apiClient.findTokenAll(token);
-            const clients = await apiClient.findClientIn(token, {
-              ids: Array.from(new Set(tokens
-                .filter<api.TokenGeneral>((x): x is api.TokenGeneral => x.type === "general")
-                .map(x => x.client))),
-            });
-            this.setState({ clients: Im.List(clients) });
+  const delToken = useMutation<delTokenClientResult, delTokenClientVariables>(delTokenClient);
+  const { data: tokens } = useQuery<findTokensResult>(findTokens, { variables: {} });
+  const apolloClient = useApolloClient();
+  React.useEffect(() => {
+    if (tokens !== undefined) {
+      apolloClient.query<findClientsResult, findClientsVariables>({
+        query: findClients,
+        variables: {
+          query: {
+            id: Array.from(new Set(tokens.tokens
+              .filter((x): x is tokenGeneral => x.__typename === "TokenGeneral")
+              .map(x => x.client.id)))
           }
+        },
+      }).then(x => {
+        setClients(Im.List(x.data.clients));
+      }).catch(_e => {
+        setSnackMsg("クライアント情報取得に失敗しました。");
+      });
+    }
+  }, [setClients, setSnackMsg, apolloClient, tokens]);
+
+  return <div>
+    <Helmet>
+      <title>連携アプリ管理</title>
+    </Helmet>
+    <Snack
+      msg={snackMsg}
+      onHide={() => setSnackMsg(null)} />
+    {clients.map(c => <Paper>
+      {c.name}
+      <IconButton type="button" onClick={async () => {
+        try {
+          await delToken({ variables: { client: c.id } });
+          setClients(clients.filter(x => x.id !== c.id));
         } catch {
-          this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+          setSnackMsg("削除に失敗しました");
         }
-      })();
-    }
-
-    render() {
-      return <UserSwitch userData={this.props.user.data} render={() => <div>
-        <Helmet>
-          <title>連携アプリ管理</title>
-        </Helmet>
-        <Snack
-          msg={this.state.snackMsg}
-          onHide={() => this.setState({ snackMsg: null })} />
-        {this.state.clients.map(c => <Paper>
-          {c.name}
-          <IconButton type="button" onClick={() => this.del(c)} >
-            <FontIcon className="material-icons">delete</FontIcon>
-          </IconButton>
-        </Paper>)}
-      </div>} />;
-    }
-
-    async del(client: api.Client) {
-      if (this.props.user.data === null) {
-        return;
-      }
-      try {
-        await apiClient.deleteTokenClient(this.props.user.data.token, { client: client.id });
-        this.setState({ clients: this.state.clients.filter(c => c.id !== client.id) });
-      } catch {
-        this.setState({ snackMsg: "削除に失敗しました" });
-      }
-    }
-  })));
+      }} >
+        <FontIcon className="material-icons">delete</FontIcon>
+      </IconButton>
+    </Paper>)}
+  </div>;
+}));

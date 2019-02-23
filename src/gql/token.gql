@@ -36,10 +36,25 @@ query findToken{
     }
 }
 
+query findTokens{
+    tokens{
+        ... on TokenMaster{
+            ...tokenMaster
+        }
+        ... on TokenGeneral{
+            ...tokenGeneral
+        }
+    }
+}
+
 mutation createTokenMaster($auth:AuthUser!){
     createTokenMaster(auth:$auth){
         ...token
     }
+}
+
+mutation delTokenClient($client:ID!){
+    delTokenClient(client:$client)
 }
 
 mutation createTokenGeneral($client:ID!){

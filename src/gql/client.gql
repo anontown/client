@@ -7,8 +7,8 @@ fragment client on Client{
   update
 } 
 
-query findClients($id:ID!){
-    clients(query:{id:[$id]}){
+query findClients($query:ClientQuery!){
+    clients(query:$query){
         ...client
     }
 }
