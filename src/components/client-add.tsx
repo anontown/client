@@ -5,10 +5,10 @@ import { Errors } from "./errors";
 import { client } from "../gql/_gql/client";
 import { createClient } from "../gql/client.gql";
 import { createClient as createClientResult, createClientVariables } from "../gql/_gql/createClient";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation, MutationUpdaterFn } from "react-apollo-hooks";
 
 interface ClientAddProps {
-  onAdd?: (client: client) => void;
+  onAddUpdate?: MutationUpdaterFn<createClientResult>
   userData: UserData;
 }
 
@@ -21,16 +21,13 @@ export const ClientAdd = (props: ClientAddProps) => {
       name: name,
       url: url
     },
+    update: props.onAddUpdate
   });
 
   return (<form>
     {error && <Errors errors={["作成に失敗"]} />}
     <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => setName(v)} />
     <TextField floatingLabelText="url" value={url} onChange={(_e, v) => setUrl(v)} />
-    <RaisedButton onClick={() => submit().then(data => {
-      if (props.onAdd) {
-        props.onAdd(data.data!.createClient);
-      }
-    }).catch(e => setError(e))} label="OK" />
+    <RaisedButton onClick={() => submit().catch(e => setError(e))} label="OK" />
   </form>);;
 };

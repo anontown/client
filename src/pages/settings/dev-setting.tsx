@@ -1,83 +1,65 @@
-import * as api from "@anontown/api-types";
-import * as Im from "immutable";
 import {
   Paper,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
-  withRouter,
 } from "react-router-dom";
 import {
   ClientEditor,
-  Snack,
-  UserSwitch,
+  ClientAdd,
+  Errors,
 } from "../../components";
-import { myInject, UserStore } from "../../stores";
 import {
-  apiClient,
-  list,
+  userSwitch,
+  UserSwitchProps,
 } from "../../utils";
+import { findClients as findClientsResult, findClientsVariables } from "../../gql/_gql/findClients";
+import { findClients } from "../../gql/client.gql";
+import { useQuery } from "react-apollo-hooks";
 
-interface DevSettingPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type DevSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 
-interface DevSettingPageState {
-  clients: Im.List<api.Client>;
-  snackMsg: string | null;
-}
+export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
+  const variables: findClientsVariables = { query: { self: true } };
+  const clients = useQuery<findClientsResult, findClientsVariables>(findClients, { variables });
 
-export const DevSettingPage =
-  withRouter(myInject(["user"], observer(class extends React.Component<DevSettingPageProps, DevSettingPageState> {
-    constructor(props: DevSettingPageProps) {
-      super(props);
-      this.state = {
-        snackMsg: null,
-        clients: Im.List(),
-      };
-
-      (async () => {
-        try {
-          if (this.props.user.data !== null) {
-            const clients = await apiClient
-              .findClientAll(this.props.user.data.token);
-            this.setState({ clients: Im.List(clients) });
-          }
-        } catch {
-          this.setState({ snackMsg: "クライアント情報取得に失敗しました。" });
+  return <Paper>
+    <Helmet>
+      <title>開発者向け</title>
+    </Helmet>
+    <Paper>
+      クライアント管理
+    </Paper>
+    <ClientAdd
+      onAddUpdate={(cache, data) => {
+        const clients = cache.readQuery<findClientsResult, findClientsVariables>({ query: findClients, variables });
+        if (clients !== null && data.data !== undefined) {
+          cache.writeQuery<findClientsResult, findClientsVariables>({
+            query: findClients,
+            variables,
+            data: { clients: clients.clients.concat([data.data.createClient]) },
+          });
         }
-      })();
-    }
-
-    render() {
-      return <UserSwitch
-        userData={this.props.user.data}
-        render={userData => <Paper>
-          <Helmet>
-            <title>開発者向け</title>
-          </Helmet>
-          <Snack
-            msg={this.state.snackMsg}
-            onHide={() => this.setState({ snackMsg: null })} />
-          <Paper>
-            クライアント管理
-          </Paper>
-          <ClientEditor
-            client={null}
-            onAdd={c => this.setState({ clients: this.state.clients.push(c) })}
-            userData={userData} />
-
-          {this.state.clients.size === 0
-            ? <Paper>クライアントがありません</Paper>
-            : null}
-          {this.state.clients.map(c => <ClientEditor
-            key={c.id}
-            client={c}
-            onUpdate={newClient => this.setState({ clients: list.update(this.state.clients, newClient) })}
-            userData={userData} />)}
-        </Paper>} />;
-    }
-  })));
+      }}
+      userData={props.userData} />
+    {clients.error !== undefined
+      ? <Errors errors={["クライアント取得に失敗しました。"]} />
+      : null}
+    {clients.loading
+      ? <div>loading</div>
+      : null}
+    {clients.data !== undefined
+      ? <>
+        {clients.data.clients.length === 0
+          ? <Paper>クライアントがありません</Paper>
+          : null}
+        {clients.data.clients.map(c => <ClientEditor
+          key={c.id}
+          client={c}
+          userData={props.userData} />)}
+      </>
+      : null}
+  </Paper>
+});
