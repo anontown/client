@@ -1,4 +1,3 @@
-import * as Im from "immutable";
 import {
   FontIcon,
   IconButton,
@@ -10,43 +9,35 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack } from "../../components";
-import { client } from "../../gql/_gql/client"
+import { Snack, Errors } from "../../components";
 import { userSwitch, UserSwitchProps } from "src/utils";
 import { findClients } from "../../gql/client.gql";
 import { findTokens, delTokenClient } from "../../gql/token.gql";
 import { findClients as findClientsResult, findClientsVariables } from "../../gql/_gql/findClients";
 import { findTokens as findTokensResult } from "../../gql/_gql/findTokens";
 import { delTokenClient as delTokenClientResult, delTokenClientVariables } from "../../gql/_gql/delTokenClient";
-import { useMutation, useQuery, useApolloClient } from "react-apollo-hooks";
+import { useMutation, useQuery } from "react-apollo-hooks";
 import { tokenGeneral } from "src/gql/_gql/tokenGeneral";
 
 type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 
 export const AppsSettingPage = userSwitch(withRouter((props: AppsSettingPageProps) => {
-  const [clients, setClients] = React.useState<Im.List<client>>(Im.List());
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
-  const delToken = useMutation<delTokenClientResult, delTokenClientVariables>(delTokenClient);
-  const { data: tokens } = useQuery<findTokensResult>(findTokens, { variables: {} });
-  const apolloClient = useApolloClient();
-  React.useEffect(() => {
-    if (tokens !== undefined) {
-      apolloClient.query<findClientsResult, findClientsVariables>({
-        query: findClients,
-        variables: {
-          query: {
-            id: Array.from(new Set(tokens.tokens
-              .filter((x): x is tokenGeneral => x.__typename === "TokenGeneral")
-              .map(x => x.client.id)))
-          }
-        },
-      }).then(x => {
-        setClients(Im.List(x.data.clients));
-      }).catch(_e => {
-        setSnackMsg("クライアント情報取得に失敗しました。");
-      });
+  const tokens = useQuery<findTokensResult>(findTokens, { variables: {} });
+  const variables: findClientsVariables = {
+    query: {
+      id: tokens.data !== undefined
+        ? Array.from(new Set(tokens.data.tokens
+          .filter((x): x is tokenGeneral => x.__typename === "TokenGeneral")
+          .map(x => x.client.id)))
+        : []
     }
-  }, [setClients, setSnackMsg, apolloClient, tokens]);
+  };
+  const clients = useQuery<findClientsResult, findClientsVariables>(findClients, {
+    skip: tokens === undefined,
+    variables,
+  });
+  const delToken = useMutation<delTokenClientResult, delTokenClientVariables>(delTokenClient);
 
   return <div>
     <Helmet>
@@ -55,18 +46,36 @@ export const AppsSettingPage = userSwitch(withRouter((props: AppsSettingPageProp
     <Snack
       msg={snackMsg}
       onHide={() => setSnackMsg(null)} />
-    {clients.map(c => <Paper>
-      {c.name}
-      <IconButton type="button" onClick={async () => {
-        try {
-          await delToken({ variables: { client: c.id } });
-          setClients(clients.filter(x => x.id !== c.id));
-        } catch {
-          setSnackMsg("削除に失敗しました");
-        }
-      }} >
-        <FontIcon className="material-icons">delete</FontIcon>
-      </IconButton>
-    </Paper>)}
+    {tokens.error !== undefined || clients.error !== undefined
+      ? <Errors errors={["エラーが発生しました。"]} />
+      : null}
+    {tokens.loading || clients.loading
+      ? <div>loading</div>
+      : null}
+    {clients.data !== undefined
+      ? clients.data.clients.map(c => <Paper>
+        {c.name}
+        <IconButton type="button" onClick={async () => {
+          try {
+            await delToken({
+              variables: { client: c.id }, update: (cache) => {
+                const clients = cache.readQuery<findClientsResult, findClientsVariables>({ query: findClients, variables });
+                if (clients !== null) {
+                  cache.writeQuery<findClientsResult, findClientsVariables>({
+                    query: findClients,
+                    variables,
+                    data: { clients: clients.clients.filter(x => x.id !== c.id) },
+                  });
+                }
+              }
+            });
+          } catch {
+            setSnackMsg("削除に失敗しました");
+          }
+        }} >
+          <FontIcon className="material-icons">delete</FontIcon>
+        </IconButton>
+      </Paper>)
+      : null}
   </div>;
 }));
