@@ -14,6 +14,10 @@ export const UserContext = React.createContext<UserContextType>({
   update: () => { }
 });
 
+export function useUserContext() {
+  return React.useContext(UserContext);
+}
+
 export interface UserProps {
   children: React.ReactNode,
   initUserData: UserData | null,
