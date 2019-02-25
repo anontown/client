@@ -15,7 +15,7 @@ import { findUser as findUserResult } from "../../gql/_gql/findUser";
 import { updateUser as updateUserResult, updateUserVariables } from "../../gql/_gql/updateUser";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../../gql/_gql/createTokenMaster";
 import { createTokenMaster } from "../../gql/token.gql";
-import { UserSwitchProps, userSwitch, UserContext, useUserContext } from "src/utils";
+import { UserSwitchProps, userSwitch, useUserContext } from "src/utils";
 import { useQuery, useMutation } from "react-apollo-hooks";
 
 type AccountSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
