@@ -1,7 +1,7 @@
 import { Storage } from "./storage";
-import { getToken_token_TokenMaster } from "../components/_gql/getToken";
+import { token_TokenMaster } from "../gql/_gql/token";
 
 export interface UserData {
-  token: getToken_token_TokenMaster;
+  token: token_TokenMaster;
   storage: Storage;
 }
