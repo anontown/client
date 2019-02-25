@@ -3,7 +3,6 @@ import {
   RaisedButton,
   TextField,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -16,75 +15,61 @@ import {
   Errors,
   Page,
 } from "../components";
-import { myInject, UserStore } from "../stores";
 import { createTokenMaster } from "../gql/token.gql";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../gql/_gql/createTokenMaster";
-import { Mutation } from "react-apollo";
+import { useUserContext, createUserData } from "src/utils";
+import { useMutation } from "react-apollo-hooks";
 
-interface LoginPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type LoginPageProps = RouteComponentProps<{}>;
 
-interface LoginPageState {
-  sn: string;
-  pass: string;
-  errors?: string[];
-}
+export const LoginPage = withRouter((_props: LoginPageProps) => {
+  const [sn, setSn] = React.useState("");
+  const [pass, setPass] = React.useState("");
+  const [errors, setErrors] = React.useState<string[] | undefined>(undefined);
+  const userContext = useUserContext();
+  const submit = useMutation<createTokenMasterResult, createTokenMasterVariables>(createTokenMaster);
 
-export const LoginPage = withRouter(myInject(["user"], observer(class extends React.Component<LoginPageProps, LoginPageState> {
-  constructor(props: LoginPageProps) {
-    super(props);
-    this.state = {
-      sn: "",
-      pass: ""
-    };
-  }
-
-  render() {
-    return <Page>
-      <Helmet>
-        <title>ログイン</title>
-      </Helmet>
-      {this.props.user.data !== null
-        ? <Redirect to="/" />
-        : <Paper>
-          <Errors errors={this.state.errors} />
-          <form>
-            <div>
-              <TextField
-                floatingLabelText="ID"
-                value={this.state.sn}
-                onChange={(_e, v) => this.setState({ sn: v })} />
-            </div>
-            <div>
-              <TextField
-                floatingLabelText="パスワード"
-                value={this.state.pass}
-                onChange={(_e, v) => this.setState({ pass: v })}
-                type="password" />
-            </div>
-            <Mutation<createTokenMasterResult, createTokenMasterVariables>
-              mutation={createTokenMaster}
-              onCompleted={x => {
-                this.props.user.userChange(x);
-              }}
-              onError={() => {
-                this.setState({ errors: ["ログインに失敗しました。"] });
-              }}
-              variables={{
-                auth: {
-                  sn: this.state.sn, pass: this.state.pass
+  return <Page>
+    <Helmet>
+      <title>ログイン</title>
+    </Helmet>
+    {userContext.value !== null
+      ? <Redirect to="/" />
+      : <Paper>
+        <Errors errors={errors} />
+        <form>
+          <div>
+            <TextField
+              floatingLabelText="ID"
+              value={sn}
+              onChange={(_e, v) => setSn(v)} />
+          </div>
+          <div>
+            <TextField
+              floatingLabelText="パスワード"
+              value={pass}
+              onChange={(_e, v) => setPass(v)}
+              type="password" />
+          </div>
+          <div><RaisedButton label="ログイン" onClick={async () => {
+            try {
+              const token = await submit({
+                variables: {
+                  auth: {
+                    sn: sn, pass: pass
+                  }
                 }
-              }}>
-              {submit => (
-                <div><RaisedButton label="ログイン" onClick={() => {
-                  submit();
-                }} /></div>
-              )}
-            </Mutation>
-            <Link to="/signup">登録</Link>
-          </form>
-        </Paper>}
-    </Page>;
-  }
-})));
+              });
+              if (token.data !== undefined) {
+                userContext.update(await createUserData(x))
+              }
+            } catch{
+              setErrors(["ログインに失敗しました。"]);
+            }
+          }} /></div>
+          <Link to="/signup">登録</Link>
+        </form>
+      </Paper>}
+  </Page>;
+
+});
