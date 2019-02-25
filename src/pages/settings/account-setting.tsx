@@ -3,89 +3,91 @@ import {
   RaisedButton,
   TextField,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack, UserSwitch } from "../../components";
-import { myInject, UserStore } from "../../stores";
-import { Query, Mutation } from "react-apollo";
+import { Snack, Errors } from "../../components";
 import { findUser, updateUser } from "../../gql/user.gql";
 import { findUser as findUserResult } from "../../gql/_gql/findUser";
 import { updateUser as updateUserResult, updateUserVariables } from "../../gql/_gql/updateUser";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../../gql/_gql/createTokenMaster";
 import { createTokenMaster } from "../../gql/token.gql";
+import { UserSwitchProps, userSwitch, UserContext } from "src/utils";
+import { useQuery, useMutation } from "react-apollo-hooks";
 
-interface AccountSettingPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type AccountSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
-interface AccountSettingPageState {
-  newPass: string;
-  oldPass: string;
-  sn: string;
-}
+export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPageProps) => {
+  const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
+  const [newPass, setNewPass] = React.useState("");
+  const [oldPass, setOldPass] = React.useState("");
+  const [sn, setSn] = React.useState("");
+  const user = useQuery<findUserResult>(findUser);
+  React.useEffect(() => {
+    if (user.data !== undefined) {
+      setSn(user.data.user.sn);
+    } else {
+      setSn("");
+    }
+  }, [user.data, setSn]);
+  const updateUserSubmit = useMutation<updateUserResult, updateUserVariables>(updateUser);
+  const createTokenMasterSubmit = useMutation<createTokenMasterResult, createTokenMasterVariables>(createTokenMaster);
+  const userContext = React.useContext(UserContext);
 
-export const AccountSettingPage =
-  myInject(["user"],
-    observer(withRouter(class extends React.Component<AccountSettingPageProps, AccountSettingPageState> {
-      constructor(props: AccountSettingPageProps) {
-        super(props);
-        this.state = {
-          newPass: "",
-          oldPass: "",
-          sn: "",
-        };
-      }
-
-      render() {
-        return <UserSwitch userData={this.props.user.data} render={() => <Paper>
-          <Helmet>
-            <title>アカウント設定</title>
-          </Helmet>
-          <UserSwitch userData={this.props.user.data} render={() =>
-            <Query<findUserResult>
-              query={findUser}
-              onCompleted={user => {
-                if ("user" in user) {
-                  this.setState({ sn: user.user.sn });
+  return <Paper>
+    <Helmet>
+      <title>アカウント設定</title>
+    </Helmet>
+    <Snack
+      msg={snackMsg}
+      onHide={() => setSnackMsg(null)} />
+    {user.error !== undefined
+      ? <Errors errors={["ユーザー情報取得に失敗しました"]} />
+      : null}
+    {user.loading
+      ? <div>loading</div>
+      : null}
+    {user.data !== undefined
+      ? <form>
+        <TextField floatingLabelText="ID" value={sn} onChange={(_e, v) => setSn(v)} />
+        <TextField
+          floatingLabelText="新しいパスワード"
+          value={newPass}
+          onChange={(_e, v) => setNewPass(v)} />
+        <TextField
+          floatingLabelText="現在のパスワード"
+          value={oldPass}
+          onChange={(_e, v) => setOldPass(v)} />
+        <RaisedButton onClick={async () => {
+          if (user.data !== undefined) {
+            try {
+              await updateUserSubmit({
+                variables: {
+                  sn,
+                  pass: newPass,
+                  auth: { id: user.data.user.id, pass: oldPass }
                 }
-              }}>{
-                ({ error, data }) => {
-                  if (error) {
-                    return <Snack msg="ユーザー情報取得に失敗しました" />;
-                  }
-                  if (data === undefined) {
-                    return "loading";
-                  }
-                  return <Mutation<createTokenMasterResult, createTokenMasterVariables> mutation={createTokenMaster} onCompleted={x => {
-                    this.props.user.updateToken(x.createTokenMaster);
-                  }}>{submit => {
-                    return <Mutation<updateUserResult, updateUserVariables> mutation={updateUser} onCompleted={() => {
-                      submit({ variables: { auth: { id: data.user.id, pass: this.state.newPass } } });
-                    }} variables={{ auth: { id: data.user.id, pass: this.state.oldPass }, sn: this.state.sn, pass: this.state.newPass }}>{submit => {
-                      return <form>
-                        <TextField floatingLabelText="ID" value={this.state.sn} onChange={(_e, v) => this.setState({ sn: v })} />
-                        <TextField
-                          floatingLabelText="新しいパスワード"
-                          value={this.state.newPass}
-                          onChange={(_e, v) => this.setState({ newPass: v })} />
-                        <TextField
-                          floatingLabelText="現在のパスワード"
-                          value={this.state.oldPass}
-                          onChange={(_e, v) => this.setState({ oldPass: v })} />
-                        <RaisedButton onClick={() => submit()} label="OK" />
-                      </form>;
-                    }}</Mutation>;
-                  }}</Mutation>;
+              });
+              const token = await createTokenMasterSubmit({
+                variables: {
+                  auth: { id: user.data.user.id, pass: newPass }
                 }
-              }</Query>
-          } />
-        </Paper >} />;
-      }
-    })));
-
-  //TODO:エラー処理
+              });
+              if (token.data !== undefined) {
+                userContext.update({
+                  ...props.userData,
+                  token: token.data.createTokenMaster
+                });
+              }
+            } catch{
+              setSnackMsg("エラーが発生しました");
+            }
+          }
+        }} label="OK" />
+      </form>
+      : null}
+  </Paper >;
+}));
