@@ -61,7 +61,7 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
                 }
               });
               if (token.data !== undefined) {
-                userContext.update(await createUserData(x))
+                userContext.update(await createUserData(token.data.createTokenMaster))
               }
             } catch{
               setErrors(["ログインに失敗しました。"]);
