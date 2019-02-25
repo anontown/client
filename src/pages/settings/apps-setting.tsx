@@ -21,7 +21,7 @@ import { tokenGeneral } from "src/gql/_gql/tokenGeneral";
 
 type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 
-export const AppsSettingPage = userSwitch(withRouter((props: AppsSettingPageProps) => {
+export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
   const tokens = useQuery<findTokensResult>(findTokens, { variables: {} });
   const variables: findClientsVariables = {
