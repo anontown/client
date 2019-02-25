@@ -19,7 +19,7 @@ import { delTokenClient as delTokenClientResult, delTokenClientVariables } from 
 import { useMutation, useQuery } from "react-apollo-hooks";
 import { tokenGeneral } from "src/gql/_gql/tokenGeneral";
 
-type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
+type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
