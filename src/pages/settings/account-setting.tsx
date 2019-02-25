@@ -15,7 +15,7 @@ import { findUser as findUserResult } from "../../gql/_gql/findUser";
 import { updateUser as updateUserResult, updateUserVariables } from "../../gql/_gql/updateUser";
 import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../../gql/_gql/createTokenMaster";
 import { createTokenMaster } from "../../gql/token.gql";
-import { UserSwitchProps, userSwitch, useUserContext } from "src/utils";
+import { UserSwitchProps, userSwitch } from "src/utils";
 import { useQuery, useMutation } from "react-apollo-hooks";
 
 type AccountSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
@@ -35,7 +35,6 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
   }, [user.data, setSn]);
   const updateUserSubmit = useMutation<updateUserResult, updateUserVariables>(updateUser);
   const createTokenMasterSubmit = useMutation<createTokenMasterResult, createTokenMasterVariables>(createTokenMaster);
-  const userContext = useUserContext();
 
   return <Paper>
     <Helmet>
@@ -77,7 +76,7 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
                 }
               });
               if (token.data !== undefined) {
-                userContext.update({
+                props.updateUserData({
                   ...props.userData,
                   token: token.data.createTokenMaster
                 });
