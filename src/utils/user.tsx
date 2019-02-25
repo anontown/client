@@ -58,7 +58,7 @@ export const User = (props: UserProps) => {
 
   useEffectSkipN(() => {
     location.reload();
-  }, [userData !== null ? userData.token.user : null]);
+  }, [userData !== null ? userData.id : null]);
 
   return (
     <UserContext.Provider
