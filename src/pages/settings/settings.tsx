@@ -12,31 +12,21 @@ interface SettingsPageProps extends RouteComponentProps<{}> {
 
 }
 
-interface SettingsPageState {
-}
 
-export const SettingsPage = withRouter(class extends React.Component<SettingsPageProps, SettingsPageState> {
-  constructor(props: SettingsPageProps) {
-    super(props);
-    this.state = {
-    };
-  }
-
-  render() {
-    return <Page
-      sidebar={<List>
-        <ListItem containerElement={<Link to="/settings/account" />}>アカウント設定</ListItem>
-        <ListItem containerElement={<Link to="/settings/apps" />}>連携アプリ</ListItem>
-        <ListItem containerElement={<Link to="/settings/dev" />}>開発者向け</ListItem>
-      </List>}>
-      <Helmet>
-        <title>アカウント設定</title>
-      </Helmet>
-      <Switch>
-        <Route path="/settings/account" component={AccountSettingPage} />
-        <Route path="/settings/apps" component={AppsSettingPage} />
-        <Route path="/settings/dev" component={DevSettingPage} />
-      </Switch>
-    </Page>;
-  }
+export const SettingsPage = withRouter((_props: SettingsPageProps) => {
+  return <Page
+    sidebar={<List>
+      <ListItem containerElement={<Link to="/settings/account" />}>アカウント設定</ListItem>
+      <ListItem containerElement={<Link to="/settings/apps" />}>連携アプリ</ListItem>
+      <ListItem containerElement={<Link to="/settings/dev" />}>開発者向け</ListItem>
+    </List>}>
+    <Helmet>
+      <title>アカウント設定</title>
+    </Helmet>
+    <Switch>
+      <Route path="/settings/account" component={AccountSettingPage} />
+      <Route path="/settings/apps" component={AppsSettingPage} />
+      <Route path="/settings/dev" component={DevSettingPage} />
+    </Switch>
+  </Page>;
 });
