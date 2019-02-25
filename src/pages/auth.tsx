@@ -1,5 +1,4 @@
 import { RaisedButton } from "material-ui";
-import { observer } from "mobx-react";
 import * as qs from "query-string";
 import * as React from "react";
 import { Helmet } from "react-helmet";
@@ -7,67 +6,59 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack } from "../components";
-import { Page } from "../components";
-import {
-  myInject,
-  UserStore,
-} from "../stores";
-import { Query, Mutation } from "react-apollo";
+import { Snack, Page, Errors } from "../components";
 import { findClients } from "../gql/client.gql";
 import { createTokenGeneral } from "../gql/token.gql";
 import { findClients as findClientsResult, findClientsVariables } from "../gql/_gql/findClients";
 import { createTokenGeneral as createTokenGeneralResult, createTokenGeneralVariables } from "../gql/_gql/createTokenGeneral";
+import { userSwitch, UserSwitchProps } from "src/utils";
+import { useQuery, useMutation } from "react-apollo-hooks";
 
-interface AuthPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
-interface AuthPageState {
-}
-
-export const AuthPage = withRouter(myInject(["user"],
-  observer(class extends React.Component<AuthPageProps, AuthPageState> {
-    constructor(props: AuthPageProps) {
-      super(props);
-    }
-
-    render() {
-      const id: string | string[] | undefined = qs.parse(this.props.location.search).client;
+export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
+  const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
+  const id: string | string[] | undefined = qs.parse(props.location.search).client;
+  const clients = useQuery<findClientsResult, findClientsVariables>(findClients, {
+    skip: typeof id !== "string",
+    variables: { query: { id: typeof id === "string" ? [id] : [] } }
+  });
+  const submit = useMutation<createTokenGeneralResult, createTokenGeneralVariables>(createTokenGeneral);
 
 
-      return <Page>
-        <Helmet>
-          <title>アプリ認証</title>
-        </Helmet>
-        {this.props.user.data !== null ? typeof id === "string"
-          ? <Query<findClientsResult, findClientsVariables>
-            query={findClients}
-            variables={{ id: id }}>
-            {({ loading, error, data }) => {
-              if (loading) return "Loading...";
-              if (error || !data || data.clients.length === 0) return (<Snack msg="クライアント取得に失敗しました。" />);
-              const client = data.clients[0];
-              return (<Mutation<createTokenGeneralResult, createTokenGeneralVariables>
-                mutation={createTokenGeneral}
-                variables={{ client: client.id }}>
-                {(create, { error }) => {
-                  return <div>
-                    認証しますか？
-                  <RaisedButton type="button" label="OK" onClick={async () => {
-                      const data = await create();
-                      if (data && data.data) {
-                        location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.req.token + "&key=" + encodeURI(data.data.createTokenGeneral.req.key);
-                      }
-                    }} />
-                    {error && <Snack msg="エラーが発生しました" />}
-                  </div>;
-                }}
-              </Mutation>);
-            }}
-          </Query>
-          : <div>パラメーターが不正です</div>
-          : <div>ログインして下さい</div>}
-      </Page>;
-    }
-  })));
+  return <Page>
+    <Helmet>
+      <title>アプリ認証</title>
+    </Helmet>
+    <Snack
+      msg={snackMsg}
+      onHide={() => setSnackMsg(null)} />
+    {clients.loading
+      ? <div>loading</div>
+      : null}
+    {typeof id !== "string"
+      ? <div>パラメーターが不正です</div>
+      : null}
+    {clients.error !== undefined
+      ? <Errors errors={["クライアント取得に失敗しました。"]} />
+      : null}
+    {clients.data !== undefined
+      ? <div>
+        認証しますか？
+          <RaisedButton type="button" label="OK" onClick={async () => {
+          if (clients.data !== undefined) {
+            const client = clients.data.clients[0];
+            try {
+              const data = await submit({ variables: { client: client.id } });
+              if (data.data !== undefined) {
+                location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.req.token + "&key=" + encodeURI(data.data.createTokenGeneral.req.key);
+              }
+            } catch{
+              setSnackMsg("エラーが発生しました");
+            }
+          }
+        }} />
+      </div>
+      : null}
+  </Page>;
+}));
