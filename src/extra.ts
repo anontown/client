@@ -1,6 +1,7 @@
 interface Array<T> {
   first(): T | undefined;
   last(): T | undefined;
+  set(i: number, item: T): T[];
 }
 
 Array.prototype.first = function () {
@@ -17,4 +18,10 @@ Array.prototype.last = function () {
   } else {
     return this[this.length - 1];
   }
+};
+
+Array.prototype.set = function (i, item) {
+  const res = [...this];
+  res[i] = item;
+  return res;
 };
