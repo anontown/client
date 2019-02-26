@@ -19,7 +19,7 @@ interface ListItem<T extends ListItemData> {
 interface ItemScrollData<T extends ListItemData> {
   item: ListItem<T>;
   y: number;
-  el: HTMLElementData;
+  el: HTMLElement;
 }
 
 export interface ScrollProps<T extends ListItemData> {
@@ -43,24 +43,16 @@ export interface ScrollProps<T extends ListItemData> {
 interface ScrollState {
 }
 
-class HTMLElementData {
-  constructor(public raw: HTMLElement) { }
+function elHeight(el: HTMLElement) {
+  return el.offsetHeight;
+}
 
-  get height() {
-    return this.raw.offsetHeight;
-  }
+function elTop(el: HTMLElement) {
+  return el.offsetTop;
+}
 
-  get top() {
-    return this.raw.offsetTop;
-  }
-
-  get bottom() {
-    return this.top + this.height;
-  }
-
-  get y() {
-    return this.top + this.height / 2;
-  }
+function elY(el: HTMLElement) {
+  return elTop(el) + elHeight(el) / 2;
 }
 
 function sleep(ms: number) {
@@ -85,7 +77,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   getItemEl(id: string) {
     const dom = ReactDOM.findDOMNode(this.refs[`item-${id}`]) as HTMLElement | null;
     if (dom !== null) {
-      return new HTMLElementData(dom);
+      return dom;
     } else {
       return null;
     }
@@ -128,7 +120,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     await sleep(0);
     const el = this.el;
     if (el !== null) {
-      el.scrollTop += (item.el.raw.offsetTop + item.el.raw.offsetHeight / 2) - item.y;
+      el.scrollTop += elY(item.el) - item.y;
     }
   }
 
@@ -146,21 +138,21 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       })
       .filter<{
         item: ListItem<T>,
-        el: HTMLElementData,
+        el: HTMLElement,
       }>((x): x is {
         item: ListItem<T>;
-        el: HTMLElementData;
+        el: HTMLElement;
       } => x !== null)
       .reduce<{
         item: ListItem<T>;
-        el: HTMLElementData;
+        el: HTMLElement;
       } | null>((min, item) => {
         if (min === null) {
           return item;
-        } else if (Math.abs(min.el.raw.getBoundingClientRect().top +
-          min.el.raw.getBoundingClientRect().height / 2) >
-          Math.abs(item.el.raw.getBoundingClientRect().top +
-            item.el.raw.getBoundingClientRect().height / 2)) {
+        } else if (Math.abs(min.el.getBoundingClientRect().top +
+          min.el.getBoundingClientRect().height / 2) >
+          Math.abs(item.el.getBoundingClientRect().top +
+            item.el.getBoundingClientRect().height / 2)) {
           return item;
         } else {
           return min;
@@ -168,7 +160,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       }, null);
 
     if (minItem !== null) {
-      return { ...minItem, y: minItem.el.raw.offsetTop + minItem.el.raw.offsetHeight / 2 };
+      return { ...minItem, y: elY(minItem.el) };
     } else {
       return null;
     }
@@ -178,7 +170,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     await sleep(0);
     const el = this.el;
     if (el !== null) {
-      el.scrollTop += (item.el.raw.offsetTop + item.el.raw.offsetHeight / 2) - item.y;
+      el.scrollTop += elY(item.el) - item.y;
     }
   }
 
@@ -196,23 +188,23 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       })
       .filter<{
         item: ListItem<T>,
-        el: HTMLElementData,
+        el: HTMLElement,
       }>((x): x is {
         item: ListItem<T>,
-        el: HTMLElementData,
+        el: HTMLElement,
       } => x !== null)
       .reduce<{
         item: ListItem<T>;
-        el: HTMLElementData;
+        el: HTMLElement;
       } | null>((min, item) => {
         if (min === null) {
           return item;
         } else if (Math.abs(window.innerHeight -
-          (min.el.raw.getBoundingClientRect().top +
-            min.el.raw.getBoundingClientRect().height / 2)) >
+          (min.el.getBoundingClientRect().top +
+            min.el.getBoundingClientRect().height / 2)) >
           Math.abs(window.innerHeight -
-            (item.el.raw.getBoundingClientRect().top +
-              item.el.raw.getBoundingClientRect().height / 2))) {
+            (item.el.getBoundingClientRect().top +
+              item.el.getBoundingClientRect().height / 2))) {
           return item;
         } else {
           return min;
@@ -220,7 +212,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
       }, null);
 
     if (minItem !== null) {
-      return { ...minItem, y: minItem.el.raw.offsetTop + minItem.el.raw.offsetHeight / 2 };
+      return { ...minItem, y: elY(minItem.el) };
     } else {
       return null;
     }
@@ -366,15 +358,15 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   async findAfter() {
-    const last = this.props.items.last();
-    if (last === undefined) {
+    const last = this.props.items.last(null);
+    if (last === null) {
       this.findNew();
     } else {
       await this._lock(async () => {
         let ise: {
           y: number;
           item: ListItem<T>;
-          el: HTMLElementData;
+          el: HTMLElement;
         } | null = null;
 
         switch (this.props.newItemOrder) {
@@ -406,15 +398,15 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   async findBefore() {
-    const first = this.props.items.first();
-    if (first === undefined) {
+    const first = this.props.items.first(null);
+    if (first === null) {
       await this.findNew();
     } else {
       await this._lock(async () => {
         let ise: {
           y: number;
           item: ListItem<T>;
-          el: HTMLElementData;
+          el: HTMLElement;
         } | null = null;
         switch (this.props.newItemOrder) {
           case "bottom":

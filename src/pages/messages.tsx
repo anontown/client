@@ -16,18 +16,52 @@ import {
   UserSwitch,
 } from "../components";
 import { myInject, UserStore } from "../stores";
-import { apiClient, dateFormat } from "../utils";
+import { apiClient, dateFormat, userSwitch, UserSwitchProps } from "../utils";
+import { findMsgs } from "../gql/msg.gql";
+import { findMsgs as findMsgsResult, findMsgsVariables } from "../gql/_gql/findMsgs";
+import { useQuery } from "react-apollo-hooks";
 
-interface MessagesPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type MessagesPageProps = RouteComponentProps<{}> & UserSwitchProps;
+
+export const MessagesPage = userSwitch(withRouter((props: MessagesPageProps) => {
+  const limit = 50;
+  const msgs = useQuery<findMsgsResult, findMsgsVariables>(findMsgs, {
+
+  });
+
+  return (
+    <Page>
+      <Helmet>
+        <title>お知らせ</title>
+      </Helmet>
+      <Snack
+        msg={this.state.snackMsg}
+        onHide={() => this.setState({ snackMsg: null })} />
+      <UserSwitch userData={this.props.user.data} render={() => <div>
+        <div>
+          <RaisedButton label="最新" onClick={() => this.readNew()} />
+        </div>
+        <div>
+          {this.state.msgs.map(m =>
+            <Paper key={m.id}>
+              <div>{dateFormat.format(m.date)}</div>
+              <Md text={m.text} />
+            </Paper>)}
+        </div>
+        <div>
+          <RaisedButton label="前" onClick={() => this.readOld()} />
+        </div>
+      </div>} />
+    </Page>
+  );
+}));
 
 interface MessagesPageState {
   msgs: Im.List<api.Msg>;
   snackMsg: null | string;
 }
 
-export const MessagesPage = withRouter(myInject(["user"],
+export const _MessagesPage = withRouter(myInject(["user"],
   observer(class extends React.Component<MessagesPageProps, MessagesPageState> {
     private limit = 50;
 
