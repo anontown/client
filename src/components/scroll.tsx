@@ -1,4 +1,3 @@
-import * as Im from "immutable";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as rx from "rxjs";
@@ -23,10 +22,10 @@ interface ItemScrollData<T extends ListItemData> {
 }
 
 export interface ScrollProps<T extends ListItemData> {
-  items: Im.List<T>;
-  onChangeItems: (items: Im.List<T>) => void;
+  items: T[];
+  onChangeItems: (items: T[]) => void;
   newItemOrder: "top" | "bottom";
-  findItem: (type: "gt" | "lt" | "gte" | "lte", date: string) => Promise<Im.List<T>>;
+  findItem: (type: "gt" | "lt" | "gte" | "lte", date: string) => Promise<T[]>;
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
@@ -103,7 +102,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
     }
   }
 
-  onChangeItems(items: Im.List<T>) {
+  onChangeItems(items: T[]) {
     this.props.onChangeItems(items
       .filter((x, i, self) => self.findIndex(y => x.id === y.id) === i)
       .sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf()));
@@ -310,7 +309,7 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
 
   subscribeNewItem(obs: rx.Observable<T>) {
     this.newItemSubs = obs.subscribe(item => {
-      this.onChangeItems(this.props.items.push(item));
+      this.onChangeItems([...this.props.items, item]);
     });
   }
 
@@ -358,8 +357,8 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   async findAfter() {
-    const last = this.props.items.last(null);
-    if (last === null) {
+    const last = this.props.items.last();
+    if (last === undefined) {
       this.findNew();
     } else {
       await this._lock(async () => {
@@ -398,8 +397,8 @@ export class Scroll<T extends ListItemData> extends React.Component<ScrollProps<
   }
 
   async findBefore() {
-    const first = this.props.items.first(null);
-    if (first === null) {
+    const first = this.props.items.first();
+    if (first === undefined) {
       await this.findNew();
     } else {
       await this._lock(async () => {
