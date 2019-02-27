@@ -2,7 +2,7 @@ import * as React from "react";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
-import { list } from "../utils";
+import { list, useLock } from "../utils";
 
 interface ListItemData {
   id: string;
@@ -59,7 +59,6 @@ function sleep(ms: number) {
 }
 
 export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
-  const isLock = React.useRef(false);
   const rootEl = React.useRef<HTMLDivElement | null>(null);
   const idElMap = React.useRef(new Map<string, HTMLDivElement>());
   React.useEffect(() => {
@@ -191,20 +190,7 @@ export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
     }
   };
 
-  const lock = async (call: () => Promise<void>) => {
-    if (isLock.current) {
-      return;
-    }
-
-    isLock.current = true;
-    try {
-      await call();
-    } catch (e) {
-      throw e;
-    } finally {
-      isLock.current = false;
-    }
-  };
+  const lock = useLock();
 
   const findAfter = async () => {
     const last = props.items.last();

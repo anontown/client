@@ -8,6 +8,7 @@ export * from "./props-type";
 export * from "./user-switch";
 export * from "./user";
 export * from "./use-effect-skip-n";
+export * from "./lock";
 
 export {
   dateFormat,
