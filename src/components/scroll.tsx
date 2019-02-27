@@ -200,9 +200,10 @@ export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
     try {
       await call();
     } catch (e) {
-      console.error(e);
+      throw e;
+    } finally {
+      isLock.current = false;
     }
-    isLock.current = false;
   };
 
   const findAfter = async () => {
