@@ -3,6 +3,7 @@ import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
 import { list, useLock } from "../utils";
+import { DateQuery, DateType } from "../../_gql/globalTypes";
 
 interface ListItemData {
   id: string;
@@ -24,14 +25,18 @@ export interface ScrollProps<T extends ListItemData> {
   items: T[];
   onChangeItems: (items: T[]) => void;
   newItemOrder: "top" | "bottom";
-  findItem: (type: "gt" | "lt" | "gte" | "lte", date: string) => Promise<T[]>;
+  findItem: (dateQuery: DateQuery) => Promise<T[]>;
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
   isAutoScroll: boolean;
+  // スクロール位置変更イベント
   scrollNewItemChange: (item: T) => void;
+  // スクロール位置変更命令
   scrollNewItem: rx.Observable<string | null>;
+  // アイテム更新
   updateItem: rx.Observable<T>;
+  // 新しいアイテム追加
   newItem: rx.Observable<T>;
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
@@ -218,7 +223,7 @@ export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
         }
 
         onChangeItems(props.items
-          .concat(await props.findItem("gt", last.date)));
+          .concat(await props.findItem({ type: DateType.gt, date: last.date })));
 
         switch (props.newItemOrder) {
           case "bottom":
@@ -257,7 +262,7 @@ export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
         }
 
         onChangeItems(props.items
-          .concat(await props.findItem("lt", first.date)));
+          .concat(await props.findItem({ type: DateType.lt, date: first.date })));
         switch (props.newItemOrder) {
           case "bottom":
             await setTopElement(ise);
@@ -272,7 +277,7 @@ export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
 
   const findNew = async () => {
     await lock(async () => {
-      onChangeItems(await props.findItem("lte", new Date().toISOString()));
+      onChangeItems(await props.findItem({ type: DateType.lte, date: new Date().toISOString() }));
       switch (props.newItemOrder) {
         case "bottom":
           await toBottom();
@@ -373,7 +378,7 @@ export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
     const subs = props.scrollNewItem.subscribe(date => {
       if (date !== null) {
         lock(async () => {
-          onChangeItems(await props.findItem("lte", date));
+          onChangeItems(await props.findItem({ type: DateType.lte, date: date }));
           switch (props.newItemOrder) {
             case "top":
               await toTop();
