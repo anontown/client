@@ -4,6 +4,7 @@ import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
 import { list, useLock } from "../utils";
 import { DateQuery, DateType } from "../../_gql/globalTypes";
+import { DocumentNode } from "graphql";
 
 interface ListItemData {
   id: string;
@@ -21,11 +22,16 @@ interface ItemScrollData<T extends ListItemData> {
   el: HTMLElement;
 }
 
-export interface ScrollProps<T extends ListItemData> {
+export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
   items: T[];
   onChangeItems: (items: T[]) => void;
   newItemOrder: "top" | "bottom";
-  findItem: (dateQuery: DateQuery) => Promise<T[]>;
+  query: DocumentNode;
+  queryVariables: (dateQuery: DateQuery) => QueryVariables;
+  queryResultConverter: (result: QueryResult) => T[];
+  subscription: DocumentNode;
+  subscriptionVariables: SubscriptionVariables;
+  subscriptionResultConverter: (result: SubscriptionResult) => T;
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
@@ -34,10 +40,6 @@ export interface ScrollProps<T extends ListItemData> {
   scrollNewItemChange: (item: T) => void;
   // スクロール位置変更命令
   scrollNewItem: rx.Observable<string | null>;
-  // アイテム更新
-  updateItem: rx.Observable<T>;
-  // 新しいアイテム追加
-  newItem: rx.Observable<T>;
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
   className?: string;
@@ -63,7 +65,7 @@ function sleep(ms: number) {
   });
 }
 
-export const Scroll = <T extends ListItemData>(props: ScrollProps<T>) => {
+export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
   const idElMap = React.useRef(new Map<string, HTMLDivElement>());
   React.useEffect(() => {
