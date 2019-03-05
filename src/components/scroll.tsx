@@ -39,7 +39,7 @@ export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables
   // スクロール位置変更イベント
   scrollNewItemChange: (item: T) => void;
   // スクロール位置変更命令
-  scrollNewItem: rx.Observable<string | null>;
+  scrollNewItem: rx.Observable<string>;
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
   className?: string;
