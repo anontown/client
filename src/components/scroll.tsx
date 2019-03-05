@@ -202,7 +202,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const findAfter = async () => {
     const last = props.items.last();
     if (last === undefined) {
-      findNew();
+      resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
         let ise: {
@@ -242,7 +242,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const findBefore = async () => {
     const first = props.items.first();
     if (first === undefined) {
-      await findNew();
+      resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
         let ise: {
@@ -277,9 +277,9 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     }
   };
 
-  const findNew = async () => {
+  const resetDate = async (date: string) => {
     await lock(async () => {
-      onChangeItems(await props.findItem({ type: DateType.lte, date: new Date().toISOString() }));
+      onChangeItems(await props.findItem({ type: DateType.lte, date }));
       switch (props.newItemOrder) {
         case "bottom":
           await toBottom();
@@ -288,7 +288,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           await toTop();
           break;
       }
-    });
+    }).then(() => findAfter());
   };
 
   React.useEffect(() => {
@@ -378,35 +378,12 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   React.useEffect(() => {
     const subs = props.scrollNewItem.subscribe(date => {
-      if (date !== null) {
-        lock(async () => {
-          onChangeItems(await props.findItem({ type: DateType.lte, date: date }));
-          switch (props.newItemOrder) {
-            case "top":
-              await toTop();
-              break;
-            case "bottom":
-              await toBottom();
-              break;
-          }
-        }).then(() => findAfter());
-      } else {
-        findNew();
-      }
+      resetDate(date);
     });
     return () => {
       subs.unsubscribe();
     };
   }, [props.scrollNewItem]);
-
-  React.useEffect(() => {
-    const subs = props.updateItem.subscribe(item => {
-      onChangeItems(list.update(props.items, item));
-    });
-    return () => {
-      subs.unsubscribe();
-    };
-  }, [props.updateItem]);
 
   React.useEffect(() => {
     const subs = props.newItem.subscribe(item => {
