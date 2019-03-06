@@ -5,6 +5,7 @@ import { setTimeout } from "timers";
 import { list, useLock } from "../utils";
 import { DateQuery, DateType } from "../../_gql/globalTypes";
 import { DocumentNode } from "graphql";
+import { useQuery } from "react-apollo-hooks";
 
 interface ListItemData {
   id: string;
@@ -29,6 +30,7 @@ export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables
   query: DocumentNode;
   queryVariables: (dateQuery: DateQuery) => QueryVariables;
   queryResultConverter: (result: QueryResult) => T[];
+  queryResultMapper: (result: QueryResult, f: (data: T[]) => T[]) => QueryResult;
   subscription: DocumentNode;
   subscriptionVariables: SubscriptionVariables;
   subscriptionResultConverter: (result: SubscriptionResult) => T;
@@ -40,6 +42,7 @@ export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables
   scrollNewItemChange: (item: T) => void;
   // スクロール位置変更命令
   scrollNewItem: rx.Observable<string>;
+  initDate: string;
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
   className?: string;
@@ -76,6 +79,13 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       }
     }
   }, [props.items, idElMap]);
+
+  const data = useQuery<QueryResult, QueryVariables>(props.query, {
+    variables: props.queryVariables({
+      date: props.initDate,
+      type: DateType.lte
+    })
+  });
 
   const toTop = async () => {
     await sleep(0);
