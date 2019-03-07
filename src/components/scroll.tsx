@@ -24,8 +24,6 @@ interface ItemScrollData<T extends ListItemData> {
 }
 
 export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
-  items: T[];
-  onChangeItems: (items: T[]) => void;
   newItemOrder: "top" | "bottom";
   query: DocumentNode;
   queryVariables: (dateQuery: DateQuery) => QueryVariables;
@@ -70,15 +68,6 @@ function sleep(ms: number) {
 
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
-  const idElMap = React.useRef(new Map<string, HTMLDivElement>());
-  React.useEffect(() => {
-    const items = new Set(props.items.map(x => x.id));
-    for (let id of idElMap.current.keys()) {
-      if (!items.has(id)) {
-        idElMap.current.delete(id);
-      }
-    }
-  }, [props.items, idElMap]);
 
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
     variables: props.queryVariables({
@@ -86,6 +75,21 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       type: DateType.lte
     })
   });
+
+  const idElMap = React.useRef(new Map<string, HTMLDivElement>());
+  React.useEffect(() => {
+    if (data.data !== undefined) {
+      const items = new Set(props.queryResultConverter(data.data).map(x => x.id));
+      for (let id of idElMap.current.keys()) {
+        if (!items.has(id)) {
+          idElMap.current.delete(id);
+        }
+      }
+    } else {
+      idElMap.current.clear();
+    }
+
+  }, [data.data, idElMap]);
 
   const toTop = async () => {
     await sleep(0);
@@ -99,12 +103,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     if (rootEl.current !== null) {
       rootEl.current.scrollTop = rootEl.current.scrollHeight;
     }
-  };
-
-  const onChangeItems = (items: T[]) => {
-    props.onChangeItems(items
-      .filter((x, i, self) => self.findIndex(y => x.id === y.id) === i)
-      .sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf()));
   };
 
   const dataToListItem = (data: T): ListItem<T> => {
@@ -123,8 +121,15 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const getTopElement = async () => {
     await sleep(0);
+
+    if (data.data === undefined) {
+      return null;
+    }
+
+    const items = props.queryResultConverter(data.data);
+
     // 最短距離のアイテム
-    const minItem = props.items
+    const minItem = items
       .map(item => {
         const el = idElMap.current.get(item.id);
         if (el !== undefined) {
@@ -168,8 +173,15 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const getBottomElement = async () => {
     await sleep(0);
+
+    if (data.data === undefined) {
+      return null;
+    }
+
+    const items = props.queryResultConverter(data.data);
+
     // 最短距離のアイテム
-    const minItem = props.items
+    const minItem = items
       .map(item => {
         const el = idElMap.current.get(item.id);
         if (el !== null) {
@@ -210,9 +222,15 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const lock = useLock();
 
   const findAfter = async () => {
-    const last = props.items.last();
-    if (last === undefined) {
-      resetDate(new Date().toISOString());
+    if (data.data === undefined) {
+      return;
+    }
+
+    const items = props.queryResultConverter(data.data);
+
+    const first = items.first();
+    if (first === undefined) {
+      await resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
         let ise: {
@@ -234,8 +252,17 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           return;
         }
 
-        onChangeItems(props.items
-          .concat(await props.findItem({ type: DateType.gt, date: last.date })));
+        await data.fetchMore({
+          variables: props.queryVariables({
+            date: first.date,
+            type: DateType.gt
+          }),
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult) return prev;
+
+            return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
+          }
+        });
 
         switch (props.newItemOrder) {
           case "bottom":
@@ -250,8 +277,14 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   };
 
   const findBefore = async () => {
-    const first = props.items.first();
-    if (first === undefined) {
+    if (data.data === undefined) {
+      return;
+    }
+
+    const items = props.queryResultConverter(data.data);
+
+    const old = items.last();
+    if (old === undefined) {
       resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
@@ -273,8 +306,18 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           return;
         }
 
-        onChangeItems(props.items
-          .concat(await props.findItem({ type: DateType.lt, date: first.date })));
+        await data.fetchMore({
+          variables: props.queryVariables({
+            date: old.date,
+            type: DateType.lt
+          }),
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult) return prev;
+
+            return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
+          }
+        });
+
         switch (props.newItemOrder) {
           case "bottom":
             await setTopElement(ise);
@@ -289,7 +332,17 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const resetDate = async (date: string) => {
     await lock(async () => {
-      onChangeItems(await props.findItem({ type: DateType.lte, date }));
+      await data.fetchMore({
+        variables: props.queryVariables({
+          date: date,
+          type: DateType.lte
+        }),
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+
+          return props.queryResultMapper(prev, _data => props.queryResultConverter(fetchMoreResult));
+        }
+      });
       switch (props.newItemOrder) {
         case "bottom":
           await toBottom();
@@ -298,7 +351,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           await toTop();
           break;
       }
-    }).then(() => findAfter());
+    });
+    await findAfter();
   };
 
   React.useEffect(() => {
@@ -405,15 +459,19 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   }, [props.newItem]);
 
   return <div className={props.className} style={props.style} ref={rootEl}>
-    {(props.newItemOrder === "top"
-      ? props.items.reverse()
-      : props.items)
-      .map(item => <div
-        key={item.id}
-        ref={el => {
-          if (el !== null) {
-            idElMap.current.set(item.id, el);
-          }
-        }}>{props.dataToEl(item)}</div>)}
+    {data.data !== undefined
+      ? (props.newItemOrder === "bottom"
+        ? props.queryResultConverter(data.data).reverse()
+        : props.queryResultConverter(data.data))
+        .map(item => <div
+          key={item.id}
+          ref={el => {
+            if (el !== null) {
+              idElMap.current.set(item.id, el);
+            }
+          }}>{props.dataToEl(item)}</div>)
+      : null}
+    {data.loading ? "Loading" : null}
+    {data.error !== undefined ? "エラーが発生しました" : null}
   </div>;
 };
