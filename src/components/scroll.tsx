@@ -5,7 +5,7 @@ import { setTimeout } from "timers";
 import { list, useLock } from "../utils";
 import { DateQuery, DateType } from "../../_gql/globalTypes";
 import { DocumentNode } from "graphql";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useSubscription } from "react-apollo-hooks";
 
 interface ListItemData {
   id: string;
@@ -69,11 +69,12 @@ function sleep(ms: number) {
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
 
+  const variables = props.queryVariables({
+    date: props.initDate,
+    type: DateType.lte
+  });
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
-    variables: props.queryVariables({
-      date: props.initDate,
-      type: DateType.lte
-    })
+    variables: variables
   });
 
   const idElMap = React.useRef(new Map<string, HTMLDivElement>());
@@ -449,14 +450,23 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     };
   }, [props.scrollNewItem]);
 
-  React.useEffect(() => {
-    const subs = props.newItem.subscribe(item => {
-      onChangeItems([...props.items, item]);
-    });
-    return () => {
-      subs.unsubscribe();
-    };
-  }, [props.newItem]);
+
+  useSubscription<SubscriptionResult, SubscriptionVariables>(props.subscription, {
+    variables: props.subscriptionVariables,
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      if (subscriptionData.data !== undefined) {
+        const subsData = props.subscriptionResultConverter(subscriptionData.data);
+        const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables: variables });
+        if (data !== null) {
+          client.writeQuery({
+            query: props.query,
+            variables: variables,
+            data: props.queryResultMapper(data, x => [subsData, ...x])
+          });
+        }
+      }
+    }
+  });
 
   return <div className={props.className} style={props.style} ref={rootEl}>
     {data.data !== undefined
