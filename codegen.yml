@@ -1,0 +1,18 @@
+overwrite: true
+schema: "app.gql"
+documents: "./src/**/*.gql"
+generates:
+  src/graphql.gen.tsx:
+    plugins:
+      - "typescript-common"
+      - "typescript-client"
+      - "typescript-react-apollo"
+  src/graphql.gen.d.ts:
+    plugins:
+      - "typescript-graphql-files-modules"
+config:
+    scalars:
+      DateTime: string
+    withHooks: true
+    noHOC: true
+    noComponents: true

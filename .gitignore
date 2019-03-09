@@ -1,5 +1,7 @@
 /node_modules
 /.vscode
 /dist
-_gql/
 /.env
+/app.gql
+*.gen.tsx
+*.gen.d.ts

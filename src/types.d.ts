@@ -5,6 +5,3 @@ declare module "remark-breaks";
 declare module "body-scroll-lock";
 declare module "*.scss";
 declare module "*.css";
-declare module "*.gql";
-
-type GQLDateTime = string;
