@@ -1,13 +1,13 @@
 overwrite: true
-schema: "app.gql"
+schema: "src/generated/app.gql"
 documents: "./src/**/*.gql"
 generates:
-  src/graphql.gen.tsx:
+  src/generated/graphql.tsx:
     plugins:
       - "typescript-common"
       - "typescript-client"
       - "typescript-react-apollo"
-  src/graphql.gen.d.ts:
+  src/generated/graphql.d.ts:
     plugins:
       - "typescript-graphql-files-modules"
 config:

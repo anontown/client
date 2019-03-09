@@ -2,6 +2,5 @@
 /.vscode
 /dist
 /.env
-/app.gql
-*.gen.tsx
-*.gen.d.ts
+src/generated/*
+!.gitkeep
