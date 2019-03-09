@@ -1,32 +1,27 @@
 #import "./client.gql"
 #import "./token-req.gql"
 
-fragment tokenBase on Token{
+fragment token on Token{
+    ...tokenMaster
+    ...tokenGeneral
+}
+
+fragment tokenMaster on TokenMaster{
+    #
     id
     key
     date
 }
 
-fragment token on Token{
-    ...tokenBase
-    ...tokenGeneralBase
-}
-
-fragment tokenMaster on TokenMaster{
-    ...tokenBase
-}
-
-fragment tokenGeneralBase on TokenGeneral{
+fragment tokenGeneral on TokenGeneral{
     client{
         ...client
     }
+    #
+    id
+    key
+    date
 }
-
-fragment tokenGeneral on TokenGeneral{
-    ...tokenBase
-    ...tokenGeneralBase
-}
-
 query findToken{
     token{
         ... on TokenMaster{

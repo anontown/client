@@ -7,31 +7,30 @@ import {
   toStorage,
   verArray,
 } from "../models";
-import { gqlClient, createHeaders } from "../utils";
-import { getToken_token_TokenMaster } from "../components/_gql/getToken";
-import { findStorages, setStorage } from "../gql/storage.gql";
-import { findStorages as findStoragesResult, findStoragesVariables } from "../gql/_gql/findStorages";
-import { setStorage as setStorageResult, setStorageVariables } from "../gql/_gql/setStorage";
+import { createHeaders } from "../utils";
+import * as G from "../../generated/graphql";
 
-export async function load(token: getToken_token_TokenMaster) {
-  const storages = await gqlClient.query<findStoragesResult, findStoragesVariables>({
-    query: findStorages,
+export async function useLoad(token: G.TokenMaster.Fragment) {
+  const storages = G.FindStorages.use({
     variables: { query: {} },
     context: {
       headers: createHeaders(token.id, token.key)
     }
   });
-  const key = [...verArray, "main"].find(ver => storages.data.storages.findIndex(x => x.key === ver) !== -1);
-  const sto = storages.data.storages.find(x => x.key === key);
+  const data = storages.data;
+  if (data === undefined) {
+    return undefined;
+  }
+  const key = [...verArray, "main"].find(ver => data.storages.findIndex(x => x.key === ver) !== -1);
+  const sto = data.storages.find(x => x.key === key);
   return toStorage(await convert(sto !== undefined
     ? JSON.parse(sto.value) as StorageJSON
     : initStorage));
 }
 
-export async function save(storage: Storage) {
+export async function useSave(storage: Storage) {
   const json = toJSON(storage);
-  await gqlClient.query<setStorageResult, setStorageVariables>({
-    query: setStorage,
+  return G.SetStorage.use({
     variables: {
       key: json.ver,
       value: JSON.stringify(json)
