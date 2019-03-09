@@ -31,7 +31,7 @@
     "@types/react-router-dom": "^4.2.3",
     "@types/react-tabs": "^1.0.4",
     "@types/uuid": "^3.4.3",
-    "apollo": "^2.5.0",
+    "apollo": "^2.6.0",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "html-loader": "^0.5.5",
