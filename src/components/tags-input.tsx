@@ -6,9 +6,8 @@ import {
 import * as React from "react";
 import { Snack } from "./snack";
 import * as style from "./tags-input.scss";
-import { findTopicTags } from "../gql/topic.gql";
-import { findTopicTags as findTopicTagsResult } from "../gql/_gql/findTopicTags";
-import { Query } from "react-apollo";
+import * as G from "../../generated/graphql";
+
 
 export interface TagsInputProps {
   value: Im.Set<string>;
@@ -51,50 +50,49 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           {t}
         </span>).toArray()}
       </div>
-      <Query<findTopicTagsResult>
-        query={findTopicTags}>{
-          ({ loading, error, data }) => {
-            if (loading) return "Loading...";
-            if (error || !data) return (<Snack msg="タグ候補取得に失敗しました" />);
+      <G.FindTopicTags.Component>{
+        ({ loading, error, data }) => {
+          if (loading) return "Loading...";
+          if (error || !data) return (<Snack msg="タグ候補取得に失敗しました" />);
 
-            return <AutoComplete
-              fullWidth={this.props.fullWidth}
-              floatingLabelText="タグ"
-              dataSource={data.topicTags.map(t => ({
-                text: t.name,
-                value: <MenuItem
-                  primaryText={t.name}
-                  secondaryText={t.count.toString()}
-                />,
-              }))}
-              open={this.state.open}
-              filter={(text, key) => key.toLowerCase().includes(text.toLowerCase()) && !this.props.value.includes(key)}
-              searchText={this.state.inputValue}
-              onUpdateInput={v => this.setState({ inputValue: v })}
-              onKeyDown={e => {
-                // エンター/半角スペ
-                if (e.keyCode === 13 || e.keyCode === 32) {
-                  e.preventDefault();
+          return <AutoComplete
+            fullWidth={this.props.fullWidth}
+            floatingLabelText="タグ"
+            dataSource={data.topicTags.map(t => ({
+              text: t.name,
+              value: <MenuItem
+                primaryText={t.name}
+                secondaryText={t.count.toString()}
+              />,
+            }))}
+            open={this.state.open}
+            filter={(text, key) => key.toLowerCase().includes(text.toLowerCase()) && !this.props.value.includes(key)}
+            searchText={this.state.inputValue}
+            onUpdateInput={v => this.setState({ inputValue: v })}
+            onKeyDown={e => {
+              // エンター/半角スペ
+              if (e.keyCode === 13 || e.keyCode === 32) {
+                e.preventDefault();
+                this.addTag();
+              }
+            }}
+            onNewRequest={() => this.addTag()}
+            onFocus={() => this.setState({ open: true })}
+            {...{ onClose: () => this.setState({ open: false }) }}
+            onBlur={() => {
+              setTimeout(() => {
+                if (!this.state.open) {
                   this.addTag();
                 }
-              }}
-              onNewRequest={() => this.addTag()}
-              onFocus={() => this.setState({ open: true })}
-              {...{ onClose: () => this.setState({ open: false }) }}
-              onBlur={() => {
-                setTimeout(() => {
-                  if (!this.state.open) {
-                    this.addTag();
-                  }
-                }, 0);
-              }}
-              listStyle={{
-                maxHeight: "30vh",
-                overflow: "auto",
-              }}
-            />;
-          }
-        }</Query>
+              }, 0);
+            }}
+            listStyle={{
+              maxHeight: "30vh",
+              overflow: "auto",
+            }}
+          />;
+        }
+      }</G.FindTopicTags.Component>
     </>;
   }
 }

@@ -10,15 +10,11 @@ import { myInject, UserStore } from "../stores";
 import { Errors } from "./errors";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import { topic_TopicFork_parent, topic_TopicFork } from "../gql/_gql/topic";
-import { findTopics, createTopicFork } from "../gql/topic.gql";
-import { findTopics as findTopicsResult, findTopicsVariables } from "../gql/_gql/findTopics";
-import { createTopicFork as createTopicForkResult, createTopicForkVariables } from "../gql/_gql/createTopicFork";
-import { Query, Mutation } from "react-apollo";
+import * as G from "../../generated/graphql";
 
 interface UnconnectedTopicForkProps {
-  topic: topic_TopicFork_parent;
-  onCreate?: (topic: topic_TopicFork) => void;
+  topic: G.TopicFork.Fragment;
+  onCreate?: (topic: G.TopicFork.Fragment) => void;
   user: UserStore;
 }
 
@@ -40,8 +36,7 @@ export const TopicFork = myInject(["user"],
     render() {
       return <div>
         {this.props.user.data !== null
-          ? <Mutation<createTopicForkResult, createTopicForkVariables>
-            mutation={createTopicFork}
+          ? <G.CreateTopicFork.Component
             variables={{
               title: this.state.title,
               parent: this.props.topic.id
@@ -61,24 +56,23 @@ export const TopicFork = myInject(["user"],
                   <RaisedButton onClick={() => submit()} label="新規作成" />
                 </form>);
               }
-            }</Mutation>
+            }</G.CreateTopicFork.Component>
           : null}
         <hr />
-        <Query<findTopicsResult, findTopicsVariables>
-          query={findTopics}
+        <G.FindTopics.Component
           variables={{ query: { parent: this.props.topic.id } }}>{
             ({ loading, error, data }) => {
               if (loading) return "Loading...";
               if (error || !data) return (<Snack msg="派生トピック取得に失敗しました" />);
               return (<div>
-                {(data.topics as topic_TopicFork[]).map(t => <Paper key={t.id}>
+                {(data.topics as G.TopicFork.Fragment[]).map(t => <Paper key={t.id}>
                   <TopicListItem
                     topic={t}
                     detail={false} />
                 </Paper>)}
               </div>);
             }
-          }</Query>
+          }</G.FindTopics.Component>
       </div>;
     }
   }));

@@ -8,9 +8,8 @@ import { Link } from "react-router-dom";
 import { UserData } from "../models";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import { findTopics } from "../gql/topic.gql";
-import { findTopics as findTopicsResult, findTopicsVariables } from "../gql/_gql/findTopics";
-import { Query } from "react-apollo";
+import * as G from "../../generated/graphql";
+
 
 interface TopicFavoProps {
   userData: UserData;
@@ -29,8 +28,7 @@ export class TopicFavo extends React.Component<TopicFavoProps, TopicFavoState> {
 
   render() {
     return <div>
-      <Query<findTopicsResult, findTopicsVariables>
-        query={findTopics}
+      <G.FindTopics.Component
         variables={{ query: { id: this.props.userData.storage.topicFavo.toArray() } }}>
         {({ loading, error, data, refetch }) => {
           return <>
@@ -62,7 +60,7 @@ export class TopicFavo extends React.Component<TopicFavoProps, TopicFavoState> {
             }
           </>;
         }}
-      </Query>
+      </G.FindTopics.Component>
     </div>;
   }
 }

@@ -5,14 +5,12 @@ import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
-import { Mutation } from "react-apollo";
-import { topic_TopicNormal } from "../gql/_gql/topic";
-import { updateTopic } from "../gql/topic.gql";
-import { updateTopic as updateTopicResult, updateTopicVariables } from "../gql/_gql/updateTopic";
+import * as G from "../../generated/graphql";
+
 
 interface TopicEditorProps {
-  topic: topic_TopicNormal;
-  onUpdate?: (topic: topic_TopicNormal) => void;
+  topic: G.TopicNormal.Fragment;
+  onUpdate?: (topic: G.TopicNormal.Fragment) => void;
   userData: UserData;
 }
 
@@ -33,8 +31,7 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
   }
 
   render() {
-    return <Mutation<updateTopicResult, updateTopicVariables>
-      mutation={updateTopic}
+    return <G.UpdateTopic.Component
       variables={{
         id: this.props.topic.id,
         title: this.state.title,
@@ -65,6 +62,6 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
             <RaisedButton onClick={() => submit()} label="OK" />
           </form>);
         }
-      }</Mutation>;
+      }</G.UpdateTopic.Component>;
   }
 }

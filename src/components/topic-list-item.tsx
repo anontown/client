@@ -7,10 +7,11 @@ import { myInject, UserStore } from "../stores";
 import { dateFormat } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
-import { topic } from "../gql/_gql/topic";
+import * as G from "../../generated/graphql";
+
 
 interface UnconnectedTopicListItemProps {
-  topic: topic;
+  topic: G.Topic.Fragment;
   user: UserStore;
   detail: boolean;
 }
@@ -45,11 +46,14 @@ export const TopicListItem =
           </div >
           {this.props.detail
             ? <div>
-              {this.props.topic.__typename !== "TopicFork"
+              {this.props.topic.__typename === "TopicOne" || this.props.topic.__typename === "TopicNormal"
                 ? <div>
                   <TagsLink tags={this.props.topic.tags} mini={true} />
                 </div >
-                : <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>}
+                : null}
+              {this.props.topic.__typename === "TopicFork"
+                ? <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>
+                : null}
 
               <div>
                 作成 {dateFormat.format(this.props.topic.date)} 更新 {dateFormat.format(this.props.topic.update)}

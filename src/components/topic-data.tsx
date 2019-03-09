@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { dateFormat } from "../utils";
 import { Md } from "./md";
 import { TagsLink } from "./tags-link";
-import { topic } from "../gql/_gql/topic";
+import * as G from "../../generated/graphql";
 
 export interface TopicDataProps {
-  topic: topic;
+  topic: G.Topic.Fragment;
 }
 
 interface TopicDataState {
@@ -25,7 +25,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
         <dd>{dateFormat.format(this.props.topic.date)}</dd>
         <dt>更新</dt>
         <dd>{dateFormat.format(this.props.topic.update)}</dd>
-        {this.props.topic.__typename !== "TopicFork"
+        {this.props.topic.__typename === "TopicNormal" || this.props.topic.__typename === "TopicOne"
           ? <>
             <dt>カテゴリ</dt>
             <dd>
