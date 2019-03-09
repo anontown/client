@@ -2,5 +2,5 @@
 /.vscode
 /dist
 /.env
-src/generated/*
+generated/*
 !.gitkeep
