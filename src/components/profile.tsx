@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Md } from "./md";
-import { profile } from "../gql/_gql/profile";
+import * as G from "../../generated/graphql";
 
 export interface ProfileProps {
-  profile: profile;
+  profile: G.Profile.Fragment;
 }
 
 interface ProfileState {

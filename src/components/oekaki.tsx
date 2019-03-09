@@ -57,7 +57,8 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   }
 
   getPoint(cx: number, cy: number): [number, number] {
-    const rect = ReactDOM.findDOMNode(this.refs.img).getBoundingClientRect();
+    // TODO: findDOMNode使わずに書き直す
+    const rect = (ReactDOM.findDOMNode(this.refs.img) as Element).getBoundingClientRect();
     return [cx - rect.left, cy - rect.top];
   }
 
@@ -134,10 +135,10 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
             checked={this.state.fill}
             onCheck={(_e, v) => this.setState({ fill: v })} />
           <IconButton onClick={() => this.setState({ value: this.state.value.undo() })}  >
-          <FontIcon className="material-icons">undo</FontIcon>
+            <FontIcon className="material-icons">undo</FontIcon>
           </IconButton>
           <IconButton onClick={() => this.setState({ value: this.state.value.redo() })} >
-          <FontIcon className="material-icons">redo</FontIcon>
+            <FontIcon className="material-icons">redo</FontIcon>
           </IconButton >
           <IconButton onClick={() => {
             // svg to formdata

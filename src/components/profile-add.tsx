@@ -4,13 +4,10 @@ import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-add.scss";
-import { profile } from "../gql/_gql/profile";
-import { createProfile } from "../gql/profile.gql";
-import { createProfile as createProfileResult, createProfileVariables } from "../gql/_gql/createProfile";
-import { Mutation } from "react-apollo";
+import * as G from "../../generated/graphql";
 
 interface ProfileAddProps {
-  onAdd?: (profile: profile) => void;
+  onAdd?: (profile: G.Profile.Fragment) => void;
   userData: UserData;
   style?: React.CSSProperties
 }
@@ -33,8 +30,7 @@ export class ProfileAdd extends React.Component<ProfileAddProps, ProfileAddState
 
   render() {
     return <Paper className={style.container} style={this.props.style}>
-      <Mutation<createProfileResult, createProfileVariables>
-        mutation={createProfile}
+      <G.CreateProfile.Component
         variables={{
           name: this.state.name,
           text: this.state.text,
@@ -64,7 +60,7 @@ export class ProfileAdd extends React.Component<ProfileAddProps, ProfileAddState
             onChange={v => this.setState({ text: v })} />
           <RaisedButton onClick={() => submit()} label="OK" />
         </form>);
-      }}</Mutation>
+      }}</G.CreateProfile.Component>
     </Paper>;
   }
 }

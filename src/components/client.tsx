@@ -5,11 +5,11 @@ import {
 import * as React from "react";
 import { UserData } from "../models";
 import { ClientEditor } from "./client-editor";
-import { client } from "../gql/_gql/client";
+import * as G from "../../generated/graphql";
 
 interface ClientProps {
-  client: client;
-  onUpdate?: (client: client) => void;
+  client: G.Client.Fragment;
+  onUpdate?: (client: G.Client.Fragment) => void;
   userData: UserData | null;
 }
 

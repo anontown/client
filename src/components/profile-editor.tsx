@@ -4,13 +4,10 @@ import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
-import { profile } from "../gql/_gql/profile";
-import { useMutation } from "react-apollo-hooks";
-import { updateProfile } from "../gql/profile.gql";
-import { updateProfile as updateProfileResult, updateProfileVariables } from "../gql/_gql/updateProfile";
+import * as G from "../../generated/graphql";
 interface ProfileEditorProps {
-  profile: profile;
-  onUpdate?: (profile: profile) => void;
+  profile: G.Profile.Fragment;
+  onUpdate?: (profile: G.Profile.Fragment) => void;
   userData: UserData;
   style?: React.CSSProperties
 }
@@ -20,7 +17,7 @@ export const ProfileEditor = (props: ProfileEditorProps) => {
   const [sn, setSn] = React.useState(props.profile.sn);
   const [name, setName] = React.useState(props.profile.name);
   const [text, setText] = React.useState(props.profile.text);
-  const submit = useMutation<updateProfileResult, updateProfileVariables>(updateProfile, {
+  const submit = G.UpdateProfile.use({
     variables: {
       id: props.profile.id,
       name: name,

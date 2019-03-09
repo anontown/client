@@ -10,17 +10,12 @@ import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { Select } from "./select";
 import { TextField } from "./text-field";
-import { res } from "../gql/_gql/res";
 import { useInputCache } from "../utils";
-import { findProfiles } from "../gql/profile.gql";
-import { findProfilesVariables, findProfiles as findProfilesResult } from "../gql/_gql/findProfiles";
-import { useQuery, useMutation } from "react-apollo-hooks";
-import { createRes as createResResult, createResVariables } from "../gql/_gql/createRes";
-import { createRes } from "../gql/res.gql";
+import * as G from "../../generated/graphql";
 
 
 interface ResWriteProps {
-  onSubmit?: (value: res) => void;
+  onSubmit?: (value: G.Res.Fragment) => void;
   topic: string;
   reply: string | null;
   userData: UserData;
@@ -63,7 +58,7 @@ export const ResWrite = (props: ResWriteProps) => {
       }
     });
 
-  const { data: profiles, error } = useQuery<findProfilesResult, findProfilesVariables>(findProfiles, {
+  const { data: profiles, error } = G.FindProfiles.use({
     variables: {
       query: {
         self: true
@@ -71,7 +66,7 @@ export const ResWrite = (props: ResWriteProps) => {
     }
   });
 
-  const mutation = useMutation<createResResult, createResVariables>(createRes, {
+  const mutation = G.CreateRes.use({
     variables: {
       topic: props.topic,
       name: data.name.length !== 0 ? data.name : null,

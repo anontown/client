@@ -56,7 +56,7 @@ export class NG extends React.Component<NGProps, NGState> {
                 ng={node}
                 onUpdate={v => this.props.onChangeStorage({
                   ...this.props.userData.storage,
-                  ng: list.update(this.props.userData.storage.ng, v),
+                  ng: list.updateIm(this.props.userData.storage.ng, v),
                 })} />
             </Dialog>
           </ListItem>)}

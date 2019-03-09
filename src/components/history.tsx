@@ -9,10 +9,10 @@ import {
 } from "../utils";
 import { Md } from "./md";
 import { TagsLink } from "./tags-link";
-import { history } from "../gql/_gql/history";
+import * as G from "../../generated/graphql";
 
 interface HistoryProps {
-  history: history;
+  history: G.History.Fragment;
 }
 
 interface HistoryState {

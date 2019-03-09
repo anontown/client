@@ -1,45 +1,52 @@
-fragment topicBase on Topic{
+fragment topicSearch on TopicSearch{
+    ...topicNormal
+    ...topicOne
+}
+
+fragment topicNormal on TopicNormal{
+    #
+    tags
+    text
+    #
     id
     title
     update
     date
     resCount
     active
-} 
-
-fragment topicSearchBase on TopicSearch{
-    tags
-    text
-}
-
-fragment topicSearch on TopicSearch{
-    ...topicBase
-    ...topicSearchBase
-}
-
-fragment topicNormal on TopicNormal{
-    ...topicSearch
 }
 
 fragment topicOne on TopicOne{
-    ...topicSearch
-}
-
-fragment topicForkBase on TopicFork{
-    parent{
-        ...topicSearch
-    }
+    #
+    tags
+    text
+    #
+    id
+    title
+    update
+    date
+    resCount
+    active
 }
 
 fragment topicFork on TopicFork{
-    ...topicBase
-    ...topicForkBase
+    parent{
+        ...topicSearch
+    }
+    #
+    id
+    title
+    update
+    date
+    resCount
+    active
 }
 
+
 fragment topic on Topic{
-    ...topicBase
-    ...topicSearchBase
-    ...topicForkBase
+    ...topicOne
+    ...topicNormal
+    ...topicFork
 } 
 
 mutation createTopicNormal($title:String!,$tags:[String!]!,$text:String!){

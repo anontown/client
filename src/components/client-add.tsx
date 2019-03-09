@@ -3,10 +3,10 @@ import * as React from "react";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MutationUpdaterFn } from "react-apollo-hooks";
-import { CreateClient } from "../../generated/graphql";
+import * as G from "../../generated/graphql";
 
 interface ClientAddProps {
-  onAddUpdate?: MutationUpdaterFn<CreateClient.Mutation>
+  onAddUpdate?: MutationUpdaterFn<G.CreateClient.Mutation>
   userData: UserData;
 }
 
@@ -15,7 +15,7 @@ export const ClientAdd = (props: ClientAddProps) => {
   const [name, setName] = React.useState("");
   const [error, setError] = React.useState<any>(null);
 
-  const submit = CreateClient.use({
+  const submit = G.CreateClient.use({
     variables: {
       name: name,
       url: url

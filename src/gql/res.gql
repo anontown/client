@@ -2,7 +2,24 @@
 #import "./profile.gql"
 #import "./history.gql"
 
-fragment resBase on Res{
+fragment res on Res{
+    ...resNormal
+    ...resHistory
+    ...resFork
+    ...resDelete
+}
+
+fragment resNormal on ResNormal{
+    name
+    text
+    reply{
+        id
+    }
+    profile{
+        ...profile
+    }
+    isReply
+    #
     id
     topic{
         ...topic
@@ -16,62 +33,71 @@ fragment resBase on Res{
     voteFlag
 }
 
-fragment res on Res{
-    ...resBase
-    ...resNormalBase
-    ...resHistoryBase
-    ...resForkBase
-    ...resDeleteBase
-}
-
-fragment resNormalBase on ResNormal{
-    name
-    text
-    reply{id}
-    profile{
-        ...profile
-    }
-    isReply
-}
-
-fragment resNormal on ResNormal{
-    ...resBase
-    ...resNormalBase
-}
-
-fragment resHistoryBase on ResHistory{
+fragment resHistory on ResHistory{
     history{
         ...history
     }
-}
-
-fragment resHistory on ResHistory{
-    ...resBase
-    ...resHistoryBase
+    #
+    id
+    topic{
+        ...topic
+    }
+    date
+    self
+    uv
+    dv
+    hash
+    replyCount
+    voteFlag
 }
 
 fragment resTopic on ResTopic{
-    ...resBase
-}
-
-fragment resForkBase on ResFork{
-    fork{
-        ...topicFork
+    #
+    id
+    topic{
+        ...topic
     }
+    date
+    self
+    uv
+    dv
+    hash
+    replyCount
+    voteFlag
 }
 
 fragment resFork on ResFork{
-    ...resBase
-    ...resForkBase
-}
-
-fragment resDeleteBase on ResDelete{
-    flag
+    fork{
+        ...topicFork
+    }
+    #
+    id
+    topic{
+        ...topic
+    }
+    date
+    self
+    uv
+    dv
+    hash
+    replyCount
+    voteFlag
 }
 
 fragment resDelete on ResDelete{
-    ...resBase
-    ...resDeleteBase
+    flag
+    #
+    id
+    topic{
+        ...topic
+    }
+    date
+    self
+    uv
+    dv
+    hash
+    replyCount
+    voteFlag
 }
 
 query findReses($query:ResQuery!){

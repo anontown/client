@@ -20,17 +20,12 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import { res } from "../gql/_gql/res";
-import { voteRes, delRes } from "../gql/res.gql";
-import { voteRes as voteResResult, voteResVariables } from "../gql/_gql/voteRes";
-import { delRes as delResResult, delResVariables } from "../gql/_gql/delRes";
-import { Mutation } from "react-apollo";
-import { VoteType } from "_gql/globalTypes";
+import * as G from "../../generated/graphql";
 
 interface UnconnectedResProps {
-  res: res;
+  res: G.Res.Fragment;
   user: UserStore;
-  update?: (res: res) => void;
+  update?: (res: G.Res.Fragment) => void;
 }
 
 export type ResProps = Omit<UnconnectedResProps, "user">;
@@ -72,11 +67,10 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
           msg={this.state.snackMsg}
           onHide={() => this.setState({ snackMsg: null })} />
         <div className={style.vote}>
-          <Mutation<voteResResult, voteResVariables>
-            mutation={voteRes}
+          <G.VoteRes.Component
             variables={{
               res: this.props.res.id,
-              type: this.props.res.voteFlag === "uv" ? VoteType.cv : VoteType.uv
+              type: this.props.res.voteFlag === "uv" ? G.VoteType.Cv : G.VoteType.Uv
             }}
             onCompleted={data => {
               if (this.props.update) {
@@ -93,12 +87,11 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                     color={this.props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
                 </IconButton>
               </>);
-            }}</Mutation>
-          <Mutation<voteResResult, voteResVariables>
-            mutation={voteRes}
+            }}</G.VoteRes.Component>
+          <G.VoteRes.Component
             variables={{
               res: this.props.res.id,
-              type: this.props.res.voteFlag === "dv" ? VoteType.cv : VoteType.dv
+              type: this.props.res.voteFlag === "dv" ? G.VoteType.Cv : G.VoteType.Dv
             }}
             onCompleted={data => {
               if (this.props.update) {
@@ -115,7 +108,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                     color={this.props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
                 </IconButton>
               </>);
-            }}</Mutation>
+            }}</G.VoteRes.Component>
         </div>
         <div className={style.main}>
           <div className={classNames(style.header, {
@@ -135,7 +128,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
             {this.props.res.__typename === "ResHistory"
               ? <span>トピックデータ</span>
               : null}
-            {this.props.res.__typename === "ResTopic"
+            {(this.props.res.__typename as any) === "ResTopic"
               ? <span>トピ主</span>
               : null}
             {this.props.res.__typename === "ResFork"
@@ -179,8 +172,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                 anchorOrigin={{ horizontal: "left", vertical: "top" }}
                 targetOrigin={{ horizontal: "left", vertical: "top" }}>
                 {this.props.res.self && this.props.res.__typename === "ResNormal"
-                  ? <Mutation<delResResult, delResVariables>
-                    mutation={delRes}
+                  ? <G.DelRes.Component
                     variables={{ res: this.props.res.id }}
                     onCompleted={data => {
                       if (this.props.update) {
@@ -191,7 +183,7 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
                         {error && <Snack msg={"削除に失敗しました"} />}
                         <MenuItem primaryText="削除" onClick={() => submit()} />
                       </>);
-                    }}</Mutation>
+                    }}</G.DelRes.Component>
                   : null}
                 <MenuItem primaryText="NG HASH" onClick={() => {
                   const user = this.props.user.data;
@@ -274,10 +266,10 @@ export const Res = myInject(["user"], observer(class extends React.Component<Unc
               <Md text={this.props.res.text} />
               : this.props.res.__typename === "ResHistory" ?
                 <Md text={this.props.res.history.text} />
-                : this.props.res.__typename === "ResTopic" && this.props.res.topic.__typename === "TopicOne" ?
+                : (this.props.res.__typename as any) === "ResTopic" && this.props.res.topic.__typename === "TopicOne" ?
                   <Md text={this.props.res.topic.text} />
                   : null}
-            {this.props.res.__typename === "ResTopic" && this.props.res.topic.__typename === "TopicFork"
+            {(this.props.res.__typename === "ResTopic" as any) && this.props.res.topic.__typename === "TopicFork"
               ? <div>
                 <p>
                   派生トピックが建ちました。
