@@ -23,13 +23,25 @@ import {
   Snack,
   TopicFavo,
 } from "../components";
-import { ResSeted } from "../models";
 import {
   myInject,
   TopicStore,
   UserStore,
 } from "../stores";
 import * as style from "./topic.scss";
+import { res } from "../gql/_gql/res";
+import { findReses as findResesResult, findResesVariables } from "../gql/_gql/findReses";
+import { findReses, resAdded } from "../gql/res.gql";
+
+export interface resAddedResult {
+  res: res,
+  count: number
+}
+
+export interface resAddedVariables {
+  topic: string
+}
+
 
 // TODO:NGのtransparent
 
@@ -165,25 +177,21 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                       : null}
                   </div>
                 </Paper>
-                <Scroll<ResSeted>
+                <Scroll<res, findResesResult, findResesVariables, resAddedResult, resAddedVariables>
+                  query={findReses}
+                  queryVariables={date => ({ query: { date } })}
                   className={style.reses}
-                  items={data.reses}
-                  onChangeItems={x => data.onChangeItems(x)}
                   newItemOrder="bottom"
-                  findItem={(type, date) => data.findItem(type, date)}
                   width={10}
                   debounceTime={500}
                   autoScrollSpeed={data.autoScrollSpeed}
                   isAutoScroll={data.isAutoScroll}
                   scrollNewItemChange={res => data.storageSaveDate(res.date)}
                   scrollNewItem={data.scrollNewItem}
-                  updateItem={data.updateItem}
-                  newItem={data.newItem}
                   dataToEl={res =>
                     <Paper>
                       <Res
-                        res={res}
-                        update={newRes => data.updateItem.next(newRes)} />
+                        res={res} />
                     </Paper>} />
                 {this.state.isResWrite && this.props.user.data !== null
                   ? <Paper className={style.resWrite}>

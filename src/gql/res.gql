@@ -97,3 +97,12 @@ mutation createRes($topic:String!,$name:String,$text:String!,$reply:String,$prof
         ...resNormal
     }
 }
+
+subscription resAdded($topic:ID!){
+  resAdded(topic:$topic){
+    count
+    res{
+        ...res
+    }
+  }
+}
