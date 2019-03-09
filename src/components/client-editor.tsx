@@ -2,14 +2,11 @@ import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
 import { UserData } from "../models";
 import { Errors } from "./errors";
-import { client } from "../gql/_gql/client";
-import { updateClient } from "../gql/client.gql";
-import { updateClient as updateClientResult, updateClientVariables } from "../gql/_gql/updateClient";
-import { Mutation } from "react-apollo";
+import { UpdateClient, Client } from "../../generated/graphql";
 
 interface ClientEditorProps {
-  client: client;
-  onUpdate?: (client: client) => void;
+  client: Client.Fragment;
+  onUpdate?: (client: Client.Fragment) => void;
   userData: UserData;
 }
 
@@ -28,8 +25,7 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
   }
 
   render() {
-    return (<Mutation<updateClientResult, updateClientVariables>
-      mutation={updateClient}
+    return (<UpdateClient.Component
       variables={{
         id: this.props.client.id,
         name: this.state.name,
@@ -48,6 +44,6 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
             <RaisedButton onClick={() => submit()} label="OK" />
           </form>);
         }
-      }</Mutation>);
+      }</UpdateClient.Component>);
   }
 }

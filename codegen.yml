@@ -2,12 +2,12 @@ overwrite: true
 schema: "generated/app.gql"
 documents: "./src/**/*.gql"
 generates:
-  src/generated/graphql.tsx:
+  generated/graphql.tsx:
     plugins:
       - "typescript-common"
       - "typescript-client"
       - "typescript-react-apollo"
-  src/generated/graphql.d.ts:
+  generated/graphql.d.ts:
     plugins:
       - "typescript-graphql-files-modules"
 config:
@@ -15,4 +15,4 @@ config:
       DateTime: string
     withHooks: true
     noHOC: true
-    noComponents: true
+    noComponents: false

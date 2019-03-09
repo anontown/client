@@ -12,7 +12,7 @@
     "loc": "sloc --format cli-table ./src",
     "apollo:generate": "",
     "postinstall": "npm run codegen",
-    "codegen": "wget https://raw.githubusercontent.com/anontown/server/graphql/resources/app.gql -O src/generated/app.gql&&gql-gen --config codegen.yml"
+    "codegen": "wget https://raw.githubusercontent.com/anontown/server/graphql/resources/app.gql -O generated/app.gql&&gql-gen --config codegen.yml"
   },
   "author": "",
   "license": "ISC",
