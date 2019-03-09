@@ -15,15 +15,13 @@ import {
   userSwitch,
   UserSwitchProps,
 } from "../../utils";
-import { findClients as findClientsResult, findClientsVariables } from "../../gql/_gql/findClients";
-import { findClients } from "../../gql/client.gql";
-import { useQuery } from "react-apollo-hooks";
+import * as G from "../../../generated/graphql";
 
 type DevSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 
 export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
-  const variables: findClientsVariables = { query: { self: true } };
-  const clients = useQuery<findClientsResult, findClientsVariables>(findClients, { variables });
+  const variables: G.FindClients.Variables = { query: { self: true } };
+  const clients = G.FindClients.use({ variables });
 
   return <Paper>
     <Helmet>
@@ -34,10 +32,10 @@ export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
     </Paper>
     <ClientAdd
       onAddUpdate={(cache, data) => {
-        const clients = cache.readQuery<findClientsResult, findClientsVariables>({ query: findClients, variables });
+        const clients = cache.readQuery<G.FindClients.Query, G.FindClients.Variables>({ query: G.FindClients.Document, variables });
         if (clients !== null && data.data !== undefined) {
-          cache.writeQuery<findClientsResult, findClientsVariables>({
-            query: findClients,
+          cache.writeQuery<G.FindClients.Query, G.FindClients.Variables>({
+            query: G.FindClients.Document,
             variables,
             data: { clients: clients.clients.concat([data.data.createClient]) },
           });

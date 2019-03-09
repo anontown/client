@@ -7,23 +7,19 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack, Page, Errors } from "../components";
-import { findClients } from "../gql/client.gql";
-import { createTokenGeneral } from "../gql/token.gql";
-import { findClients as findClientsResult, findClientsVariables } from "../gql/_gql/findClients";
-import { createTokenGeneral as createTokenGeneralResult, createTokenGeneralVariables } from "../gql/_gql/createTokenGeneral";
 import { userSwitch, UserSwitchProps } from "src/utils";
-import { useQuery, useMutation } from "react-apollo-hooks";
+import * as G from "../../generated/graphql";
 
 type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
   const id: string | string[] | undefined = qs.parse(props.location.search).client;
-  const clients = useQuery<findClientsResult, findClientsVariables>(findClients, {
+  const clients = G.FindClients.use({
     skip: typeof id !== "string",
     variables: { query: { id: typeof id === "string" ? [id] : [] } }
   });
-  const submit = useMutation<createTokenGeneralResult, createTokenGeneralVariables>(createTokenGeneral);
+  const submit = G.CreateTokenGeneral.use();
 
 
   return <Page>

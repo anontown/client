@@ -10,13 +10,8 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack, Errors } from "../../components";
-import { findUser, updateUser } from "../../gql/user.gql";
-import { findUser as findUserResult } from "../../gql/_gql/findUser";
-import { updateUser as updateUserResult, updateUserVariables } from "../../gql/_gql/updateUser";
-import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../../gql/_gql/createTokenMaster";
-import { createTokenMaster } from "../../gql/token.gql";
 import { UserSwitchProps, userSwitch } from "src/utils";
-import { useQuery, useMutation } from "react-apollo-hooks";
+import * as G from "../../../generated/graphql";
 
 type AccountSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -25,7 +20,7 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
   const [newPass, setNewPass] = React.useState("");
   const [oldPass, setOldPass] = React.useState("");
   const [sn, setSn] = React.useState("");
-  const user = useQuery<findUserResult>(findUser);
+  const user = G.FindUser.use();
   React.useEffect(() => {
     if (user.data !== undefined) {
       setSn(user.data.user.sn);
@@ -33,8 +28,8 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
       setSn("");
     }
   }, [user.data, setSn]);
-  const updateUserSubmit = useMutation<updateUserResult, updateUserVariables>(updateUser);
-  const createTokenMasterSubmit = useMutation<createTokenMasterResult, createTokenMasterVariables>(createTokenMaster);
+  const updateUserSubmit = G.UpdateUser.use();
+  const createTokenMasterSubmit = G.CreateTokenMaster.use();
 
   return <Paper>
     <Helmet>

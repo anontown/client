@@ -29,19 +29,7 @@ import {
   UserStore,
 } from "../stores";
 import * as style from "./topic.scss";
-import { res } from "../gql/_gql/res";
-import { findReses as findResesResult, findResesVariables } from "../gql/_gql/findReses";
-import { findReses, resAdded } from "../gql/res.gql";
-
-export interface resAddedResult {
-  res: res,
-  count: number
-}
-
-export interface resAddedVariables {
-  topic: string
-}
-
+import * as G from "../../generated/graphql";
 
 // TODO:NGのtransparent
 
@@ -177,8 +165,8 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                       : null}
                   </div>
                 </Paper>
-                <Scroll<res, findResesResult, findResesVariables, resAddedResult, resAddedVariables>
-                  query={findReses}
+                <Scroll<G.Res.Fragment, G.FindReses.Query, G.FindReses.Variables, G.ResAdded.Subscription, G.ResAdded.Variables>
+                  query={G.FindReses.Document}
                   queryVariables={date => ({ query: { date } })}
                   className={style.reses}
                   newItemOrder="bottom"

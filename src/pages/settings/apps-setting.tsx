@@ -11,33 +11,27 @@ import {
 } from "react-router-dom";
 import { Snack, Errors } from "../../components";
 import { userSwitch, UserSwitchProps } from "src/utils";
-import { findClients } from "../../gql/client.gql";
-import { findTokens, delTokenClient } from "../../gql/token.gql";
-import { findClients as findClientsResult, findClientsVariables } from "../../gql/_gql/findClients";
-import { findTokens as findTokensResult } from "../../gql/_gql/findTokens";
-import { delTokenClient as delTokenClientResult, delTokenClientVariables } from "../../gql/_gql/delTokenClient";
-import { useMutation, useQuery } from "react-apollo-hooks";
-import { tokenGeneral } from "src/gql/_gql/tokenGeneral";
+import * as G from "../../../generated/graphql";
 
 type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
-  const tokens = useQuery<findTokensResult>(findTokens, { variables: {} });
-  const variables: findClientsVariables = {
+  const tokens = G.FindTokens.use({ variables: {} });
+  const variables: G.FindClients.Variables = {
     query: {
       id: tokens.data !== undefined
         ? Array.from(new Set(tokens.data.tokens
-          .filter((x): x is tokenGeneral => x.__typename === "TokenGeneral")
+          .filter((x): x is G.TokenGeneral.Fragment => x.__typename === "TokenGeneral")
           .map(x => x.client.id)))
         : []
     }
   };
-  const clients = useQuery<findClientsResult, findClientsVariables>(findClients, {
+  const clients = G.FindClients.use({
     skip: tokens === undefined,
     variables,
   });
-  const delToken = useMutation<delTokenClientResult, delTokenClientVariables>(delTokenClient);
+  const delToken = G.DelTokenClient.use();
 
   return <div>
     <Helmet>
@@ -59,10 +53,10 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
           try {
             await delToken({
               variables: { client: c.id }, update: (cache) => {
-                const clients = cache.readQuery<findClientsResult, findClientsVariables>({ query: findClients, variables });
+                const clients = cache.readQuery<G.FindClients.Query, G.FindClients.Variables>({ query: G.FindClients.Document, variables });
                 if (clients !== null) {
-                  cache.writeQuery<findClientsResult, findClientsVariables>({
-                    query: findClients,
+                  cache.writeQuery<G.FindClients.Query, G.FindClients.Variables>({
+                    query: G.FindClients.Document,
                     variables,
                     data: { clients: clients.clients.filter(x => x.id !== c.id) },
                   });

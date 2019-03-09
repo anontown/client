@@ -15,10 +15,8 @@ import {
   Errors,
   Page,
 } from "../components";
-import { createTokenMaster } from "../gql/token.gql";
-import { createTokenMaster as createTokenMasterResult, createTokenMasterVariables } from "../gql/_gql/createTokenMaster";
+import * as G from "../../generated/graphql";
 import { useUserContext, createUserData } from "src/utils";
-import { useMutation } from "react-apollo-hooks";
 
 type LoginPageProps = RouteComponentProps<{}>;
 
@@ -27,7 +25,7 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
   const [pass, setPass] = React.useState("");
   const [errors, setErrors] = React.useState<string[] | undefined>(undefined);
   const userContext = useUserContext();
-  const submit = useMutation<createTokenMasterResult, createTokenMasterVariables>(createTokenMaster);
+  const submit = G.CreateTokenMaster.use();
 
   return <Page>
     <Helmet>
@@ -61,7 +59,7 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
                 }
               });
               if (token.data !== undefined) {
-                userContext.update(await createUserData(token.data.createTokenMaster))
+                userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMaster.Fragment))
               }
             } catch{
               setErrors(["ログインに失敗しました。"]);

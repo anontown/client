@@ -9,9 +9,8 @@ import { Page, Profile, Snack } from "../components";
 import {
   withModal,
 } from "../utils";
-import { findProfiles } from "../gql/profile.gql";
-import { findProfiles as findProfilesResult, findProfilesVariables } from "../gql/_gql/findProfiles";
 import { Query } from "react-apollo";
+import * as G from "../../generated/graphql";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -30,8 +29,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
       <Helmet>
         <title>プロフィール</title>
       </Helmet>
-      <Query<findProfilesResult, findProfilesVariables>
-        query={findProfiles}
+      <G.FindProfiles.Component
         variables={{ query: { id: [this.props.match.params.id] } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
@@ -46,7 +44,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
             </Paper>
           );
         }}
-      </Query>
+      </G.FindProfiles.Component>
     </div>;
   }
 });
