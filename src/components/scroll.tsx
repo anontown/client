@@ -32,7 +32,7 @@ export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables
   subscription: DocumentNode;
   subscriptionVariables: SubscriptionVariables;
   subscriptionResultConverter: (result: SubscriptionResult) => T;
-  onSubscription: (item: T) => void;
+  onSubscription: (item: SubscriptionResult) => void;
   width: number;
   debounceTime: number;
   autoScrollSpeed: number;
@@ -465,7 +465,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
             data: props.queryResultMapper(data, x => [subsData, ...x])
           });
         }
-        props.onSubscription(subsData);
+        props.onSubscription(subscriptionData.data);
       }
     }
   });
