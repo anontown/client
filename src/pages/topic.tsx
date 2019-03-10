@@ -167,7 +167,12 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                 </Paper>
                 <Scroll<G.Res.Fragment, G.FindReses.Query, G.FindReses.Variables, G.ResAdded.Subscription, G.ResAdded.Variables>
                   query={G.FindReses.Document}
-                  queryVariables={date => ({ query: { date } })}
+                  queryVariables={date => ({ query: { date, topic: data.topic.id } })}
+                  queryResultConverter={x => x.reses}
+                  queryResultMapper={(x, f) => ({ ...x, reses: f(x.reses) })}
+                  subscription={G.ResAdded.Document}
+                  subscriptionVariables={{ topic: data.topic.id }}
+                  subscriptionResultConverter={x => x.resAdded.res}
                   className={style.reses}
                   newItemOrder="bottom"
                   width={10}
@@ -176,6 +181,8 @@ export const TopicPage = withRouter(myInject(["user", "topic"],
                   isAutoScroll={data.isAutoScroll}
                   scrollNewItemChange={res => data.storageSaveDate(res.date)}
                   scrollNewItem={data.scrollNewItem}
+                  initDate
+                  onSubscription
                   dataToEl={res =>
                     <Paper>
                       <Res
