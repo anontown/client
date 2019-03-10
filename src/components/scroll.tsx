@@ -2,10 +2,10 @@ import * as React from "react";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
-import { list, useLock } from "../utils";
-import { DateQuery, DateType } from "../../_gql/globalTypes";
+import { useLock } from "../utils";
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription } from "react-apollo-hooks";
+import * as G from "../../generated/graphql";
 
 interface ListItemData {
   id: string;
@@ -26,7 +26,7 @@ interface ItemScrollData<T extends ListItemData> {
 export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
   newItemOrder: "top" | "bottom";
   query: DocumentNode;
-  queryVariables: (dateQuery: DateQuery) => QueryVariables;
+  queryVariables: (dateQuery: G.DateQuery) => QueryVariables;
   queryResultConverter: (result: QueryResult) => T[];
   queryResultMapper: (result: QueryResult, f: (data: T[]) => T[]) => QueryResult;
   subscription: DocumentNode;
@@ -72,7 +72,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const variables = props.queryVariables({
     date: props.initDate,
-    type: DateType.lte
+    type: G.DateType.Lte
   });
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
     variables: variables
@@ -257,7 +257,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         await data.fetchMore({
           variables: props.queryVariables({
             date: first.date,
-            type: DateType.gt
+            type: G.DateType.Gt
           }),
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult) return prev;
@@ -311,7 +311,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         await data.fetchMore({
           variables: props.queryVariables({
             date: old.date,
-            type: DateType.lt
+            type: G.DateType.Lt
           }),
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult) return prev;
@@ -337,7 +337,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       await data.fetchMore({
         variables: props.queryVariables({
           date: date,
-          type: DateType.lte
+          type: G.DateType.Lte
         }),
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
