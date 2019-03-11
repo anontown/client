@@ -45,6 +45,7 @@ export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables
   dataToEl: (data: T) => JSX.Element;
   style?: React.CSSProperties;
   className?: string;
+  changeItems: (items: T[]) => void;
 }
 
 function elHeight(el: HTMLElement) {
@@ -77,6 +78,12 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
     variables: variables
   });
+
+  React.useEffect(() => {
+    if (data.data !== undefined) {
+      props.changeItems(props.queryResultConverter(data.data));
+    }
+  }, [data.data]);
 
   const idElMap = React.useRef(new Map<string, HTMLDivElement>());
   React.useEffect(() => {

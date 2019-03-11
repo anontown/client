@@ -6,7 +6,6 @@ import {
   Slider,
   Toggle,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -20,18 +19,12 @@ import {
   Res,
   ResWrite,
   Scroll,
-  Snack,
   TopicFavo,
 } from "../components";
-import {
-  myInject,
-  TopicStore,
-  UserStore,
-} from "../stores";
 import * as style from "./topic.scss";
 import * as G from "../../generated/graphql";
 import { useUserContext } from "src/utils";
-
+import * as rx from "rxjs";
 // TODO:NGのtransparent
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
@@ -43,6 +36,60 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
   const [isAutoScrollDialog, setIsAutoScrollDialog] = React.useState(false);
   const [isNGDialog, setIsNGDialog] = React.useState(false);
   const user = useUserContext();
+  const topics = G.FindTopics.use({ variables: { query: { id: [props.match.params.id] } } });
+  const topic = topics.data !== undefined ? topics.data.topics[0] : null;
+  const [autoScrollSpeed, setAutoScrollSpeed] = React.useState(15);
+  const [isAutoScroll, setIsAutoScroll] = React.useState(false);
+  const scrollNewItem = React.useRef(new rx.ReplaySubject<string>(1));
+  const items = React.useRef<G.Res.Fragment[]>([]);
+  let initDate;
+  if (user.value !== null) {
+    const topicRead = user.value.storage.topicRead.get(props.match.params.id);
+    if (topicRead !== undefined) {
+      initDate = topicRead.date;
+    } else {
+      initDate = new Date().toISOString();
+    }
+  } else {
+    initDate = new Date().toISOString();
+  }
+
+  const isFavo = user.value !== null && user.value.storage.topicFavo.has(props.match.params.id);
+
+  function storageSaveDate(date: string | null) {
+    if (user.value === null || topic === null) {
+      return;
+    }
+    const storage = user.value.storage;
+    if (date === null) {
+      const storageRes = storage.topicRead.get(props.match.params.id);
+      if (storageRes !== undefined) {
+        date = storageRes.date;
+      } else {
+        const first = items.current.first();
+        if (first === undefined) {
+          return;
+        }
+        date = first.date;
+      }
+    }
+    const dateNonNull = date;
+    user.update({
+      ...user.value,
+      storage: {
+        ...storage,
+        topicRead: storage.topicRead.update(topic.id, x => ({
+          ...x,
+          date: dateNonNull,
+          count: topic.resCount,
+        })),
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    storageSaveDate(null);
+  }, [topic !== null ? topic.resCount : null]);
 
   return <Page
     disableScroll={true}
@@ -52,314 +99,161 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
     <Helmet>
       <title>トピック</title>
     </Helmet>
-    <Snack
-      msg={this.props.topic.msg}
-      onHide={() => this.props.topic.clearMsg()} />
-    {this.props.topic.data !== null
-      ? (() => {
-        const data = this.props.topic.data;
-        return <>
+    {topic !== null
+      ? <>
+        <Dialog
+          title="自動スクロール"
+          open={isAutoScrollDialog}
+          autoScrollBodyContent={true}
+          onRequestClose={() => setIsAutoScrollDialog(false)}>
+          <Toggle
+            label="自動スクロール"
+            toggled={isAutoScroll}
+            onToggle={(_e, v) => setIsAutoScroll(v)} />
+          <Slider
+            max={30}
+            value={autoScrollSpeed}
+            onChange={(_e, v) => setAutoScrollSpeed(v)} />
+        </Dialog>
+        {user.value !== null ?
           <Dialog
-            title="自動スクロール"
-            open={isAutoScrollDialog}
+            title="NG"
+            open={isNGDialog}
             autoScrollBodyContent={true}
-            onRequestClose={() => setIsAutoScrollDialog(false)}>
-            <Toggle
-              label="自動スクロール"
-              toggled={data.isAutoScroll}
-              onToggle={(_e, v) => data.setIsAutoScroll(v)} />
-            <Slider
-              max={30}
-              value={data.autoScrollSpeed}
-              onChange={(_e, v) => data.setAutoScrollSpeed(v)} />
+            onRequestClose={() => setIsNGDialog(false)}>
+            <NG
+              userData={user.value}
+              onChangeStorage={v => {
+                if (user.value !== null) {
+                  user.update({
+                    ...user.value,
+                    storage: v
+                  });
+                }
+              }} />
           </Dialog>
-          {user.value !== null ?
-            <Dialog
-              title="NG"
-              open={isNGDialog}
-              autoScrollBodyContent={true}
-              onRequestClose={() => setIsNGDialog(false)}>
-              <NG
+          : null
+        }
+        <div className={style.main}>
+          <Helmet>
+            <title>{topic.title}</title>
+          </Helmet>
+          <Paper className={style.header}>
+            <div className={style.subject}>
+              {topic.__typename === "TopicFork"
+                ? <FontIcon className="material-icons">call_split</FontIcon>
+                : null}
+              {topic.__typename === "TopicOne"
+                ? <FontIcon className="material-icons">looks_one</FontIcon>
+                : null}
+              {topic.title}
+            </div>
+            <div>
+              <IconButton containerElement={<Link to={{
+                pathname: `/topic/${props.match.params.id}/data`,
+                state: { modal: true },
+              }} />}>
+                <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
+              </IconButton>
+              {topic.__typename === "TopicNormal"
+                ? <IconButton containerElement={<Link to={{
+                  pathname: `/topic/${props.match.params.id}/fork`,
+                  state: { modal: true },
+                }} />}>
+                  <FontIcon className="material-icons">call_split</FontIcon>
+                </IconButton>
+                : null}
+              {topic.__typename === "TopicNormal" && user.value !== null
+                ? <IconButton containerElement={<Link to={{
+                  pathname: `/topic/${props.match.params.id}/edit`,
+                  state: { modal: true },
+                }} />}>
+                  <FontIcon className="material-icons">settings</FontIcon>
+                </IconButton>
+                : null}
+              {user.value !== null
+                ? <IconButton onClick={() => {
+                  if (user.value === null) {
+                    return;
+                  }
+                  const storage = user.value.storage;
+                  const tf = storage.topicFavo;
+                  user.update({
+                    ...user.value,
+                    storage: {
+                      ...storage,
+                      topicFavo: isFavo ? tf.delete(props.match.params.id) : tf.add(props.match.params.id),
+                    }
+                  })
+                }}>
+                  {isFavo
+                    ? <FontIcon className="material-icons">star</FontIcon>
+                    : <FontIcon className="material-icons">star_border</FontIcon>}
+                </IconButton>
+                : null}
+              <IconButton onClick={() => setIsAutoScrollDialog(true)}>
+                <FontIcon className="material-icons">play_circle_outline</FontIcon>
+              </IconButton>
+              <IconButton onClick={() => setIsNGDialog(true)}>
+                <FontIcon className="material-icons">mood_bad</FontIcon>
+              </IconButton>
+              {user.value !== null && topic.active
+                ? <IconButton onClick={() => setIsResWrite(!isResWrite)}>
+                  <FontIcon className="material-icons">create</FontIcon>
+                </IconButton>
+                : null}
+            </div>
+          </Paper>
+          <Scroll<G.Res.Fragment, G.FindReses.Query, G.FindReses.Variables, G.ResAdded.Subscription, G.ResAdded.Variables>
+            query={G.FindReses.Document}
+            queryVariables={date => ({ query: { date, topic: topic.id } })}
+            queryResultConverter={x => x.reses}
+            queryResultMapper={(x, f) => ({ ...x, reses: f(x.reses) })}
+            subscription={G.ResAdded.Document}
+            subscriptionVariables={{ topic: topic.id }}
+            subscriptionResultConverter={x => x.resAdded.res}
+            className={style.reses}
+            newItemOrder="bottom"
+            width={10}
+            debounceTime={500}
+            autoScrollSpeed={autoScrollSpeed}
+            isAutoScroll={isAutoScroll}
+            scrollNewItemChange={res => storageSaveDate(res.date)}
+            scrollNewItem={scrollNewItem.current}
+            initDate={initDate}
+            onSubscription={x => {
+              topics.updateQuery(t => ({
+                ...t,
+                topics: t.topics.map(t => ({ ...t, resCount: x.resAdded.count }))
+              }));
+            }}
+            dataToEl={res =>
+              <Paper>
+                <Res
+                  res={res} />
+              </Paper>}
+            changeItems={x => {
+              items.current = x;
+            }} />
+          {isResWrite && user.value !== null
+            ? <Paper className={style.resWrite}>
+              <ResWrite
+                topic={topic.id}
+                reply={null}
                 userData={user.value}
-                onChangeStorage={v => {
+                changeStorage={x => {
                   if (user.value !== null) {
                     user.update({
                       ...user.value,
-                      storage: v
-                    });
+                      storage: x
+                    })
                   }
                 }} />
-            </Dialog>
-            : null
-          }
-          <div className={style.main}>
-            <Helmet>
-              <title>{data.topic.title}</title>
-            </Helmet>
-            <Paper className={style.header}>
-              <div className={style.subject}>
-                {data.topic.type === "fork"
-                  ? <FontIcon className="material-icons">call_split</FontIcon>
-                  : null}
-                {data.topic.type === "one"
-                  ? <FontIcon className="material-icons">looks_one</FontIcon>
-                  : null}
-                {data.topic.title}
-              </div>
-              <div>
-                <IconButton containerElement={<Link to={{
-                  pathname: `/topic/${props.match.params.id}/data`,
-                  state: { modal: true },
-                }} />}>
-                  <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
-                </IconButton>
-                {data.topic.type === "normal"
-                  ? <IconButton containerElement={<Link to={{
-                    pathname: `/topic/${props.match.params.id}/fork`,
-                    state: { modal: true },
-                  }} />}>
-                    <FontIcon className="material-icons">call_split</FontIcon>
-                  </IconButton>
-                  : null}
-                {data.topic.type === "normal" && user.value !== null
-                  ? <IconButton containerElement={<Link to={{
-                    pathname: `/topic/${props.match.params.id}/edit`,
-                    state: { modal: true },
-                  }} />}>
-                    <FontIcon className="material-icons">settings</FontIcon>
-                  </IconButton>
-                  : null}
-                {user.value !== null
-                  ? <IconButton onClick={() => data.favo()}>
-                    {data.isFavo
-                      ? <FontIcon className="material-icons">star</FontIcon>
-                      : <FontIcon className="material-icons">star_border</FontIcon>}
-                  </IconButton>
-                  : null}
-                <IconButton onClick={() => setIsAutoScrollDialog(true)}>
-                  <FontIcon className="material-icons">play_circle_outline</FontIcon>
-                </IconButton>
-                <IconButton onClick={() => setIsNGDialog(true)}>
-                  <FontIcon className="material-icons">mood_bad</FontIcon>
-                </IconButton>
-                {user.value !== null && data.topic.active
-                  ? <IconButton onClick={() => setIsResWrite(!isResWrite)}>
-                    <FontIcon className="material-icons">create</FontIcon>
-                  </IconButton>
-                  : null}
-              </div>
             </Paper>
-            <Scroll<G.Res.Fragment, G.FindReses.Query, G.FindReses.Variables, G.ResAdded.Subscription, G.ResAdded.Variables>
-              query={G.FindReses.Document}
-              queryVariables={date => ({ query: { date, topic: data.topic.id } })}
-              queryResultConverter={x => x.reses}
-              queryResultMapper={(x, f) => ({ ...x, reses: f(x.reses) })}
-              subscription={G.ResAdded.Document}
-              subscriptionVariables={{ topic: data.topic.id }}
-              subscriptionResultConverter={x => x.resAdded.res}
-              className={style.reses}
-              newItemOrder="bottom"
-              width={10}
-              debounceTime={500}
-              autoScrollSpeed={data.autoScrollSpeed}
-              isAutoScroll={data.isAutoScroll}
-              scrollNewItemChange={res => data.storageSaveDate(res.date)}
-              scrollNewItem={data.scrollNewItem}
-              initDate
-              onSubscription
-              dataToEl={res =>
-                <Paper>
-                  <Res
-                    res={res} />
-                </Paper>} />
-            {isResWrite && user.value !== null
-              ? <Paper className={style.resWrite}>
-                <ResWrite
-                  topic={data.topic.id}
-                  reply={null}
-                  userData={user.value}
-                  changeStorage={x => {
-                    if (user.value !== null) {
-                      user.update({
-                        ...user.value,
-                        storage: x
-                      })
-                    }
-                  }} />
-              </Paper>
-              : null}
-          </div>
-        </>;
-      })()
+            : null}
+        </div>
+      </>
       : null
     }
   </Page>;
 });
-
-export interface TopicPageState {
-  isResWrite: boolean;
-  isAutoScrollDialog: boolean;
-  isNGDialog: boolean;
-}
-
-export const _TopicPage = withRouter(myInject(["user", "topic"],
-  observer(class extends React.Component<TopicPageProps, TopicPageState> {
-    initState: TopicPageState = {
-      isResWrite: false,
-      isAutoScrollDialog: false,
-      isNGDialog: false,
-    };
-
-    constructor(props: TopicPageProps) {
-      super(props);
-      this.state = this.initState;
-      this.props.topic.load(props.match.params.id);
-    }
-
-    componentWillReceiveProps(nextProps: TopicPageProps) {
-      if (this.props.match.params.id !== nextProps.match.params.id) {
-        this.setState(this.initState, () => {
-          this.props.topic.load(nextProps.match.params.id);
-        });
-      }
-    }
-
-    render() {
-      return <Page
-        disableScroll={true}
-        sidebar={this.props.user.data !== null
-          ? <TopicFavo detail={false} userData={this.props.user.data} />
-          : undefined}>
-        <Helmet>
-          <title>トピック</title>
-        </Helmet>
-        <Snack
-          msg={this.props.topic.msg}
-          onHide={() => this.props.topic.clearMsg()} />
-        {this.props.topic.data !== null
-          ? (() => {
-            const data = this.props.topic.data;
-            return <>
-              <Dialog
-                title="自動スクロール"
-                open={this.state.isAutoScrollDialog}
-                autoScrollBodyContent={true}
-                onRequestClose={() => this.setState({ isAutoScrollDialog: false })}>
-                <Toggle
-                  label="自動スクロール"
-                  toggled={data.isAutoScroll}
-                  onToggle={(_e, v) => data.setIsAutoScroll(v)} />
-                <Slider
-                  max={30}
-                  value={data.autoScrollSpeed}
-                  onChange={(_e, v) => data.setAutoScrollSpeed(v)} />
-              </Dialog>
-              {this.props.user.data !== null ?
-                <Dialog
-                  title="NG"
-                  open={this.state.isNGDialog}
-                  autoScrollBodyContent={true}
-                  onRequestClose={() => this.setState({ isNGDialog: false })}>
-                  <NG
-                    userData={this.props.user.data}
-                    onChangeStorage={v => this.props.user.setStorage(v)} />
-                </Dialog>
-                : null
-              }
-              <div className={style.main}>
-                <Helmet>
-                  <title>{data.topic.title}</title>
-                </Helmet>
-                <Paper className={style.header}>
-                  <div className={style.subject}>
-                    {data.topic.type === "fork"
-                      ? <FontIcon className="material-icons">call_split</FontIcon>
-                      : null}
-                    {data.topic.type === "one"
-                      ? <FontIcon className="material-icons">looks_one</FontIcon>
-                      : null}
-                    {data.topic.title}
-                  </div>
-                  <div>
-                    <IconButton containerElement={<Link to={{
-                      pathname: `/topic/${this.props.match.params.id}/data`,
-                      state: { modal: true },
-                    }} />}>
-                      <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
-                    </IconButton>
-                    {data.topic.type === "normal"
-                      ? <IconButton containerElement={<Link to={{
-                        pathname: `/topic/${this.props.match.params.id}/fork`,
-                        state: { modal: true },
-                      }} />}>
-                        <FontIcon className="material-icons">call_split</FontIcon>
-                      </IconButton>
-                      : null}
-                    {data.topic.type === "normal" && this.props.user.data !== null
-                      ? <IconButton containerElement={<Link to={{
-                        pathname: `/topic/${this.props.match.params.id}/edit`,
-                        state: { modal: true },
-                      }} />}>
-                        <FontIcon className="material-icons">settings</FontIcon>
-                      </IconButton>
-                      : null}
-                    {this.props.user.data !== null
-                      ? <IconButton onClick={() => data.favo()}>
-                        {data.isFavo
-                          ? <FontIcon className="material-icons">star</FontIcon>
-                          : <FontIcon className="material-icons">star_border</FontIcon>}
-                      </IconButton>
-                      : null}
-                    <IconButton onClick={() => this.setState({ isAutoScrollDialog: true })}>
-                      <FontIcon className="material-icons">play_circle_outline</FontIcon>
-                    </IconButton>
-                    <IconButton onClick={() => this.setState({ isNGDialog: true })}>
-                      <FontIcon className="material-icons">mood_bad</FontIcon>
-                    </IconButton>
-                    {this.props.user.data !== null && data.topic.active
-                      ? <IconButton onClick={() => this.setState({ isResWrite: !this.state.isResWrite })}>
-                        <FontIcon className="material-icons">create</FontIcon>
-                      </IconButton>
-                      : null}
-                  </div>
-                </Paper>
-                <Scroll<G.Res.Fragment, G.FindReses.Query, G.FindReses.Variables, G.ResAdded.Subscription, G.ResAdded.Variables>
-                  query={G.FindReses.Document}
-                  queryVariables={date => ({ query: { date, topic: data.topic.id } })}
-                  queryResultConverter={x => x.reses}
-                  queryResultMapper={(x, f) => ({ ...x, reses: f(x.reses) })}
-                  subscription={G.ResAdded.Document}
-                  subscriptionVariables={{ topic: data.topic.id }}
-                  subscriptionResultConverter={x => x.resAdded.res}
-                  className={style.reses}
-                  newItemOrder="bottom"
-                  width={10}
-                  debounceTime={500}
-                  autoScrollSpeed={data.autoScrollSpeed}
-                  isAutoScroll={data.isAutoScroll}
-                  scrollNewItemChange={res => data.storageSaveDate(res.date)}
-                  scrollNewItem={data.scrollNewItem}
-                  initDate
-                  onSubscription
-                  dataToEl={res =>
-                    <Paper>
-                      <Res
-                        res={res} />
-                    </Paper>} />
-                {this.state.isResWrite && this.props.user.data !== null
-                  ? <Paper className={style.resWrite}>
-                    <ResWrite
-                      topic={data.topic.id}
-                      reply={null}
-                      userData={this.props.user.data}
-                      changeStorage={x => this.props.user.setStorage(x)} />
-                  </Paper>
-                  : null}
-              </div>
-            </>;
-          })()
-          : null
-        }
-      </Page>;
-    }
-  })));
