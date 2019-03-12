@@ -7,16 +7,16 @@ import {
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
 import {
-  withModal, UserSwitchProps, userSwitch,
+  withModal
 } from "../utils";
 import * as G from "../../generated/graphql";
 
-type ResHashBaseProps = RouteComponentProps<{ hash: string }> & UserSwitchProps;
+type ResHashBaseProps = RouteComponentProps<{ hash: string }>;
 
 interface ResHashBaseState {
 }
 
-const ResHashBase = userSwitch(withRouter(class extends React.Component<ResHashBaseProps, ResHashBaseState> {
+const ResHashBase = withRouter(class extends React.Component<ResHashBaseProps, ResHashBaseState> {
   constructor(props: ResHashBaseProps) {
     super(props);
   }
@@ -40,7 +40,7 @@ const ResHashBase = userSwitch(withRouter(class extends React.Component<ResHashB
       </G.FindReses.Component>
     </div>;
   }
-}));
+});
 
 export function ResHashPage() {
   return <Page><ResHashBase /></Page>;
