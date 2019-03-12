@@ -7,16 +7,16 @@ import {
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
 import {
-  withModal, UserSwitchProps, userSwitch,
+  withModal
 } from "../utils";
 import * as G from "../../generated/graphql";
 
-type ResReplyBaseProps = RouteComponentProps<{ id: string }> & UserSwitchProps;
+type ResReplyBaseProps = RouteComponentProps<{ id: string }>;
 
 interface ResReplyBaseState {
 }
 
-const ResReplyBase = userSwitch(withRouter(class extends React.Component<ResReplyBaseProps, ResReplyBaseState> {
+const ResReplyBase = withRouter(class extends React.Component<ResReplyBaseProps, ResReplyBaseState> {
   constructor(props: ResReplyBaseProps) {
     super(props);
   }
@@ -38,7 +38,7 @@ const ResReplyBase = userSwitch(withRouter(class extends React.Component<ResRepl
       </G.FindReses.Component>
     </div>;
   }
-}));
+});
 
 export function ResReplyPage() {
   return <Page><ResReplyBase /></Page>;
