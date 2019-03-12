@@ -8,9 +8,7 @@ import { Page, Snack, TopicData } from "../components";
 import {
   withModal,
 } from "../utils";
-import { findTopics } from "../gql/topic.gql";
-import { findTopics as findTopicsResult, findTopicsVariables } from "../gql/_gql/findTopics";
-import { Query } from "react-apollo";
+import * as G from "../../generated/graphql";
 
 interface TopicDataBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -28,8 +26,7 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
     this.props.match.params.id
 
     return <Paper zDepth={this.props.zDepth}>
-      <Query<findTopicsResult, findTopicsVariables>
-        query={findTopics}
+      <G.FindTopics.Component
         variables={{ query: { id: [this.props.match.params.id] } }}>{
           ({ loading, error, data }) => {
             if (loading) return "Loading...";
@@ -39,7 +36,7 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
               <TopicData topic={data.topics[0]} />
             </Paper>);
           }
-        }</Query>
+        }</G.FindTopics.Component>
     </Paper>;
   }
 });
