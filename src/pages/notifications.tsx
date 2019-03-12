@@ -2,67 +2,108 @@ import {
   Paper,
   RaisedButton,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
-  withRouter,
 } from "react-router-dom";
 import {
   Page,
   Res,
-  Snack,
-  UserSwitch,
 } from "../components";
-import {
-  myInject,
-  NotificationsStore,
-  UserStore,
-} from "../stores";
+import { userSwitch, UserSwitchProps } from "src/utils";
+import * as G from "../../generated/graphql";
 
-interface NotificationsPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-  notifications: NotificationsStore;
-}
+type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
-export interface NotificationsPageState {
-}
+export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => {
+  const reses = G.FindReses.use({
+    variables: {
+      query: {
+        date: {
+          date: new Date().toISOString(),
+          type: G.DateType.Lte
+        },
+        notice: true
+      }
+    }
+  });
 
-export const NotificationsPage =
-  withRouter(
-    myInject(["user", "notifications"],
-      observer(class extends React.Component<NotificationsPageProps, NotificationsPageState> {
-        constructor(props: NotificationsPageProps) {
-          super(props);
-          this.props.notifications.load();
-        }
-
-        render() {
-          return (
-            <Page>
-              <Helmet>
-                <title>通知</title>
-              </Helmet>
-              <Snack
-                msg={this.props.notifications.msg}
-                onHide={() => this.props.notifications.clearMsg()} />
-              <UserSwitch userData={this.props.user.data} render={() => <div>
-                <div>
-                  <RaisedButton label="最新" onClick={() => this.props.notifications.readNew()} />
-                </div>
-                <div>
-                  {this.props.notifications.reses.map(r => <Paper key={r.id}>
-                    <Res
-                      res={r}
-                      update={newRes => this.props.notifications.update(newRes)} />
-                  </Paper>)}
-                </div>
-                <div>
-                  <RaisedButton label="前" onClick={() => this.props.notifications.readOld()} />
-                </div>
-              </div>} />
-            </Page>
-          );
-        }
-      })));
+  return (
+    <Page>
+      <Helmet>
+        <title>通知</title>
+      </Helmet>
+      <div>
+        <div>
+          <RaisedButton label="最新" onClick={async () => {
+            if (reses.data === undefined) {
+              return;
+            }
+            const first = reses.data.reses.first();
+            if (first === undefined) {
+              await reses.refetch();
+            } else {
+              reses.fetchMore({
+                variables: {
+                  query: {
+                    date: {
+                      date: first.date,
+                      type: G.DateType.Gt
+                    },
+                    notice: true
+                  },
+                },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  if (!fetchMoreResult) return prev;
+                  return {
+                    ...prev,
+                    msgs: [...fetchMoreResult.reses, ...prev.reses]
+                  }
+                }
+              });
+            }
+          }} />
+        </div>
+        <div>
+          {reses.data !== undefined
+            ? reses.data.reses.map(r => <Paper key={r.id}>
+              <Res
+                res={r} />
+            </Paper>)
+            : null}
+        </div>
+        <div>
+          <RaisedButton label="前" onClick={async () => {
+            if (reses.data === undefined) {
+              return;
+            }
+            const last = reses.data.reses.last();
+            if (last === undefined) {
+              await reses.refetch();
+            } else {
+              reses.fetchMore({
+                variables: {
+                  query: {
+                    date: {
+                      date: last.date,
+                      type: G.DateType.Lt
+                    },
+                    notice: true
+                  },
+                },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  if (!fetchMoreResult) return prev;
+                  return {
+                    ...prev,
+                    msgs: [...prev.reses, ...fetchMoreResult.reses]
+                  }
+                }
+              });
+            }
+          }} />
+        </div>
+      </div>
+    </Page>
+  );
+});
