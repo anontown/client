@@ -7,7 +7,6 @@ import {
   SelectField,
   TextField,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -19,17 +18,12 @@ import {
   MdEditor,
   Page,
   TagsInput,
-  UserSwitch,
 } from "../components";
-import { myInject, UserStore } from "../stores";
-import { createTopicNormal, createTopicOne } from "../gql/topic.gql";
-import { createTopicNormal as createTopicNormalResult, createTopicNormalVariables } from "../gql/_gql/createTopicNormal";
-import { createTopicOne as createTopicOneResult, createTopicOneVariables } from "../gql/_gql/createTopicOne";
 import { Mutation } from "react-apollo";
+import { UserSwitchProps, userSwitch } from "src/utils";
+import * as G from "../../generated/graphql";
 
-interface TopicCreatePageProps extends RouteComponentProps<{}> {
-  user: UserStore;
-}
+type TopicCreatePageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export interface TopicCreatePageState {
   title: string;
@@ -40,7 +34,7 @@ export interface TopicCreatePageState {
 }
 
 export const TopicCreatePage =
-  withRouter(myInject(["user"], observer(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
+  userSwitch(withRouter(class extends React.Component<TopicCreatePageProps, TopicCreatePageState> {
     constructor(props: TopicCreatePageProps) {
       super(props);
       this.state = {
@@ -57,9 +51,9 @@ export const TopicCreatePage =
         <Helmet>
           <title>トピック作成</title>
         </Helmet>
-        <UserSwitch userData={this.props.user.data} render={() => <Paper>
-          <Mutation<createTopicNormalResult | createTopicOneResult, createTopicNormalVariables | createTopicOneVariables>
-            mutation={this.state.type === "TopicNormal" ? createTopicNormal : createTopicOne}
+        <Paper>
+          <Mutation<G.CreateTopicNormal.Mutation | G.CreateTopicOne.Mutation, G.CreateTopicNormal.Variables | G.CreateTopicOne.Variables>
+            mutation={this.state.type === "TopicNormal" ? G.CreateTopicNormal.Document : G.CreateTopicOne.Document}
             variables={{
               title: this.state.title,
               tags: this.state.tags.toArray(),
@@ -118,7 +112,7 @@ export const TopicCreatePage =
               </form>);
             }}
           </Mutation>
-        </Paper>} />
+        </Paper>
       </Page>;
     }
-  })));
+  }));
