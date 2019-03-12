@@ -15,7 +15,7 @@ import * as G from "../../generated/graphql";
 
 type MessagesPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
-export const MessagesPage = userSwitch(withRouter((props: MessagesPageProps) => {
+export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) => {
   const msgs = G.FindMsgs.use({
     variables: {
       query: {
