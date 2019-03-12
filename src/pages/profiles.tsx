@@ -12,13 +12,14 @@ import {
 } from "../components";
 import * as G from "../../generated/graphql";
 import { UserSwitchProps, userSwitch } from "src/utils";
+import { RouteComponentProps, withRouter } from "react-router";
 
-type ProfilesPageProps = UserSwitchProps;
+type ProfilesPageProps = RouteComponentProps & UserSwitchProps;
 
 export interface ProfilesPageState {
 }
 
-export const ProfilesPage = userSwitch(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
+export const ProfilesPage = userSwitch(withRouter(class extends React.Component<ProfilesPageProps, ProfilesPageState> {
   constructor(props: ProfilesPageProps) {
     super(props);
   }
@@ -54,4 +55,4 @@ export const ProfilesPage = userSwitch(class extends React.Component<ProfilesPag
       </Page>
     );
   }
-});
+}));
