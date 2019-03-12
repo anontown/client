@@ -3,7 +3,6 @@ import {
   RaisedButton,
   TextField,
 } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import Recaptcha from "react-google-recaptcha";
 import { Helmet } from "react-helmet";
@@ -18,13 +17,10 @@ import {
   Page,
 } from "../components";
 import { Config } from "../env";
-import { myInject, UserStore } from "../stores";
-import { createUser } from "../gql/user.gql";
-import { createUser as createUserResult, createUserVariables } from "../gql/_gql/createUser";
-import { Mutation } from "react-apollo";
+import * as G from "../../generated/graphql";
+import { UserContext, createUserData } from "src/utils";
 
 interface SignupPageProps extends RouteComponentProps<{}> {
-  user: UserStore;
 }
 
 interface SignupPageState {
@@ -34,7 +30,7 @@ interface SignupPageState {
   recaptcha: string | null;
 }
 
-export const SignupPage = withRouter(myInject(["user"], observer(class extends React.Component<SignupPageProps, SignupPageState> {
+export const SignupPage = withRouter(class extends React.Component<SignupPageProps, SignupPageState> {
   constructor(props: SignupPageProps) {
     super(props);
     this.state = {
@@ -49,7 +45,7 @@ export const SignupPage = withRouter(myInject(["user"], observer(class extends R
       <Helmet>
         <title>登録</title>
       </Helmet>
-      {this.props.user.data !== null
+      <UserContext.Consumer>{user => user.value !== null
         ? <Redirect to="/" />
         : <Paper>
           <form>
@@ -73,8 +69,7 @@ export const SignupPage = withRouter(myInject(["user"], observer(class extends R
               onChange={(v: string) => this.setState({ recaptcha: v })} />
             <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
 
-            <Mutation<createUserResult, createUserVariables>
-              mutation={createUser}
+            <G.CreateUser.Component
               onError={() => {
                 const rc = this.refs.recaptcha as any;
                 if (rc) {
@@ -82,8 +77,8 @@ export const SignupPage = withRouter(myInject(["user"], observer(class extends R
                 }
                 this.setState({ errors: ["アカウント作成に失敗しました"] });
               }}
-              onCompleted={x => {
-                this.props.user.userChange(x.createUser.token);
+              onCompleted={async x => {
+                user.update(await createUserData(x.createUser.token as G.TokenMaster.Fragment))
               }}
               variables={{
                 sn: this.state.sn, pass: this.state.pass,
@@ -91,10 +86,10 @@ export const SignupPage = withRouter(myInject(["user"], observer(class extends R
               }}>
               {create =>
                 (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}
-            </Mutation>
+            </G.CreateUser.Component>
             <Link to="/login">ログイン</Link>
           </form>
-        </Paper>}
+        </Paper>}</UserContext.Consumer>
     </Page>;
   }
-})));
+});
