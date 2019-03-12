@@ -1,5 +1,4 @@
 import { Paper } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -8,50 +7,40 @@ import {
 } from "react-router-dom";
 import { Page, Res, Snack } from "../components";
 import {
-  myInject,
-  UserStore,
-} from "../stores";
-import {
-  withModal,
+  withModal, UserSwitchProps, userSwitch,
 } from "../utils";
-import { findReses } from "../gql/res.gql";
-import { findReses as findResesResult, findResesVariables } from "../gql/_gql/findReses";
-import { Query } from "react-apollo";
+import * as G from "../../generated/graphql";
 
-interface ResHashBaseProps extends RouteComponentProps<{ hash: string }> {
-  user: UserStore;
-}
+type ResHashBaseProps = RouteComponentProps<{ hash: string }> & UserSwitchProps;
 
 interface ResHashBaseState {
 }
 
-const ResHashBase = withRouter(myInject(["user"],
-  observer(class extends React.Component<ResHashBaseProps, ResHashBaseState> {
-    constructor(props: ResHashBaseProps) {
-      super(props);
-    }
+const ResHashBase = userSwitch(withRouter(class extends React.Component<ResHashBaseProps, ResHashBaseState> {
+  constructor(props: ResHashBaseProps) {
+    super(props);
+  }
 
-    render() {
-      const hash = decodeURIComponent(this.props.match.params.hash);
+  render() {
+    const hash = decodeURIComponent(this.props.match.params.hash);
 
-      return <div>
-        <Helmet>
-          <title>HASH:{hash}</title>
-        </Helmet>
-        <Query<findResesResult, findResesVariables>
-          query={findReses}
-          variables={{ query: { hash } }}>
-          {({ loading, error, data }) => {
-            if (loading) return "Loading...";
-            if (error || !data) return (<Snack msg="レス取得に失敗しました" />);
-            return data.reses.map(res => <Paper key={res.id}>
-              <Res res={res} />
-            </Paper>)
-          }}
-        </Query>
-      </div>;
-    }
-  })));
+    return <div>
+      <Helmet>
+        <title>HASH:{hash}</title>
+      </Helmet>
+      <G.FindReses.Component
+        variables={{ query: { hash } }}>
+        {({ loading, error, data }) => {
+          if (loading) return "Loading...";
+          if (error || !data) return (<Snack msg="レス取得に失敗しました" />);
+          return data.reses.map(res => <Paper key={res.id}>
+            <Res res={res} />
+          </Paper>)
+        }}
+      </G.FindReses.Component>
+    </div>;
+  }
+}));
 
 export function ResHashPage() {
   return <Page><ResHashBase /></Page>;
