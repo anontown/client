@@ -9,7 +9,6 @@ import { Page, Profile, Snack } from "../components";
 import {
   withModal,
 } from "../utils";
-import { Query } from "react-apollo";
 import * as G from "../../generated/graphql";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
