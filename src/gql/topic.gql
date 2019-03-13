@@ -61,8 +61,8 @@ mutation createTopicOne($title:String!,$tags:[String!]!,$text:String!){
     }
 }
 
-query findTopics($query:TopicQuery!){
-    topics(query:$query){
+query findTopics($query:TopicQuery!,$skip:Int,$limit:Int){
+    topics(query:$query,skip:$skip,limit:$limit){
         ...topic
     }
 }
