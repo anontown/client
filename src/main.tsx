@@ -1,13 +1,11 @@
 import "core-js";
 import { Dialog } from "material-ui";
-import { Provider } from "mobx-react";
 import * as OfflinePluginRuntime from "offline-plugin/runtime";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { App } from "./components/app";
 import * as dialogStyle from "./dialog.scss";
-import { stores } from "./stores";
 import { ApolloProvider } from 'react-apollo';
 import { gqlClient } from "./utils";
 import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
@@ -21,15 +19,13 @@ OfflinePluginRuntime.install();
 
 ReactDOM.render(
   <BrowserRouter>
-    <Provider {...stores}>
-      <ApolloProvider client={gqlClient}>
-        <ApolloHooksProvider client={gqlClient}>
-          <Switch>
-            <Route path="/" component={App} />
-          </Switch>
-        </ApolloHooksProvider>
-      </ApolloProvider>,
-    </Provider>
+    <ApolloProvider client={gqlClient}>
+      <ApolloHooksProvider client={gqlClient}>
+        <Switch>
+          <Route path="/" component={App} />
+        </Switch>
+      </ApolloHooksProvider>
+    </ApolloProvider>,
   </BrowserRouter>,
   document.querySelector("#root"),
 );
