@@ -10,7 +10,7 @@ import {
 import { createHeaders } from "../utils";
 import * as G from "../../generated/graphql";
 
-export async function useLoad(token: G.TokenMaster.Fragment) {
+export function useLoad(token: G.TokenMaster.Fragment) {
   const storages = G.FindStorages.use({
     variables: { query: {} },
     context: {
@@ -28,12 +28,15 @@ export async function useLoad(token: G.TokenMaster.Fragment) {
     : initStorage));
 }
 
-export async function useSave(storage: Storage) {
-  const json = toJSON(storage);
-  return G.SetStorage.use({
-    variables: {
-      key: json.ver,
-      value: JSON.stringify(json)
-    }
-  });
+export function useSave() {
+  const submit = G.SetStorage.use();
+  return (storage: Storage) => {
+    const json = toJSON(storage);
+    return submit({
+      variables: {
+        key: json.ver,
+        value: JSON.stringify(json)
+      }
+    });
+  };
 }
