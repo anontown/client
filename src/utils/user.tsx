@@ -3,6 +3,7 @@ import { UserData } from "src/models";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { useEffectSkipN } from "./use-effect-skip-n";
+import { useSave } from "./storage-api";
 
 export interface UserContextType {
   value: UserData | null,
@@ -29,14 +30,14 @@ export const User = (props: UserProps) => {
   useEffectSkipN(() => {
     subjectRef.current.next(userData);
   }, [userData]);
+  const storageSave = useSave();
   React.useEffect(() => {
     const subs = subjectRef
       .current
       .pipe(op.debounceTime(5000))
       .subscribe(data => {
         if (data !== null) {
-          storageAPI
-            .save(data.token, data.storage);
+          storageSave(data.storage);
         }
       });
 
