@@ -1,5 +1,4 @@
 import { Paper } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
@@ -8,53 +7,38 @@ import {
 } from "react-router-dom";
 import {
   Page,
-  Snack,
   TopicFork,
 } from "../components";
 import {
-  myInject,
-  TopicForkStore,
-} from "../stores";
-import {
-  withModal,
+  withModal, userSwitch, UserSwitchProps,
 } from "../utils";
+import * as G from "../../generated/graphql";
 
-interface TopicForkBaseProps extends RouteComponentProps<{ id: string }> {
+type TopicForkBaseProps = RouteComponentProps<{ id: string }> & UserSwitchProps & {
   zDepth?: number;
-  topicFork: TopicForkStore;
-}
+};
 
-interface TopicForkBaseState {
-}
-
-const TopicForkBase = withRouter(myInject(["topicFork"],
-  observer(class extends React.Component<TopicForkBaseProps, TopicForkBaseState> {
-    constructor(props: TopicForkBaseProps) {
-      super(props);
-
-      this.componentWillReceiveProps(this.props);
+const TopicForkBase = withRouter(userSwitch((props: TopicForkBaseProps) => {
+  const topics = G.FindTopics.use({
+    variables: {
+      query: {
+        id: [props.match.params.id]
+      }
     }
+  });
+  const topic = topics.data !== undefined ? topics.data.topics[0] : null;
 
-    componentWillReceiveProps(nextProps: TopicForkBaseProps) {
-      this.props.topicFork.load(nextProps.match.params.id);
-    }
-
-    render() {
-      return <Paper zDepth={this.props.zDepth}>
-        <Helmet>
-          <title>派生トピック</title>
-        </Helmet>
-        <Snack
-          msg={this.props.topicFork.msg}
-          onHide={() => this.props.topicFork.clearMsg()} />
-        {this.props.topicFork.topic !== null && this.props.topicFork.topic.type === "normal"
-          ? <TopicFork topic={this.props.topicFork.topic} onCreate={topic => {
-            this.props.history.push(`/topic/${topic.id}`);
-          }} />
-          : null}
-      </Paper>;
-    }
-  })));
+  return <Paper zDepth={props.zDepth}>
+    <Helmet>
+      <title>派生トピック</title>
+    </Helmet>
+    {topic !== null && topic.__typename === "TopicNormal"
+      ? <TopicFork topic={topic} onCreate={topic => {
+        props.history.push(`/topic/${topic.id}`);
+      }} />
+      : null}
+  </Paper>;
+}));
 
 export function TopicForkPage() {
   return <Page><TopicForkBase /></Page>;
