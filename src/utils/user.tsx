@@ -20,7 +20,7 @@ export function useUserContext() {
 }
 
 export interface UserProps {
-  children: React.ReactNode,
+  children: (user: UserContextType) => React.ReactNode,
   initUserData: UserData | null,
 }
 
@@ -61,13 +61,15 @@ export const User = (props: UserProps) => {
     location.reload();
   }, [userData !== null ? userData.id : null]);
 
+  const context: UserContextType = {
+    value: userData,
+    update: x => setUserData(x)
+  };
+
   return (
     <UserContext.Provider
-      value={{
-        value: userData,
-        update: x => setUserData(x)
-      }}>
-      {props.children}
+      value={context}>
+      {props.children(context)}
     </UserContext.Provider>
   );
 };
