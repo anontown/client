@@ -12,7 +12,6 @@ import {
   lightBaseTheme,
   MuiThemeProvider,
 } from "material-ui/styles";
-import { observer } from "mobx-react";
 import * as React from "react";
 import {
   Link,
@@ -23,32 +22,30 @@ import {
 } from "react-router-dom";
 import { BUILD_DATE, gaID } from "../env";
 import * as pages from "../pages";
-import { myInject, UserStore } from "../stores";
 import {
   createUserData,
   dateFormat,
   gqlClient,
   createHeaders,
   User,
+  UserContextType,
 } from "../utils";
 import * as style from "./app.scss";
-import { findToken } from "../gql/token.gql";
-import { findToken as findTokenResult } from "../gql/_gql/findToken";
 import { UserData } from "src/models";
+import * as G from "../../generated/graphql";
 
 declare const gtag: any;
 
 const muiTheme = getMuiTheme(lightBaseTheme);
 
 interface AppProps extends RouteComponentProps<{}> {
-  user: UserStore;
 }
 
 interface AppState {
   initUserData?: UserData | null
 }
 
-export const App = myInject(["user"], observer(withRouter(class extends React.Component<AppProps, AppState> {
+export const App = withRouter(class extends React.Component<AppProps, AppState> {
   previousLocation = this.props.location;
 
   constructor(props: AppProps) {
@@ -81,16 +78,16 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
       } else {
         throw Error();
       }
-      let res = await gqlClient.query<findTokenResult>({
-        query: findToken,
+      let res = await gqlClient.query<G.FindToken.Query>({
+        query: G.FindToken.Document,
         context: {
           headers: createHeaders(token.id, token.key)
         }
       });
-      if (res.data.token.__typename === "TokenGeneral") {
+      if (res.data.token.__typename as string === "TokenGeneral") {
         throw Error();
       }
-      this.setState({ initUserData: await createUserData(res.data.token) });
+      this.setState({ initUserData: await createUserData(res.data.token as G.TokenMaster.Fragment) });
     } catch {
       this.setState({ initUserData: null });
     }
@@ -106,8 +103,8 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
     }
   }
 
-  logout() {
-    this.props.user.userChange(null);
+  logout(user: UserContextType) {
+    user.update(null);
   }
 
   render() {
@@ -122,95 +119,97 @@ export const App = myInject(["user"], observer(withRouter(class extends React.Co
       <MuiThemeProvider muiTheme={muiTheme}>
         {this.state.initUserData !== undefined
           ? <User initUserData={this.state.initUserData}>
-            <div className={style.container}>
-              <Toolbar className={style.header}>
-                <ToolbarGroup firstChild={true} className={style.big}>
-                  <ToolbarTitle text="Anontown" />
-                  <ToolbarTitle text={`build:${dateFormat.format(BUILD_DATE)}`}
-                    style={{ fontSize: "0.5rem" }} />
-                </ToolbarGroup>
-                <ToolbarGroup>
-                  <IconButton containerElement={<Link to="/" />}>
-                    <FontIcon className="material-icons">home</FontIcon>
-                  </IconButton>
-                  <IconButton containerElement={<Link to="/topic/search" />}>
-                    <FontIcon className="material-icons">search</FontIcon>
-                  </IconButton>
-                  {this.props.user.data !== null
-                    ? <IconButton containerElement={<Link to="/notifications" />}>
-                      <FontIcon className="material-icons">notifications</FontIcon>
+            {user => {
+              return <div className={style.container}>
+                <Toolbar className={style.header}>
+                  <ToolbarGroup firstChild={true} className={style.big}>
+                    <ToolbarTitle text="Anontown" />
+                    <ToolbarTitle text={`build:${dateFormat.format(BUILD_DATE)}`}
+                      style={{ fontSize: "0.5rem" }} />
+                  </ToolbarGroup>
+                  <ToolbarGroup>
+                    <IconButton containerElement={<Link to="/" />}>
+                      <FontIcon className="material-icons">home</FontIcon>
                     </IconButton>
-                    : null}
-                  <IconMenu
-                    iconButtonElement={
-                      <IconButton touch={true}>
-                        <FontIcon className="material-icons">people</FontIcon>
-                      </IconButton>}>
-                    {this.props.user.data !== null
-                      ? [
-                        <MenuItem
-                          key="1"
-                          primaryText="プロフ管理"
-                          containerElement={<Link to="/profiles" />} />,
-                        <MenuItem
-                          key="2"
-                          primaryText="お知らせ"
-                          containerElement={<Link to="/messages" />} />,
-                        <MenuItem
-                          key="3"
-                          primaryText="設定"
-                          containerElement={<Link to="/settings/account" />} />,
-                        <MenuItem
-                          key="4"
-                          primaryText="ログアウト"
-                          onClick={() => this.logout()} />,
-                      ]
-                      : <MenuItem
-                        primaryText="ログイン"
-                        containerElement={<Link to="/login" />} />}
+                    <IconButton containerElement={<Link to="/topic/search" />}>
+                      <FontIcon className="material-icons">search</FontIcon>
+                    </IconButton>
+                    {user.value !== null
+                      ? <IconButton containerElement={<Link to="/notifications" />}>
+                        <FontIcon className="material-icons">notifications</FontIcon>
+                      </IconButton>
+                      : null}
+                    <IconMenu
+                      iconButtonElement={
+                        <IconButton touch={true}>
+                          <FontIcon className="material-icons">people</FontIcon>
+                        </IconButton>}>
+                      {user.value !== null
+                        ? [
+                          <MenuItem
+                            key="1"
+                            primaryText="プロフ管理"
+                            containerElement={<Link to="/profiles" />} />,
+                          <MenuItem
+                            key="2"
+                            primaryText="お知らせ"
+                            containerElement={<Link to="/messages" />} />,
+                          <MenuItem
+                            key="3"
+                            primaryText="設定"
+                            containerElement={<Link to="/settings/account" />} />,
+                          <MenuItem
+                            key="4"
+                            primaryText="ログアウト"
+                            onClick={() => this.logout(user)} />,
+                        ]
+                        : <MenuItem
+                          primaryText="ログイン"
+                          containerElement={<Link to="/login" />} />}
 
-                  </IconMenu>
-                  <IconButton containerElement={<a
-                    href="https://document.anontown.com/"
-                    target="_blank" />}>
-                    <FontIcon className="material-icons">help</FontIcon>
-                  </IconButton>
-                </ToolbarGroup>
-              </Toolbar>
-              <div className={style.main}>
-                <Switch location={isModal ? this.previousLocation : location}>
-                  <Route exact={true} path="/" component={pages.HomePage} />
-                  <Route exact={true} path="/res/:id" component={pages.ResPage} />
-                  <Route exact={true} path="/res/:id/reply" component={pages.ResReplyPage} />
-                  <Route exact={true} path="/hash/:hash" component={pages.ResHashPage} />
-                  <Route exact={true} path="/topic/search" component={pages.TopicSearchPage} />
-                  <Route exact={true} path="/topic/create" component={pages.TopicCreatePage} />
-                  <Route exact={true} path="/topic/:id" component={pages.TopicPage} />
-                  <Route exact={true} path="/topic/:id/data" component={pages.TopicDataPage} />
-                  <Route exact={true} path="/topic/:id/fork" component={pages.TopicForkPage} />
-                  <Route exact={true} path="/topic/:id/edit" component={pages.TopicEditPage} />
-                  <Route exact={true} path="/profiles" component={pages.ProfilesPage} />
-                  <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
-                  <Route exact={true} path="/messages" component={pages.MessagesPage} />
-                  <Route exact={true} path="/signup" component={pages.SignupPage} />
-                  <Route exact={true} path="/login" component={pages.LoginPage} />
-                  <Route exact={true} path="/auth" component={pages.AuthPage} />
-                  <Route path="/settings" component={pages.SettingsPage} />
-                  <Route exact={true} path="/profile/:id" component={pages.ProfilePage} />
-                  <Route component={pages.NotFoundPage} />
-                </Switch>
-                {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
-                {isModal ? <Route path="/res/:id/reply" component={pages.ResReplyModal} /> : null}
-                {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
-                {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
-                {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
-                {isModal ? <Route path="/topic/:id/edit" component={pages.TopicEditModal} /> : null}
-                {isModal ? <Route path="/hash/:hash" component={pages.ResHashModal} /> : null}
+                    </IconMenu>
+                    <IconButton containerElement={<a
+                      href="https://document.anontown.com/"
+                      target="_blank" />}>
+                      <FontIcon className="material-icons">help</FontIcon>
+                    </IconButton>
+                  </ToolbarGroup>
+                </Toolbar>
+                <div className={style.main}>
+                  <Switch location={isModal ? this.previousLocation : location}>
+                    <Route exact={true} path="/" component={pages.HomePage} />
+                    <Route exact={true} path="/res/:id" component={pages.ResPage} />
+                    <Route exact={true} path="/res/:id/reply" component={pages.ResReplyPage} />
+                    <Route exact={true} path="/hash/:hash" component={pages.ResHashPage} />
+                    <Route exact={true} path="/topic/search" component={pages.TopicSearchPage} />
+                    <Route exact={true} path="/topic/create" component={pages.TopicCreatePage} />
+                    <Route exact={true} path="/topic/:id" component={pages.TopicPage} />
+                    <Route exact={true} path="/topic/:id/data" component={pages.TopicDataPage} />
+                    <Route exact={true} path="/topic/:id/fork" component={pages.TopicForkPage} />
+                    <Route exact={true} path="/topic/:id/edit" component={pages.TopicEditPage} />
+                    <Route exact={true} path="/profiles" component={pages.ProfilesPage} />
+                    <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
+                    <Route exact={true} path="/messages" component={pages.MessagesPage} />
+                    <Route exact={true} path="/signup" component={pages.SignupPage} />
+                    <Route exact={true} path="/login" component={pages.LoginPage} />
+                    <Route exact={true} path="/auth" component={pages.AuthPage} />
+                    <Route path="/settings" component={pages.SettingsPage} />
+                    <Route exact={true} path="/profile/:id" component={pages.ProfilePage} />
+                    <Route component={pages.NotFoundPage} />
+                  </Switch>
+                  {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
+                  {isModal ? <Route path="/res/:id/reply" component={pages.ResReplyModal} /> : null}
+                  {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
+                  {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
+                  {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
+                  {isModal ? <Route path="/topic/:id/edit" component={pages.TopicEditModal} /> : null}
+                  {isModal ? <Route path="/hash/:hash" component={pages.ResHashModal} /> : null}
+                </div>
               </div>
-            </div>
+            }}
           </User>
           : null}
       </MuiThemeProvider>
     );
   }
-})));
+});
