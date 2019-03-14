@@ -1,8 +1,8 @@
 import { Storage } from "./storage";
-import { token_TokenMaster } from "../gql/_gql/token";
+import * as G from "../../generated/graphql";
 
 export interface UserData {
-  token: token_TokenMaster;
+  token: G.TokenMaster.Fragment;
   storage: Storage;
   id: string;
 }

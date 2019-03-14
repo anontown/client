@@ -1,7 +1,7 @@
 import * as Im from "immutable";
 import * as uuid from "uuid";
 import * as ngJson from "./ng-json";
-import { res } from "../gql/_gql/res";
+import * as G from "../../generated/graphql";
 
 export function createDefaultNode(): NGNode {
   return {
@@ -25,7 +25,7 @@ export function createDefaultNG(): NG {
 }
 
 // TODO:chain
-export function isNG(ng: NG, res: res) {
+export function isNG(ng: NG, res: G.Res.Fragment) {
   if (ng.topic !== null && ng.topic !== res.topic.id) {
     return false;
   }
@@ -37,7 +37,7 @@ export function isNG(ng: NG, res: res) {
   return !!isNodeNG(ng.node, res);
 }
 
-function isNodeNG(node: NGNode, res: res): boolean | null {
+function isNodeNG(node: NGNode, res: G.Res.Fragment): boolean | null {
   switch (node.type) {
     case "not":
       const b = isNodeNG(node.child, res);
