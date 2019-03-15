@@ -22,7 +22,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
       query: {
         date: {
           date: new Date().toISOString(),
-          type: G.DateType.Lte
+          type: "lte"
         },
         notice: true
       }
@@ -49,7 +49,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
                   query: {
                     date: {
                       date: first.date,
-                      type: G.DateType.Gt
+                      type: "gt"
                     },
                     notice: true
                   },
@@ -87,7 +87,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
                   query: {
                     date: {
                       date: last.date,
-                      type: G.DateType.Lt
+                      type: "lt"
                     },
                     notice: true
                   },

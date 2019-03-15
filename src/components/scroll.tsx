@@ -73,7 +73,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const variables = props.queryVariables({
     date: props.initDate,
-    type: G.DateType.Lte
+    type: "lte"
   });
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
     variables: variables
@@ -264,7 +264,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         await data.fetchMore({
           variables: props.queryVariables({
             date: first.date,
-            type: G.DateType.Gt
+            type: "gt"
           }),
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult) return prev;
@@ -318,7 +318,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         await data.fetchMore({
           variables: props.queryVariables({
             date: old.date,
-            type: G.DateType.Lt
+            type: "lt"
           }),
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult) return prev;
@@ -344,7 +344,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       await data.fetchMore({
         variables: props.queryVariables({
           date: date,
-          type: G.DateType.Lte
+          type: "lte"
         }),
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;

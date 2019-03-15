@@ -54,7 +54,7 @@ export const Res = (props: ResProps) => {
         <G.VoteRes.Component
           variables={{
             res: props.res.id,
-            type: props.res.voteFlag === "uv" ? G.VoteType.Cv : G.VoteType.Uv
+            type: props.res.voteFlag === "uv" ? "cv" : "uv"
           }}
           onCompleted={data => {
             if (props.update) {
@@ -75,7 +75,7 @@ export const Res = (props: ResProps) => {
         <G.VoteRes.Component
           variables={{
             res: props.res.id,
-            type: props.res.voteFlag === "dv" ? G.VoteType.Cv : G.VoteType.Dv
+            type: props.res.voteFlag === "dv" ? "cv" : "dv"
           }}
           onCompleted={data => {
             if (props.update) {

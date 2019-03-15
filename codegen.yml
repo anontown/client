@@ -16,3 +16,4 @@ config:
     withHooks: true
     noHOC: true
     noComponents: false
+    enumsAsTypes: true

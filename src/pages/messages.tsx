@@ -21,7 +21,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
       query: {
         date: {
           date: new Date().toISOString(),
-          type: G.DateType.Lte
+          type: "lte"
         }
       }
     }
@@ -47,7 +47,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
                   query: {
                     date: {
                       date: first.date,
-                      type: G.DateType.Gt
+                      type: "gt"
                     }
                   },
                 },
@@ -85,7 +85,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
                   query: {
                     date: {
                       date: last.date,
-                      type: G.DateType.Lt
+                      type: "lt"
                     }
                   },
                 },

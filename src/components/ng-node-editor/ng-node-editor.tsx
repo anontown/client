@@ -48,7 +48,7 @@ export class NGNodesEditor extends React.Component<NGNodesEditorProps, NGNodesEd
   }
 
   handleChangeNode = (x: ng.NGNode) => {
-    this.props.onChange(list.update(this.props.values, x));
+    this.props.onChange(list.updateIm(this.props.values, x));
   }
 
   render() {

@@ -73,7 +73,7 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
               if (token.data !== undefined) {
                 props.updateUserData({
                   ...props.userData,
-                  token: token.data.createTokenMaster
+                  token: token.data.createTokenMaster as G.TokenMaster.Fragment
                 });
               }
             } catch{
