@@ -58,7 +58,7 @@ export const ResWrite = (props: ResWriteProps) => {
       }
     });
 
-  const { data: profiles, error } = G.FindProfiles.use({
+  const { data: profiles } = G.FindProfiles.use({
     variables: {
       query: {
         self: true
