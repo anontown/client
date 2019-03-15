@@ -1,7 +1,8 @@
 import * as Im from "immutable";
-import { apiClient } from "../utils";
 import * as ng from "./ng";
 import * as ngJson from "./ng-json";
+import { gqlClient } from "src/utils";
+import * as G from "../../generated/graphql";
 
 interface StorageJSON1 {
   readonly ver: "1.0.0";
@@ -201,11 +202,17 @@ function convert6To7(val: StorageJSON6): StorageJSON7 {
 
 async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
   const topicRead: StorageJSON8["topicRead"] = {};
-  const dates = new Map((await apiClient
-    .findResIn(null, {
-      ids: Object.entries(val.topicRead)
-        .map(([_l, { res }]) => res),
-    }))
+  const dates = new Map((await gqlClient.query<G.FindReses.Query, G.FindReses.Variables>({
+    query: G.FindReses.Document,
+    variables: {
+      query: {
+        id: Object.entries(val.topicRead)
+          .map(([_l, { res }]) => res)
+      }
+    }
+  }))
+    .data
+    .reses
     .map<[string, string]>(x => [x.id, x.date]));
   for (const topic of Object.keys(val.topicRead)) {
     const data = val.topicRead[topic];

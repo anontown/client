@@ -7,22 +7,19 @@ import {
   toStorage,
   verArray,
 } from "../models";
-import { createHeaders } from "../utils";
+import { createHeaders, gqlClient } from "../utils";
 import * as G from "../../generated/graphql";
 
-export function useLoad(token: G.TokenMaster.Fragment) {
-  const storages = G.FindStorages.use({
+export async function load(token: G.TokenMaster.Fragment) {
+  const storages = await gqlClient.query<G.FindStorages.Query, G.FindStorages.Variables>({
+    query: G.FindStorages.Document,
     variables: { query: {} },
     context: {
       headers: createHeaders(token.id, token.key)
     }
   });
-  const data = storages.data;
-  if (data === undefined) {
-    return undefined;
-  }
-  const key = [...verArray, "main"].find(ver => data.storages.findIndex(x => x.key === ver) !== -1);
-  const sto = data.storages.find(x => x.key === key);
+  const key = [...verArray, "main"].find(ver => storages.data.storages.findIndex(x => x.key === ver) !== -1);
+  const sto = storages.data.storages.find(x => x.key === key);
   return toStorage(await convert(sto !== undefined
     ? JSON.parse(sto.value) as StorageJSON
     : initStorage));
