@@ -8,7 +8,7 @@ import { Errors } from "./errors";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
 import * as G from "../../generated/graphql";
-import { useUserContext } from "src/utils";
+import { useUserContext } from "../utils";
 
 interface TopicForkProps {
   topic: G.TopicNormal.Fragment;

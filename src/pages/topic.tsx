@@ -23,7 +23,7 @@ import {
 } from "../components";
 import * as style from "./topic.scss";
 import * as G from "../../generated/graphql";
-import { useUserContext } from "src/utils";
+import { useUserContext } from "../utils";
 import * as rx from "rxjs";
 // TODO:NGのtransparent
 

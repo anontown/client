@@ -25,7 +25,7 @@ import {
 } from "../components";
 import * as style from "./topic-search.scss";
 import * as G from "../../generated/graphql";
-import { useUserContext } from "src/utils";
+import { useUserContext } from "../utils";
 
 type TopicSearchPageProps = RouteComponentProps<{}>;
 

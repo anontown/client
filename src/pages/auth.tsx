@@ -7,7 +7,7 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack, Page, Errors } from "../components";
-import { userSwitch, UserSwitchProps } from "src/utils";
+import { userSwitch, UserSwitchProps } from "../utils";
 import * as G from "../../generated/graphql";
 
 type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;

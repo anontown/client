@@ -11,7 +11,7 @@ import {
   Page,
   Res,
 } from "../components";
-import { userSwitch, UserSwitchProps } from "src/utils";
+import { userSwitch, UserSwitchProps } from "../utils";
 import * as G from "../../generated/graphql";
 
 type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;

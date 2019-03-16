@@ -1,7 +1,7 @@
 import * as Im from "immutable";
 import * as ng from "./ng";
 import * as ngJson from "./ng-json";
-import { gqlClient } from "src/utils";
+import { gqlClient } from "../utils";
 import * as G from "../../generated/graphql";
 
 interface StorageJSON1 {

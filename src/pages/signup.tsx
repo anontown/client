@@ -18,7 +18,7 @@ import {
 } from "../components";
 import { Config } from "../env";
 import * as G from "../../generated/graphql";
-import { UserContext, createUserData } from "src/utils";
+import { UserContext, createUserData } from "../utils";
 
 interface SignupPageProps extends RouteComponentProps<{}> {
 }

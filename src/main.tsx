@@ -9,7 +9,6 @@ import * as dialogStyle from "./dialog.scss";
 import { ApolloProvider } from 'react-apollo';
 import { gqlClient } from "./utils";
 import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
-import "extera";
 
 (Dialog as any).defaultProps.className = dialogStyle.dialog;
 (Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;

@@ -16,7 +16,7 @@ import {
   Page,
 } from "../components";
 import * as G from "../../generated/graphql";
-import { useUserContext, createUserData } from "src/utils";
+import { useUserContext, createUserData } from "../utils";
 
 type LoginPageProps = RouteComponentProps<{}>;
 

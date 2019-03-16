@@ -11,7 +11,7 @@ import {
   ProfileAdd,
 } from "../components";
 import * as G from "../../generated/graphql";
-import { UserSwitchProps, userSwitch } from "src/utils";
+import { UserSwitchProps, userSwitch } from "../utils";
 import { RouteComponentProps, withRouter } from "react-router";
 
 type ProfilesPageProps = RouteComponentProps & UserSwitchProps;

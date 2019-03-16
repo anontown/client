@@ -20,7 +20,7 @@ import {
   TagsInput,
 } from "../components";
 import { Mutation } from "react-apollo";
-import { UserSwitchProps, userSwitch } from "src/utils";
+import { UserSwitchProps, userSwitch } from "../utils";
 import * as G from "../../generated/graphql";
 
 type TopicCreatePageProps = RouteComponentProps<{}> & UserSwitchProps;
