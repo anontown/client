@@ -1,5 +1,4 @@
 import { Config } from "../env";
-import { stores } from "../stores";
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
@@ -8,6 +7,7 @@ import { ApolloLink, Operation, split } from 'apollo-link';
 import * as zen from "zen-observable-ts";
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { auth } from "./user";
 
 export function createHeaders(id: string, key: string): {} {
   return {
@@ -28,9 +28,9 @@ const wsLink = new WebSocketLink({
 });
 
 const request = async (opt: Operation) => {
-  if (stores.user.data !== null) {
+  if (auth !== null) {
     opt.setContext({
-      headers: createHeaders(stores.user.data.token.id, stores.user.data.token.key)
+      headers: createHeaders(auth.token.id, auth.token.key)
     });
   }
 };

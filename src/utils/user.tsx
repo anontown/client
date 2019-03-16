@@ -5,6 +5,9 @@ import * as op from "rxjs/operators";
 import { useEffectSkipN } from "./use-effect-skip-n";
 import { useSave } from "./storage-api";
 
+// TODO: 最悪な実装なのであとで何とかする
+export let auth: UserData | null = null;
+
 export interface UserContextType {
   value: UserData | null,
   update: (value: UserData | null) => void
@@ -63,7 +66,10 @@ export const User = (props: UserProps) => {
 
   const context: UserContextType = {
     value: userData,
-    update: x => setUserData(x)
+    update: x => {
+      setUserData(x);
+      auth = null;
+    }
   };
 
   return (
