@@ -11,7 +11,7 @@ import * as G from "../../generated/graphql";
 import { useUserContext } from "src/utils";
 
 interface TopicForkProps {
-  topic: G.TopicFork.Fragment;
+  topic: G.TopicNormal.Fragment;
   onCreate?: (topic: G.TopicFork.Fragment) => void;
 }
 
