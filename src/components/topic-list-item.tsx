@@ -1,70 +1,57 @@
 import { FontIcon } from "material-ui";
-import { observer } from "mobx-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { Omit } from "type-zoo";
-import { myInject, UserStore } from "../stores";
-import { dateFormat } from "../utils";
+import { dateFormat, useUserContext } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
 import * as G from "../../generated/graphql";
 
 
-interface UnconnectedTopicListItemProps {
+interface TopicListItemProps {
   topic: G.Topic.Fragment;
-  user: UserStore;
   detail: boolean;
 }
-export type TopicListItemProps = Omit<UnconnectedTopicListItemProps, "user">;
 
-interface TopicListItemState {
-}
+export const TopicListItem = (props: TopicListItemProps) => {
+  const user = useUserContext();
 
-export const TopicListItem =
-  myInject(["user"], observer(class extends React.Component<UnconnectedTopicListItemProps, TopicListItemState> {
-    constructor(props: UnconnectedTopicListItemProps) {
-      super(props);
+  let newRes: number | null = null;
+  if (user.value !== null) {
+    const topicData = user.value.storage.topicRead.get(props.topic.id);
+    if (topicData !== undefined) {
+      newRes = Math.max(0, props.topic.resCount - topicData.count);
     }
+  }
 
-    render() {
-      let newRes: number | null = null;
-      if (this.props.user.data !== null) {
-        const topicData = this.props.user.data.storage.topicRead.get(this.props.topic.id);
-        if (topicData !== undefined) {
-          newRes = Math.max(0, this.props.topic.resCount - topicData.count);
-        }
-      }
-
-      return (
-        <div className={style.container}>
-          <div>
-            {!this.props.topic.active ? <FontIcon className="material-icons">not_interested</FontIcon> : null}
-            {this.props.topic.__typename === "TopicOne" ? <FontIcon className="material-icons">looks_one</FontIcon> : null}
-            {this.props.topic.__typename === "TopicFork" ? <FontIcon className="material-icons">call_split</FontIcon> : null}
-            {newRes !== null && newRes !== 0 ? <FontIcon className="material-icons">fiber_new</FontIcon> : null}
-            <Link className={style.title} to={`/topic/${this.props.topic.id}`}>{this.props.topic.title}</Link>
-          </div >
-          {this.props.detail
+  return (
+    <div className={style.container}>
+      <div>
+        {!props.topic.active ? <FontIcon className="material-icons">not_interested</FontIcon> : null}
+        {props.topic.__typename === "TopicOne" ? <FontIcon className="material-icons">looks_one</FontIcon> : null}
+        {props.topic.__typename === "TopicFork" ? <FontIcon className="material-icons">call_split</FontIcon> : null}
+        {newRes !== null && newRes !== 0 ? <FontIcon className="material-icons">fiber_new</FontIcon> : null}
+        <Link className={style.title} to={`/topic/${props.topic.id}`}>{props.topic.title}</Link>
+      </div >
+      {props.detail
+        ? <div>
+          {props.topic.__typename === "TopicOne" || props.topic.__typename === "TopicNormal"
             ? <div>
-              {this.props.topic.__typename === "TopicOne" || this.props.topic.__typename === "TopicNormal"
-                ? <div>
-                  <TagsLink tags={this.props.topic.tags} mini={true} />
-                </div >
-                : null}
-              {this.props.topic.__typename === "TopicFork"
-                ? <Link to={`/topic/${this.props.topic.parent}`}>親トピック</Link>
-                : null}
-
-              <div>
-                作成 {dateFormat.format(this.props.topic.date)} 更新 {dateFormat.format(this.props.topic.update)}
-              </div>
-              <div>
-                総レス数 {this.props.topic.resCount} {newRes !== null && newRes !== 0 ? <span>新着 {newRes}</span> : null}
-              </div>
+              <TagsLink tags={props.topic.tags} mini={true} />
             </div >
-            : null
-          }
-        </div>
-      );
-    }
-  }));
+            : null}
+          {props.topic.__typename === "TopicFork"
+            ? <Link to={`/topic/${props.topic.parent}`}>親トピック</Link>
+            : null}
+
+          <div>
+            作成 {dateFormat.format(props.topic.date)} 更新 {dateFormat.format(props.topic.update)}
+          </div>
+          <div>
+            総レス数 {props.topic.resCount} {newRes !== null && newRes !== 0 ? <span>新着 {newRes}</span> : null}
+          </div>
+        </div >
+        : null
+      }
+    </div>
+  );
+};
