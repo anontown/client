@@ -17,14 +17,14 @@ import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 OfflinePluginRuntime.install();
 
 ReactDOM.render(
-  <BrowserRouter>
-    <ApolloProvider client={gqlClient}>
-      <ApolloHooksProvider client={gqlClient}>
+  <ApolloProvider client={gqlClient}>
+    <ApolloHooksProvider client={gqlClient}>
+      <BrowserRouter>
         <Switch>
           <Route path="/" component={App} />
         </Switch>
-      </ApolloHooksProvider>
-    </ApolloProvider>,
-  </BrowserRouter>,
+      </BrowserRouter>
+    </ApolloHooksProvider>
+  </ApolloProvider>,
   document.querySelector("#root"),
 );
