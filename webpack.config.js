@@ -61,11 +61,6 @@ module.exports = {
                 loader: "html-loader"
             },
             {
-                enforce: "pre",
-                test: /\.js$/,
-                loader: "source-map-loader"
-            },
-            {
                 test: /\.s?css$/,
                 use: [
                     {
@@ -81,6 +76,7 @@ module.exports = {
             }
         ]
     },
+    devtool: "source-map",
     devServer: {
         contentBase: 'public',
         port: 3000,
