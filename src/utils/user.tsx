@@ -4,9 +4,10 @@ import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { useEffectSkipN } from "./use-effect-skip-n";
 import { useSave } from "./storage-api";
+import * as G from "../../generated/graphql";
 
 // TODO: 最悪な実装なのであとで何とかする
-export let auth: UserData | null = null;
+export let auth: G.TokenMaster.Fragment | null = null;
 
 export interface UserContextType {
   value: UserData | null,
@@ -68,7 +69,7 @@ export const User = (props: UserProps) => {
     value: userData,
     update: x => {
       setUserData(x);
-      auth = null;
+      auth = x !== null ? x.token : null;
     }
   };
 
