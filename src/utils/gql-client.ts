@@ -30,7 +30,7 @@ const wsLink = new WebSocketLink({
 const request = async (opt: Operation) => {
   if (auth !== null) {
     opt.setContext({
-      headers: createHeaders(auth.token.id, auth.token.key)
+      headers: createHeaders(auth.id, auth.key)
     });
   }
 };
