@@ -68,7 +68,7 @@ function textMatcherTest(matcher: NGNodeTextMatcher, text: string): boolean | nu
       try {
         return new RegExp(matcher.source, [
           matcher.i ? "i" : "",
-        ].join()).test(text);
+        ].join("")).test(text);
       } catch {
         return null;
       }
