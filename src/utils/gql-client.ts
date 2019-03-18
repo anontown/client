@@ -1,6 +1,6 @@
 import { Config } from "../env";
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, Operation, split } from 'apollo-link';
@@ -8,6 +8,7 @@ import * as zen from "zen-observable-ts";
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { auth } from "./user";
+import introspectionResult from "../../generated/introspection-result";
 
 export function createHeaders(id: string, key: string): {} {
   return {
@@ -55,6 +56,10 @@ const requestLink = new ApolloLink((operation, forward) =>
   })
 );
 
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData: introspectionResult
+});
+
 export const gqlClient = new ApolloClient({
   link: ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {
@@ -76,5 +81,7 @@ export const gqlClient = new ApolloClient({
       httpLink,
     )
   ]),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    fragmentMatcher
+  })
 });

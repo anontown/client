@@ -35,6 +35,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "graphql-code-generator": "^0.18.0",
+    "graphql-codegen-fragment-matcher": "^0.18.0",
     "graphql-codegen-typescript-client": "^0.18.0",
     "graphql-codegen-typescript-common": "^0.18.0",
     "graphql-codegen-typescript-graphql-files-modules": "^0.18.0",

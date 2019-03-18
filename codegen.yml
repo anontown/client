@@ -10,6 +10,9 @@ generates:
   generated/graphql.d.ts:
     plugins:
       - "typescript-graphql-files-modules"
+  generated/introspection-result.ts:
+    plugins:
+      - fragment-matcher
 config:
     scalars:
       DateTime: string
