@@ -31,6 +31,8 @@ interface SignupPageState {
 }
 
 export const SignupPage = withRouter(class extends React.Component<SignupPageProps, SignupPageState> {
+  recaptchaRef = React.createRef<any>();
+
   constructor(props: SignupPageProps) {
     super(props);
     this.state = {
@@ -65,13 +67,13 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
             </div>
             <Recaptcha
               sitekey={Config.recaptcha.siteKey}
-              ref="recaptcha"
+              ref={this.recaptchaRef}
               onChange={(v: string) => this.setState({ recaptcha: v })} />
             <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
 
             <G.CreateUser.Component
               onError={() => {
-                const rc = this.refs.recaptcha as any;
+                const rc = this.recaptchaRef.current;
                 if (rc) {
                   rc.reset();
                 }
