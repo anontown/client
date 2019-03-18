@@ -25,7 +25,7 @@ import {
 } from "../components";
 import * as style from "./topic-search.scss";
 import * as G from "../../generated/graphql";
-import { useUserContext } from "../utils";
+import { useUserContext, queryResultConvert } from "../utils";
 
 type TopicSearchPageProps = RouteComponentProps<{}>;
 
@@ -64,6 +64,7 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
       limit: limit,
     },
   });
+  queryResultConvert(topics);
 
   React.useEffect(() => {
     const sub = formChange

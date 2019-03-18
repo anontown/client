@@ -26,3 +26,4 @@ export { toColorString } from "./to-color-string";
 export { withModal } from "./with-modal";
 export { gqlClient, createHeaders } from "./gql-client";
 export * from "./input-cache";
+export * from "./query-result-convert";
