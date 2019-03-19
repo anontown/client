@@ -4,7 +4,6 @@ import {
   Paper,
 } from "material-ui";
 import * as React from "react";
-import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -12,6 +11,7 @@ import {
 import { Snack, Errors } from "../../components";
 import { userSwitch, UserSwitchProps, queryResultConvert } from "../../utils";
 import * as G from "../../../generated/graphql";
+import { useTitle } from "react-use";
 
 type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -35,10 +35,9 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
   queryResultConvert(clients);
   const delToken = G.DelTokenClient.use();
 
+  useTitle("連携アプリ管理");
+
   return <div>
-    <Helmet>
-      <title>連携アプリ管理</title>
-    </Helmet>
     <Snack
       msg={snackMsg}
       onHide={() => setSnackMsg(null)} />

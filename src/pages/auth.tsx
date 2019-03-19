@@ -1,7 +1,6 @@
 import { RaisedButton } from "material-ui";
 import * as qs from "query-string";
 import * as React from "react";
-import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
   withRouter,
@@ -9,6 +8,7 @@ import {
 import { Snack, Page, Errors } from "../components";
 import { userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
+import { useTitle } from "react-use";
 
 type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -22,11 +22,10 @@ export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
   queryResultConvert(clients);
   const submit = G.CreateTokenGeneral.use();
 
+  useTitle("アプリ認証");
+
 
   return <Page>
-    <Helmet>
-      <title>アプリ認証</title>
-    </Helmet>
     <Snack
       msg={snackMsg}
       onHide={() => setSnackMsg(null)} />
