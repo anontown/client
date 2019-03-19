@@ -19,16 +19,11 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
   const [newPass, setNewPass] = React.useState("");
   const [oldPass, setOldPass] = React.useState("");
-  const [sn, setSn] = React.useState("");
+
   const user = G.FindUser.use();
   queryResultConvert(user);
-  React.useEffect(() => {
-    if (user.data !== undefined) {
-      setSn(user.data.user.sn);
-    } else {
-      setSn("");
-    }
-  }, [user.data, setSn]);
+
+  const [sn, setSn] = React.useState(user.data !== undefined ? user.data.user.sn : "");
   const updateUserSubmit = G.UpdateUser.use();
   const createTokenMasterSubmit = G.CreateTokenMaster.use();
 
