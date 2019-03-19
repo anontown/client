@@ -17,11 +17,12 @@ import * as G from "../../generated/graphql";
 type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => {
+  const now = React.useRef(new Date().toISOString());
   const reses = G.FindReses.use({
     variables: {
       query: {
         date: {
-          date: new Date().toISOString(),
+          date: now.current,
           type: "lte"
         },
         notice: true

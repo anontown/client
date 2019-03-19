@@ -16,11 +16,12 @@ import * as G from "../../generated/graphql";
 type MessagesPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) => {
+  const now = React.useRef(new Date().toISOString());
   const msgs = G.FindMsgs.use({
     variables: {
       query: {
         date: {
-          date: new Date().toISOString(),
+          date: now.current,
           type: "lte"
         }
       }

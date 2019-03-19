@@ -295,7 +295,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
     const old = items.last();
     if (old === undefined) {
-      resetDate(new Date().toISOString());
+      await resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
         let ise: {

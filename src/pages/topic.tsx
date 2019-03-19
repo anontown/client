@@ -32,6 +32,7 @@ interface TopicPageProps extends RouteComponentProps<{ id: string }> {
 }
 
 export const TopicPage = withRouter((props: TopicPageProps) => {
+  const now = React.useRef(new Date().toISOString());
   const [isResWrite, setIsResWrite] = React.useState(false);
   const [isAutoScrollDialog, setIsAutoScrollDialog] = React.useState(false);
   const [isNGDialog, setIsNGDialog] = React.useState(false);
@@ -49,10 +50,10 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
     if (topicRead !== undefined) {
       initDate = topicRead.date;
     } else {
-      initDate = new Date().toISOString();
+      initDate = now.current;
     }
   } else {
-    initDate = new Date().toISOString();
+    initDate = now.current;
   }
 
   const isFavo = user.value !== null && user.value.storage.topicFavo.has(props.match.params.id);
