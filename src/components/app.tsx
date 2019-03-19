@@ -63,7 +63,6 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
 
   changeLocation(prop: AppProps) {
     const path = prop.location.pathname;
-    console.log("ga", path);
     gtag("config", gaID, {
       page_path: path,
     });
