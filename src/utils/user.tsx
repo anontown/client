@@ -30,6 +30,7 @@ export interface UserProps {
 
 export const User = (props: UserProps) => {
   const [userData, setUserData] = React.useState(props.initUserData);
+  auth = props.initUserData !== null ? props.initUserData.token : null;
   const subjectRef = React.useRef(new rx.Subject<UserData | null>());
   useEffectSkipN(() => {
     subjectRef.current.next(userData);
