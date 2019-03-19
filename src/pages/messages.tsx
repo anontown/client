@@ -10,7 +10,7 @@ import {
   Md,
   Page,
 } from "../components";
-import { dateFormat, userSwitch, UserSwitchProps } from "../utils";
+import { dateFormat, userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
 
 type MessagesPageProps = RouteComponentProps<{}> & UserSwitchProps;
@@ -26,6 +26,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
       }
     }
   });
+  queryResultConvert(msgs);
 
   return (
     <Page>

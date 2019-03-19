@@ -10,7 +10,7 @@ import {
   TopicFork,
 } from "../components";
 import {
-  withModal, userSwitch, UserSwitchProps,
+  withModal, userSwitch, UserSwitchProps, queryResultConvert,
 } from "../utils";
 import * as G from "../../generated/graphql";
 
@@ -26,6 +26,7 @@ const TopicForkBase = withRouter(userSwitch((props: TopicForkBaseProps) => {
       }
     }
   });
+  queryResultConvert(topics);
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
 
   return <Paper zDepth={props.zDepth}>

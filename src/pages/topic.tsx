@@ -23,7 +23,7 @@ import {
 } from "../components";
 import * as style from "./topic.scss";
 import * as G from "../../generated/graphql";
-import { useUserContext } from "../utils";
+import { useUserContext, queryResultConvert } from "../utils";
 import * as rx from "rxjs";
 // TODO:NGのtransparent
 
@@ -37,6 +37,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
   const [isNGDialog, setIsNGDialog] = React.useState(false);
   const user = useUserContext();
   const topics = G.FindTopics.use({ variables: { query: { id: [props.match.params.id] } } });
+  queryResultConvert(topics);
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
   const [autoScrollSpeed, setAutoScrollSpeed] = React.useState(15);
   const [isAutoScroll, setIsAutoScroll] = React.useState(false);

@@ -10,7 +10,7 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack, Errors } from "../../components";
-import { UserSwitchProps, userSwitch } from "../../utils";
+import { UserSwitchProps, userSwitch, queryResultConvert } from "../../utils";
 import * as G from "../../../generated/graphql";
 
 type AccountSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
@@ -21,6 +21,7 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
   const [oldPass, setOldPass] = React.useState("");
   const [sn, setSn] = React.useState("");
   const user = G.FindUser.use();
+  queryResultConvert(user);
   React.useEffect(() => {
     if (user.data !== undefined) {
       setSn(user.data.user.sn);

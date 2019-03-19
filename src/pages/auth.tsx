@@ -7,7 +7,7 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack, Page, Errors } from "../components";
-import { userSwitch, UserSwitchProps } from "../utils";
+import { userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
 
 type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;
@@ -19,6 +19,7 @@ export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
     skip: typeof id !== "string",
     variables: { query: { id: typeof id === "string" ? [id] : [] } }
   });
+  queryResultConvert(clients);
   const submit = G.CreateTokenGeneral.use();
 
 

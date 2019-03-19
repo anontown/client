@@ -10,7 +10,7 @@ import {
   withRouter,
 } from "react-router-dom";
 import { Snack, Errors } from "../../components";
-import { userSwitch, UserSwitchProps } from "../../utils";
+import { userSwitch, UserSwitchProps, queryResultConvert } from "../../utils";
 import * as G from "../../../generated/graphql";
 
 type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
@@ -18,6 +18,7 @@ type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
   const tokens = G.FindTokens.use({ variables: {} });
+  queryResultConvert(tokens);
   const variables: G.FindClients.Variables = {
     query: {
       id: tokens.data !== undefined
@@ -31,6 +32,7 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
     skip: tokens === undefined,
     variables,
   });
+  queryResultConvert(clients);
   const delToken = G.DelTokenClient.use();
 
   return <div>

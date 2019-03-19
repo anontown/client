@@ -11,7 +11,7 @@ import {
   Page,
   Res,
 } from "../components";
-import { userSwitch, UserSwitchProps } from "../utils";
+import { userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
 
 type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;
@@ -28,6 +28,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
       }
     }
   });
+  queryResultConvert(reses);
 
   return (
     <Page>

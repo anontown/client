@@ -58,7 +58,7 @@ export const ResWrite = (props: ResWriteProps) => {
       }
     });
 
-  const { data: profiles } = G.FindProfiles.use({
+  const profiles = G.FindProfiles.use({
     variables: {
       query: {
         self: true
@@ -103,23 +103,25 @@ export const ResWrite = (props: ResWriteProps) => {
             ...x,
             name: v,
           })))} />
-    <Select
-      style={{
-        marginRight: "3px",
-        backgroundColor: "#fff",
-      }}
-      value={data.profile || ""}
-      onChange={v => {
-        setStorage(props.userData.storage.topicWrite
-          .update(props.topic, formDefualt, x => ({
-            ...x,
-            profile: v || null,
-          })));
-      }}
-      options={[
-        { value: "", text: "(プロフなし)" },
-        ...profiles!.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` })),
-      ]} />
+    {profiles.data !== undefined
+      ? <Select
+        style={{
+          marginRight: "3px",
+          backgroundColor: "#fff",
+        }}
+        value={data.profile || ""}
+        onChange={v => {
+          setStorage(props.userData.storage.topicWrite
+            .update(props.topic, formDefualt, x => ({
+              ...x,
+              profile: v || null,
+            })));
+        }}
+        options={[
+          { value: "", text: "(プロフなし)" },
+          ...profiles.data.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` })),
+        ]} />
+      : null}
     <CheckBox
       value={data.age}
       onChange={v =>

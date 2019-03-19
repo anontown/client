@@ -14,6 +14,7 @@ import {
 import {
   userSwitch,
   UserSwitchProps,
+  queryResultConvert,
 } from "../../utils";
 import * as G from "../../../generated/graphql";
 
@@ -22,6 +23,7 @@ type DevSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
   const variables: G.FindClients.Variables = { query: { self: true } };
   const clients = G.FindClients.use({ variables });
+  queryResultConvert(clients);
 
   return <Paper>
     <Helmet>
