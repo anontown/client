@@ -70,9 +70,6 @@ function sleep(ms: number) {
 
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
-  setTimeout(() => {
-    toBottom();
-  }, 1000);
 
   const variables = props.queryVariables({
     date: props.initDate,
@@ -82,6 +79,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     variables: variables
   });
   queryResultConvert(data);
+
+  useEffectCond(() => {
+    resetDate(props.initDate);
+  }, () => data.data !== null);
 
   React.useEffect(() => {
     if (data.data !== undefined) {
