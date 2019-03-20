@@ -342,17 +342,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const resetDate = async (date: string) => {
     await lock(async () => {
-      await data.fetchMore({
-        variables: props.queryVariables({
-          date: date,
-          type: "lte"
-        }),
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-
-          return props.queryResultMapper(prev, _data => props.queryResultConverter(fetchMoreResult));
-        }
-      });
+      await data.refetch(props.queryVariables({
+        date: date,
+        type: "lte"
+      }));
       switch (props.newItemOrder) {
         case "bottom":
           await toBottom();
