@@ -12,7 +12,7 @@ export function useEffectSkipN(effect: React.EffectCallback, deps?: React.Depend
   }, deps);
 }
 
-export function useEffectCond(effect: React.EffectCallback, cond: () => boolean, n = 1) {
+export function useEffectCond(effect: React.EffectCallback, cond = () => true, deps?: React.DependencyList, n = 1) {
   const countRef = React.useRef(0);
 
   React.useEffect(() => {
@@ -23,5 +23,5 @@ export function useEffectCond(effect: React.EffectCallback, cond: () => boolean,
         countRef.current++;
       }
     }
-  });
+  }, deps);
 }
