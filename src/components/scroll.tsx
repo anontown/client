@@ -2,7 +2,7 @@ import * as React from "react";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
-import { useLock, queryResultConvert, useEffectCond } from "../utils";
+import { useLock, queryResultConvert, useEffectCond, useEffectRef } from "../utils";
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
@@ -362,98 +362,102 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     await findAfter();
   };
 
-  React.useEffect(() => {
+  useEffectRef(f => {
     const el = rootEl.current;
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
         .pipe(op.map(() => el.scrollTop),
           op.filter(top => top <= props.width),
           op.debounceTime(props.debounceTime))
-        .subscribe(() => {
-          switch (props.newItemOrder) {
-            case "top":
-              findAfter();
-              break;
-            case "bottom":
-              findBefore();
-              break;
-          }
-        }) :
+        .subscribe(() => f.current()) :
       null;
     return () => {
       if (subs !== null) {
         subs.unsubscribe();
       }
     };
+  }, () => {
+    switch (props.newItemOrder) {
+      case "top":
+        findAfter();
+        break;
+      case "bottom":
+        findBefore();
+        break;
+    }
   }, [rootEl.current, props.debounceTime]);
 
-  React.useEffect(() => {
+  useEffectRef(f => {
     const el = rootEl.current;
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
         .pipe(op.map(() => el.scrollTop + el.clientHeight),
           op.filter(bottom => bottom >= el.scrollHeight - props.width),
           op.debounceTime(props.debounceTime))
-        .subscribe(() => {
-          switch (props.newItemOrder) {
-            case "bottom":
-              findAfter();
-              break;
-            case "top":
-              findBefore();
-              break;
-          }
-        })
+        .subscribe(() => f.current())
       : null;
     return () => {
       if (subs !== null) {
         subs.unsubscribe();
       }
     };
+  }, () => {
+    switch (props.newItemOrder) {
+      case "bottom":
+        findAfter();
+        break;
+      case "top":
+        findBefore();
+        break;
+    }
   }, [rootEl.current, props.debounceTime]);
 
-  React.useEffect(() => {
+  useEffectRef(f => {
     const el = rootEl.current;
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
         .pipe(op.debounceTime(props.debounceTime),
           op.mergeMap(() => props.newItemOrder === "top" ? getTopElement() : getBottomElement())
         )
-        .subscribe(newItem => {
-          if (newItem !== null) {
-            props.scrollNewItemChange(newItem.item.data);
-          }
-        })
+        .subscribe(x => f.current(x))
       : null;
     return () => {
       if (subs !== null) {
         subs.unsubscribe();
       }
     };
-  }, [rootEl.current, props.debounceTime]);
+  }, (newItem: {
+    y: number;
+    item: ListItem<T>;
+    el: HTMLDivElement;
+  } | null) => {
+      if (newItem !== null) {
+        props.scrollNewItemChange(newItem.item.data);
+      }
+    }, [rootEl.current, props.debounceTime]);
 
-  React.useEffect(() => {
+  useEffectRef(f => {
     const subs = rx
       .interval(100)
-      .subscribe(() => {
-        const el = rootEl.current;
-        if (props.isAutoScroll && el !== null) {
-          el.scrollTop += props.autoScrollSpeed;
-        }
-      });
+      .subscribe(() => f.current());
     return () => {
       subs.unsubscribe();
     };
+  }, () => {
+    const el = rootEl.current;
+    if (props.isAutoScroll && el !== null) {
+      el.scrollTop += props.autoScrollSpeed;
+    }
   }, []);
   // TODO: autoScrollSpeedとか配列に追加しないと正常に動かないかも
 
-  React.useEffect(() => {
-    const subs = props.scrollNewItem.subscribe(date => {
-      resetDate(date);
-    });
+  useEffectRef(f => {
+    const subs = props.scrollNewItem.subscribe(x => f.current(x));
     return () => {
       subs.unsubscribe();
     };
+  }, (date: string) => {
+    resetDate(date);
   }, [props.scrollNewItem]);
 
 
