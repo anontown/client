@@ -70,6 +70,9 @@ function sleep(ms: number) {
 
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
+  setTimeout(() => {
+    toBottom();
+  }, 1000);
 
   const variables = props.queryVariables({
     date: props.initDate,
@@ -474,7 +477,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   return <div className={props.className} style={props.style} ref={rootEl}>
     {data.data !== undefined
       ? (props.newItemOrder === "bottom"
-        ? props.queryResultConverter(data.data).reverse()
+        ? [...props.queryResultConverter(data.data)].reverse()
         : props.queryResultConverter(data.data))
         .map(item => <div
           key={item.id}
