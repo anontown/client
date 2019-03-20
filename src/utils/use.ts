@@ -5,7 +5,7 @@ export function useEffectSkipN(effect: React.EffectCallback, deps?: React.Depend
 
   React.useEffect(() => {
     if (countRef.current >= n) {
-      effect();
+      return effect();
     } else {
       countRef.current++;
     }
@@ -18,7 +18,7 @@ export function useEffectCond(effect: React.EffectCallback, cond: () => boolean,
   React.useEffect(() => {
     if (cond()) {
       if (countRef.current < n) {
-        effect();
+        return effect();
       } else {
         countRef.current++;
       }
