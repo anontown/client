@@ -2,7 +2,7 @@ import * as React from "react";
 import { UserData } from "src/models";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
-import { useEffectSkipN } from "./use-effect-skip-n";
+import { useEffectSkipN } from "./use";
 import { useSave } from "./storage-api";
 import * as G from "../../generated/graphql";
 
