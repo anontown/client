@@ -90,17 +90,17 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     }
   }, [data.data]);
 
-  const idElMap = React.useRef(new Map<string, HTMLDivElement>());
+  const idElMap = React.useMemo(() => new Map<string, HTMLDivElement>(), []);
   React.useEffect(() => {
     if (data.data !== undefined) {
       const items = new Set(props.queryResultConverter(data.data).map(x => x.id));
-      for (let id of idElMap.current.keys()) {
+      for (let id of idElMap.keys()) {
         if (!items.has(id)) {
-          idElMap.current.delete(id);
+          idElMap.delete(id);
         }
       }
     } else {
-      idElMap.current.clear();
+      idElMap.clear();
     }
 
   }, [data.data, idElMap]);
@@ -145,7 +145,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     // 最短距離のアイテム
     const minItem = items
       .map(item => {
-        const el = idElMap.current.get(item.id);
+        const el = idElMap.get(item.id);
         if (el !== undefined) {
           return ({ item: dataToListItem(item), el });
         } else {
@@ -197,7 +197,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     // 最短距離のアイテム
     const minItem = items
       .map(item => {
-        const el = idElMap.current.get(item.id);
+        const el = idElMap.get(item.id);
         if (el !== null) {
           return ({ item: dataToListItem(item), el });
         } else {
@@ -484,7 +484,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           key={item.id}
           ref={el => {
             if (el !== null) {
-              idElMap.current.set(item.id, el);
+              idElMap.set(item.id, el);
             }
           }}>{props.dataToEl(item)}</div>)
       : null}
