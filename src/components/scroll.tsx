@@ -80,10 +80,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   });
   queryResultConvert(data);
 
-  useEffectCond(() => {
-    console.log("qaaaa");
-  }, () => data.data !== undefined);
-
   React.useEffect(() => {
     if (data.data !== undefined) {
       props.changeItems(props.queryResultConverter(data.data));
