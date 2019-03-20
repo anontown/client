@@ -10,7 +10,7 @@ import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { Select } from "./select";
 import { TextField } from "./text-field";
-import { useInputCache } from "../utils";
+import { useInputCache, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
 
 
@@ -65,6 +65,7 @@ export const ResWrite = (props: ResWriteProps) => {
       }
     }
   });
+  queryResultConvert(profiles);
 
   const mutation = G.CreateRes.use({
     variables: {
