@@ -7,7 +7,7 @@ import * as storageAPI from "./storage-api";
 export * from "./props-type";
 export * from "./user-switch";
 export * from "./user";
-export * from "./use-effect-skip-n";
+export * from "./use";
 export * from "./lock";
 
 export {
