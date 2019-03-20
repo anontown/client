@@ -2,9 +2,9 @@ import * as React from "react";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
-import { useLock, queryResultConvert, useEffectCond, useEffectRef } from "../utils";
+import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef } from "../utils";
 import { DocumentNode } from "graphql";
-import { useQuery, useSubscription } from "react-apollo-hooks";
+import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
 
 interface ListItemData {
@@ -461,22 +461,23 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   }, [props.scrollNewItem]);
 
 
+  const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }: OnSubscriptionDataOptions<SubscriptionResult>) => {
+    if (subscriptionData.data !== undefined) {
+      const subsData = props.subscriptionResultConverter(subscriptionData.data);
+      const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables: variables });
+      if (data !== null) {
+        client.writeQuery({
+          query: props.query,
+          variables: variables,
+          data: props.queryResultMapper(data, x => [subsData, ...x])
+        });
+      }
+      props.onSubscription(subscriptionData.data);
+    }
+  });
   useSubscription<SubscriptionResult, SubscriptionVariables>(props.subscription, {
     variables: props.subscriptionVariables,
-    onSubscriptionData: ({ client, subscriptionData }) => {
-      if (subscriptionData.data !== undefined) {
-        const subsData = props.subscriptionResultConverter(subscriptionData.data);
-        const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables: variables });
-        if (data !== null) {
-          client.writeQuery({
-            query: props.query,
-            variables: variables,
-            data: props.queryResultMapper(data, x => [subsData, ...x])
-          });
-        }
-        props.onSubscription(subscriptionData.data);
-      }
-    }
+    onSubscriptionData: props => onSubscriptionDataRef.current(props)
   });
 
   return <div className={props.className} style={props.style} ref={rootEl}>

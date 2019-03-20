@@ -2,7 +2,7 @@ import * as React from "react";
 import { UserData } from "src/models";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
-import { useEffectSkipN } from "./use";
+import { useEffectSkipN, useEffectRef } from "./use";
 import { useSave } from "./storage-api";
 import * as G from "../../generated/graphql";
 
@@ -36,19 +36,21 @@ export const User = (props: UserProps) => {
     subjectRef.current.next(userData);
   }, [userData]);
   const storageSave = useSave();
-  React.useEffect(() => {
+  useEffectRef(f => {
     const subs = subjectRef
       .current
       .pipe(op.debounceTime(5000))
       .subscribe(data => {
-        if (data !== null) {
-          storageSave(data.storage);
-        }
+        f.current(data);
       });
 
     return () => {
       subs.unsubscribe();
     };
+  }, (data: UserData | null) => {
+    if (data !== null) {
+      storageSave(data.storage);
+    }
   }, []);
 
   useEffectSkipN(() => {

@@ -25,7 +25,7 @@ import {
 } from "../components";
 import * as style from "./topic-search.scss";
 import * as G from "../../generated/graphql";
-import { useUserContext, queryResultConvert } from "../utils";
+import { useUserContext, queryResultConvert, useEffectRef } from "../utils";
 
 type TopicSearchPageProps = RouteComponentProps<{}>;
 
@@ -66,23 +66,25 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
   });
   queryResultConvert(topics);
 
-  React.useEffect(() => {
+  useEffectRef(f => {
     const sub = formChange
       .current
       .pipe(op.debounceTime(500))
       .subscribe(() => {
-        props.history.push({
-          pathname: "/topic/search",
-          search: qs.stringify({
-            title: formTitle,
-            dead: formDead.toString(),
-            tags: formTags.toArray(),
-          }),
-        });
+        f.current();
       });
     return () => {
       sub.unsubscribe();
     };
+  }, () => {
+    props.history.push({
+      pathname: "/topic/search",
+      search: qs.stringify({
+        title: formTitle,
+        dead: formDead.toString(),
+        tags: formTags.toArray(),
+      }),
+    });
   }, [formChange.current]);
 
   return <Page>
