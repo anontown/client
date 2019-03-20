@@ -2,7 +2,7 @@ import * as React from "react";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
-import { useLock, queryResultConvert } from "../utils";
+import { useLock, queryResultConvert, useEffectCond } from "../utils";
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
@@ -79,6 +79,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     variables: variables
   });
   queryResultConvert(data);
+
+  useEffectCond(() => {
+    console.log("qaaaa");
+  }, () => data.data !== undefined);
 
   React.useEffect(() => {
     if (data.data !== undefined) {
