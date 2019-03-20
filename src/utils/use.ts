@@ -33,3 +33,8 @@ export function useValueRef<T>(val: T) {
   }, [val]);
   return ref;
 }
+
+export function useEffectRef<T>(effect: (ref: React.MutableRefObject<T>) => void | (() => void | undefined), val: T, deps?: React.DependencyList) {
+  const ref = useValueRef(val);
+  React.useEffect(() => effect(ref), deps);
+}
