@@ -98,7 +98,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
                   if (!fetchMoreResult) return prev;
                   return {
                     ...prev,
-                    msgs: [...prev.reses, ...fetchMoreResult.reses]
+                    reses: [...prev.reses, ...fetchMoreResult.reses]
                   }
                 }
               });
