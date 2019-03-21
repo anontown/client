@@ -2,6 +2,7 @@ import * as Im from "immutable";
 import * as uuid from "uuid";
 import * as ngJson from "./ng-json";
 import * as G from "../../generated/graphql";
+import { isNullOrUndefined } from "../utils";
 
 export function createDefaultNode(): NGNode {
   return {
@@ -25,7 +26,7 @@ export function createDefaultNG(): NG {
 }
 
 // TODO:chain
-export function isNG(ng: NG, res: G.Res.Fragment) {
+export function isNG(ng: NG, res: G.ResFragment) {
   if (ng.topic !== null && ng.topic !== res.topic.id) {
     return false;
   }
@@ -37,7 +38,7 @@ export function isNG(ng: NG, res: G.Res.Fragment) {
   return !!isNodeNG(ng.node, res);
 }
 
-function isNodeNG(node: NGNode, res: G.Res.Fragment): boolean | null {
+function isNodeNG(node: NGNode, res: G.ResFragment): boolean | null {
   switch (node.type) {
     case "not":
       const b = isNodeNG(node.child, res);
@@ -53,7 +54,7 @@ function isNodeNG(node: NGNode, res: G.Res.Fragment): boolean | null {
     case "text":
       return res.__typename === "ResNormal" && textMatcherTest(node.matcher, res.text);
     case "name":
-      return res.__typename === "ResNormal" && res.name !== null && textMatcherTest(node.matcher, res.name);
+      return res.__typename === "ResNormal" && !isNullOrUndefined(res.name) && textMatcherTest(node.matcher, res.name);
     case "vote":
       return res.uv - res.dv < node.value;
   }

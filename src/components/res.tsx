@@ -20,8 +20,8 @@ import { Snack } from "./snack";
 import * as G from "../../generated/graphql";
 
 interface ResProps {
-  res: G.Res.Fragment;
-  update?: (res: G.Res.Fragment) => void;
+  res: G.ResFragment;
+  update?: (res: G.ResFragment) => void;
 }
 
 export const Res = (props: ResProps) => {
@@ -51,7 +51,7 @@ export const Res = (props: ResProps) => {
         msg={snackMsg}
         onHide={() => setSnackMsg(null)} />
       <div className={style.vote}>
-        <G.VoteRes.Component
+        <G.VoteResComponent
           variables={{
             res: props.res.id,
             type: props.res.voteFlag === "uv" ? "cv" : "uv"
@@ -71,8 +71,8 @@ export const Res = (props: ResProps) => {
                   color={props.res.voteFlag === "uv" ? "orange" : undefined}>keyboard_arrow_up</FontIcon>
               </IconButton>
             </>);
-          }}</G.VoteRes.Component>
-        <G.VoteRes.Component
+          }}</G.VoteResComponent>
+        <G.VoteResComponent
           variables={{
             res: props.res.id,
             type: props.res.voteFlag === "dv" ? "cv" : "dv"
@@ -92,7 +92,7 @@ export const Res = (props: ResProps) => {
                   color={props.res.voteFlag === "dv" ? "orange" : undefined}>keyboard_arrow_down</FontIcon>
               </IconButton>
             </>);
-          }}</G.VoteRes.Component>
+          }}</G.VoteResComponent>
       </div>
       <div className={style.main}>
         <div className={classNames(style.header, {
@@ -156,7 +156,7 @@ export const Res = (props: ResProps) => {
               anchorOrigin={{ horizontal: "left", vertical: "top" }}
               targetOrigin={{ horizontal: "left", vertical: "top" }}>
               {props.res.self && props.res.__typename === "ResNormal"
-                ? <G.DelRes.Component
+                ? <G.DelResComponent
                   variables={{ res: props.res.id }}
                   onCompleted={data => {
                     if (props.update) {
@@ -167,7 +167,7 @@ export const Res = (props: ResProps) => {
                       {error && <Snack msg={"削除に失敗しました"} />}
                       <MenuItem primaryText="削除" onClick={() => submit()} />
                     </>);
-                  }}</G.DelRes.Component>
+                  }}</G.DelResComponent>
                 : null}
               <MenuItem primaryText="NG HASH" onClick={() => {
                 if (user.value !== null) {

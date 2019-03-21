@@ -17,23 +17,23 @@ type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
-  const tokens = G.FindTokens.use({ variables: {} });
+  const tokens = G.useFindTokensQuery({ variables: {} });
   queryResultConvert(tokens);
-  const variables: G.FindClients.Variables = {
+  const variables: G.FindClientsQueryVariables = {
     query: {
       id: tokens.data !== undefined
         ? Array.from(new Set(tokens.data.tokens
-          .filter((x): x is G.TokenGeneral.Fragment => x.__typename === "TokenGeneral")
+          .filter((x): x is G.TokenGeneralFragment => x.__typename === "TokenGeneral")
           .map(x => x.client.id)))
         : []
     }
   };
-  const clients = G.FindClients.use({
+  const clients = G.useFindClientsQuery({
     skip: tokens === undefined,
     variables,
   });
   queryResultConvert(clients);
-  const delToken = G.DelTokenClient.use();
+  const delToken = G.useDelTokenClientMutation();
 
   useTitle("連携アプリ管理");
 
@@ -54,10 +54,10 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
           try {
             await delToken({
               variables: { client: c.id }, update: (cache) => {
-                const clients = cache.readQuery<G.FindClients.Query, G.FindClients.Variables>({ query: G.FindClients.Document, variables });
+                const clients = cache.readQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({ query: G.FindClientsDocument, variables });
                 if (clients !== null) {
-                  cache.writeQuery<G.FindClients.Query, G.FindClients.Variables>({
-                    query: G.FindClients.Document,
+                  cache.writeQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({
+                    query: G.FindClientsDocument,
                     variables,
                     data: { clients: clients.clients.filter(x => x.id !== c.id) },
                   });

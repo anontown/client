@@ -6,7 +6,7 @@ import { TagsLink } from "./tags-link";
 import * as G from "../../generated/graphql";
 
 export interface TopicDataProps {
-  topic: G.Topic.Fragment;
+  topic: G.TopicFragment;
 }
 
 interface TopicDataState {

@@ -7,7 +7,7 @@ import * as style from "./profile-add.scss";
 import * as G from "../../generated/graphql";
 
 interface ProfileAddProps {
-  onAdd?: (profile: G.Profile.Fragment) => void;
+  onAdd?: (profile: G.ProfileFragment) => void;
   userData: UserData;
   style?: React.CSSProperties
 }
@@ -30,7 +30,7 @@ export class ProfileAdd extends React.Component<ProfileAddProps, ProfileAddState
 
   render() {
     return <Paper className={style.container} style={this.props.style}>
-      <G.CreateProfile.Component
+      <G.CreateProfileComponent
         variables={{
           name: this.state.name,
           text: this.state.text,
@@ -60,7 +60,7 @@ export class ProfileAdd extends React.Component<ProfileAddProps, ProfileAddState
             onChange={v => this.setState({ text: v })} />
           <RaisedButton onClick={() => submit()} label="OK" />
         </form>);
-      }}</G.CreateProfile.Component>
+      }}</G.CreateProfileComponent>
     </Paper>;
   }
 }

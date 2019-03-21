@@ -28,7 +28,7 @@ export class TopicFavo extends React.Component<TopicFavoProps, TopicFavoState> {
 
   render() {
     return <div>
-      <G.FindTopics.Component
+      <G.FindTopicsComponent
         variables={{ query: { id: this.props.userData.storage.topicFavo.toArray() } }}>
         {({ loading, error, data, refetch }) => {
           return <>
@@ -60,7 +60,7 @@ export class TopicFavo extends React.Component<TopicFavoProps, TopicFavoState> {
             }
           </>;
         }}
-      </G.FindTopics.Component>
+      </G.FindTopicsComponent>
     </div>;
   }
 }

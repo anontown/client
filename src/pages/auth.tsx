@@ -15,12 +15,12 @@ type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;
 export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
   const id: string | string[] | undefined = qs.parse(props.location.search).client;
-  const clients = G.FindClients.use({
+  const clients = G.useFindClientsQuery({
     skip: typeof id !== "string",
     variables: { query: { id: typeof id === "string" ? [id] : [] } }
   });
   queryResultConvert(clients);
-  const submit = G.CreateTokenGeneral.use();
+  const submit = G.useCreateTokenGeneralMutation();
 
   useTitle("アプリ認証");
 

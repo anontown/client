@@ -28,7 +28,7 @@ const ResBase = withRouter((class extends React.Component<ResBaseProps, ResBaseS
       <Helmet>
         <title>レス</title>
       </Helmet>
-      <G.FindReses.Component
+      <G.FindResesComponent
         variables={{ query: { id: [this.props.match.params.id] } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
@@ -40,7 +40,7 @@ const ResBase = withRouter((class extends React.Component<ResBaseProps, ResBaseS
             </Paper>
           );
         }}
-      </G.FindReses.Component>
+      </G.FindResesComponent>
     </div>;
   }
 }));

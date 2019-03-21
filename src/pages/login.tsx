@@ -25,7 +25,7 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
   const [pass, setPass] = React.useState("");
   const [errors, setErrors] = React.useState<string[] | undefined>(undefined);
   const userContext = useUserContext();
-  const submit = G.CreateTokenMaster.use();
+  const submit = G.useCreateTokenMasterMutation();
 
   return <Page>
     <Helmet>
@@ -59,7 +59,7 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
                 }
               });
               if (token.data !== undefined) {
-                userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMaster.Fragment))
+                userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment))
               }
             } catch{
               setErrors(["ログインに失敗しました。"]);

@@ -37,13 +37,13 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
   const [isAutoScrollDialog, setIsAutoScrollDialog] = React.useState(false);
   const [isNGDialog, setIsNGDialog] = React.useState(false);
   const user = useUserContext();
-  const topics = G.FindTopics.use({ variables: { query: { id: [props.match.params.id] } } });
+  const topics = G.useFindTopicsQuery({ variables: { query: { id: [props.match.params.id] } } });
   queryResultConvert(topics);
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
   const [autoScrollSpeed, setAutoScrollSpeed] = React.useState(15);
   const [isAutoScroll, setIsAutoScroll] = React.useState(false);
   const scrollNewItem = React.useRef(new rx.ReplaySubject<string>(1));
-  const items = React.useRef<G.Res.Fragment[]>([]);
+  const items = React.useRef<G.ResFragment[]>([]);
   let initDate;
   if (user.value !== null) {
     const topicRead = user.value.storage.topicRead.get(props.match.params.id);
@@ -206,12 +206,12 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                 : null}
             </div>
           </Paper>
-          <Scroll<G.Res.Fragment, G.FindReses.Query, G.FindReses.Variables, G.ResAdded.Subscription, G.ResAdded.Variables>
-            query={G.FindReses.Document}
+          <Scroll<G.ResFragment, G.FindResesQuery, G.FindResesQueryVariables, G.ResAddedSubscription, G.ResAddedSubscriptionVariables>
+            query={G.FindResesDocument}
             queryVariables={date => ({ query: { date, topic: topic.id } })}
             queryResultConverter={x => x.reses}
             queryResultMapper={(x, f) => ({ ...x, reses: f(x.reses) })}
-            subscription={G.ResAdded.Document}
+            subscription={G.ResAddedDocument}
             subscriptionVariables={{ topic: topic.id }}
             subscriptionResultConverter={x => x.resAdded.res}
             className={style.reses}

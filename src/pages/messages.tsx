@@ -17,7 +17,7 @@ type MessagesPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) => {
   const now = React.useRef(new Date().toISOString());
-  const msgs = G.FindMsgs.use({
+  const msgs = G.useFindMsgsQuery({
     variables: {
       query: {
         date: {

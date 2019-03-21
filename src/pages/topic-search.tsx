@@ -54,7 +54,7 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
   const user = useUserContext();
   const limit = 100;
 
-  const topics = G.FindTopics.use({
+  const topics = G.useFindTopicsQuery({
     variables: {
       query: {
         title: query.title,

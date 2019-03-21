@@ -77,8 +77,8 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
       } else {
         throw Error();
       }
-      let res = await gqlClient.query<G.FindToken.Query>({
-        query: G.FindToken.Document,
+      let res = await gqlClient.query<G.FindTokenQuery>({
+        query: G.FindTokenDocument,
         context: {
           headers: createHeaders(token.id, token.key)
         }
@@ -86,7 +86,7 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
       if (res.data.token.__typename as string === "TokenGeneral") {
         throw Error();
       }
-      this.setState({ initUserData: await createUserData(res.data.token as G.TokenMaster.Fragment) });
+      this.setState({ initUserData: await createUserData(res.data.token as G.TokenMasterFragment) });
     } catch {
       this.setState({ initUserData: null });
     }

@@ -22,7 +22,7 @@ type TopicEditBaseProps = RouteComponentProps<{ id: string }> & UserSwitchProps 
 };
 
 const TopicEditBase = withRouter(userSwitch((props: TopicEditBaseProps) => {
-  const topics = G.FindTopics.use({
+  const topics = G.useFindTopicsQuery({
     variables: {
       query: {
         id: [props.match.params.id]

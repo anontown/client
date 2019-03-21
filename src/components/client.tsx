@@ -8,8 +8,8 @@ import { ClientEditor } from "./client-editor";
 import * as G from "../../generated/graphql";
 
 interface ClientProps {
-  client: G.Client.Fragment;
-  onUpdate?: (client: G.Client.Fragment) => void;
+  client: G.ClientFragment;
+  onUpdate?: (client: G.ClientFragment) => void;
   userData: UserData | null;
 }
 

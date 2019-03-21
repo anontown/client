@@ -50,7 +50,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
           {t}
         </span>).toArray()}
       </div>
-      <G.FindTopicTags.Component>{
+      <G.FindTopicTagsComponent>{
         ({ loading, error, data }) => {
           if (loading) return "Loading...";
           if (error || !data) return (<Snack msg="タグ候補取得に失敗しました" />);
@@ -92,7 +92,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
             }}
           />;
         }
-      }</G.FindTopicTags.Component>
+      }</G.FindTopicTagsComponent>
     </>;
   }
 }

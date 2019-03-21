@@ -28,7 +28,7 @@ const ResHashBase = withRouter(class extends React.Component<ResHashBaseProps, R
       <Helmet>
         <title>HASH:{hash}</title>
       </Helmet>
-      <G.FindReses.Component
+      <G.FindResesComponent
         variables={{ query: { hash } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
@@ -37,7 +37,7 @@ const ResHashBase = withRouter(class extends React.Component<ResHashBaseProps, R
             <Res res={res} />
           </Paper>)
         }}
-      </G.FindReses.Component>
+      </G.FindResesComponent>
     </div>;
   }
 });

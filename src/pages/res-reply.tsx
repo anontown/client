@@ -26,7 +26,7 @@ const ResReplyBase = withRouter(class extends React.Component<ResReplyBaseProps,
       <Helmet>
         <title>リプライ</title>
       </Helmet>
-      <G.FindReses.Component
+      <G.FindResesComponent
         variables={{ query: { reply: this.props.match.params.id } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
@@ -35,7 +35,7 @@ const ResReplyBase = withRouter(class extends React.Component<ResReplyBaseProps,
             <Res res={res} />
           </Paper>)
         }}
-      </G.FindReses.Component>
+      </G.FindResesComponent>
     </div>;
   }
 });

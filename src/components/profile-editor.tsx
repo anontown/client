@@ -6,8 +6,8 @@ import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
 import * as G from "../../generated/graphql";
 interface ProfileEditorProps {
-  profile: G.Profile.Fragment;
-  onUpdate?: (profile: G.Profile.Fragment) => void;
+  profile: G.ProfileFragment;
+  onUpdate?: (profile: G.ProfileFragment) => void;
   userData: UserData;
   style?: React.CSSProperties
 }
@@ -17,7 +17,7 @@ export const ProfileEditor = (props: ProfileEditorProps) => {
   const [sn, setSn] = React.useState(props.profile.sn);
   const [name, setName] = React.useState(props.profile.name);
   const [text, setText] = React.useState(props.profile.text);
-  const submit = G.UpdateProfile.use({
+  const submit = G.useUpdateProfileMutation({
     variables: {
       id: props.profile.id,
       name: name,

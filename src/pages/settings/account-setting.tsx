@@ -20,12 +20,12 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
   const [newPass, setNewPass] = React.useState("");
   const [oldPass, setOldPass] = React.useState("");
 
-  const user = G.FindUser.use();
+  const user = G.useFindUserQuery();
   queryResultConvert(user);
 
   const [sn, setSn] = React.useState(user.data !== undefined ? user.data.user.sn : "");
-  const updateUserSubmit = G.UpdateUser.use();
-  const createTokenMasterSubmit = G.CreateTokenMaster.use();
+  const updateUserSubmit = G.useUpdateUserMutation();
+  const createTokenMasterSubmit = G.useCreateTokenMasterMutation();
 
   return <Paper>
     <Helmet>
@@ -69,7 +69,7 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
               if (token.data !== undefined) {
                 props.updateUserData({
                   ...props.userData,
-                  token: token.data.createTokenMaster as G.TokenMaster.Fragment
+                  token: token.data.createTokenMaster as G.TokenMasterFragment
                 });
               }
             } catch{

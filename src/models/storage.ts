@@ -202,8 +202,8 @@ function convert6To7(val: StorageJSON6): StorageJSON7 {
 
 async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
   const topicRead: StorageJSON8["topicRead"] = {};
-  const dates = new Map((await gqlClient.query<G.FindReses.Query, G.FindReses.Variables>({
-    query: G.FindReses.Document,
+  const dates = new Map((await gqlClient.query<G.FindResesQuery, G.FindResesQueryVariables>({
+    query: G.FindResesDocument,
     variables: {
       query: {
         id: Object.entries(val.topicRead)

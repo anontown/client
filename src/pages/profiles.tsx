@@ -32,7 +32,7 @@ export const ProfilesPage = userSwitch(withRouter(class extends React.Component<
         </Helmet>
         <Tabs>
           <Tab label="編集">
-            <G.FindProfiles.Component variables={{ query: { self: true } }}>
+            <G.FindProfilesComponent variables={{ query: { self: true } }}>
               {({ loading, error, data }) => {
                 if (loading) return "Loading...";
                 if (error || !data) return (<Snack msg="プロフィール取得に失敗しました" />);
@@ -45,7 +45,7 @@ export const ProfilesPage = userSwitch(withRouter(class extends React.Component<
                       profile={p}
                       userData={this.props.userData} />)
                 );
-              }}</G.FindProfiles.Component>
+              }}</G.FindProfilesComponent>
           </Tab>
           <Tab label="新規">
             <ProfileAdd

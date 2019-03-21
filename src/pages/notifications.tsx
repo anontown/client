@@ -18,7 +18,7 @@ type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => {
   const now = React.useRef(new Date().toISOString());
-  const reses = G.FindReses.use({
+  const reses = G.useFindResesQuery({
     variables: {
       query: {
         date: {

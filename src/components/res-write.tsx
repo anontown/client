@@ -15,7 +15,7 @@ import * as G from "../../generated/graphql";
 
 
 interface ResWriteProps {
-  onSubmit?: (value: G.Res.Fragment) => void;
+  onSubmit?: (value: G.ResNormalFragment) => void;
   topic: string;
   reply: string | null;
   userData: UserData;
@@ -58,7 +58,7 @@ export const ResWrite = (props: ResWriteProps) => {
       }
     });
 
-  const profiles = G.FindProfiles.use({
+  const profiles = G.useFindProfilesQuery({
     variables: {
       query: {
         self: true
@@ -67,7 +67,7 @@ export const ResWrite = (props: ResWriteProps) => {
   });
   queryResultConvert(profiles);
 
-  const mutation = G.CreateRes.use({
+  const mutation = G.useCreateResMutation({
     variables: {
       topic: props.topic,
       name: data.name.length !== 0 ? data.name : null,
@@ -80,8 +80,8 @@ export const ResWrite = (props: ResWriteProps) => {
 
   const submit = () => {
     mutation().then(x => {
-      if (props.onSubmit) {
-        props.onSubmit(x.data!.createRes);
+      if (props.onSubmit !== undefined && x.data !== undefined) {
+        props.onSubmit(x.data.createRes);
       }
       setErrors([]);
       setTextCache("");

@@ -12,7 +12,7 @@ import { TagsLink } from "./tags-link";
 import * as G from "../../generated/graphql";
 
 interface HistoryProps {
-  history: G.History.Fragment;
+  history: G.HistoryFragment;
 }
 
 interface HistoryState {

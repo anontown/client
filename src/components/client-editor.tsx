@@ -5,8 +5,8 @@ import { Errors } from "./errors";
 import * as G from "../../generated/graphql";
 
 interface ClientEditorProps {
-  client: G.Client.Fragment;
-  onUpdate?: (client: G.Client.Fragment) => void;
+  client: G.ClientFragment;
+  onUpdate?: (client: G.ClientFragment) => void;
   userData: UserData;
 }
 
@@ -25,7 +25,7 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
   }
 
   render() {
-    return (<G.UpdateClient.Component
+    return (<G.UpdateClientComponent
       variables={{
         id: this.props.client.id,
         name: this.state.name,
@@ -44,6 +44,6 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
             <RaisedButton onClick={() => submit()} label="OK" />
           </form>);
         }
-      }</G.UpdateClient.Component>);
+      }</G.UpdateClientComponent>);
   }
 }

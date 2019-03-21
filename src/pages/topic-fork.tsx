@@ -19,7 +19,7 @@ type TopicForkBaseProps = RouteComponentProps<{ id: string }> & UserSwitchProps 
 };
 
 const TopicForkBase = withRouter(userSwitch((props: TopicForkBaseProps) => {
-  const topics = G.FindTopics.use({
+  const topics = G.useFindTopicsQuery({
     variables: {
       query: {
         id: [props.match.params.id]

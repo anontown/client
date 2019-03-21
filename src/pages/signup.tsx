@@ -71,7 +71,7 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
               onChange={(v: string) => this.setState({ recaptcha: v })} />
             <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
 
-            <G.CreateUser.Component
+            <G.CreateUserComponent
               onError={() => {
                 const rc = this.recaptchaRef.current;
                 if (rc) {
@@ -80,7 +80,7 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
                 this.setState({ errors: ["アカウント作成に失敗しました"] });
               }}
               onCompleted={async x => {
-                user.update(await createUserData(x.createUser.token as G.TokenMaster.Fragment))
+                user.update(await createUserData(x.createUser.token as G.TokenMasterFragment))
               }}
               variables={{
                 sn: this.state.sn, pass: this.state.pass,
@@ -88,7 +88,7 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
               }}>
               {create =>
                 (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}
-            </G.CreateUser.Component>
+            </G.CreateUserComponent>
             <Link to="/login">ログイン</Link>
           </form>
         </Paper>}</UserContext.Consumer>

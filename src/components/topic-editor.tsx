@@ -9,8 +9,8 @@ import * as G from "../../generated/graphql";
 
 
 interface TopicEditorProps {
-  topic: G.TopicNormal.Fragment;
-  onUpdate?: (topic: G.TopicNormal.Fragment) => void;
+  topic: G.TopicNormalFragment;
+  onUpdate?: (topic: G.TopicNormalFragment) => void;
   userData: UserData;
 }
 
@@ -31,7 +31,7 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
   }
 
   render() {
-    return <G.UpdateTopic.Component
+    return <G.UpdateTopicComponent
       variables={{
         id: this.props.topic.id,
         title: this.state.title,
@@ -62,6 +62,6 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
             <RaisedButton onClick={() => submit()} label="OK" />
           </form>);
         }
-      }</G.UpdateTopic.Component>;
+      }</G.UpdateTopicComponent>;
   }
 }

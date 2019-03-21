@@ -21,8 +21,8 @@ import * as G from "../../../generated/graphql";
 type DevSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
 
 export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
-  const variables: G.FindClients.Variables = { query: { self: true } };
-  const clients = G.FindClients.use({ variables });
+  const variables: G.FindClientsQueryVariables = { query: { self: true } };
+  const clients = G.useFindClientsQuery({ variables });
   queryResultConvert(clients);
 
   return <Paper>
@@ -34,10 +34,10 @@ export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
     </Paper>
     <ClientAdd
       onAddUpdate={(cache, data) => {
-        const clients = cache.readQuery<G.FindClients.Query, G.FindClients.Variables>({ query: G.FindClients.Document, variables });
+        const clients = cache.readQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({ query: G.FindClientsDocument, variables });
         if (clients !== null && data.data !== undefined) {
-          cache.writeQuery<G.FindClients.Query, G.FindClients.Variables>({
-            query: G.FindClients.Document,
+          cache.writeQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({
+            query: G.FindClientsDocument,
             variables,
             data: { clients: clients.clients.concat([data.data.createClient]) },
           });

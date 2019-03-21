@@ -11,8 +11,8 @@ import * as G from "../../generated/graphql";
 import { useUserContext } from "../utils";
 
 interface TopicForkProps {
-  topic: G.TopicNormal.Fragment;
-  onCreate?: (topic: G.TopicFork.Fragment) => void;
+  topic: G.TopicNormalFragment;
+  onCreate?: (topic: G.TopicForkFragment) => void;
 }
 
 export const TopicFork = (props: TopicForkProps) => {
@@ -21,7 +21,7 @@ export const TopicFork = (props: TopicForkProps) => {
 
   return <div>
     {user.value !== null
-      ? <G.CreateTopicFork.Component
+      ? <G.CreateTopicForkComponent
         variables={{
           title: title,
           parent: props.topic.id
@@ -41,22 +41,22 @@ export const TopicFork = (props: TopicForkProps) => {
               <RaisedButton onClick={() => submit()} label="新規作成" />
             </form>);
           }
-        }</G.CreateTopicFork.Component>
+        }</G.CreateTopicForkComponent>
       : null}
     <hr />
-    <G.FindTopics.Component
+    <G.FindTopicsComponent
       variables={{ query: { parent: props.topic.id } }}>{
         ({ loading, error, data }) => {
           if (loading) return "Loading...";
           if (error || !data) return (<Snack msg="派生トピック取得に失敗しました" />);
           return (<div>
-            {(data.topics as G.TopicFork.Fragment[]).map(t => <Paper key={t.id}>
+            {data.topics.map(t => <Paper key={t.id}>
               <TopicListItem
                 topic={t}
                 detail={false} />
             </Paper>)}
           </div>);
         }
-      }</G.FindTopics.Component>
+      }</G.FindTopicsComponent>
   </div>;
 };

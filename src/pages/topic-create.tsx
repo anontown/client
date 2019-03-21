@@ -52,8 +52,8 @@ export const TopicCreatePage =
           <title>トピック作成</title>
         </Helmet>
         <Paper>
-          <Mutation<G.CreateTopicNormal.Mutation | G.CreateTopicOne.Mutation, G.CreateTopicNormal.Variables | G.CreateTopicOne.Variables>
-            mutation={this.state.type === "TopicNormal" ? G.CreateTopicNormal.Document : G.CreateTopicOne.Document}
+          <Mutation<G.CreateTopicNormalMutation | G.CreateTopicOneMutation, G.CreateTopicNormalMutationVariables | G.CreateTopicOneMutationVariables>
+            mutation={this.state.type === "TopicNormal" ? G.CreateTopicNormalDocument : G.CreateTopicOneDocument}
             variables={{
               title: this.state.title,
               tags: this.state.tags.toArray(),

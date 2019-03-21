@@ -28,7 +28,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
       <Helmet>
         <title>プロフィール</title>
       </Helmet>
-      <G.FindProfiles.Component
+      <G.FindProfilesComponent
         variables={{ query: { id: [this.props.match.params.id] } }}>
         {({ loading, error, data }) => {
           if (loading) return "Loading...";
@@ -43,7 +43,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
             </Paper>
           );
         }}
-      </G.FindProfiles.Component>
+      </G.FindProfilesComponent>
     </div>;
   }
 });

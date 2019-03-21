@@ -7,7 +7,7 @@ import { useSave } from "./storage-api";
 import * as G from "../../generated/graphql";
 
 // TODO: 最悪な実装なのであとで何とかする
-export let auth: G.TokenMaster.Fragment | null = null;
+export let auth: G.TokenMasterFragment | null = null;
 
 export interface UserContextType {
   value: UserData | null,

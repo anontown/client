@@ -8,7 +8,7 @@ import * as G from "../../generated/graphql";
 
 
 interface TopicListItemProps {
-  topic: G.Topic.Fragment;
+  topic: G.TopicFragment;
   detail: boolean;
 }
 

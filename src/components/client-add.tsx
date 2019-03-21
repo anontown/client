@@ -6,7 +6,7 @@ import { MutationUpdaterFn } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
 
 interface ClientAddProps {
-  onAddUpdate?: MutationUpdaterFn<G.CreateClient.Mutation>
+  onAddUpdate?: MutationUpdaterFn<G.CreateClientMutation>
   userData: UserData;
 }
 
@@ -15,7 +15,7 @@ export const ClientAdd = (props: ClientAddProps) => {
   const [name, setName] = React.useState("");
   const [error, setError] = React.useState<any>(null);
 
-  const submit = G.CreateClient.use({
+  const submit = G.useCreateClientMutation({
     variables: {
       name: name,
       url: url

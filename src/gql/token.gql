@@ -6,21 +6,21 @@ fragment token on Token{
     ...tokenGeneral
 }
 
-fragment tokenMaster on TokenMaster{
-    #
+fragment tokenBase on Token{
     id
     key
     date
+}
+
+fragment tokenMaster on TokenMaster{
+    ...tokenBase
 }
 
 fragment tokenGeneral on TokenGeneral{
     client{
         ...client
     }
-    #
-    id
-    key
-    date
+    ...tokenBase
 }
 query findToken{
     token{

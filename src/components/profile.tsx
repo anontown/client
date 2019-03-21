@@ -3,7 +3,7 @@ import { Md } from "./md";
 import * as G from "../../generated/graphql";
 
 export interface ProfileProps {
-  profile: G.Profile.Fragment;
+  profile: G.ProfileFragment;
 }
 
 interface ProfileState {

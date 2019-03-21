@@ -10,9 +10,9 @@ import {
 import { createHeaders, gqlClient } from "../utils";
 import * as G from "../../generated/graphql";
 
-export async function load(token: G.TokenMaster.Fragment) {
-  const storages = await gqlClient.query<G.FindStorages.Query, G.FindStorages.Variables>({
-    query: G.FindStorages.Document,
+export async function load(token: G.TokenMasterFragment) {
+  const storages = await gqlClient.query<G.FindStoragesQuery, G.FindStoragesQueryVariables>({
+    query: G.FindStoragesDocument,
     variables: { query: {} },
     context: {
       headers: createHeaders(token.id, token.key)
@@ -26,7 +26,7 @@ export async function load(token: G.TokenMaster.Fragment) {
 }
 
 export function useSave() {
-  const submit = G.SetStorage.use();
+  const submit = G.useSetStorageMutation();
   return (storage: Storage) => {
     const json = toJSON(storage);
     return submit({

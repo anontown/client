@@ -4,15 +4,15 @@ documents: "./src/**/*.gql"
 generates:
   generated/graphql.tsx:
     plugins:
-      - "typescript-common"
-      - "typescript-client"
+      - "typescript"
       - "typescript-react-apollo"
+      - "typescript-operations"
   generated/graphql.d.ts:
     plugins:
       - "typescript-graphql-files-modules"
   generated/introspection-result.ts:
     plugins:
-      - fragment-matcher
+      - "fragment-matcher"
 config:
     scalars:
       DateTime: string

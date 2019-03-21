@@ -26,7 +26,7 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
     this.props.match.params.id
 
     return <Paper zDepth={this.props.zDepth}>
-      <G.FindTopics.Component
+      <G.FindTopicsComponent
         variables={{ query: { id: [this.props.match.params.id] } }}>{
           ({ loading, error, data }) => {
             if (loading) return "Loading...";
@@ -36,7 +36,7 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
               <TopicData topic={data.topics[0]} />
             </Paper>);
           }
-        }</G.FindTopics.Component>
+        }</G.FindTopicsComponent>
     </Paper>;
   }
 });
