@@ -7,7 +7,6 @@ const path = require("path");
 module.exports = {
     entry: {
         main: [
-            './src/extra.ts',
             './src/main.tsx',
             './src/global.scss'
         ]

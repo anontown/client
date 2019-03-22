@@ -25,6 +25,7 @@ import * as style from "./topic.scss";
 import * as G from "../../generated/graphql";
 import { useUserContext, queryResultConvert } from "../utils";
 import * as rx from "rxjs";
+import { arrayFirst } from "@kgtkr/utils";
 // TODO:NGのtransparent
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
@@ -68,7 +69,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
       if (storageRes !== undefined) {
         date = storageRes.date;
       } else {
-        const first = items.current.first();
+        const first = arrayFirst(items.current);
         if (first === undefined) {
           return;
         }

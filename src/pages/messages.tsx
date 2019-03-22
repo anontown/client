@@ -12,6 +12,7 @@ import {
 } from "../components";
 import { dateFormat, userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
+import { arrayFirst, arrayLast } from "@kgtkr/utils";
 
 type MessagesPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -40,7 +41,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
             if (msgs.data === undefined) {
               return;
             }
-            const first = msgs.data.msgs.first();
+            const first = arrayFirst(msgs.data.msgs);
             if (first === undefined) {
               await msgs.refetch();
             } else {
@@ -78,7 +79,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
             if (msgs.data === undefined) {
               return;
             }
-            const last = msgs.data.msgs.last();
+            const last = arrayLast(msgs.data.msgs);
             if (last === undefined) {
               await msgs.refetch();
             } else {

@@ -6,6 +6,7 @@ import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef }
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
+import { arrayFirst, arrayLast } from "@kgtkr/utils";
 
 interface ListItemData {
   id: string;
@@ -242,7 +243,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
     const items = props.queryResultConverter(data.data);
 
-    const first = items.first();
+    const first = arrayFirst(items);
     if (first === undefined) {
       await resetDate(new Date().toISOString());
     } else {
@@ -297,7 +298,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
     const items = props.queryResultConverter(data.data);
 
-    const old = items.last();
+    const old = arrayLast(items);
     if (old === undefined) {
       await resetDate(new Date().toISOString());
     } else {

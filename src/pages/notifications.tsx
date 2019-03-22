@@ -13,6 +13,7 @@ import {
 } from "../components";
 import { userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
 import * as G from "../../generated/graphql";
+import { arrayLast } from "@kgtkr/utils";
 
 type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -42,7 +43,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
             if (reses.data === undefined) {
               return;
             }
-            const first = reses.data.reses.first();
+            const first = arrayLast(reses.data.reses);
             if (first === undefined) {
               await reses.refetch();
             } else {
@@ -80,7 +81,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
             if (reses.data === undefined) {
               return;
             }
-            const last = reses.data.reses.last();
+            const last = arrayLast(reses.data.reses);
             if (last === undefined) {
               await reses.refetch();
             } else {
