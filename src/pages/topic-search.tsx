@@ -30,7 +30,7 @@ import { useUserContext, queryResultConvert, useEffectRef } from "../utils";
 type TopicSearchPageProps = RouteComponentProps<{}>;
 
 function parseQuery(search: string) {
-  const query: { [key: string]: string | string[] | undefined } = qs.parse(search);
+  const query = qs.parse(search);
 
   const qTitle = query.title;
   const title = typeof qTitle === "string" ? qTitle : "";

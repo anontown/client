@@ -42,7 +42,7 @@ module.exports = {
             inject: true,
             template: 'index.html',
         }),
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(),
     ],
     module: {
         rules: [
