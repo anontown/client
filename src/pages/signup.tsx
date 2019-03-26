@@ -44,9 +44,7 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
 
   render() {
     return <Page>
-      <Helmet>
-        <title>登録</title>
-      </Helmet>
+      <Helmet title="登録" />
       <UserContext.Consumer>{user => user.value !== null
         ? <Redirect to="/" />
         : <Paper>

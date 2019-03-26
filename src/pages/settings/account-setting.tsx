@@ -28,9 +28,7 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
   const createTokenMasterSubmit = G.useCreateTokenMasterMutation();
 
   return <Paper>
-    <Helmet>
-      <title>アカウント設定</title>
-    </Helmet>
+    <Helmet title="アカウント設定" />
     <Snack
       msg={snackMsg}
       onHide={() => setSnackMsg(null)} />

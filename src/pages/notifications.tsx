@@ -34,9 +34,7 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
 
   return (
     <Page>
-      <Helmet>
-        <title>通知</title>
-      </Helmet>
+      <Helmet title="通知" />
       <div>
         <div>
           <RaisedButton label="最新" onClick={async () => {

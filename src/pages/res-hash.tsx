@@ -25,9 +25,7 @@ const ResHashBase = withRouter(class extends React.Component<ResHashBaseProps, R
     const hash = decodeURIComponent(this.props.match.params.hash);
 
     return <div>
-      <Helmet>
-        <title>HASH:{hash}</title>
-      </Helmet>
+      <Helmet title={`HASH:${hash}`} />
       <G.FindResesComponent
         variables={{ query: { hash } }}>
         {({ loading, error, data }) => {

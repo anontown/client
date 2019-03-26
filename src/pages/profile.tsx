@@ -25,9 +25,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
 
   render() {
     return <div>
-      <Helmet>
-        <title>プロフィール</title>
-      </Helmet>
+      <Helmet title="プロフィール" />
       <G.FindProfilesComponent
         variables={{ query: { id: [this.props.match.params.id] } }}>
         {({ loading, error, data }) => {
@@ -36,9 +34,7 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
 
           return (
             <Paper zDepth={this.props.zDepth}>
-              <Helmet>
-                <title>●{data.profiles[0].sn}</title>
-              </Helmet>
+              <Helmet title={`●${data.profiles[0].sn}`} />
               <Profile profile={data.profiles[0]} />
             </Paper>
           );

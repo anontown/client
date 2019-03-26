@@ -88,9 +88,7 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
   }, [formChange.current]);
 
   return <Page>
-    <Helmet>
-      <title>検索</title>
-    </Helmet>
+    <Helmet title="検索" />
     <Paper className={style.form}>
       {user.value !== null
         ? <IconButton onClick={() => {

@@ -21,9 +21,7 @@ export const HomePage = (_props: HomePageProps) => {
   const userContext = useUserContext();
   return (
     <Page>
-      <Helmet>
-        <title>Anontown</title>
-      </Helmet>
+      <Helmet title="Anontown" />
       {userContext.value !== null
         ? <Tabs>
           <Tab label="トピック">

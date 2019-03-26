@@ -20,9 +20,7 @@ export const SettingsPage = withRouter((_props: SettingsPageProps) => {
       <ListItem containerElement={<Link to="/settings/apps" />}>連携アプリ</ListItem>
       <ListItem containerElement={<Link to="/settings/dev" />}>開発者向け</ListItem>
     </List>}>
-    <Helmet>
-      <title>アカウント設定</title>
-    </Helmet>
+    <Helmet title="アカウント設定" />
     <Switch>
       <Route path="/settings/account" component={AccountSettingPage} />
       <Route path="/settings/apps" component={AppsSettingPage} />

@@ -30,9 +30,7 @@ const TopicForkBase = withRouter(userSwitch((props: TopicForkBaseProps) => {
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
 
   return <Paper zDepth={props.zDepth}>
-    <Helmet>
-      <title>派生トピック</title>
-    </Helmet>
+    <Helmet title="派生トピック" />
     {topic !== null && topic.__typename === "TopicNormal"
       ? <TopicFork topic={topic} onCreate={topic => {
         props.history.push(`/topic/${topic.id}`);

@@ -27,9 +27,7 @@ export const ProfilesPage = userSwitch(withRouter(class extends React.Component<
   render() {
     return (
       <Page>
-        <Helmet>
-          <title>プロフィール管理</title>
-        </Helmet>
+        <Helmet title="プロフィール管理" />
         <Tabs>
           <Tab label="編集">
             <G.FindProfilesComponent variables={{ query: { self: true } }}>

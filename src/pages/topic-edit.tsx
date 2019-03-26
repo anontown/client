@@ -33,9 +33,7 @@ const TopicEditBase = withRouter(userSwitch((props: TopicEditBaseProps) => {
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
 
   return <Paper zDepth={props.zDepth}>
-    <Helmet>
-      <title>トピック編集</title>
-    </Helmet>
+    <Helmet title="トピック編集" />
     {topic !== null && topic.__typename === "TopicNormal"
       ? <TopicEditor topic={topic} userData={props.userData} />
       : null}

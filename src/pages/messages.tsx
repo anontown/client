@@ -32,9 +32,7 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
 
   return (
     <Page>
-      <Helmet>
-        <title>お知らせ</title>
-      </Helmet>
+      <Helmet title="お知らせ" />
       <div>
         <div>
           <RaisedButton label="最新" onClick={async () => {

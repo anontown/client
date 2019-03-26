@@ -23,9 +23,7 @@ const ResReplyBase = withRouter(class extends React.Component<ResReplyBaseProps,
 
   render() {
     return <div>
-      <Helmet>
-        <title>リプライ</title>
-      </Helmet>
+      <Helmet title="リプライ" />
       <G.FindResesComponent
         variables={{ query: { reply: this.props.match.params.id } }}>
         {({ loading, error, data }) => {

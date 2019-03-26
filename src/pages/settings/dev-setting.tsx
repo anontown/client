@@ -26,9 +26,7 @@ export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
   queryResultConvert(clients);
 
   return <Paper>
-    <Helmet>
-      <title>開発者向け</title>
-    </Helmet>
+    <Helmet title="開発者向け" />
     <Paper>
       クライアント管理
     </Paper>

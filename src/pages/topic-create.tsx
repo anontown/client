@@ -48,9 +48,7 @@ export const TopicCreatePage =
 
     render() {
       return <Page>
-        <Helmet>
-          <title>トピック作成</title>
-        </Helmet>
+        <Helmet title="トピック作成" />
         <Paper>
           <Mutation<G.CreateTopicNormalMutation | G.CreateTopicOneMutation, G.CreateTopicNormalMutationVariables | G.CreateTopicOneMutationVariables>
             mutation={this.state.type === "TopicNormal" ? G.CreateTopicNormalDocument : G.CreateTopicOneDocument}

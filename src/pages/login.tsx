@@ -28,9 +28,7 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
   const submit = G.useCreateTokenMasterMutation();
 
   return <Page>
-    <Helmet>
-      <title>ログイン</title>
-    </Helmet>
+    <Helmet title="ログイン" />
     {userContext.value !== null
       ? <Redirect to="/" />
       : <Paper>
