@@ -7,7 +7,6 @@ import {
   Toggle,
 } from "material-ui";
 import * as React from "react";
-import { Helmet } from "react-helmet";
 import {
   Link,
   RouteComponentProps,
@@ -26,6 +25,7 @@ import * as G from "../../generated/graphql";
 import { useUserContext, queryResultConvert } from "../utils";
 import * as rx from "rxjs";
 import { arrayFirst } from "@kgtkr/utils";
+import { useTitle } from "react-use";
 // TODO:NGのtransparent
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
@@ -94,14 +94,13 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
     storageSaveDate(null);
   }, [topic !== null ? topic.resCount : null]);
 
+  useTitle(topic !== null ? topic.title : "トピック");
+
   return <Page
     disableScroll={true}
     sidebar={user.value !== null
       ? <TopicFavo detail={false} userData={user.value} />
       : undefined}>
-    <Helmet>
-      <title>トピック</title>
-    </Helmet>
     {topic !== null
       ? <>
         <Dialog
@@ -138,9 +137,6 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
           : null
         }
         <div className={style.main}>
-          <Helmet>
-            <title>{topic.title}</title>
-          </Helmet>
           <Paper className={style.header}>
             <div className={style.subject}>
               {topic.__typename === "TopicFork"
