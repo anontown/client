@@ -51,6 +51,11 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
   const [formTitle, setFormTitle] = React.useState(query.title);
   const [formDead, setFormDead] = React.useState(query.dead);
   const [formTags, setFormTags] = React.useState(Im.Set(query.tags));
+  React.useEffect(() => {
+    setFormTitle(query.title);
+    setFormDead(query.dead);
+    setFormTags(Im.Set(query.tags));
+  }, [props.location.search]);
   const user = useUserContext();
   const limit = 100;
 
