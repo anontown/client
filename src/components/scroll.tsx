@@ -463,7 +463,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
 
   const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }: OnSubscriptionDataOptions<SubscriptionResult>) => {
-    console.log(subscriptionData);
     if (subscriptionData.data !== undefined) {
       const subsData = props.subscriptionResultConverter(subscriptionData.data);
       const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables: variables });
