@@ -199,7 +199,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     const minItem = items
       .map(item => {
         const el = idElMap.get(item.id);
-        if (el !== null) {
+        if (el !== undefined) {
           return ({ item: dataToListItem(item), el });
         } else {
           return null;
@@ -463,6 +463,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
 
   const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }: OnSubscriptionDataOptions<SubscriptionResult>) => {
+    console.log(subscriptionData);
     if (subscriptionData.data !== undefined) {
       const subsData = props.subscriptionResultConverter(subscriptionData.data);
       const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables: variables });
