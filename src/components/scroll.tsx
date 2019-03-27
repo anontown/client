@@ -6,7 +6,7 @@ import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef }
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
-import { arrayFirst, arrayLast } from "@kgtkr/utils";
+import { arrayFirst, arrayLast, debugPrint } from "@kgtkr/utils";
 
 interface ListItemData {
   id: string;
@@ -413,12 +413,15 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     }
   }, [rootEl.current, props.debounceTime]);
 
+  const getTopBottomElementRef = useValueRef(() => props.newItemOrder === "top" ? getTopElement() : getBottomElement());
+
   useEffectRef(f => {
     const el = rootEl.current;
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
-        .pipe(op.debounceTime(props.debounceTime),
-          op.mergeMap(() => props.newItemOrder === "top" ? getTopElement() : getBottomElement())
+        .pipe(
+          op.debounceTime(props.debounceTime),
+          op.mergeMap(() => getTopBottomElementRef.current())
         )
         .subscribe(x => f.current(x))
       : null;
@@ -450,7 +453,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       el.scrollTop += props.autoScrollSpeed;
     }
   }, []);
-  // TODO: autoScrollSpeedとか配列に追加しないと正常に動かないかも
 
   useEffectRef(f => {
     const subs = props.scrollNewItem.subscribe(x => f.current(x));

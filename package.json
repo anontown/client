@@ -58,7 +58,7 @@
     "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
-    "@kgtkr/utils": "^1.0.0",
+    "@kgtkr/utils": "^1.0.2",
     "@trainline/react-skeletor": "^1.0.2",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
