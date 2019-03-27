@@ -18,9 +18,8 @@ export function useEffectCond(effect: React.EffectCallback, cond = () => true, d
   React.useEffect(() => {
     if (cond()) {
       if (countRef.current < n) {
-        return effect();
-      } else {
         countRef.current++;
+        return effect();
       }
     }
   }, deps);
