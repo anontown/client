@@ -6,7 +6,7 @@ import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef }
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
-import { arrayFirst, arrayLast, debugPrint } from "@kgtkr/utils";
+import { arrayFirst, arrayLast, debugPrint, nullMap } from "@kgtkr/utils";
 
 interface ListItemData {
   id: string;
@@ -25,6 +25,7 @@ interface ItemData<T extends ListItemData> {
 
 interface ItemScrollData<T extends ListItemData> {
   item: ListItem<T>;
+  //ターゲットy座標
   y: number;
   el: HTMLDivElement;
 }
@@ -132,7 +133,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     };
   };
 
-  const setTopElement = async (item: ItemScrollData<T>) => {
+  const setElement = async (item: ItemScrollData<T>) => {
     await sleep(0);
     if (rootEl.current !== null) {
       rootEl.current.scrollTop += elY(item.el) - item.y;
@@ -175,13 +176,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       return { ...minItem, y: elY(minItem.el) };
     } else {
       return null;
-    }
-  };
-
-  const setBottomElement = async (item: ItemScrollData<T>) => {
-    await sleep(0);
-    if (rootEl.current !== null) {
-      rootEl.current.scrollTop += elY(item.el) - item.y;
     }
   };
 
@@ -268,14 +262,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           }
         });
 
-        switch (props.newItemOrder) {
-          case "bottom":
-            await setBottomElement(ise);
-            break;
-          case "top":
-            await setTopElement(ise);
-            break;
-        }
+        await setElement(ise);
       });
     }
   };
@@ -318,14 +305,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           }
         });
 
-        switch (props.newItemOrder) {
-          case "bottom":
-            await setTopElement(ise);
-            break;
-          case "top":
-            await setBottomElement(ise);
-            break;
-        }
+        await setElement(ise);
       });
     }
   };
@@ -406,7 +386,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       ? rx.fromEvent(el, "scroll")
         .pipe(
           op.debounceTime(props.debounceTime),
-          op.mergeMap(() => getTopBottomElementRef.current())
+          op.mergeMap(() => getTopBottomElementRef.current()),
+          op.map(x => nullMap(x => x.item.data, x))
         )
         .subscribe(x => f.current(x))
       : null;
@@ -415,9 +396,9 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         subs.unsubscribe();
       }
     };
-  }, (newItem: ItemScrollData<T> | null) => {
+  }, (newItem: T | null) => {
     if (newItem !== null) {
-      props.scrollNewItemChange(newItem.item.data);
+      props.scrollNewItemChange(newItem);
     }
   }, [rootEl.current, props.debounceTime]);
 
