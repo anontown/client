@@ -22,14 +22,6 @@ interface ItemData<T extends ListItemData> {
   item: ListItem<T>;
   el: HTMLDivElement;
 }
-
-interface ItemScrollData<T extends ListItemData> {
-  item: ListItem<T>;
-  //ターゲットy座標
-  y: number;
-  el: HTMLDivElement;
-}
-
 export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
   newItemOrder: "top" | "bottom";
   query: DocumentNode;
@@ -150,6 +142,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     };
   };
 
+  // 上端に一番近いアイテム
   const getTopElement = async () => {
     await sleep(0);
 
@@ -183,12 +176,13 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       }, null);
 
     if (minItem !== null) {
-      return { ...minItem, y: elY(minItem.el) };
+      return minItem.item.data;
     } else {
       return null;
     }
   };
 
+  // 下端に一番近いアイテム
   const getBottomElement = async () => {
     await sleep(0);
 
@@ -225,7 +219,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       }, null);
 
     if (minItem !== null) {
-      return { ...minItem, y: elY(minItem.el) };
+      return minItem.item.data;
     } else {
       return null;
     }
@@ -368,7 +362,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         .pipe(
           op.debounceTime(props.debounceTime),
           op.mergeMap(() => getTopBottomElementRef.current()),
-          op.map(x => pipe(x).chain(nullMap(x => x.item.data)).value)
         )
         .subscribe(x => f.current(x))
       : null;
