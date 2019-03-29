@@ -103,6 +103,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const toTop = async () => {
     await sleep(0);
     if (rootEl.current !== null) {
+      console.log("toTop", rootEl.current);
       rootEl.current.scrollTop = 0;
     }
   };
@@ -110,6 +111,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const toBottom = async () => {
     await sleep(0);
     if (rootEl.current !== null) {
+      console.log("toBottom", rootEl.current);
       rootEl.current.scrollTop = rootEl.current.scrollHeight;
     }
   };
@@ -130,6 +132,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       if (elData !== undefined) {
         await sleep(0);
         if (rootEl.current !== null) {
+          console.log("lock", rootEl.current);
           rootEl.current.scrollTop += elY(elData.el) - elData.y;
         }
       }
@@ -302,7 +305,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
         .pipe(op.map(() => el.scrollTop),
-          op.filter(top => top <= props.width),
+          op.filter(top => Math.abs(top) <= props.width),
           op.debounceTime(props.debounceTime))
         .subscribe(() => f.current()) :
       null;
@@ -327,7 +330,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
         .pipe(op.map(() => el.scrollTop + el.clientHeight),
-          op.filter(bottom => bottom >= el.scrollHeight - props.width),
+          op.filter(bottom => props.width >= Math.abs(el.scrollHeight - bottom)),
           op.debounceTime(props.debounceTime))
         .subscribe(() => f.current())
       : null;
