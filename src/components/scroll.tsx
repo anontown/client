@@ -6,7 +6,7 @@ import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef }
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
-import { arrayFirst, arrayLast, pipe, nullMap, undefinedMap } from "@kgtkr/utils";
+import { arrayFirst, arrayLast, pipe, nullMap, undefinedMap, arrayDrop, undefinedUnwrap } from "@kgtkr/utils";
 
 interface ListItemData {
   id: string;
@@ -63,6 +63,8 @@ function sleep(ms: number) {
   });
 }
 
+type Queue = { type: "reset", date: string } | { type: "after" } | { type: "before" };
+
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
 
@@ -76,8 +78,53 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   });
   queryResultConvert(data);
 
+  const queueLock = React.useRef(false);
+  const queues = React.useRef<Queue[]>([]);
+  const runQueueOne = useValueRef(async (queue: Queue) => {
+    switch (queue.type) {
+      case "reset":
+        await resetDate(queue.date);
+        break;
+      case "before":
+        await findBefore();
+        break;
+      case "after":
+        await findAfter();
+        break;
+    }
+  });
+
+  const runFirstQueue = async () => {
+    if (!queueLock.current) {
+      queueLock.current = true;
+      try {
+        const first = arrayFirst(queues.current);
+        if (first !== undefined) {
+          queues.current = pipe(queues.current).chain(arrayDrop(1)).value;
+          await runQueueOne.current(first);
+        }
+      } catch (e) {
+        throw e;
+      } finally {
+        queueLock.current = false;
+      }
+      if (queues.current.length !== 0) {
+        await runFirstQueue();
+      }
+    }
+  };
+
+  const addQueue = async (queue: Queue) => {
+    if (queue.type === "reset") {
+      queues.current = [queue];
+    } else {
+      queues.current = [...queues.current, queue];
+    }
+    await runFirstQueue();
+  };
+
   useEffectCond(() => {
-    resetDate(initDate);
+    addQueue({ type: "reset", date: initDate });
   }, () => data.data !== null);
 
   React.useEffect(() => {
@@ -220,8 +267,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     }
   };
 
-  const lock = useLock();
-
   const findAfter = async () => {
     if (data.data === undefined) {
       return;
@@ -233,19 +278,17 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     if (first === undefined) {
       await resetDate(new Date().toISOString());
     } else {
-      await lock(async () => {
-        await scrollLock(async () => {
-          await data.fetchMore({
-            variables: props.queryVariables({
-              date: first.date,
-              type: "gt"
-            }),
-            updateQuery: (prev, { fetchMoreResult }) => {
-              if (!fetchMoreResult) return prev;
+      await scrollLock(async () => {
+        await data.fetchMore({
+          variables: props.queryVariables({
+            date: first.date,
+            type: "gt"
+          }),
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult) return prev;
 
-              return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
-            }
-          });
+            return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
+          }
         });
       });
     }
@@ -262,39 +305,35 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     if (old === undefined) {
       await resetDate(new Date().toISOString());
     } else {
-      await lock(async () => {
-        await scrollLock(async () => {
-          await data.fetchMore({
-            variables: props.queryVariables({
-              date: old.date,
-              type: "lt"
-            }),
-            updateQuery: (prev, { fetchMoreResult }) => {
-              if (!fetchMoreResult) return prev;
+      await scrollLock(async () => {
+        await data.fetchMore({
+          variables: props.queryVariables({
+            date: old.date,
+            type: "lt"
+          }),
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult) return prev;
 
-              return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
-            }
-          });
+            return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
+          }
         });
       });
     }
   };
 
   const resetDate = async (date: string) => {
-    await lock(async () => {
-      await data.refetch(props.queryVariables({
-        date: date,
-        type: "lte"
-      }));
-      switch (props.newItemOrder) {
-        case "bottom":
-          await toBottom();
-          break;
-        case "top":
-          await toTop();
-          break;
-      }
-    });
+    await data.refetch(props.queryVariables({
+      date: date,
+      type: "lte"
+    }));
+    switch (props.newItemOrder) {
+      case "bottom":
+        await toBottom();
+        break;
+      case "top":
+        await toTop();
+        break;
+    }
     await findAfter();
   };
 
@@ -315,10 +354,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   }, () => {
     switch (props.newItemOrder) {
       case "top":
-        findAfter();
+        addQueue({ type: "after" });
         break;
       case "bottom":
-        findBefore();
+        addQueue({ type: "before" });
         break;
     }
   }, [rootEl.current, props.debounceTime]);
@@ -340,10 +379,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   }, () => {
     switch (props.newItemOrder) {
       case "bottom":
-        findAfter();
+        addQueue({ type: "after" });
         break;
       case "top":
-        findBefore();
+        addQueue({ type: "before" });
         break;
     }
   }, [rootEl.current, props.debounceTime]);
@@ -391,7 +430,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       subs.unsubscribe();
     };
   }, (date: string) => {
-    resetDate(date);
+    addQueue({ type: "reset", date });
   }, [props.scrollNewItem]);
 
 
