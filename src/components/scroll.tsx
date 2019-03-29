@@ -122,11 +122,16 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       .chain(undefinedMap(x => idElMap.get(x.id)))
       .chain(undefinedMap(x => ({ el: x, y: elY(x) })))
       .value;
-    await f();
-    if (elData !== undefined) {
-      await sleep(0);
-      if (rootEl.current !== null) {
-        rootEl.current.scrollTop += elY(elData.el) - elData.y;
+    try {
+      await f();
+    } catch (e) {
+      throw e;
+    } finally {
+      if (elData !== undefined) {
+        await sleep(0);
+        if (rootEl.current !== null) {
+          rootEl.current.scrollTop += elY(elData.el) - elData.y;
+        }
       }
     }
   };
