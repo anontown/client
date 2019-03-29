@@ -13,10 +13,11 @@ interface ListItemData {
   date: string;
 }
 
-interface ItemData<T extends ListItemData> {
+interface ItemElPair<T extends ListItemData> {
   item: T;
   el: HTMLDivElement;
 }
+
 export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
   newItemOrder: "top" | "bottom";
   query: DocumentNode;
@@ -149,8 +150,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         } else {
           return null;
         }
-      }).filter((x): x is ItemData<T> => x !== null)
-      .reduce<ItemData<T> | null>((min, item) => {
+      }).filter((x): x is ItemElPair<T> => x !== null)
+      .reduce<ItemElPair<T> | null>((min, item) => {
         if (min === null) {
           return item;
         } else if (Math.abs(min.el.getBoundingClientRect().top +
@@ -190,8 +191,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           return null;
         }
       })
-      .filter((x): x is ItemData<T> => x !== null)
-      .reduce<ItemData<T> | null>((min, item) => {
+      .filter((x): x is ItemElPair<T> => x !== null)
+      .reduce<ItemElPair<T> | null>((min, item) => {
         if (min === null) {
           return item;
         } else if (Math.abs(window.innerHeight -
