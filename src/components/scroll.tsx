@@ -66,8 +66,9 @@ function sleep(ms: number) {
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
 
+  const initDate = React.useMemo(() => props.initDate, []);
   const variables = props.queryVariables({
-    date: props.initDate,
+    date: initDate,
     type: "lte"
   });
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
@@ -76,7 +77,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   queryResultConvert(data);
 
   useEffectCond(() => {
-    resetDate(props.initDate);
+    resetDate(initDate);
   }, () => data.data !== null);
 
   React.useEffect(() => {
@@ -103,7 +104,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const toTop = async () => {
     await sleep(0);
     if (rootEl.current !== null) {
-      console.log("toTop", rootEl.current);
       rootEl.current.scrollTop = 0;
     }
   };
@@ -111,7 +111,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const toBottom = async () => {
     await sleep(0);
     if (rootEl.current !== null) {
-      console.log("toBottom", rootEl.current);
       rootEl.current.scrollTop = rootEl.current.scrollHeight;
     }
   };
@@ -132,7 +131,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       if (elData !== undefined) {
         await sleep(0);
         if (rootEl.current !== null) {
-          console.log("lock", rootEl.current);
           rootEl.current.scrollTop += elY(elData.el) - elData.y;
         }
       }
