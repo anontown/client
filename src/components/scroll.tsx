@@ -18,10 +18,15 @@ interface ListItem<T extends ListItemData> {
   el: JSX.Element;
 }
 
+interface ItemData<T extends ListItemData> {
+  item: ListItem<T>;
+  el: HTMLDivElement;
+}
+
 interface ItemScrollData<T extends ListItemData> {
   item: ListItem<T>;
   y: number;
-  el: HTMLElement;
+  el: HTMLDivElement;
 }
 
 export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
@@ -152,14 +157,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         } else {
           return null;
         }
-      }).filter((x): x is {
-        item: ListItem<T>;
-        el: HTMLDivElement;
-      } => x !== null)
-      .reduce<{
-        item: ListItem<T>;
-        el: HTMLDivElement;
-      } | null>((min, item) => {
+      }).filter((x): x is ItemData<T> => x !== null)
+      .reduce<ItemData<T> | null>((min, item) => {
         if (min === null) {
           return item;
         } else if (Math.abs(min.el.getBoundingClientRect().top +
@@ -205,14 +204,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           return null;
         }
       })
-      .filter((x): x is {
-        item: ListItem<T>,
-        el: HTMLDivElement,
-      } => x !== null)
-      .reduce<{
-        item: ListItem<T>;
-        el: HTMLDivElement;
-      } | null>((min, item) => {
+      .filter((x): x is ItemData<T> => x !== null)
+      .reduce<ItemData<T> | null>((min, item) => {
         if (min === null) {
           return item;
         } else if (Math.abs(window.innerHeight -
@@ -248,11 +241,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       await resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
-        let ise: {
-          y: number;
-          item: ListItem<T>;
-          el: HTMLElement;
-        } | null = null;
+        let ise: ItemScrollData<T> | null = null;
 
         switch (props.newItemOrder) {
           case "bottom":
@@ -303,11 +292,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       await resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
-        let ise: {
-          y: number;
-          item: ListItem<T>;
-          el: HTMLElement;
-        } | null = null;
+        let ise: ItemScrollData<T> | null = null;
         switch (props.newItemOrder) {
           case "bottom":
             ise = await getTopElement();
@@ -430,15 +415,11 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         subs.unsubscribe();
       }
     };
-  }, (newItem: {
-    y: number;
-    item: ListItem<T>;
-    el: HTMLDivElement;
-  } | null) => {
-      if (newItem !== null) {
-        props.scrollNewItemChange(newItem.item.data);
-      }
-    }, [rootEl.current, props.debounceTime]);
+  }, (newItem: ItemScrollData<T> | null) => {
+    if (newItem !== null) {
+      props.scrollNewItemChange(newItem.item.data);
+    }
+  }, [rootEl.current, props.debounceTime]);
 
   useEffectRef(f => {
     const subs = rx
