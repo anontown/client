@@ -13,13 +13,8 @@ interface ListItemData {
   date: string;
 }
 
-interface ListItem<T extends ListItemData> {
-  data: T;
-  el: JSX.Element;
-}
-
 interface ItemData<T extends ListItemData> {
-  item: ListItem<T>;
+  item: T;
   el: HTMLDivElement;
 }
 export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
@@ -135,13 +130,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     }
   };
 
-  const dataToListItem = (data: T): ListItem<T> => {
-    return {
-      data,
-      el: props.dataToEl(data),
-    };
-  };
-
   // 上端に一番近いアイテム
   const getTopElement = async () => {
     await sleep(0);
@@ -157,7 +145,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       .map(item => {
         const el = idElMap.get(item.id);
         if (el !== undefined) {
-          return ({ item: dataToListItem(item), el });
+          return ({ item: item, el });
         } else {
           return null;
         }
@@ -176,7 +164,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       }, null);
 
     if (minItem !== null) {
-      return minItem.item.data;
+      return minItem.item;
     } else {
       return null;
     }
@@ -197,7 +185,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       .map(item => {
         const el = idElMap.get(item.id);
         if (el !== undefined) {
-          return ({ item: dataToListItem(item), el });
+          return ({ item: item, el });
         } else {
           return null;
         }
@@ -219,7 +207,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       }, null);
 
     if (minItem !== null) {
-      return minItem.item.data;
+      return minItem.item;
     } else {
       return null;
     }
