@@ -5,6 +5,7 @@ import {
   Paper,
   Slider,
   Toggle,
+  RaisedButton,
 } from "material-ui";
 import * as React from "react";
 import {
@@ -26,6 +27,7 @@ import { useUserContext, queryResultConvert } from "../utils";
 import * as rx from "rxjs";
 import { arrayFirst } from "@kgtkr/utils";
 import { useTitle } from "react-use";
+import * as moment from "moment";
 // TODO:NGのtransparent
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
@@ -33,8 +35,9 @@ interface TopicPageProps extends RouteComponentProps<{ id: string }> {
 }
 
 export const TopicPage = withRouter((props: TopicPageProps) => {
-  const now = React.useRef(new Date().toISOString());
+  const now = React.useMemo(() => new Date().toISOString(), []);
   const [isResWrite, setIsResWrite] = React.useState(false);
+  const [isJumpDialog, setIsJumpDialog] = React.useState(false);
   const [isAutoScrollDialog, setIsAutoScrollDialog] = React.useState(false);
   const [isNGDialog, setIsNGDialog] = React.useState(false);
   const user = useUserContext();
@@ -45,17 +48,19 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
   const [isAutoScroll, setIsAutoScroll] = React.useState(false);
   const scrollNewItem = React.useRef(new rx.ReplaySubject<string>(1));
   const items = React.useRef<G.ResFragment[]>([]);
-  let initDate;
-  if (user.value !== null) {
-    const topicRead = user.value.storage.topicRead.get(props.match.params.id);
-    if (topicRead !== undefined) {
-      initDate = topicRead.date;
+  const initDate = React.useMemo(() => {
+    if (user.value !== null) {
+      const topicRead = user.value.storage.topicRead.get(props.match.params.id);
+      if (topicRead !== undefined) {
+        return topicRead.date;
+      } else {
+        return now;
+      }
     } else {
-      initDate = now.current;
+      return now;
     }
-  } else {
-    initDate = now.current;
-  }
+  }, []);
+  const [jumpValue, setJumpValue] = React.useState(new Date(now).valueOf());
 
   const isFavo = user.value !== null && user.value.storage.topicFavo.has(props.match.params.id);
 
@@ -136,6 +141,25 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
           </Dialog>
           : null
         }
+        <Dialog
+          title="ジャンプ"
+          open={isJumpDialog}
+          autoScrollBodyContent={true}
+          onRequestClose={() => setIsJumpDialog(false)}>
+          <Slider
+            min={new Date(topic.date).valueOf()}
+            max={new Date(now).valueOf()}
+            value={jumpValue}
+            onChange={(_e, v) => setJumpValue(v)} />
+          <div>
+            {moment(new Date(jumpValue)).format("YYYY-MM-DD")}
+          </div>
+          <div>
+            <RaisedButton onClick={() => {
+              scrollNewItem.current.next(new Date(jumpValue).toISOString());
+            }}>ジャンプ</RaisedButton>
+          </div>
+        </Dialog>
         <div className={style.main}>
           <Paper className={style.header}>
             <div className={style.subject}>
@@ -201,6 +225,9 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                   <FontIcon className="material-icons">create</FontIcon>
                 </IconButton>
                 : null}
+              <IconButton onClick={() => setIsJumpDialog(true)}>
+                <FontIcon className="material-icons">arrow_upward</FontIcon>
+              </IconButton>
             </div>
           </Paper>
           <Scroll<G.ResFragment, G.FindResesQuery, G.FindResesQueryVariables, G.ResAddedSubscription, G.ResAddedSubscriptionVariables>
