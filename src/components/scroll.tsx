@@ -6,7 +6,7 @@ import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef }
 import { DocumentNode } from "graphql";
 import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
-import { arrayFirst, arrayLast, debugPrint, nullMap } from "@kgtkr/utils";
+import { arrayFirst, arrayLast, pipe, nullMap, undefinedMap } from "@kgtkr/utils";
 
 interface ListItemData {
   id: string;
@@ -126,18 +126,28 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     }
   };
 
+  const scrollLock = async (f: () => Promise<void>) => {
+    await sleep(0);
+    const elData = pipe(data.data)
+      .chain(undefinedMap(props.queryResultConverter))
+      .chain(undefinedMap(arrayFirst))
+      .chain(undefinedMap(x => idElMap.get(x.id)))
+      .chain(undefinedMap(x => ({ el: x, y: elY(x) })))
+      .value;
+    await f();
+    if (elData !== undefined) {
+      await sleep(0);
+      if (rootEl.current !== null) {
+        rootEl.current.scrollTop += elY(elData.el) - elData.y;
+      }
+    }
+  };
+
   const dataToListItem = (data: T): ListItem<T> => {
     return {
       data,
       el: props.dataToEl(data),
     };
-  };
-
-  const setElement = async (item: ItemScrollData<T>) => {
-    await sleep(0);
-    if (rootEl.current !== null) {
-      rootEl.current.scrollTop += elY(item.el) - item.y;
-    }
   };
 
   const getTopElement = async () => {
@@ -235,34 +245,19 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       await resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
-        let ise: ItemScrollData<T> | null = null;
+        await scrollLock(async () => {
+          await data.fetchMore({
+            variables: props.queryVariables({
+              date: first.date,
+              type: "gt"
+            }),
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
 
-        switch (props.newItemOrder) {
-          case "bottom":
-            ise = await getBottomElement();
-            break;
-          case "top":
-            ise = await getTopElement();
-            break;
-        }
-
-        if (ise === null) {
-          return;
-        }
-
-        await data.fetchMore({
-          variables: props.queryVariables({
-            date: first.date,
-            type: "gt"
-          }),
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev;
-
-            return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
-          }
+              return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
+            }
+          });
         });
-
-        await setElement(ise);
       });
     }
   };
@@ -279,33 +274,19 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       await resetDate(new Date().toISOString());
     } else {
       await lock(async () => {
-        let ise: ItemScrollData<T> | null = null;
-        switch (props.newItemOrder) {
-          case "bottom":
-            ise = await getTopElement();
-            break;
-          case "top":
-            ise = await getBottomElement();
-            break;
-        }
+        await scrollLock(async () => {
+          await data.fetchMore({
+            variables: props.queryVariables({
+              date: old.date,
+              type: "lt"
+            }),
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
 
-        if (ise === null) {
-          return;
-        }
-
-        await data.fetchMore({
-          variables: props.queryVariables({
-            date: old.date,
-            type: "lt"
-          }),
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev;
-
-            return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
-          }
+              return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
+            }
+          });
         });
-
-        await setElement(ise);
       });
     }
   };
@@ -387,7 +368,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         .pipe(
           op.debounceTime(props.debounceTime),
           op.mergeMap(() => getTopBottomElementRef.current()),
-          op.map(x => nullMap(x => x.item.data, x))
+          op.map(x => pipe(x).chain(nullMap(x => x.item.data)).value)
         )
         .subscribe(x => f.current(x))
       : null;
