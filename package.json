@@ -11,7 +11,7 @@
     "lint:fix": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}' --fix",
     "loc": "sloc --format cli-table ./src",
     "apollo:generate": "",
-    "codegen": "wget https://raw.githubusercontent.com/anontown/server/graphql/resources/app.gql -O generated/app.gql&&gql-gen --config codegen.yml"
+    "codegen": "gql-gen --config codegen.yml"
   },
   "author": "",
   "license": "ISC",
@@ -57,6 +57,7 @@
     "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
+    "@anontown/schema": "^1.0.0",
     "@kgtkr/utils": "^1.0.3",
     "@trainline/react-skeletor": "^1.0.2",
     "apollo-cache-inmemory": "^1.5.1",
