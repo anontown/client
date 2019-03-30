@@ -1,12 +1,12 @@
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
-import { UserData } from "../models";
-import { Errors } from "./errors";
 import { MutationUpdaterFn } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
+import { UserData } from "../models";
+import { Errors } from "./errors";
 
 interface ClientAddProps {
-  onAddUpdate?: MutationUpdaterFn<G.CreateClientMutation>
+  onAddUpdate?: MutationUpdaterFn<G.CreateClientMutation>;
   userData: UserData;
 }
 
@@ -17,10 +17,10 @@ export const ClientAdd = (props: ClientAddProps) => {
 
   const submit = G.useCreateClientMutation({
     variables: {
-      name: name,
-      url: url
+      name,
+      url,
     },
-    update: props.onAddUpdate
+    update: props.onAddUpdate,
   });
 
   return (<form>
@@ -28,5 +28,5 @@ export const ClientAdd = (props: ClientAddProps) => {
     <TextField floatingLabelText="名前" value={name} onChange={(_e, v) => setName(v)} />
     <TextField floatingLabelText="url" value={url} onChange={(_e, v) => setUrl(v)} />
     <RaisedButton onClick={() => submit().catch(e => setError(e))} label="OK" />
-  </form>);;
+  </form>);
 };

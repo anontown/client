@@ -1,3 +1,4 @@
+import * as G from "../../generated/graphql";
 import {
   convert,
   initStorage,
@@ -8,15 +9,14 @@ import {
   verArray,
 } from "../models";
 import { createHeaders, gqlClient } from "../utils";
-import * as G from "../../generated/graphql";
 
 export async function load(token: G.TokenMasterFragment) {
   const storages = await gqlClient.query<G.FindStoragesQuery, G.FindStoragesQueryVariables>({
     query: G.FindStoragesDocument,
     variables: { query: {} },
     context: {
-      headers: createHeaders(token.id, token.key)
-    }
+      headers: createHeaders(token.id, token.key),
+    },
   });
   const key = [...verArray, "main"].find(ver => storages.data.storages.findIndex(x => x.key === ver) !== -1);
   const sto = storages.data.storages.find(x => x.key === key);
@@ -32,8 +32,8 @@ export function useSave() {
     return submit({
       variables: {
         key: json.ver,
-        value: JSON.stringify(json)
-      }
+        value: JSON.stringify(json),
+      },
     });
   };
 }

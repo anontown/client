@@ -7,18 +7,18 @@ import * as React from "react";
 import Recaptcha from "react-google-recaptcha";
 import { Helmet } from "react-helmet";
 import {
+  Link,
   Redirect,
   RouteComponentProps,
   withRouter,
-  Link,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import {
   Errors,
   Page,
 } from "../components";
 import { Config } from "../env";
-import * as G from "../../generated/graphql";
-import { UserContext, createUserData } from "../utils";
+import { createUserData, UserContext } from "../utils";
 
 interface SignupPageProps extends RouteComponentProps<{}> {
 }
@@ -78,11 +78,11 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
                 this.setState({ errors: ["アカウント作成に失敗しました"] });
               }}
               onCompleted={async x => {
-                user.update(await createUserData(x.createUser.token as G.TokenMasterFragment))
+                user.update(await createUserData(x.createUser.token as G.TokenMasterFragment));
               }}
               variables={{
                 sn: this.state.sn, pass: this.state.pass,
-                recaptcha: this.state.recaptcha!
+                recaptcha: this.state.recaptcha!,
               }}>
               {create =>
                 (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}

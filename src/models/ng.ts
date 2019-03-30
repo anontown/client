@@ -1,8 +1,8 @@
+import { isNullish } from "@kgtkr/utils";
 import * as Im from "immutable";
 import * as uuid from "uuid";
-import * as ngJson from "./ng-json";
 import * as G from "../../generated/graphql";
-import { isNullish } from "@kgtkr/utils";
+import * as ngJson from "./ng-json";
 
 export function createDefaultNode(): NGNode {
   return {

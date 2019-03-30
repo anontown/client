@@ -4,15 +4,14 @@ import {
 } from "material-ui";
 import * as React from "react";
 
+import * as G from "../../generated/graphql";
 import { Storage, UserData } from "../models";
+import { queryResultConvert, useInputCache } from "../utils";
 import { CheckBox } from "./check-box";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { Select } from "./select";
 import { TextField } from "./text-field";
-import { useInputCache, queryResultConvert } from "../utils";
-import * as G from "../../generated/graphql";
-
 
 interface ResWriteProps {
   onSubmit?: (value: G.ResNormalFragment) => void;
@@ -61,9 +60,9 @@ export const ResWrite = (props: ResWriteProps) => {
   const profiles = G.useFindProfilesQuery({
     variables: {
       query: {
-        self: true
-      }
-    }
+        self: true,
+      },
+    },
   });
   queryResultConvert(profiles);
 
@@ -75,7 +74,7 @@ export const ResWrite = (props: ResWriteProps) => {
       reply: props.reply,
       profile: data.profile,
       age: data.age,
-    }
+    },
   });
 
   const submit = () => {

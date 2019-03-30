@@ -4,8 +4,8 @@ import { Omit } from "type-zoo";
 import { UserContext } from "./user";
 
 export interface UserSwitchProps {
-    userData: UserData,
-    updateUserData: (value: UserData | null) => void
+    userData: UserData;
+    updateUserData: (value: UserData | null) => void;
 }
 
 export function userSwitch<P extends UserSwitchProps>(Children: React.ComponentType<P>)

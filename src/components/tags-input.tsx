@@ -4,10 +4,9 @@ import {
   MenuItem,
 } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
 import { Snack } from "./snack";
 import * as style from "./tags-input.scss";
-import * as G from "../../generated/graphql";
-
 
 export interface TagsInputProps {
   value: Im.Set<string>;
@@ -52,8 +51,8 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
       </div>
       <G.FindTopicTagsComponent>{
         ({ loading, error, data }) => {
-          if (loading) return "Loading...";
-          if (error || !data) return (<Snack msg="タグ候補取得に失敗しました" />);
+          if (loading) { return "Loading..."; }
+          if (error || !data) { return (<Snack msg="タグ候補取得に失敗しました" />); }
 
           return <AutoComplete
             fullWidth={this.props.fullWidth}
@@ -91,8 +90,7 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
               overflow: "auto",
             }}
           />;
-        }
-      }</G.FindTopicTagsComponent>
+        }}</G.FindTopicTagsComponent>
     </>;
   }
 }

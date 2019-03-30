@@ -9,9 +9,9 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack, Errors } from "../../components";
-import { UserSwitchProps, userSwitch, queryResultConvert } from "../../utils";
 import * as G from "../../../generated/graphql";
+import { Errors, Snack } from "../../components";
+import { queryResultConvert, userSwitch, UserSwitchProps } from "../../utils";
 
 type AccountSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -56,21 +56,21 @@ export const AccountSettingPage = userSwitch(withRouter((props: AccountSettingPa
                 variables: {
                   sn,
                   pass: newPass,
-                  auth: { id: user.data.user.id, pass: oldPass }
-                }
+                  auth: { id: user.data.user.id, pass: oldPass },
+                },
               });
               const token = await createTokenMasterSubmit({
                 variables: {
-                  auth: { id: user.data.user.id, pass: newPass }
-                }
+                  auth: { id: user.data.user.id, pass: newPass },
+                },
               });
               if (token.data !== undefined) {
                 props.updateUserData({
                   ...props.userData,
-                  token: token.data.createTokenMaster as G.TokenMasterFragment
+                  token: token.data.createTokenMaster as G.TokenMasterFragment,
                 });
               }
-            } catch{
+            } catch {
               setSnackMsg("エラーが発生しました");
             }
           }

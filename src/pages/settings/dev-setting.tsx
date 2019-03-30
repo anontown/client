@@ -6,19 +6,19 @@ import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
 } from "react-router-dom";
+import * as G from "../../../generated/graphql";
 import {
-  ClientEditor,
   ClientAdd,
+  ClientEditor,
   Errors,
 } from "../../components";
 import {
+  queryResultConvert,
   userSwitch,
   UserSwitchProps,
-  queryResultConvert,
 } from "../../utils";
-import * as G from "../../../generated/graphql";
 
-type DevSettingPageProps = RouteComponentProps<{}> & UserSwitchProps
+type DevSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
 export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
   const variables: G.FindClientsQueryVariables = { query: { self: true } };
@@ -59,5 +59,5 @@ export const DevSettingPage = userSwitch((props: DevSettingPageProps) => {
           userData={props.userData} />)}
       </>
       : null}
-  </Paper>
+  </Paper>;
 });

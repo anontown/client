@@ -20,19 +20,19 @@ import {
   Switch,
   withRouter,
 } from "react-router-dom";
+import { UserData } from "src/models";
+import * as G from "../../generated/graphql";
 import { BUILD_DATE, gaID } from "../env";
 import * as pages from "../pages";
 import {
+  createHeaders,
   createUserData,
   dateFormat,
   gqlClient,
-  createHeaders,
   User,
   UserContextType,
 } from "../utils";
 import * as style from "./app.scss";
-import { UserData } from "src/models";
-import * as G from "../../generated/graphql";
 
 declare const gtag: any;
 
@@ -42,7 +42,7 @@ interface AppProps extends RouteComponentProps<{}> {
 }
 
 interface AppState {
-  initUserData?: UserData | null
+  initUserData?: UserData | null;
 }
 
 export const App = withRouter(class extends React.Component<AppProps, AppState> {
@@ -77,11 +77,11 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
       } else {
         throw Error();
       }
-      let res = await gqlClient.query<G.FindTokenQuery>({
+      const res = await gqlClient.query<G.FindTokenQuery>({
         query: G.FindTokenDocument,
         context: {
-          headers: createHeaders(token.id, token.key)
-        }
+          headers: createHeaders(token.id, token.key),
+        },
       });
       if (res.data.token.__typename as string === "TokenGeneral") {
         throw Error();
@@ -204,7 +204,7 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
                   {isModal ? <Route path="/topic/:id/edit" component={pages.TopicEditModal} /> : null}
                   {isModal ? <Route path="/hash/:hash" component={pages.ResHashModal} /> : null}
                 </div>
-              </div>
+              </div>;
             }}
           </User>
           : null}

@@ -1,12 +1,12 @@
+import { arrayDrop, arrayFirst, arrayLast, nullMap, pipe, undefinedMap, undefinedUnwrap } from "@kgtkr/utils";
+import { DocumentNode } from "graphql";
 import * as React from "react";
+import { OnSubscriptionDataOptions, useQuery, useSubscription } from "react-apollo-hooks";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
-import { useLock, queryResultConvert, useEffectCond, useEffectRef, useValueRef } from "../utils";
-import { DocumentNode } from "graphql";
-import { useQuery, useSubscription, OnSubscriptionDataOptions } from "react-apollo-hooks";
 import * as G from "../../generated/graphql";
-import { arrayFirst, arrayLast, pipe, nullMap, undefinedMap, arrayDrop, undefinedUnwrap } from "@kgtkr/utils";
+import { queryResultConvert, useEffectCond, useEffectRef, useLock, useValueRef } from "../utils";
 
 interface ListItemData {
   id: string;
@@ -71,10 +71,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const initDate = React.useMemo(() => props.initDate, []);
   const variables = props.queryVariables({
     date: initDate,
-    type: "lte"
+    type: "lte",
   });
   const data = useQuery<QueryResult, QueryVariables>(props.query, {
-    variables: variables
+    variables,
   });
   queryResultConvert(data);
 
@@ -137,7 +137,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   React.useEffect(() => {
     if (data.data !== undefined) {
       const items = new Set(props.queryResultConverter(data.data).map(x => x.id));
-      for (let id of idElMap.keys()) {
+      for (const id of idElMap.keys()) {
         if (!items.has(id)) {
           idElMap.delete(id);
         }
@@ -199,7 +199,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       .map(item => {
         const el = idElMap.get(item.id);
         if (el !== undefined) {
-          return ({ item: item, el });
+          return ({ item, el });
         } else {
           return null;
         }
@@ -239,7 +239,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       .map(item => {
         const el = idElMap.get(item.id);
         if (el !== undefined) {
-          return ({ item: item, el });
+          return ({ item, el });
         } else {
           return null;
         }
@@ -282,13 +282,13 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         await data.fetchMore({
           variables: props.queryVariables({
             date: first.date,
-            type: "gt"
+            type: "gt",
           }),
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev;
+            if (!fetchMoreResult) { return prev; }
 
             return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
-          }
+          },
         });
       });
     }
@@ -309,13 +309,13 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         await data.fetchMore({
           variables: props.queryVariables({
             date: old.date,
-            type: "lt"
+            type: "lt",
           }),
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev;
+            if (!fetchMoreResult) { return prev; }
 
             return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
-          }
+          },
         });
       });
     }
@@ -323,8 +323,8 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   const resetDate = async (date: string) => {
     await data.refetch(props.queryVariables({
-      date: date,
-      type: "lte"
+      date,
+      type: "lte",
     }));
     switch (props.newItemOrder) {
       case "bottom":
@@ -433,16 +433,15 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     addQueue({ type: "reset", date });
   }, [props.scrollNewItem]);
 
-
   const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }: OnSubscriptionDataOptions<SubscriptionResult>) => {
     if (subscriptionData.data !== undefined) {
       const subsData = props.subscriptionResultConverter(subscriptionData.data);
-      const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables: variables });
+      const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables });
       if (data !== null) {
         client.writeQuery({
           query: props.query,
-          variables: variables,
-          data: props.queryResultMapper(data, x => [subsData, ...x])
+          variables,
+          data: props.queryResultMapper(data, x => [subsData, ...x]),
         });
       }
       props.onSubscription(subscriptionData.data);
@@ -450,7 +449,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   });
   useSubscription<SubscriptionResult, SubscriptionVariables>(props.subscription, {
     variables: props.subscriptionVariables,
-    onSubscriptionData: props => onSubscriptionDataRef.current(props)
+    onSubscriptionData: props => onSubscriptionDataRef.current(props),
   });
 
   return <div className={props.className} style={props.style} ref={rootEl}>

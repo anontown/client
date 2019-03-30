@@ -5,10 +5,10 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack, Page, Errors } from "../components";
-import { userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
-import * as G from "../../generated/graphql";
 import { useTitle } from "react-use";
+import * as G from "../../generated/graphql";
+import { Errors, Page, Snack } from "../components";
+import { queryResultConvert, userSwitch, UserSwitchProps } from "../utils";
 
 type AuthPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -17,13 +17,12 @@ export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
   const id = qs.parse(props.location.search).client;
   const clients = G.useFindClientsQuery({
     skip: typeof id !== "string",
-    variables: { query: { id: typeof id === "string" ? [id] : [] } }
+    variables: { query: { id: typeof id === "string" ? [id] : [] } },
   });
   queryResultConvert(clients);
   const submit = G.useCreateTokenGeneralMutation();
 
   useTitle("アプリ認証");
-
 
   return <Page>
     <Snack
@@ -49,7 +48,7 @@ export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
               if (data.data !== undefined) {
                 location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.req.token + "&key=" + encodeURI(data.data.createTokenGeneral.req.key);
               }
-            } catch{
+            } catch {
               setSnackMsg("エラーが発生しました");
             }
           }

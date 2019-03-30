@@ -1,5 +1,5 @@
-import * as op from "rxjs/operators";
 import * as rx from "rxjs/ajax";
+import * as op from "rxjs/operators";
 
 import { Config } from "../env";
 

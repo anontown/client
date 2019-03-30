@@ -1,6 +1,6 @@
+import { FontIcon, IconButton } from "material-ui";
 import * as React from "react";
 import * as style from "./page.scss";
-import { IconButton, FontIcon } from "material-ui";
 
 export interface PageProps {
   sidebar?: React.ReactNode;
@@ -8,14 +8,14 @@ export interface PageProps {
 }
 
 interface PageState {
-  isLeft: boolean
+  isLeft: boolean;
 }
 
 export class Page extends React.Component<PageProps, PageState> {
   constructor(props: PageProps) {
     super(props);
     this.state = {
-      isLeft: false
+      isLeft: false,
     };
   }
   render() {
@@ -26,7 +26,7 @@ export class Page extends React.Component<PageProps, PageState> {
         {this.props.sidebar !== undefined
           ? <aside style={{
             height: "100%",
-            width: !this.state.isLeft ? 50 : undefined
+            width: !this.state.isLeft ? 50 : undefined,
           }}>
             <IconButton onClick={() => this.setState({ isLeft: !this.state.isLeft })}>
               <FontIcon className="material-icons">{this.state.isLeft ? "chevron_left" : "chevron_right"}</FontIcon>

@@ -1,11 +1,10 @@
 import { FontIcon } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import { dateFormat, useUserContext } from "../utils";
 import { TagsLink } from "./tags-link";
 import * as style from "./topic-list-item.scss";
-import * as G from "../../generated/graphql";
-
 
 interface TopicListItemProps {
   topic: G.TopicFragment;

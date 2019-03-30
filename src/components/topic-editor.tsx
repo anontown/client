@@ -1,12 +1,11 @@
 import * as Im from "immutable";
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import { TagsInput } from "./tags-input";
-import * as G from "../../generated/graphql";
-
 
 interface TopicEditorProps {
   topic: G.TopicNormalFragment;
@@ -36,7 +35,7 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
         id: this.props.topic.id,
         title: this.state.title,
         text: this.state.text,
-        tags: this.state.tags.toArray()
+        tags: this.state.tags.toArray(),
       }}
       onCompleted={data => {
         if (this.props.onUpdate) {
@@ -61,7 +60,6 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
               onChange={v => this.setState({ text: v })} />
             <RaisedButton onClick={() => submit()} label="OK" />
           </form>);
-        }
-      }</G.UpdateTopicComponent>;
+        }}</G.UpdateTopicComponent>;
   }
 }

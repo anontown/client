@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import { dateFormat } from "../utils";
 import { Md } from "./md";
 import { TagsLink } from "./tags-link";
-import * as G from "../../generated/graphql";
 
 export interface TopicDataProps {
   topic: G.TopicFragment;
@@ -47,7 +47,7 @@ export class TopicData extends React.Component<TopicDataProps, TopicDataState> {
           </>
           : null}
         {
-          //TODO: 編集履歴を別ページにしてここからリンク
+          // TODO: 編集履歴を別ページにしてここからリンク
         }
       </dl>
     </div>;

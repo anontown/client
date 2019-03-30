@@ -1,18 +1,23 @@
+import { arrayFirst } from "@kgtkr/utils";
 import {
   Dialog,
   FontIcon,
   IconButton,
   Paper,
+  RaisedButton,
   Slider,
   Toggle,
-  RaisedButton,
 } from "material-ui";
+import * as moment from "moment";
 import * as React from "react";
 import {
   Link,
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
+import { useTitle } from "react-use";
+import * as rx from "rxjs";
+import * as G from "../../generated/graphql";
 import {
   NG,
   Page,
@@ -21,13 +26,8 @@ import {
   Scroll,
   TopicFavo,
 } from "../components";
+import { queryResultConvert, useUserContext } from "../utils";
 import * as style from "./topic.scss";
-import * as G from "../../generated/graphql";
-import { useUserContext, queryResultConvert } from "../utils";
-import * as rx from "rxjs";
-import { arrayFirst } from "@kgtkr/utils";
-import { useTitle } from "react-use";
-import * as moment from "moment";
 // TODO:NGのtransparent
 
 interface TopicPageProps extends RouteComponentProps<{ id: string }> {
@@ -91,7 +91,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
           date: dateNonNull,
           count: topic.resCount,
         })),
-      }
+      },
     });
   }
 
@@ -134,7 +134,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                 if (user.value !== null) {
                   user.update({
                     ...user.value,
-                    storage: v
+                    storage: v,
                   });
                 }
               }} />
@@ -206,8 +206,8 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                     storage: {
                       ...storage,
                       topicFavo: isFavo ? tf.delete(props.match.params.id) : tf.add(props.match.params.id),
-                    }
-                  })
+                    },
+                  });
                 }}>
                   {isFavo
                     ? <FontIcon className="material-icons">star</FontIcon>
@@ -250,7 +250,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
             onSubscription={x => {
               topics.updateQuery(t => ({
                 ...t,
-                topics: t.topics.map(t => ({ ...t, resCount: x.resAdded.count }))
+                topics: t.topics.map(t => ({ ...t, resCount: x.resAdded.count })),
               }));
             }}
             dataToEl={res =>
@@ -271,8 +271,8 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                   if (user.value !== null) {
                     user.update({
                       ...user.value,
-                      storage: x
-                    })
+                      storage: x,
+                    });
                   }
                 }} />
             </Paper>

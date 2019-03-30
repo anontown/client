@@ -1,15 +1,15 @@
 import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-editor.scss";
-import * as G from "../../generated/graphql";
 interface ProfileEditorProps {
   profile: G.ProfileFragment;
   onUpdate?: (profile: G.ProfileFragment) => void;
   userData: UserData;
-  style?: React.CSSProperties
+  style?: React.CSSProperties;
 }
 
 export const ProfileEditor = (props: ProfileEditorProps) => {
@@ -20,9 +20,9 @@ export const ProfileEditor = (props: ProfileEditorProps) => {
   const submit = G.useUpdateProfileMutation({
     variables: {
       id: props.profile.id,
-      name: name,
-      text: text,
-      sn: sn,
+      name,
+      text,
+      sn,
     },
   });
 

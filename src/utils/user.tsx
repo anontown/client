@@ -1,22 +1,22 @@
 import * as React from "react";
-import { UserData } from "src/models";
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
-import { useEffectSkipN, useEffectRef } from "./use";
-import { useSave } from "./storage-api";
+import { UserData } from "src/models";
 import * as G from "../../generated/graphql";
+import { useSave } from "./storage-api";
+import { useEffectRef, useEffectSkipN } from "./use";
 
 // TODO: 最悪な実装なのであとで何とかする
 export let auth: G.TokenMasterFragment | null = null;
 
 export interface UserContextType {
-  value: UserData | null,
-  update: (value: UserData | null) => void
+  value: UserData | null;
+  update: (value: UserData | null) => void;
 }
 
 export const UserContext = React.createContext<UserContextType>({
   value: null,
-  update: () => { }
+  update: () => { },
 });
 
 export function useUserContext() {
@@ -24,8 +24,8 @@ export function useUserContext() {
 }
 
 export interface UserProps {
-  children: (user: UserContextType) => React.ReactNode,
-  initUserData: UserData | null,
+  children: (user: UserContextType) => React.ReactNode;
+  initUserData: UserData | null;
 }
 
 export const User = (props: UserProps) => {
@@ -73,7 +73,7 @@ export const User = (props: UserProps) => {
     update: x => {
       setUserData(x);
       auth = x !== null ? x.token : null;
-    }
+    },
   };
 
   return (

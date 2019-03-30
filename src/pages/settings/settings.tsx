@@ -12,7 +12,6 @@ interface SettingsPageProps extends RouteComponentProps<{}> {
 
 }
 
-
 export const SettingsPage = withRouter((_props: SettingsPageProps) => {
   return <Page
     sidebar={<List>

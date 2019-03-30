@@ -6,17 +6,17 @@ import {
 import * as React from "react";
 import { Helmet } from "react-helmet";
 import {
+  Link,
   Redirect,
   RouteComponentProps,
   withRouter,
-  Link,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import {
   Errors,
   Page,
 } from "../components";
-import * as G from "../../generated/graphql";
-import { useUserContext, createUserData } from "../utils";
+import { createUserData, useUserContext } from "../utils";
 
 type LoginPageProps = RouteComponentProps<{}>;
 
@@ -52,14 +52,14 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
               const token = await submit({
                 variables: {
                   auth: {
-                    sn: sn, pass: pass
-                  }
-                }
+                    sn, pass,
+                  },
+                },
               });
               if (token.data !== undefined) {
-                userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment))
+                userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment));
               }
-            } catch{
+            } catch {
               setErrors(["ログインに失敗しました。"]);
             }
           }} /></div>

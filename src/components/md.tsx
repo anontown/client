@@ -1,5 +1,6 @@
-import { Dialog, IconButton, FontIcon } from "material-ui";
+import { Dialog, FontIcon, IconButton } from "material-ui";
 import * as React from "react";
+import { Rnd } from "react-rnd";
 import { Link } from "react-router-dom";
 import { Config } from "../env";
 import {
@@ -8,7 +9,6 @@ import {
   safeURL,
 } from "../utils";
 import * as style from "./md.scss";
-import { Rnd } from "react-rnd";
 
 type URLType = { type: "normal", url: string } |
 { type: "router", path: string } |
@@ -59,7 +59,7 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
             height: window.innerWidth / 3,
           }}
           style={{
-            backgroundColor: "#555"
+            backgroundColor: "#555",
           }}>
           <IconButton type="button" onClick={() => this.setState({ slow: false })} >
             <FontIcon className="material-icons">close</FontIcon>

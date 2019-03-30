@@ -1,15 +1,15 @@
 import { Paper, RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
 import { UserData } from "../models";
 import { Errors } from "./errors";
 import { MdEditor } from "./md-editor";
 import * as style from "./profile-add.scss";
-import * as G from "../../generated/graphql";
 
 interface ProfileAddProps {
   onAdd?: (profile: G.ProfileFragment) => void;
   userData: UserData;
-  style?: React.CSSProperties
+  style?: React.CSSProperties;
 }
 
 interface ProfileAddState {

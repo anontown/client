@@ -18,14 +18,14 @@ import {
 import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { isArray } from "util";
+import * as G from "../../generated/graphql";
 import {
   Page,
   TagsInput,
   TopicListItem,
 } from "../components";
+import { queryResultConvert, useEffectRef, useUserContext } from "../utils";
 import * as style from "./topic-search.scss";
-import * as G from "../../generated/graphql";
-import { useUserContext, queryResultConvert, useEffectRef } from "../utils";
 
 type TopicSearchPageProps = RouteComponentProps<{}>;
 
@@ -66,7 +66,7 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
         tags: query.tags,
         activeOnly: !query.dead,
       },
-      limit: limit,
+      limit,
     },
   });
   queryResultConvert(topics);
@@ -108,8 +108,8 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
             storage: {
               ...storage,
               tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
-            }
-          })
+            },
+          });
         }}>
           {user.value.storage.tagsFavo.has(Im.Set(query.tags))
             ? <FontIcon className="material-icons">star</FontIcon>
@@ -161,16 +161,16 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
       <RaisedButton onClick={() => {
         topics.fetchMore({
           variables: {
-            skip: topics.data !== undefined ? topics.data.topics.length : 0
+            skip: topics.data !== undefined ? topics.data.topics.length : 0,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev;
+            if (!fetchMoreResult) { return prev; }
             return {
               ...prev,
-              msgs: [...prev.topics, ...fetchMoreResult.topics]
-            }
-          }
-        })
+              msgs: [...prev.topics, ...fetchMoreResult.topics],
+            };
+          },
+        });
       }} label="もっと" />
     </div>
   </Page>;

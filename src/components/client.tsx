@@ -3,9 +3,9 @@ import {
   IconButton,
 } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
 import { UserData } from "../models";
 import { ClientEditor } from "./client-editor";
-import * as G from "../../generated/graphql";
 
 interface ClientProps {
   client: G.ClientFragment;

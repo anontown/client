@@ -4,11 +4,11 @@ import {
   TextField,
 } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
+import { useUserContext } from "../utils";
 import { Errors } from "./errors";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import * as G from "../../generated/graphql";
-import { useUserContext } from "../utils";
 
 interface TopicForkProps {
   topic: G.TopicNormalFragment;
@@ -23,8 +23,8 @@ export const TopicFork = (props: TopicForkProps) => {
     {user.value !== null
       ? <G.CreateTopicForkComponent
         variables={{
-          title: title,
-          parent: props.topic.id
+          title,
+          parent: props.topic.id,
         }}
         onCompleted={data => {
           if (props.onCreate) {
@@ -40,15 +40,14 @@ export const TopicFork = (props: TopicForkProps) => {
                 onChange={(_e, v) => setTitle(v)} />
               <RaisedButton onClick={() => submit()} label="新規作成" />
             </form>);
-          }
-        }</G.CreateTopicForkComponent>
+          }}</G.CreateTopicForkComponent>
       : null}
     <hr />
     <G.FindTopicsComponent
       variables={{ query: { parent: props.topic.id } }}>{
         ({ loading, error, data }) => {
-          if (loading) return "Loading...";
-          if (error || !data) return (<Snack msg="派生トピック取得に失敗しました" />);
+          if (loading) { return "Loading..."; }
+          if (error || !data) { return (<Snack msg="派生トピック取得に失敗しました" />); }
           return (<div>
             {data.topics.map(t => <Paper key={t.id}>
               <TopicListItem
@@ -56,7 +55,6 @@ export const TopicFork = (props: TopicForkProps) => {
                 detail={false} />
             </Paper>)}
           </div>);
-        }
-      }</G.FindTopicsComponent>
+        }}</G.FindTopicsComponent>
   </div>;
 };

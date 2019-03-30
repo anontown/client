@@ -1,8 +1,8 @@
 import { RaisedButton, TextField } from "material-ui";
 import * as React from "react";
+import * as G from "../../generated/graphql";
 import { UserData } from "../models";
 import { Errors } from "./errors";
-import * as G from "../../generated/graphql";
 
 interface ClientEditorProps {
   client: G.ClientFragment;
@@ -43,7 +43,6 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
             <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
             <RaisedButton onClick={() => submit()} label="OK" />
           </form>);
-        }
-      }</G.UpdateClientComponent>);
+        }}</G.UpdateClientComponent>);
   }
 }

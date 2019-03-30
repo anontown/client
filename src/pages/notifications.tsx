@@ -1,3 +1,4 @@
+import { arrayLast } from "@kgtkr/utils";
 import {
   Paper,
   RaisedButton,
@@ -7,13 +8,12 @@ import { Helmet } from "react-helmet";
 import {
   RouteComponentProps,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import {
   Page,
   Res,
 } from "../components";
-import { userSwitch, UserSwitchProps, queryResultConvert } from "../utils";
-import * as G from "../../generated/graphql";
-import { arrayLast } from "@kgtkr/utils";
+import { queryResultConvert, userSwitch, UserSwitchProps } from "../utils";
 
 type NotificationsPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -24,11 +24,11 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
       query: {
         date: {
           date: now.current,
-          type: "lte"
+          type: "lte",
         },
-        notice: true
-      }
-    }
+        notice: true,
+      },
+    },
   });
   queryResultConvert(reses);
 
@@ -50,18 +50,18 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
                   query: {
                     date: {
                       date: first.date,
-                      type: "gt"
+                      type: "gt",
                     },
-                    notice: true
+                    notice: true,
                   },
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) return prev;
+                  if (!fetchMoreResult) { return prev; }
                   return {
                     ...prev,
-                    msgs: [...fetchMoreResult.reses, ...prev.reses]
-                  }
-                }
+                    msgs: [...fetchMoreResult.reses, ...prev.reses],
+                  };
+                },
               });
             }
           }} />
@@ -88,18 +88,18 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
                   query: {
                     date: {
                       date: last.date,
-                      type: "lt"
+                      type: "lt",
                     },
-                    notice: true
+                    notice: true,
                   },
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) return prev;
+                  if (!fetchMoreResult) { return prev; }
                   return {
                     ...prev,
-                    reses: [...prev.reses, ...fetchMoreResult.reses]
-                  }
-                }
+                    reses: [...prev.reses, ...fetchMoreResult.reses],
+                  };
+                },
               });
             }
           }} />

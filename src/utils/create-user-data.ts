@@ -1,7 +1,7 @@
-import { UserData } from "../models";
-import * as storageAPI from "./storage-api";
 import * as G from "../../generated/graphql";
-import { gqlClient, createHeaders } from "./gql-client";
+import { UserData } from "../models";
+import { createHeaders, gqlClient } from "./gql-client";
+import * as storageAPI from "./storage-api";
 
 export async function createUserData(token: G.TokenMasterFragment): Promise<UserData> {
   const storage = await storageAPI.load(token);
@@ -9,8 +9,8 @@ export async function createUserData(token: G.TokenMasterFragment): Promise<User
     query: G.FindUserDocument,
     variables: {},
     context: {
-      headers: createHeaders(token.id, token.key)
-    }
+      headers: createHeaders(token.id, token.key),
+    },
   });
 
   return { storage, token, id: user.data.user.id };

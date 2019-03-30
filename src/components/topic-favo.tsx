@@ -5,11 +5,10 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import { UserData } from "../models";
 import { Snack } from "./snack";
 import { TopicListItem } from "./topic-list-item";
-import * as G from "../../generated/graphql";
-
 
 interface TopicFavoProps {
   userData: UserData;
@@ -37,8 +36,8 @@ export class TopicFavo extends React.Component<TopicFavoProps, TopicFavoState> {
             </IconButton>
             {
               (() => {
-                if (loading) return "Loading...";
-                if (error || !data) return (<Snack msg="トピック取得に失敗しました" />);
+                if (loading) { return "Loading..."; }
+                if (error || !data) { return (<Snack msg="トピック取得に失敗しました" />); }
 
                 const topics = data.topics.sort((a, b) => a.update > b.update ? -1 : a.update < b.update ? 1 : 0);
 

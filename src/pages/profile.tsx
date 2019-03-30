@@ -5,11 +5,11 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import { Page, Profile, Snack } from "../components";
 import {
   withModal,
 } from "../utils";
-import * as G from "../../generated/graphql";
 
 interface ProfileBaseProps extends RouteComponentProps<{ id: string }> {
   zDepth?: number;
@@ -29,8 +29,8 @@ const ProfileBase = withRouter(class extends React.Component<ProfileBaseProps, P
       <G.FindProfilesComponent
         variables={{ query: { id: [this.props.match.params.id] } }}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading...";
-          if (error || !data || data.profiles.length === 0) return (<Snack msg="プロフィール取得に失敗しました" />);
+          if (loading) { return "Loading..."; }
+          if (error || !data || data.profiles.length === 0) { return (<Snack msg="プロフィール取得に失敗しました" />); }
 
           return (
             <Paper zDepth={this.props.zDepth}>

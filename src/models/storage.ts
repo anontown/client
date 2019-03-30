@@ -1,8 +1,8 @@
 import * as Im from "immutable";
+import * as G from "../../generated/graphql";
+import { gqlClient } from "../utils";
 import * as ng from "./ng";
 import * as ngJson from "./ng-json";
-import { gqlClient } from "../utils";
-import * as G from "../../generated/graphql";
 
 interface StorageJSON1 {
   readonly ver: "1.0.0";
@@ -207,9 +207,9 @@ async function convert7To8(val: StorageJSON7): Promise<StorageJSON8> {
     variables: {
       query: {
         id: Object.entries(val.topicRead)
-          .map(([_l, { res }]) => res)
-      }
-    }
+          .map(([_l, { res }]) => res),
+      },
+    },
   }))
     .data
     .reses

@@ -4,15 +4,15 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { Helmet } from "react-helmet";
+import { RouteComponentProps, withRouter } from "react-router";
+import * as G from "../../generated/graphql";
 import {
   Page,
+  ProfileAdd,
   ProfileEditor,
   Snack,
-  ProfileAdd,
 } from "../components";
-import * as G from "../../generated/graphql";
-import { UserSwitchProps, userSwitch } from "../utils";
-import { RouteComponentProps, withRouter } from "react-router";
+import { userSwitch, UserSwitchProps } from "../utils";
 
 type ProfilesPageProps = RouteComponentProps & UserSwitchProps;
 
@@ -32,8 +32,8 @@ export const ProfilesPage = userSwitch(withRouter(class extends React.Component<
           <Tab label="編集">
             <G.FindProfilesComponent variables={{ query: { self: true } }}>
               {({ loading, error, data }) => {
-                if (loading) return "Loading...";
-                if (error || !data) return (<Snack msg="プロフィール取得に失敗しました" />);
+                if (loading) { return "Loading..."; }
+                if (error || !data) { return (<Snack msg="プロフィール取得に失敗しました" />); }
 
                 return (
                   data.profiles.map(p =>

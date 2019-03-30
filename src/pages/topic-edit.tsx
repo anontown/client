@@ -5,17 +5,17 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import {
   Page,
   TopicEditor,
 } from "../components";
 import {
-  withModal,
+  queryResultConvert,
   userSwitch,
   UserSwitchProps,
-  queryResultConvert,
+  withModal,
 } from "../utils";
-import * as G from "../../generated/graphql";
 
 type TopicEditBaseProps = RouteComponentProps<{ id: string }> & UserSwitchProps & {
   zDepth?: number;
@@ -25,9 +25,9 @@ const TopicEditBase = withRouter(userSwitch((props: TopicEditBaseProps) => {
   const topics = G.useFindTopicsQuery({
     variables: {
       query: {
-        id: [props.match.params.id]
-      }
-    }
+        id: [props.match.params.id],
+      },
+    },
   });
   queryResultConvert(topics);
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;

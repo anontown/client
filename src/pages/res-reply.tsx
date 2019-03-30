@@ -5,11 +5,11 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import { Page, Res, Snack } from "../components";
 import {
-  withModal
+  withModal,
 } from "../utils";
-import * as G from "../../generated/graphql";
 
 type ResReplyBaseProps = RouteComponentProps<{ id: string }>;
 
@@ -27,11 +27,11 @@ const ResReplyBase = withRouter(class extends React.Component<ResReplyBaseProps,
       <G.FindResesComponent
         variables={{ query: { reply: this.props.match.params.id } }}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading...";
-          if (error || !data) return (<Snack msg="レス取得に失敗しました" />);
+          if (loading) { return "Loading..."; }
+          if (error || !data) { return (<Snack msg="レス取得に失敗しました" />); }
           return data.reses.map(res => <Paper key={res.id}>
             <Res res={res} />
-          </Paper>)
+          </Paper>);
         }}
       </G.FindResesComponent>
     </div>;

@@ -9,6 +9,7 @@ import {
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as uuid from "uuid";
+import * as G from "../../generated/graphql";
 import { ng } from "../models";
 import {
   dateFormat, useUserContext,
@@ -17,7 +18,6 @@ import { Md } from "./md";
 import { ResWrite } from "./res-write";
 import * as style from "./res.scss";
 import { Snack } from "./snack";
-import * as G from "../../generated/graphql";
 
 interface ResProps {
   res: G.ResFragment;
@@ -29,7 +29,6 @@ export const Res = (props: ResProps) => {
   const [snackMsg, setSnackMsg] = React.useState<string | null>(null);
   const [disableNG, setDisableNG] = React.useState(false);
   const user = useUserContext();
-
 
   const smallIcon = {
     width: 18,
@@ -54,7 +53,7 @@ export const Res = (props: ResProps) => {
         <G.VoteResComponent
           variables={{
             res: props.res.id,
-            type: props.res.voteFlag === "uv" ? "cv" : "uv"
+            type: props.res.voteFlag === "uv" ? "cv" : "uv",
           }}
           onCompleted={data => {
             if (props.update) {
@@ -75,7 +74,7 @@ export const Res = (props: ResProps) => {
         <G.VoteResComponent
           variables={{
             res: props.res.id,
-            type: props.res.voteFlag === "dv" ? "cv" : "dv"
+            type: props.res.voteFlag === "dv" ? "cv" : "dv",
           }}
           onCompleted={data => {
             if (props.update) {
@@ -189,7 +188,7 @@ export const Res = (props: ResProps) => {
                           hash: props.res.hash,
                         },
                       }),
-                    }
+                    },
                   });
                 }
               }} />
@@ -214,7 +213,7 @@ export const Res = (props: ResProps) => {
                             profile: props.res.profile.id,
                           },
                         }),
-                      }
+                      },
                     });
                   }
                 }} />
@@ -292,8 +291,8 @@ export const Res = (props: ResProps) => {
                 if (user.value !== null) {
                   user.update({
                     ...user.value,
-                    storage: x
-                  })
+                    storage: x,
+                  });
                 }
               }} />
           </Paper>

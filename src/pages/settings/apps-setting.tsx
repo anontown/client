@@ -8,10 +8,10 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { Snack, Errors } from "../../components";
-import { userSwitch, UserSwitchProps, queryResultConvert } from "../../utils";
-import * as G from "../../../generated/graphql";
 import { useTitle } from "react-use";
+import * as G from "../../../generated/graphql";
+import { Errors, Snack } from "../../components";
+import { queryResultConvert, userSwitch, UserSwitchProps } from "../../utils";
 
 type AppsSettingPageProps = RouteComponentProps<{}> & UserSwitchProps;
 
@@ -25,8 +25,8 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
         ? Array.from(new Set(tokens.data.tokens
           .filter((x): x is G.TokenGeneralFragment => x.__typename === "TokenGeneral")
           .map(x => x.client.id)))
-        : []
-    }
+        : [],
+    },
   };
   const clients = G.useFindClientsQuery({
     skip: tokens === undefined,
@@ -53,7 +53,7 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
         <IconButton type="button" onClick={async () => {
           try {
             await delToken({
-              variables: { client: c.id }, update: (cache) => {
+              variables: { client: c.id }, update:cache => {
                 const clients = cache.readQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({ query: G.FindClientsDocument, variables });
                 if (clients !== null) {
                   cache.writeQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({
@@ -62,7 +62,7 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
                     data: { clients: clients.clients.filter(x => x.id !== c.id) },
                   });
                 }
-              }
+              },
             });
           } catch {
             setSnackMsg("削除に失敗しました");

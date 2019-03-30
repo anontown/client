@@ -5,14 +5,14 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
+import * as G from "../../generated/graphql";
 import {
   Page,
   TopicFork,
 } from "../components";
 import {
-  withModal, userSwitch, UserSwitchProps, queryResultConvert,
+  queryResultConvert, userSwitch, UserSwitchProps, withModal,
 } from "../utils";
-import * as G from "../../generated/graphql";
 
 type TopicForkBaseProps = RouteComponentProps<{ id: string }> & UserSwitchProps & {
   zDepth?: number;
@@ -22,9 +22,9 @@ const TopicForkBase = withRouter(userSwitch((props: TopicForkBaseProps) => {
   const topics = G.useFindTopicsQuery({
     variables: {
       query: {
-        id: [props.match.params.id]
-      }
-    }
+        id: [props.match.params.id],
+      },
+    },
   });
   queryResultConvert(topics);
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
