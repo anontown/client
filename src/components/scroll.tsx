@@ -81,7 +81,6 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   const lock = useLock();
   const runCmd = useFunctionRef(async (cmd: Cmd) => {
     await lock(async () => {
-      console.log(JSON.stringify(cmd));
       switch (cmd.type) {
         case "reset":
           await resetDate(cmd.date);
@@ -121,21 +120,21 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   }, [data.data, idElMap]);
 
-  const toTop = async () => {
+  const toTop = useFunctionRef(async () => {
     await sleep(0);
     if (rootEl.current !== null) {
       rootEl.current.scrollTop = 0;
     }
-  };
+  });
 
-  const toBottom = async () => {
+  const toBottom = useFunctionRef(async () => {
     await sleep(0);
     if (rootEl.current !== null) {
       rootEl.current.scrollTop = rootEl.current.scrollHeight;
     }
-  };
+  });
 
-  const scrollLock = async (f: () => Promise<void>) => {
+  const scrollLock = useFunctionRef(async (f: () => Promise<void>) => {
     await sleep(0);
     const elData = pipe(data.data)
       .chain(undefinedMap(props.queryResultConverter))
@@ -155,10 +154,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         }
       }
     }
-  };
+  });
 
   // 上端に一番近いアイテム
-  const getTopElement = async () => {
+  const getTopElement = useFunctionRef(async () => {
     await sleep(0);
 
     if (data.data === undefined) {
@@ -195,10 +194,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     } else {
       return null;
     }
-  };
+  });
 
   // 下端に一番近いアイテム
-  const getBottomElement = async () => {
+  const getBottomElement = useFunctionRef(async () => {
     await sleep(0);
 
     if (data.data === undefined) {
@@ -238,9 +237,9 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     } else {
       return null;
     }
-  };
+  });
 
-  const findAfter = async () => {
+  const findAfter = useFunctionRef(async () => {
     if (data.data === undefined) {
       return;
     }
@@ -265,9 +264,9 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         });
       });
     }
-  };
+  });
 
-  const findBefore = async () => {
+  const findBefore = useFunctionRef(async () => {
     if (data.data === undefined) {
       return;
     }
@@ -292,9 +291,9 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         });
       });
     }
-  };
+  });
 
-  const resetDate = async (date: string) => {
+  const resetDate = useFunctionRef(async (date: string) => {
     await data.refetch(props.queryVariables({
       date,
       type: "lte",
@@ -308,7 +307,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
         break;
     }
     await findAfter();
-  };
+  });
 
   useEffectRef(f => {
     const el = rootEl.current;
