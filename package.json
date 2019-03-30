@@ -6,12 +6,11 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "webpack -p --mode production&&cp  -pR ./public/* ./dist",
+    "build": "npm run codegen&&webpack -p --mode production&&cp  -pR ./public/* ./dist",
     "lint": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}'",
     "lint:fix": "tslint -p tsconfig.json -c tslint.json 'src/**/*.ts{,x}' --fix",
     "loc": "sloc --format cli-table ./src",
     "apollo:generate": "",
-    "postinstall": "npm run codegen",
     "codegen": "wget https://raw.githubusercontent.com/anontown/server/graphql/resources/app.gql -O generated/app.gql&&gql-gen --config codegen.yml"
   },
   "author": "",
