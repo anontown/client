@@ -6,7 +6,7 @@ import * as rx from "rxjs";
 import * as op from "rxjs/operators";
 import { setTimeout } from "timers";
 import * as G from "../../generated/graphql";
-import { queryResultConvert, useEffectCond, useEffectRef, useLock, useValueRef } from "../utils";
+import { queryResultConvert, useEffectCond, useEffectRef, useLock, useValueRef, useFunctionRef } from "../utils";
 
 interface ListItemData {
   id: string;
@@ -63,7 +63,7 @@ function sleep(ms: number) {
   });
 }
 
-type Queue = { type: "reset", date: string } | { type: "after" } | { type: "before" };
+type Cmd = { type: "reset", date: string } | { type: "after" } | { type: "before" };
 
 export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
@@ -78,53 +78,26 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   });
   queryResultConvert(data);
 
-  const queueLock = React.useRef(false);
-  const queues = React.useRef<Queue[]>([]);
-  const runQueueOne = useValueRef(async (queue: Queue) => {
-    switch (queue.type) {
-      case "reset":
-        await resetDate(queue.date);
-        break;
-      case "before":
-        await findBefore();
-        break;
-      case "after":
-        await findAfter();
-        break;
-    }
+  const lock = useLock();
+  const runCmd = useFunctionRef(async (cmd: Cmd) => {
+    await lock(async () => {
+      console.log(JSON.stringify(cmd));
+      switch (cmd.type) {
+        case "reset":
+          await resetDate(cmd.date);
+          break;
+        case "before":
+          await findBefore();
+          break;
+        case "after":
+          await findAfter();
+          break;
+      }
+    });
   });
 
-  const runFirstQueue = async () => {
-    if (!queueLock.current) {
-      queueLock.current = true;
-      try {
-        const first = arrayFirst(queues.current);
-        if (first !== undefined) {
-          queues.current = pipe(queues.current).chain(arrayDrop(1)).value;
-          await runQueueOne.current(first);
-        }
-      } catch (e) {
-        throw e;
-      } finally {
-        queueLock.current = false;
-      }
-      if (queues.current.length !== 0) {
-        await runFirstQueue();
-      }
-    }
-  };
-
-  const addQueue = async (queue: Queue) => {
-    if (queue.type === "reset") {
-      queues.current = [queue];
-    } else {
-      queues.current = [...queues.current, queue];
-    }
-    await runFirstQueue();
-  };
-
   useEffectCond(() => {
-    addQueue({ type: "reset", date: initDate });
+    runCmd({ type: "reset", date: initDate });
   }, () => data.data !== null);
 
   React.useEffect(() => {
@@ -354,10 +327,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   }, () => {
     switch (props.newItemOrder) {
       case "top":
-        addQueue({ type: "after" });
+        runCmd({ type: "after" });
         break;
       case "bottom":
-        addQueue({ type: "before" });
+        runCmd({ type: "before" });
         break;
     }
   }, [rootEl.current, props.debounceTime]);
@@ -379,10 +352,10 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   }, () => {
     switch (props.newItemOrder) {
       case "bottom":
-        addQueue({ type: "after" });
+        runCmd({ type: "after" });
         break;
       case "top":
-        addQueue({ type: "before" });
+        runCmd({ type: "before" });
         break;
     }
   }, [rootEl.current, props.debounceTime]);
@@ -430,7 +403,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
       subs.unsubscribe();
     };
   }, (date: string) => {
-    addQueue({ type: "reset", date });
+    runCmd({ type: "reset", date });
   }, [props.scrollNewItem]);
 
   const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }: OnSubscriptionDataOptions<SubscriptionResult>) => {
