@@ -25,6 +25,8 @@ const wsLink = new WebSocketLink({
   uri: Config.socket.origin + "/graphql",
   options: {
     reconnect: true,
+    lazy: true,
+    connectionParams: () => auth !== null ? createHeaders(auth.id, auth.key) : {},
   },
 });
 
