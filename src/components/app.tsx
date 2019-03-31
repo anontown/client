@@ -124,7 +124,7 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
                   <ToolbarGroup firstChild={true} className={style.big}>
                     {(() => {
                       const now = new Date();
-                      if (now.getMonth() + 1 === 4 && now.getDate() === 1) {
+                      if (now.getMonth() + 1 === 4 && now.getDate() === 1 && now.getHours() < 12) {
                         return <ToolbarGroup className={style.april}>April Fool！</ToolbarGroup>;
                       } else {
                         return <ToolbarTitle text="Anontown" />;
