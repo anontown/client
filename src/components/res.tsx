@@ -99,7 +99,7 @@ export const Res = (props: ResProps) => {
           [style.reply]: props.res.__typename === "ResNormal" && props.res.isReply && !props.res.self,
         })}>
           <a onClick={() => setIsReply(!isReply)}>
-            #
+            @
               </a>
           &nbsp;
               {props.res.__typename === "ResNormal" && props.res.name !== null
@@ -140,7 +140,7 @@ export const Res = (props: ResProps) => {
               modal: true,
             },
           }}>
-            HASH:{props.res.hash.substr(0, 6)}
+            #{props.res.hash.substr(0, 6)}
           </Link>
           &nbsp;
             <span>
