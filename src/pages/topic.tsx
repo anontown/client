@@ -7,6 +7,8 @@ import {
   RaisedButton,
   Slider,
   Toggle,
+  IconMenu,
+  MenuItem
 } from "material-ui";
 import * as moment from "moment";
 import * as React from "react";
@@ -171,29 +173,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                 : null}
               {topic.title}
             </div>
-            <div>
-              <IconButton containerElement={<Link to={{
-                pathname: `/topic/${props.match.params.id}/data`,
-                state: { modal: true },
-              }} />}>
-                <FontIcon className="material-icons">keyboard_arrow_down</FontIcon>
-              </IconButton>
-              {topic.__typename === "TopicNormal"
-                ? <IconButton containerElement={<Link to={{
-                  pathname: `/topic/${props.match.params.id}/fork`,
-                  state: { modal: true },
-                }} />}>
-                  <FontIcon className="material-icons">call_split</FontIcon>
-                </IconButton>
-                : null}
-              {topic.__typename === "TopicNormal" && user.value !== null
-                ? <IconButton containerElement={<Link to={{
-                  pathname: `/topic/${props.match.params.id}/edit`,
-                  state: { modal: true },
-                }} />}>
-                  <FontIcon className="material-icons">settings</FontIcon>
-                </IconButton>
-                : null}
+            <div className={style.toolbar}>
               {user.value !== null
                 ? <IconButton onClick={() => {
                   if (user.value === null) {
@@ -214,20 +194,48 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                     : <FontIcon className="material-icons">star_border</FontIcon>}
                 </IconButton>
                 : null}
-              <IconButton onClick={() => setIsAutoScrollDialog(true)}>
-                <FontIcon className="material-icons">play_circle_outline</FontIcon>
-              </IconButton>
-              <IconButton onClick={() => setIsNGDialog(true)}>
-                <FontIcon className="material-icons">mood_bad</FontIcon>
-              </IconButton>
               {user.value !== null && topic.active
                 ? <IconButton onClick={() => setIsResWrite(!isResWrite)}>
                   <FontIcon className="material-icons">create</FontIcon>
                 </IconButton>
                 : null}
-              <IconButton onClick={() => setIsJumpDialog(true)}>
-                <FontIcon className="material-icons">arrow_upward</FontIcon>
-              </IconButton>
+              <IconMenu
+                iconButtonElement={
+                  <IconButton touch={true}>
+                    <FontIcon className="material-icons">more_vert</FontIcon>
+                  </IconButton>}>
+                <MenuItem
+                  primaryText="詳細データ"
+                  containerElement={<Link to={{
+                    pathname: `/topic/${props.match.params.id}/data`,
+                    state: { modal: true },
+                  }} />} />
+                {topic.__typename === "TopicNormal" && user.value !== null
+                  ? <MenuItem
+                    primaryText="トピック編集"
+                    containerElement={<Link to={{
+                      pathname: `/topic/${props.match.params.id}/edit`,
+                      state: { modal: true },
+                    }} />} />
+                  : null}
+                {topic.__typename === "TopicNormal"
+                  ? <MenuItem
+                    primaryText="派生トピック"
+                    containerElement={<Link to={{
+                      pathname: `/topic/${props.match.params.id}/fork`,
+                      state: { modal: true },
+                    }} />} />
+                  : null}
+                <MenuItem
+                  primaryText="自動スクロール"
+                  onClick={() => setIsAutoScrollDialog(true)} />
+                <MenuItem
+                  primaryText="ジャンプ"
+                  onClick={() => setIsJumpDialog(true)} />
+                <MenuItem
+                  primaryText="NG"
+                  onClick={() => setIsNGDialog(true)} />
+              </IconMenu>
             </div>
           </Paper>
           <Scroll<G.ResFragment, G.FindResesQuery, G.FindResesQueryVariables, G.ResAddedSubscription, G.ResAddedSubscriptionVariables>

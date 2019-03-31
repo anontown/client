@@ -12,6 +12,10 @@
   white-space: nowrap;
 }
 
+.toolbar{
+  margin-left:auto;
+}
+
 .reses{
   flex: 1;
   overflow-y: auto;
@@ -21,6 +25,7 @@
 .header{
   background-color: #99f !important;
   padding: 0.3rem;
+  display: flex;
 }
 
 .resWrite{
