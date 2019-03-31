@@ -144,7 +144,7 @@ export const Res = (props: ResProps) => {
           </Link>
           &nbsp;
             <span>
-            {props.res.uv - props.res.dv}ポイント
+            {props.res.uv - props.res.dv}vote
             </span>
           {user.value !== null
             ? <IconMenu
