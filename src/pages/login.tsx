@@ -27,45 +27,50 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
   const userContext = useUserContext();
   const submit = G.useCreateTokenMasterMutation();
 
-  return <Page>
-    <Helmet title="ログイン" />
-    {userContext.value !== null
-      ? <Redirect to="/" />
-      : <Paper>
-        <Errors errors={errors} />
-        <form>
-          <div>
-            <TextField
-              floatingLabelText="ID"
-              value={sn}
-              onChange={(_e, v) => setSn(v)} />
-          </div>
-          <div>
-            <TextField
-              floatingLabelText="パスワード"
-              value={pass}
-              onChange={(_e, v) => setPass(v)}
-              type="password" />
-          </div>
-          <div><RaisedButton label="ログイン" onClick={async () => {
-            try {
-              const token = await submit({
-                variables: {
-                  auth: {
-                    sn, pass,
+  return (
+    <Page>
+      <Helmet title="ログイン" />
+      {userContext.value !== null
+        ? <Redirect to="/" />
+        : <Paper>
+          <Errors errors={errors} />
+          <form>
+            <div>
+              <TextField
+                floatingLabelText="ID"
+                value={sn}
+                onChange={(_e, v) => setSn(v)}
+              />
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="パスワード"
+                value={pass}
+                onChange={(_e, v) => setPass(v)}
+                type="password"
+              />
+            </div>
+            <div><RaisedButton label="ログイン" onClick={async () => {
+              try {
+                const token = await submit({
+                  variables: {
+                    auth: {
+                      sn, pass,
+                    },
                   },
-                },
-              });
-              if (token.data !== undefined) {
-                userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment));
+                });
+                if (token.data !== undefined) {
+                  userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment));
+                }
+              } catch {
+                setErrors(["ログインに失敗しました。"]);
               }
-            } catch {
-              setErrors(["ログインに失敗しました。"]);
-            }
-          }} /></div>
-          <Link to="/signup">登録</Link>
-        </form>
-      </Paper>}
-  </Page>;
+            }}
+            /></div>
+            <Link to="/signup">登録</Link>
+          </form>
+        </Paper>}
+    </Page>
+  );
 
 });

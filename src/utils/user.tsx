@@ -79,7 +79,8 @@ export const User = (props: UserProps) => {
 
   return (
     <UserContext.Provider
-      value={context}>
+      value={context}
+    >
       {props.children(context)}
     </UserContext.Provider>
   );

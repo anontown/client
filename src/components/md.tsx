@@ -45,35 +45,39 @@ class MdYouTube extends React.Component<MdYouTubeProps, { slow: boolean }> {
   }
 
   render() {
-    return <>
-      <img
-        className={style.preview}
-        src={`https://i.ytimg.com/vi/${this.props.videoID}/maxresdefault.jpg`}
-        title={this.props.title || undefined}
-        onClick={() => this.setState({ slow: true })} />
-      {this.state.slow
-        ? <Rnd
-          default={{
-            x: 0,
-            y: 0,
-            width: window.innerWidth / 3 * 2,
-            height: window.innerWidth / 3,
-          }}
-          style={{
-            backgroundColor: "#555",
-          }}>
-          <IconButton type="button" onClick={() => this.setState({ slow: false })} >
-            <FontIcon className="material-icons">close</FontIcon>
-          </IconButton>
-          <div className={style.youtube}>
-            <iframe
-              src={`https://www.youtube.com/embed/${this.props.videoID}`}
-              frameBorder="0">
-            </iframe>
-          </div>
-        </Rnd>
-        : null}
-    </>;
+    return (
+      <>
+        <img
+          className={style.preview}
+          src={`https://i.ytimg.com/vi/${this.props.videoID}/maxresdefault.jpg`}
+          title={this.props.title || undefined}
+          onClick={() => this.setState({ slow: true })}
+        />
+        {this.state.slow
+          ? <Rnd
+            default={{
+              x: 0,
+              y: 0,
+              width: window.innerWidth / 3 * 2,
+              height: window.innerWidth / 3,
+            }}
+            style={{
+              backgroundColor: "#555",
+            }}
+          >
+            <IconButton type="button" onClick={() => this.setState({ slow: false })} >
+              <FontIcon className="material-icons">close</FontIcon>
+            </IconButton>
+            <div className={style.youtube}>
+              <iframe
+                src={`https://www.youtube.com/embed/${this.props.videoID}`}
+                frameBorder="0"
+              />
+            </div>
+          </Rnd>
+          : null}
+      </>
+    );
   }
 }
 
@@ -114,9 +118,12 @@ function MdLink(props: { node: mdParser.Link }) {
         title: props.node.title || undefined,
       }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
-      return <MdImg
-        url={safeURL(props.node.url)}
-        title={props.node.title || undefined} />;
+      return (
+        <MdImg
+          url={safeURL(props.node.url)}
+          title={props.node.title || undefined}
+        />
+      );
     case "youtube":
       return <MdYouTube videoID={link.videoID} title={props.node.title || undefined} />;
     case "router":
@@ -207,10 +214,13 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
       case "link":
         return <MdLink node={this.props.node} />;
       case "image":
-        return <MdImg
-          url={camo.getCamoUrl(this.props.node.url)}
-          title={this.props.node.title || undefined}
-          alt={this.props.node.alt || undefined} />;
+        return (
+          <MdImg
+            url={camo.getCamoUrl(this.props.node.url)}
+            title={this.props.node.title || undefined}
+            alt={this.props.node.alt || undefined}
+          />
+        );
       case "text":
         return this.props.node.value;
       default:
@@ -238,26 +248,31 @@ class MdImg extends React.Component<MdImgProps, MdImgState> {
   }
 
   render() {
-    return <>
-      <img
-        className={style.preview}
-        src={camo.getCamoUrl(this.props.url)}
-        title={this.props.title}
-        alt={this.props.alt}
-        onClick={() => this.setState({ dialog: true })} />
-      <Modal
-        isOpen={this.state.dialog}
-        onRequestClose={() => this.setState({ dialog: false })}>
+    return (
+      <>
         <img
-          style={{
-            width: "50vw",
-            height: "auto",
-          }}
+          className={style.preview}
           src={camo.getCamoUrl(this.props.url)}
           title={this.props.title}
           alt={this.props.alt}
-          onClick={() => this.setState({ dialog: true })} />
-      </Modal>
-    </>;
+          onClick={() => this.setState({ dialog: true })}
+        />
+        <Modal
+          isOpen={this.state.dialog}
+          onRequestClose={() => this.setState({ dialog: false })}
+        >
+          <img
+            style={{
+              width: "50vw",
+              height: "auto",
+            }}
+            src={camo.getCamoUrl(this.props.url)}
+            title={this.props.title}
+            alt={this.props.alt}
+            onClick={() => this.setState({ dialog: true })}
+          />
+        </Modal>
+      </>
+    );
   }
 }

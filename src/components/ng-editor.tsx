@@ -17,16 +17,19 @@ export function NGEditor(props: NGEditorProps) {
       <TextField
         floatingLabelText="名前"
         value={props.ng.name}
-        onChange={(_e, v) => props.onUpdate({ ...props.ng, name: v })} />
+        onChange={(_e, v) => props.onUpdate({ ...props.ng, name: v })}
+      />
       <TextField
         floatingLabelText="トピック"
         value={props.ng.topic || ""}
-        onChange={(_e, v) => props.onUpdate({ ...props.ng, topic: v || null })} />
+        onChange={(_e, v) => props.onUpdate({ ...props.ng, topic: v || null })}
+      />
       <List>
         <NGNodeEditor
           nestedLevel={0}
           value={props.ng.node}
-          onChange={v => props.onUpdate({ ...props.ng, node: v })} />
+          onChange={v => props.onUpdate({ ...props.ng, node: v })}
+        />
       </List>
     </div>
   );

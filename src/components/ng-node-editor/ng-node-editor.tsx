@@ -76,7 +76,8 @@ export class NGNodesEditor extends React.Component<NGNodesEditorProps, NGNodesEd
             onChange={this.handleChangeNode}
             nestedLevel={this.props.nestedLevel + 1}
             rightIconButton={<IconButton
-              onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== value.id))}>
+              onClick={() => this.props.onChange(this.props.values.filter(x => x.id !== value.id))}
+            >
               <FontIcon className="material-icons">close</FontIcon>
             </IconButton>}
           />)
@@ -216,7 +217,8 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
           openDialog={this.state.openDialog}
           changeOpenDialog={this.handleChangeOpenDialog}
           value={this.props.value}
-          onChange={this.props.onChange} />
+          onChange={this.props.onChange}
+        />
       )
         : this.props.value.type === "or" ? (
           <NGOrNodeEditor
@@ -226,7 +228,8 @@ export class NGNodeEditor extends React.Component<NGNodeEditorProps, NGNodeEdito
             openDialog={this.state.openDialog}
             changeOpenDialog={this.handleChangeOpenDialog}
             value={this.props.value}
-            onChange={this.props.onChange} />
+            onChange={this.props.onChange}
+          />
         )
           : this.props.value.type === "profile" ? (
             <NGProfileNodeEditor
@@ -322,7 +325,8 @@ export class NGOrNodeEditor extends React.Component<NGOrNodeEditorProps, NGOrNod
             ...this.props.value,
             children: nodes,
           });
-        }} />
+        }}
+      />
     );
   }
 }
@@ -348,20 +352,23 @@ export class NGAndNodeEditor extends React.Component<NGAndNodeEditorProps, NGAnd
   }
 
   render() {
-    return <NGNodesEditor
-      openDialog={this.props.openDialog}
-      changeOpenDialog={this.props.changeOpenDialog}
-      nestedLevel={this.props.nestedLevel}
-      rightIconButton={this.props.rightIconButton}
-      select={this.props.select}
-      values={this.props.value.children}
-      primaryText="And"
-      onChange={node => {
-        this.props.onChange({
-          ...this.props.value,
-          children: node,
-        });
-      }} />;
+    return (
+      <NGNodesEditor
+        openDialog={this.props.openDialog}
+        changeOpenDialog={this.props.changeOpenDialog}
+        nestedLevel={this.props.nestedLevel}
+        rightIconButton={this.props.rightIconButton}
+        select={this.props.select}
+        values={this.props.value.children}
+        primaryText="And"
+        onChange={node => {
+          this.props.onChange({
+            ...this.props.value,
+            children: node,
+          });
+        }}
+      />
+    );
   }
 }
 

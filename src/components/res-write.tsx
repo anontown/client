@@ -89,62 +89,67 @@ export const ResWrite = (props: ResWriteProps) => {
     });
   };
 
-  return <form>
-    <Errors errors={errors} />
-    <TextField
-      style={{
-        marginRight: "3px",
-      }}
-      placeholder="名前"
-      value={data.name}
-      onChange={v =>
-        setStorage(props.userData.storage.topicWrite
-          .update(props.topic, formDefualt, x => ({
-            ...x,
-            name: v,
-          })))} />
-    {profiles.data !== undefined
-      ? <Select
+  return (
+    <form>
+      <Errors errors={errors} />
+      <TextField
         style={{
           marginRight: "3px",
-          backgroundColor: "#fff",
         }}
-        value={data.profile || ""}
-        onChange={v => {
+        placeholder="名前"
+        value={data.name}
+        onChange={v =>
           setStorage(props.userData.storage.topicWrite
             .update(props.topic, formDefualt, x => ({
               ...x,
-              profile: v || null,
-            })));
+              name: v,
+            })))}
+      />
+      {profiles.data !== undefined
+        ? <Select
+          style={{
+            marginRight: "3px",
+            backgroundColor: "#fff",
+          }}
+          value={data.profile || ""}
+          onChange={v => {
+            setStorage(props.userData.storage.topicWrite
+              .update(props.topic, formDefualt, x => ({
+                ...x,
+                profile: v || null,
+              })));
+          }}
+          options={[
+            { value: "", text: "(プロフなし)" },
+            ...profiles.data.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` })),
+          ]}
+        />
+        : null}
+      <CheckBox
+        value={data.age}
+        onChange={v =>
+          setStorage(props.userData.storage.topicWrite
+            .update(props.topic, formDefualt, x => ({
+              ...x,
+              age: v,
+            })))}
+        label="Age"
+      />
+      <MdEditor value={textCache}
+        onChange={v => setTextCache(v)}
+        maxRows={5}
+        minRows={1}
+        onKeyDown={e => {
+          if ((e.shiftKey || e.ctrlKey) && e.keyCode === 13) {
+            e.preventDefault();
+            submit();
+          }
         }}
-        options={[
-          { value: "", text: "(プロフなし)" },
-          ...profiles.data.profiles.map(p => ({ value: p.id, text: `●${p.sn} ${p.name}` })),
-        ]} />
-      : null}
-    <CheckBox
-      value={data.age}
-      onChange={v =>
-        setStorage(props.userData.storage.topicWrite
-          .update(props.topic, formDefualt, x => ({
-            ...x,
-            age: v,
-          })))}
-      label="Age"
-    />
-    <MdEditor value={textCache}
-      onChange={v => setTextCache(v)}
-      maxRows={5}
-      minRows={1}
-      onKeyDown={e => {
-        if ((e.shiftKey || e.ctrlKey) && e.keyCode === 13) {
-          e.preventDefault();
-          submit();
-        }
-      }}
-      fullWidth={true}
-      actions={<RaisedButton onClick={submit}>
-        書き込む
-      </RaisedButton>} />
-  </form>;
+        fullWidth={true}
+        actions={<RaisedButton onClick={submit}>
+          書き込む
+      </RaisedButton>}
+      />
+    </form>
+  );
 };

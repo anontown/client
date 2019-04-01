@@ -11,10 +11,12 @@ export interface UserSwitchProps {
 export function userSwitch<P extends UserSwitchProps>(Children: React.ComponentType<P>)
     : React.ComponentType<Omit<P, keyof UserSwitchProps>> {
     return (props: Omit<P, keyof UserSwitchProps>) => {
-        return <UserContext.Consumer>
-            {val => val.value !== null
-                ? <Children {...props as any} userData={val.value} updateUserData={val.update} />
-                : <div>ログインして下さい</div>}
-        </UserContext.Consumer>;
+        return (
+            <UserContext.Consumer>
+                {val => val.value !== null
+                    ? <Children {...props as any} userData={val.value} updateUserData={val.update} />
+                    : <div>ログインして下さい</div>}
+            </UserContext.Consumer>
+        );
     };
 }

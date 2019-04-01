@@ -43,53 +43,59 @@ export const SignupPage = withRouter(class extends React.Component<SignupPagePro
   }
 
   render() {
-    return <Page>
-      <Helmet title="登録" />
-      <UserContext.Consumer>{user => user.value !== null
-        ? <Redirect to="/" />
-        : <Paper>
-          <form>
-            <Errors errors={this.state.errors} />
-            <div>
-              <TextField
-                floatingLabelText="ID"
-                value={this.state.sn}
-                onChange={(_e, v) => this.setState({ sn: v })} />
-            </div>
-            <div>
-              <TextField
-                floatingLabelText="パスワード"
-                value={this.state.pass}
-                onChange={(_e, v) => this.setState({ pass: v })}
-                type="password" />
-            </div>
-            <Recaptcha
-              sitekey={Config.recaptcha.siteKey}
-              ref={this.recaptchaRef}
-              onChange={(v: string) => this.setState({ recaptcha: v })} />
-            <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
+    return (
+      <Page>
+        <Helmet title="登録" />
+        <UserContext.Consumer>{user => user.value !== null
+          ? <Redirect to="/" />
+          : <Paper>
+            <form>
+              <Errors errors={this.state.errors} />
+              <div>
+                <TextField
+                  floatingLabelText="ID"
+                  value={this.state.sn}
+                  onChange={(_e, v) => this.setState({ sn: v })}
+                />
+              </div>
+              <div>
+                <TextField
+                  floatingLabelText="パスワード"
+                  value={this.state.pass}
+                  onChange={(_e, v) => this.setState({ pass: v })}
+                  type="password"
+                />
+              </div>
+              <Recaptcha
+                sitekey={Config.recaptcha.siteKey}
+                ref={this.recaptchaRef}
+                onChange={(v: string) => this.setState({ recaptcha: v })}
+              />
+              <div><a target="_blank" href="https://document.anontown.com/terms.html">利用規約(10行くらいしかないから読んでね)</a></div>
 
-            <G.CreateUserComponent
-              onError={() => {
-                const rc = this.recaptchaRef.current;
-                if (rc) {
-                  rc.reset();
-                }
-                this.setState({ errors: ["アカウント作成に失敗しました"] });
-              }}
-              onCompleted={async x => {
-                user.update(await createUserData(x.createUser.token as G.TokenMasterFragment));
-              }}
-              variables={{
-                sn: this.state.sn, pass: this.state.pass,
-                recaptcha: this.state.recaptcha!,
-              }}>
-              {create =>
-                (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}
-            </G.CreateUserComponent>
-            <Link to="/login">ログイン</Link>
-          </form>
-        </Paper>}</UserContext.Consumer>
-    </Page>;
+              <G.CreateUserComponent
+                onError={() => {
+                  const rc = this.recaptchaRef.current;
+                  if (rc) {
+                    rc.reset();
+                  }
+                  this.setState({ errors: ["アカウント作成に失敗しました"] });
+                }}
+                onCompleted={async x => {
+                  user.update(await createUserData(x.createUser.token as G.TokenMasterFragment));
+                }}
+                variables={{
+                  sn: this.state.sn, pass: this.state.pass,
+                  recaptcha: this.state.recaptcha!,
+                }}
+              >
+                {create =>
+                  (<div><RaisedButton label="利用規約に同意して登録" onClick={() => create()} /></div>)}
+              </G.CreateUserComponent>
+              <Link to="/login">ログイン</Link>
+            </form>
+          </Paper>}</UserContext.Consumer>
+      </Page>
+    );
   }
 });

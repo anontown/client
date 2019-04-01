@@ -424,20 +424,25 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     onSubscriptionData: props => onSubscriptionDataRef.current(props),
   });
 
-  return <div className={props.className} style={props.style} ref={rootEl}>
-    {data.data !== undefined
-      ? (props.newItemOrder === "bottom"
-        ? [...props.queryResultConverter(data.data)].reverse()
-        : props.queryResultConverter(data.data))
-        .map(item => <div
-          key={item.id}
-          ref={el => {
-            if (el !== null) {
-              idElMap.set(item.id, el);
-            }
-          }}>{props.dataToEl(item)}</div>)
-      : null}
-    {data.loading ? "Loading" : null}
-    {data.error !== undefined ? "エラーが発生しました" : null}
-  </div>;
+  return (
+    <div className={props.className} style={props.style} ref={rootEl}>
+      {data.data !== undefined
+        ? (props.newItemOrder === "bottom"
+          ? [...props.queryResultConverter(data.data)].reverse()
+          : props.queryResultConverter(data.data))
+          .map(item => <div
+            key={item.id}
+            ref={el => {
+              if (el !== null) {
+                idElMap.set(item.id, el);
+              }
+            }}
+          >
+            {props.dataToEl(item)}
+          </div>)
+        : null}
+      {data.loading ? "Loading" : null}
+      {data.error !== undefined ? "エラーが発生しました" : null}
+    </div>
+  );
 };

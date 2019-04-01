@@ -27,26 +27,31 @@ export class NGTextNodeEditor extends React.Component<NGTextNodeEditorProps, NGT
   }
 
   render() {
-    return <>
-      <Modal
-        isOpen={this.props.openDialog}
-        onRequestClose={() => this.props.changeOpenDialog(false)}>
-        {this.props.select}
-        <NGMatcherEditor
-          floatingLabelText="本文"
-          matcher={this.props.value.matcher}
-          onChange={v => {
-            this.props.onChange({
-              ...this.props.value,
-              matcher: v,
-            });
-          }} />
-      </Modal>
-      <ListItem
-        nestedLevel={this.props.nestedLevel}
-        rightIconButton={this.props.rightIconButton}
-        onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`Text:${this.props.value.matcher.source}`} />
-    </>;
+    return (
+      <>
+        <Modal
+          isOpen={this.props.openDialog}
+          onRequestClose={() => this.props.changeOpenDialog(false)}
+        >
+          {this.props.select}
+          <NGMatcherEditor
+            floatingLabelText="本文"
+            matcher={this.props.value.matcher}
+            onChange={v => {
+              this.props.onChange({
+                ...this.props.value,
+                matcher: v,
+              });
+            }}
+          />
+        </Modal>
+        <ListItem
+          nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
+          onClick={() => this.props.changeOpenDialog(true)}
+          primaryText={`Text:${this.props.value.matcher.source}`}
+        />
+      </>
+    );
   }
 }

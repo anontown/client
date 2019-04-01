@@ -130,8 +130,10 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
                         return <ToolbarTitle text="Anontown" />;
                       }
                     })()}
-                    <ToolbarTitle text={`build:${dateFormat.format(BUILD_DATE)}`}
-                      style={{ fontSize: "0.5rem" }} />
+                    <ToolbarTitle
+                      text={`build:${dateFormat.format(BUILD_DATE)}`}
+                      style={{ fontSize: "0.5rem" }}
+                    />
                   </ToolbarGroup>
                   <ToolbarGroup>
                     <IconButton containerElement={<Link to="/" />}>
@@ -149,34 +151,43 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
                       iconButtonElement={
                         <IconButton touch={true}>
                           <FontIcon className="material-icons">people</FontIcon>
-                        </IconButton>}>
+                        </IconButton>}
+                    >
                       {user.value !== null
                         ? [
                           <MenuItem
                             key="1"
                             primaryText="プロフ管理"
-                            containerElement={<Link to="/profiles" />} />,
+                            containerElement={<Link to="/profiles" />}
+                          />,
                           <MenuItem
                             key="2"
                             primaryText="お知らせ"
-                            containerElement={<Link to="/messages" />} />,
+                            containerElement={<Link to="/messages" />}
+                          />,
                           <MenuItem
                             key="3"
                             primaryText="設定"
-                            containerElement={<Link to="/settings/account" />} />,
+                            containerElement={<Link to="/settings/account" />}
+                          />,
                           <MenuItem
                             key="4"
                             primaryText="ログアウト"
-                            onClick={() => this.logout(user)} />,
+                            onClick={() => this.logout(user)}
+                          />,
                         ]
                         : <MenuItem
                           primaryText="ログイン"
-                          containerElement={<Link to="/login" />} />}
+                          containerElement={<Link to="/login" />}
+                        />}
 
                     </IconMenu>
-                    <IconButton containerElement={<a
-                      href="https://document.anontown.com/"
-                      target="_blank" />}>
+                    <IconButton
+                      containerElement={<a
+                        href="https://document.anontown.com/"
+                        target="_blank"
+                      />}
+                    >
                       <FontIcon className="material-icons">help</FontIcon>
                     </IconButton>
                   </ToolbarGroup>
