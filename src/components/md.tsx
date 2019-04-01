@@ -28,6 +28,7 @@ export function Md(props: MdProps) {
     },
     className: style.md,
   },
+    // tslint:disable-next-line:jsx-key
     ...node.children.map(c => <MdNode node={c} />));
 }
 
@@ -116,6 +117,7 @@ function MdLink(props: { node: mdParser.Link }) {
         href: safeURL(props.node.url),
         target: "_blank",
         title: props.node.title || undefined,
+        // tslint:disable-next-line:jsx-key
       }, ...props.node.children.map(c => <MdNode node={c} />));
     case "image":
       return (
@@ -129,12 +131,14 @@ function MdLink(props: { node: mdParser.Link }) {
     case "router":
       return React.createElement(Link, {
         to: link.path,
+        // tslint:disable-next-line:jsx-key
       }, ...props.node.children.map(c => <MdNode node={c} />));
   }
 }
 
 function MdHeading(props: { node: mdParser.Heading }) {
   return React.createElement(`h${props.node.depth}`, {},
+    // tslint:disable-next-line:jsx-key
     ...props.node.children.map(c => <MdNode node={c} />));
 }
 
@@ -151,6 +155,7 @@ function MdTable(props: { node: mdParser.Table }) {
                 textAlign: props.node.align[index],
               },
             }, ...cell.type === "tableCell"
+              // tslint:disable-next-line:jsx-key
               ? cell.children.map(c => <MdNode node={c} />)
               : []))
           : [])}
@@ -163,6 +168,7 @@ function MdTable(props: { node: mdParser.Table }) {
               style: {
                 textAlign: props.node.align[index],
               },
+              // tslint:disable-next-line:jsx-key
             }, ...cell.children.map(c => <MdNode node={c} />))
             : []))
           : []))}
@@ -175,9 +181,11 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
     switch (this.props.node.type) {
       case "paragraph":
         return React.createElement("p", {}
+          // tslint:disable-next-line:jsx-key
           , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "blockquote":
         return React.createElement("blockquote", {}
+          // tslint:disable-next-line:jsx-key
           , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "heading":
         return <MdHeading node={this.props.node} />;
@@ -192,13 +200,16 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
       case "list":
         if (this.props.node.ordered) {
           return React.createElement("ol", {}
+            // tslint:disable-next-line:jsx-key
             , ...this.props.node.children.map(c => <MdNode node={c} />));
         } else {
           return React.createElement("ul", {}
+            // tslint:disable-next-line:jsx-key
             , ...this.props.node.children.map(c => <MdNode node={c} />));
         }
       case "listItem":
         return React.createElement("li", {}
+          // tslint:disable-next-line:jsx-key
           , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "table":
         return <MdTable node={this.props.node} />;
@@ -208,12 +219,15 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
         return <br />;
       case "emphasis":
         return React.createElement("em", {}
+          // tslint:disable-next-line:jsx-key
           , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "strong":
         return React.createElement("strong", {}
+          // tslint:disable-next-line:jsx-key
           , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "delete":
         return React.createElement("del", {}
+          // tslint:disable-next-line:jsx-key
           , ...this.props.node.children.map(c => <MdNode node={c} />));
       case "link":
         return <MdLink node={this.props.node} />;
