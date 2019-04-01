@@ -1,6 +1,5 @@
 import * as Im from "immutable";
 import {
-  Dialog,
   MenuItem,
   Paper,
   RaisedButton,
@@ -20,6 +19,7 @@ import {
   MdEditor,
   Page,
   TagsInput,
+  Modal,
 } from "../components";
 import { userSwitch, UserSwitchProps } from "../utils";
 
@@ -63,21 +63,18 @@ export const TopicCreatePage =
           >
             {(submit, { error }) => {
               return (<form>
-                <Dialog
-                  title="確認"
-                  open={this.state.openDialog}
-                  autoScrollBodyContent={true}
-                  onRequestClose={() => this.setState({ openDialog: false })}
-                  actions={[
-                    <RaisedButton label={"はい"} onClick={() => {
-                      this.setState({ openDialog: false });
-                      submit();
-                    }} />,
-                    <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />,
-                  ]}>
+                <Modal
+                  isOpen={this.state.openDialog}
+                  onRequestClose={() => this.setState({ openDialog: false })}>
+                  <h1>確認</h1>
                   ニュース・ネタ・実況などは単発トピックで建てて下さい。<br />
                   本当に建てますか？
-            </Dialog>
+                  <RaisedButton label={"はい"} onClick={() => {
+                    this.setState({ openDialog: false });
+                    submit();
+                  }} />
+                  <RaisedButton label={"いいえ"} onClick={() => this.setState({ openDialog: false })} />
+                </Modal>
                 {error && <Errors errors={["エラーが発生しました"]} />}
                 <div>
                   <SelectField

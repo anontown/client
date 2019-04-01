@@ -1,5 +1,4 @@
 import {
-  Dialog,
   FontIcon,
   IconButton,
   List,
@@ -9,6 +8,7 @@ import * as React from "react";
 import { ng, Storage, UserData } from "../models";
 import { list } from "../utils";
 import { NGEditor } from "./ng-editor";
+import { Modal } from "./modal";
 
 interface NGProps {
   userData: UserData;
@@ -47,18 +47,17 @@ export class NG extends React.Component<NGProps, NGState> {
             onClick={() => this.setState({ dialog: node.id })}
             key={node.id}
             primaryText={node.name}>
-            <Dialog
-              title={node.name}
-              open={this.state.dialog === node.id}
-              autoScrollBodyContent={true}
+            <Modal
+              isOpen={this.state.dialog === node.id}
               onRequestClose={() => this.setState({ dialog: null })}>
+              <h1>{node.name}</h1>
               <NGEditor
                 ng={node}
                 onUpdate={v => this.props.onChangeStorage({
                   ...this.props.userData.storage,
                   ng: list.updateIm(this.props.userData.storage.ng, v),
                 })} />
-            </Dialog>
+            </Modal>
           </ListItem>)}
       </List>
     </div>;

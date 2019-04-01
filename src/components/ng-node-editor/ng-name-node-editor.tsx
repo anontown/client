@@ -1,10 +1,10 @@
 import {
-  Dialog,
   ListItem,
 } from "material-ui";
 import * as React from "react";
 import { ng } from "../../models";
 import { NGMatcherEditor } from "./ng-matcher-editor";
+import { Modal } from "../modal";
 
 export interface NGNameNodeEditorProps {
   value: ng.NGNodeName;
@@ -28,9 +28,8 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
 
   render() {
     return <>
-      <Dialog
-        open={this.props.openDialog}
-        autoScrollBodyContent={true}
+      <Modal
+        isOpen={this.props.openDialog}
         onRequestClose={() => this.props.changeOpenDialog(false)}>
         {this.props.select}
         <NGMatcherEditor
@@ -42,7 +41,7 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
               matcher: v,
             });
           }} />
-      </Dialog>
+      </Modal>
       <ListItem
         nestedLevel={this.props.nestedLevel}
         rightIconButton={this.props.rightIconButton}

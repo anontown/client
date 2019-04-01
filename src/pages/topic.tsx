@@ -1,6 +1,5 @@
 import { arrayFirst } from "@kgtkr/utils";
 import {
-  Dialog,
   FontIcon,
   IconButton,
   Paper,
@@ -27,6 +26,7 @@ import {
   ResWrite,
   Scroll,
   TopicFavo,
+  Modal,
 } from "../components";
 import { queryResultConvert, useUserContext } from "../utils";
 import * as style from "./topic.scss";
@@ -110,11 +110,10 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
       : undefined}>
     {topic !== null
       ? <>
-        <Dialog
-          title="自動スクロール"
-          open={isAutoScrollDialog}
-          autoScrollBodyContent={true}
+        <Modal
+          isOpen={isAutoScrollDialog}
           onRequestClose={() => setIsAutoScrollDialog(false)}>
+          <h1>自動スクロール</h1>
           <Toggle
             label="自動スクロール"
             toggled={isAutoScroll}
@@ -123,13 +122,12 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
             max={30}
             value={autoScrollSpeed}
             onChange={(_e, v) => setAutoScrollSpeed(v)} />
-        </Dialog>
+        </Modal>
         {user.value !== null ?
-          <Dialog
-            title="NG"
-            open={isNGDialog}
-            autoScrollBodyContent={true}
+          <Modal
+            isOpen={isNGDialog}
             onRequestClose={() => setIsNGDialog(false)}>
+            <h1>NG</h1>
             <NG
               userData={user.value}
               onChangeStorage={v => {
@@ -140,14 +138,13 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                   });
                 }
               }} />
-          </Dialog>
+          </Modal>
           : null
         }
-        <Dialog
-          title="ジャンプ"
-          open={isJumpDialog}
-          autoScrollBodyContent={true}
+        <Modal
+          isOpen={isJumpDialog}
           onRequestClose={() => setIsJumpDialog(false)}>
+          <h1>ジャンプ</h1>
           <Slider
             min={new Date(topic.date).valueOf()}
             max={new Date(now).valueOf()}
@@ -161,7 +158,7 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
               scrollNewItem.current.next(new Date(jumpValue).toISOString());
             }}>ジャンプ</RaisedButton>
           </div>
-        </Dialog>
+        </Modal>
         <div className={style.main}>
           <Paper className={style.header}>
             <div className={style.subject}>

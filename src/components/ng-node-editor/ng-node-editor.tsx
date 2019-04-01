@@ -1,6 +1,5 @@
 import * as Im from "immutable";
 import {
-  Dialog,
   FontIcon,
   IconButton,
   ListItem,
@@ -15,6 +14,7 @@ import { NGNameNodeEditor } from "./ng-name-node-editor";
 import { NGProfileNodeEditor } from "./ng-profile-node-editor";
 import { NGTextNodeEditor } from "./ng-text-node-editor";
 import { NGVoteNodeEditor } from "./ng-vote-node-editor";
+import { Modal } from "../modal";
 
 export interface NGNodesEditorState {
 }
@@ -54,13 +54,12 @@ export class NGNodesEditor extends React.Component<NGNodesEditorProps, NGNodesEd
   render() {
     return (
       <>
-        <Dialog
-          open={this.props.openDialog}
-          autoScrollBodyContent={true}
+        <Modal
+          isOpen={this.props.openDialog}
           onRequestClose={this.handleDialogClose}
         >
           {this.props.select}
-        </Dialog>
+        </Modal>
         <ListItem
           nestedLevel={this.props.nestedLevel}
           rightIconButton={this.props.rightIconButton}
@@ -389,13 +388,12 @@ export class NGNotNodeEditor extends React.Component<NGNotNodeEditorProps, NGNot
   render() {
     return (
       <>
-        <Dialog
-          open={this.props.openDialog}
-          autoScrollBodyContent={true}
+        <Modal
+          isOpen={this.props.openDialog}
           onRequestClose={() => this.props.changeOpenDialog(false)}
         >
           {this.props.select}
-        </Dialog>
+        </Modal>
         <ListItem
           nestedLevel={this.props.nestedLevel}
           rightIconButton={this.props.rightIconButton}

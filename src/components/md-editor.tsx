@@ -1,5 +1,4 @@
 import {
-  Dialog,
   FontIcon,
   IconButton,
 } from "material-ui";
@@ -12,6 +11,7 @@ import { Errors } from "./errors";
 import { Md } from "./md";
 import { Oekaki } from "./oekaki";
 import { TextArea } from "./text-area";
+import { Modal } from "./modal";
 
 export interface MdEditorProps {
   value: string;
@@ -72,20 +72,18 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
           });
         this.upload(datas);
       }}>
-        <Dialog
-          title="お絵かき"
-          open={this.state.slowOekaki}
-          autoScrollBodyContent={true}
+        <Modal
+          isOpen={this.state.slowOekaki}
           onRequestClose={() => this.setState({ slowOekaki: false })}>
+          <h1>お絵かき</h1>
           <Errors errors={this.state.oekakiErrors} />
           <Oekaki size={{ x: 320, y: 240 }} onSubmit={data => this.upload([data])} />
-        </Dialog>
-        <Dialog
-          title="画像アップロード"
-          open={this.state.slowImage}
-          autoScrollBodyContent={true}
+        </Modal>
+        <Modal
+          isOpen={this.state.slowImage}
           onRequestClose={() => this.setState({ slowImage: false })}
         >
+          <h1>画像アップロード</h1>
           <Errors errors={this.state.imageErrors} />
           <input
             type="file"
@@ -103,7 +101,7 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
               }
             }}
           />
-        </Dialog>
+        </Modal>
         <Tabs>
           <TabList>
             <Tab>Edit</Tab>

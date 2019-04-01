@@ -1,5 +1,4 @@
 import "core-js";
-import { Dialog } from "material-ui";
 import * as OfflinePluginRuntime from "offline-plugin/runtime";
 import * as React from "react";
 import { ApolloProvider } from "react-apollo";
@@ -7,11 +6,10 @@ import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import * as ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { App } from "./components/app";
-import * as dialogStyle from "./dialog.scss";
 import { gqlClient } from "./utils";
+import * as Modal from 'react-modal';
 
-(Dialog as any).defaultProps.className = dialogStyle.dialog;
-(Dialog as any).defaultProps.contentClassName = dialogStyle.dialogContent;
+Modal.setAppElement("#root");
 
 // Installing ServiceWorker
 OfflinePluginRuntime.install();

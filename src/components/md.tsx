@@ -1,4 +1,4 @@
-import { Dialog, FontIcon, IconButton } from "material-ui";
+import { FontIcon, IconButton } from "material-ui";
 import * as React from "react";
 import { Rnd } from "react-rnd";
 import { Link } from "react-router-dom";
@@ -9,6 +9,7 @@ import {
   safeURL,
 } from "../utils";
 import * as style from "./md.scss";
+import { Modal } from "./modal";
 
 type URLType = { type: "normal", url: string } |
 { type: "router", path: string } |
@@ -244,9 +245,8 @@ class MdImg extends React.Component<MdImgProps, MdImgState> {
         title={this.props.title}
         alt={this.props.alt}
         onClick={() => this.setState({ dialog: true })} />
-      <Dialog
-        open={this.state.dialog}
-        autoScrollBodyContent={true}
+      <Modal
+        isOpen={this.state.dialog}
         onRequestClose={() => this.setState({ dialog: false })}>
         <img
           style={{
@@ -257,7 +257,7 @@ class MdImg extends React.Component<MdImgProps, MdImgState> {
           title={this.props.title}
           alt={this.props.alt}
           onClick={() => this.setState({ dialog: true })} />
-      </Dialog>
+      </Modal>
     </>;
   }
 }

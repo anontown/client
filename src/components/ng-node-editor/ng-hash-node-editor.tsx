@@ -1,10 +1,10 @@
 import {
-  Dialog,
   ListItem,
   TextField,
 } from "material-ui";
 import * as React from "react";
 import { ng } from "../../models";
+import { Modal } from "../modal";
 
 export interface NGHashNodeEditorProps {
   value: ng.NGNodeHash;
@@ -28,9 +28,8 @@ export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGH
 
   render() {
     return <>
-      <Dialog
-        open={this.props.openDialog}
-        autoScrollBodyContent={true}
+      <Modal
+        isOpen={this.props.openDialog}
         onRequestClose={() => this.props.changeOpenDialog(false)}>
         {this.props.select}
         <TextField
@@ -42,7 +41,7 @@ export class NGHashNodeEditor extends React.Component<NGHashNodeEditorProps, NGH
               hash: v,
             });
           }} />
-      </Dialog>
+      </Modal>
       <ListItem
         nestedLevel={this.props.nestedLevel}
         rightIconButton={this.props.rightIconButton}

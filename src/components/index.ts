@@ -32,3 +32,4 @@ export * from "./text-field";
 export * from "./select";
 export * from "./check-box";
 export * from "./text-area";
+export * from "./modal";
