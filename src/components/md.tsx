@@ -141,31 +141,33 @@ function MdHeading(props: { node: mdParser.Heading }) {
 function MdTable(props: { node: mdParser.Table }) {
   const head = props.node.children[0];
 
-  return <table>
-    <thead>
-      {React.createElement("tr", {}, ...head.type === "tableRow"
-        ? head.children.map((cell, index) =>
-          React.createElement("th", {
-            style: {
-              textAlign: props.node.align[index],
-            },
-          }, ...cell.type === "tableCell"
-            ? cell.children.map(c => <MdNode node={c} />)
+  return (
+    <table>
+      <thead>
+        {React.createElement("tr", {}, ...head.type === "tableRow"
+          ? head.children.map((cell, index) =>
+            React.createElement("th", {
+              style: {
+                textAlign: props.node.align[index],
+              },
+            }, ...cell.type === "tableCell"
+              ? cell.children.map(c => <MdNode node={c} />)
+              : []))
+          : [])}
+      </thead>
+      {React.createElement("tbody", {}, ...props.node.children
+        .filter((_, i) => i !== 0)
+        .map(row => row.type === "tableRow"
+          ? React.createElement("tr", {}, ...row.children.map((cell, index) => cell.type === "tableCell"
+            ? React.createElement("td", {
+              style: {
+                textAlign: props.node.align[index],
+              },
+            }, ...cell.children.map(c => <MdNode node={c} />))
             : []))
-        : [])}
-    </thead>
-    {React.createElement("tbody", {}, ...props.node.children
-      .filter((_, i) => i !== 0)
-      .map(row => row.type === "tableRow"
-        ? React.createElement("tr", {}, ...row.children.map((cell, index) => cell.type === "tableCell"
-          ? React.createElement("td", {
-            style: {
-              textAlign: props.node.align[index],
-            },
-          }, ...cell.children.map(c => <MdNode node={c} />))
-          : []))
-        : []))}
-  </table>;
+          : []))}
+    </table>
+  );
 }
 
 class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
@@ -180,9 +182,11 @@ class MdNode extends React.Component<{ node: mdParser.MdNode }, {}> {
       case "heading":
         return <MdHeading node={this.props.node} />;
       case "code":
-        return <pre>
-          <code>{this.props.node.value}</code>
-        </pre>;
+        return (
+          <pre>
+            <code>{this.props.node.value}</code>
+          </pre>
+        );
       case "inlineCode":
         return <code>{this.props.node.value}</code>;
       case "list":

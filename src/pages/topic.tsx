@@ -219,29 +219,32 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                 >
                   <MenuItem
                     primaryText="詳細データ"
-                    containerElement={<Link to={{
-                      pathname: `/topic/${props.match.params.id}/data`,
-                      state: { modal: true },
-                    }}
+                    containerElement={<Link
+                      to={{
+                        pathname: `/topic/${props.match.params.id}/data`,
+                        state: { modal: true },
+                      }}
                     />}
                   />
                   {topic.__typename === "TopicNormal" && user.value !== null
                     ? <MenuItem
                       primaryText="トピック編集"
-                      containerElement={<Link to={{
-                        pathname: `/topic/${props.match.params.id}/edit`,
-                        state: { modal: true },
-                      }}
+                      containerElement={<Link
+                        to={{
+                          pathname: `/topic/${props.match.params.id}/edit`,
+                          state: { modal: true },
+                        }}
                       />}
                     />
                     : null}
                   {topic.__typename === "TopicNormal"
                     ? <MenuItem
                       primaryText="派生トピック"
-                      containerElement={<Link to={{
-                        pathname: `/topic/${props.match.params.id}/fork`,
-                        state: { modal: true },
-                      }}
+                      containerElement={<Link
+                        to={{
+                          pathname: `/topic/${props.match.params.id}/fork`,
+                          state: { modal: true },
+                        }}
                       />}
                     />
                     : null}
@@ -260,7 +263,11 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
                 </IconMenu>
               </div>
             </Paper>
-            <Scroll<G.ResFragment, G.FindResesQuery, G.FindResesQueryVariables, G.ResAddedSubscription, G.ResAddedSubscriptionVariables>
+            <Scroll<G.ResFragment,
+              G.FindResesQuery,
+              G.FindResesQueryVariables,
+              G.ResAddedSubscription,
+              G.ResAddedSubscriptionVariables>
               query={G.FindResesDocument}
               queryVariables={date => ({ query: { date, topic: topic.id } })}
               queryResultConverter={x => x.reses}
@@ -278,9 +285,9 @@ export const TopicPage = withRouter((props: TopicPageProps) => {
               scrollNewItem={scrollNewItem.current}
               initDate={initDate}
               onSubscription={x => {
-                topics.updateQuery(t => ({
-                  ...t,
-                  topics: t.topics.map(t => ({ ...t, resCount: x.resAdded.count })),
+                topics.updateQuery(ts => ({
+                  ...ts,
+                  topics: ts.topics.map(t => ({ ...t, resCount: x.resAdded.count })),
                 }));
               }}
               dataToEl={res =>

@@ -50,22 +50,24 @@ export const LoginPage = withRouter((_props: LoginPageProps) => {
                 type="password"
               />
             </div>
-            <div><RaisedButton label="ログイン" onClick={async () => {
-              try {
-                const token = await submit({
-                  variables: {
-                    auth: {
-                      sn, pass,
+            <div><RaisedButton
+              label="ログイン"
+              onClick={async () => {
+                try {
+                  const token = await submit({
+                    variables: {
+                      auth: {
+                        sn, pass,
+                      },
                     },
-                  },
-                });
-                if (token.data !== undefined) {
-                  userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment));
+                  });
+                  if (token.data !== undefined) {
+                    userContext.update(await createUserData(token.data.createTokenMaster as G.TokenMasterFragment));
+                  }
+                } catch {
+                  setErrors(["ログインに失敗しました。"]);
                 }
-              } catch {
-                setErrors(["ログインに失敗しました。"]);
-              }
-            }}
+              }}
             /></div>
             <Link to="/signup">登録</Link>
           </form>

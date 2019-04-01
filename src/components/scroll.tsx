@@ -18,7 +18,8 @@ interface ItemElPair<T extends ListItemData> {
   el: HTMLDivElement;
 }
 
-export interface ScrollProps<T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
+export interface ScrollProps
+  <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables> {
   newItemOrder: "top" | "bottom";
   query: DocumentNode;
   queryVariables: (dateQuery: G.DateQuery) => QueryVariables;
@@ -65,7 +66,8 @@ function sleep(ms: number) {
 
 type Cmd = { type: "reset", date: string } | { type: "after" } | { type: "before" };
 
-export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>(props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
+export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>
+  (props: ScrollProps<T, QueryResult, QueryVariables, SubscriptionResult, SubscriptionVariables>) => {
   const rootEl = React.useRef<HTMLDivElement | null>(null);
 
   const initDate = React.useMemo(() => props.initDate, []);
@@ -259,7 +261,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult) { return prev; }
 
-            return props.queryResultMapper(prev, data => [...props.queryResultConverter(fetchMoreResult), ...data]);
+            return props.queryResultMapper(prev, x => [...props.queryResultConverter(fetchMoreResult), ...x]);
           },
         });
       });
@@ -286,7 +288,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult) { return prev; }
 
-            return props.queryResultMapper(prev, data => [...data, ...props.queryResultConverter(fetchMoreResult)]);
+            return props.queryResultMapper(prev, x => [...x, ...props.queryResultConverter(fetchMoreResult)]);
           },
         });
       });
@@ -405,15 +407,16 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     runCmd({ type: "reset", date });
   }, [props.scrollNewItem]);
 
-  const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }: OnSubscriptionDataOptions<SubscriptionResult>) => {
+  const onSubscriptionDataRef = useValueRef(({ client, subscriptionData }
+    : OnSubscriptionDataOptions<SubscriptionResult>) => {
     if (subscriptionData.data !== undefined) {
       const subsData = props.subscriptionResultConverter(subscriptionData.data);
-      const data = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables });
-      if (data !== null) {
+      const prev = client.readQuery<QueryResult, QueryVariables>({ query: props.query, variables });
+      if (prev !== null) {
         client.writeQuery({
           query: props.query,
           variables,
-          data: props.queryResultMapper(data, x => [subsData, ...x]),
+          data: props.queryResultMapper(prev, x => [subsData, ...x]),
         });
       }
       props.onSubscription(subscriptionData.data);
@@ -421,7 +424,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
   });
   useSubscription<SubscriptionResult, SubscriptionVariables>(props.subscription, {
     variables: props.subscriptionVariables,
-    onSubscriptionData: props => onSubscriptionDataRef.current(props),
+    onSubscriptionData: x => onSubscriptionDataRef.current(x),
   });
 
   return (

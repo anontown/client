@@ -51,7 +51,9 @@ export const AuthPage = userSwitch(withRouter((props: AuthPageProps) => {
                 try {
                   const data = await submit({ variables: { client: client.id } });
                   if (data.data !== undefined) {
-                    location.href = client.url + "?" + "id=" + data.data.createTokenGeneral.req.token + "&key=" + encodeURI(data.data.createTokenGeneral.req.key);
+                    location.href
+                      = client.url + "?" + "id=" + data.data.createTokenGeneral.req.token +
+                      "&key=" + encodeURI(data.data.createTokenGeneral.req.key);
                   }
                 } catch {
                   setSnackMsg("エラーが発生しました");

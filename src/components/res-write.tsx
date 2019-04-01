@@ -22,10 +22,10 @@ interface ResWriteProps {
 }
 
 export const ResWrite = (props: ResWriteProps) => {
-  function setStorage(data: Storage["topicWrite"]) {
+  function setStorage(x: Storage["topicWrite"]) {
     props.changeStorage({
       ...props.userData.storage,
-      topicWrite: data,
+      topicWrite: x,
     });
   }
 
@@ -135,7 +135,8 @@ export const ResWrite = (props: ResWriteProps) => {
             })))}
         label="Age"
       />
-      <MdEditor value={textCache}
+      <MdEditor
+        value={textCache}
         onChange={v => setTextCache(v)}
         maxRows={5}
         minRows={1}

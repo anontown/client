@@ -42,11 +42,13 @@ export class TagsInput extends React.Component<TagsInputProps, TagsInputState> {
       <>
         <div>
           {this.props.value.map(t => <span key={t} className={style.tag}>
-            <span className={style.tagButton} onClick={() => {
-              if (this.props.onChange !== undefined) {
-                this.props.onChange(this.props.value.remove(t));
-              }
-            }}
+            <span
+              className={style.tagButton}
+              onClick={() => {
+                if (this.props.onChange !== undefined) {
+                  this.props.onChange(this.props.value.remove(t));
+                }
+              }}
             >
               ×
             </span>

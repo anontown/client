@@ -30,20 +30,22 @@ export class NG extends React.Component<NGProps, NGState> {
   render() {
     return (
       <div>
-        <IconButton onClick={() => this.props.onChangeStorage({
-          ...this.props.userData.storage,
-          ng: this.props.userData.storage.ng.insert(0, ng.createDefaultNG()),
-        })}
+        <IconButton
+          onClick={() => this.props.onChangeStorage({
+            ...this.props.userData.storage,
+            ng: this.props.userData.storage.ng.insert(0, ng.createDefaultNG()),
+          })}
         >
           <FontIcon className="material-icons">add_circle</FontIcon>
         </IconButton>
         <List>
           {this.props.userData.storage.ng.map(node =>
             <ListItem
-              rightIconButton={<IconButton onClick={() => this.props.onChangeStorage({
-                ...this.props.userData.storage,
-                ng: this.props.userData.storage.ng.filter(x => x.id !== node.id),
-              })}
+              rightIconButton={<IconButton
+                onClick={() => this.props.onChangeStorage({
+                  ...this.props.userData.storage,
+                  ng: this.props.userData.storage.ng.filter(x => x.id !== node.id),
+                })}
               >
                 <FontIcon className="material-icons">close</FontIcon>
               </IconButton>}

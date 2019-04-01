@@ -138,12 +138,13 @@ export const Res = (props: ResProps) => {
               ? <span>削除</span>
               : null}
             {props.res.__typename === "ResNormal" && props.res.profile !== null
-              ? <Link to={{
-                pathname: `/profile/${props.res.profile.id}`,
-                state: {
-                  modal: true,
-                },
-              }}
+              ? <Link
+                to={{
+                  pathname: `/profile/${props.res.profile.id}`,
+                  state: {
+                    modal: true,
+                  },
+                }}
               >
                 ●{props.res.profile.sn}
               </Link>
@@ -261,10 +262,11 @@ export const Res = (props: ResProps) => {
             <span>
               {props.res.__typename === "ResNormal" && props.res.reply !== null
                 ? <IconButton
-                  containerElement={<Link to={{
-                    pathname: `/res/${props.res.reply}`,
-                    state: { modal: true },
-                  }}
+                  containerElement={<Link
+                    to={{
+                      pathname: `/res/${props.res.reply}`,
+                      state: { modal: true },
+                    }}
                   />}
                   style={small}
                   iconStyle={smallIcon}

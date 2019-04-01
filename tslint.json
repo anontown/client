@@ -39,5 +39,8 @@
         // 一時的に無効
         "jsx-no-lambda": false
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "exclude": [
+        "generated/**/*"
+    ]
 }
