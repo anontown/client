@@ -1,3 +1,4 @@
+import { nullUnwrap } from "@kgtkr/utils";
 import * as Im from "immutable";
 import {
   Checkbox,
@@ -12,7 +13,6 @@ import {
   toColorString,
 } from "../utils";
 import { ColorPicker } from "./color-picker";
-import { nullUnwrap } from "@kgtkr/utils";
 
 export interface Vec2d {
   x: number;
