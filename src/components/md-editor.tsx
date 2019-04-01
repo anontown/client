@@ -59,22 +59,25 @@ export class MdEditor extends React.Component<MdEditorProps, MdEditorState> {
 
   render() {
     return (
-      <div onPaste={e => {
-        const items = e.clipboardData.items;
-        const datas = Array.from(items)
-          .filter(x => x.type.indexOf("image") !== -1)
-          .map(x => x.getAsFile())
-          .filter<File>((x): x is File => x !== null)
-          .map(x => {
-            const data = new FormData();
-            data.append("image", x, "image.png");
-            return data;
-          });
-        this.upload(datas);
-      }}>
+      <div
+        onPaste={e => {
+          const items = e.clipboardData.items;
+          const datas = Array.from(items)
+            .filter(x => x.type.indexOf("image") !== -1)
+            .map(x => x.getAsFile())
+            .filter<File>((x): x is File => x !== null)
+            .map(x => {
+              const data = new FormData();
+              data.append("image", x, "image.png");
+              return data;
+            });
+          this.upload(datas);
+        }}
+      >
         <Modal
           isOpen={this.state.slowOekaki}
-          onRequestClose={() => this.setState({ slowOekaki: false })}>
+          onRequestClose={() => this.setState({ slowOekaki: false })}
+        >
           <h1>お絵かき</h1>
           <Errors errors={this.state.oekakiErrors} />
           <Oekaki size={{ x: 320, y: 240 }} onSubmit={data => this.upload([data])} />

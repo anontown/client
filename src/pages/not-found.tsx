@@ -12,8 +12,10 @@ interface NotFoundProps extends RouteComponentProps<{}> {
 }
 
 export const NotFoundPage = withRouter((_props: NotFoundProps) => {
-  return <Page>
-    <Helmet title="NotFound" />
-    <Paper>ページが見つかりません</Paper>
-  </Page>;
+  return (
+    <Page>
+      <Helmet title="NotFound" />
+      <Paper>ページが見つかりません</Paper>
+    </Page>
+  );
 });

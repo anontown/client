@@ -20,14 +20,19 @@ export class Page extends React.Component<PageProps, PageState> {
   }
   render() {
     return (
-      <div style={{
-        height: "100%",
-      }} className={this.props.sidebar !== undefined ? style.two : undefined}>
+      <div
+        style={{
+          height: "100%",
+        }}
+        className={this.props.sidebar !== undefined ? style.two : undefined}
+      >
         {this.props.sidebar !== undefined
-          ? <aside style={{
-            height: "100%",
-            width: !this.state.isLeft ? 50 : undefined,
-          }}>
+          ? <aside
+            style={{
+              height: "100%",
+              width: !this.state.isLeft ? 50 : undefined,
+            }}
+          >
             <IconButton onClick={() => this.setState({ isLeft: !this.state.isLeft })}>
               <FontIcon className="material-icons">{this.state.isLeft ? "chevron_left" : "chevron_right"}</FontIcon>
             </IconButton>
@@ -38,7 +43,8 @@ export class Page extends React.Component<PageProps, PageState> {
           style={{
             height: "100%",
           }}
-          className={!this.props.disableScroll ? style.mainScroll : undefined}>
+          className={!this.props.disableScroll ? style.mainScroll : undefined}
+        >
           {this.props.children}
         </main>
       </div>

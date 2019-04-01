@@ -30,36 +30,43 @@ export class TopicEditor extends React.Component<TopicEditorProps, TopicEditorSt
   }
 
   render() {
-    return <G.UpdateTopicComponent
-      variables={{
-        id: this.props.topic.id,
-        title: this.state.title,
-        text: this.state.text,
-        tags: this.state.tags.toArray(),
-      }}
-      onCompleted={data => {
-        if (this.props.onUpdate) {
-          this.props.onUpdate(data.updateTopic);
-        }
-      }}>{
-        (submit, { error }) => {
-          return (<form>
-            {error && <Errors errors={["エラーが発生しました"]} />}
-            <TextField
-              fullWidth={true}
-              floatingLabelText="タイトル"
-              value={this.state.title}
-              onChange={(_e, v) => this.setState({ title: v })} />
-            <TagsInput
-              value={this.state.tags}
-              onChange={v => this.setState({ tags: v })}
-              fullWidth={true} />
-            <MdEditor
-              fullWidth={true}
-              value={this.state.text}
-              onChange={v => this.setState({ text: v })} />
-            <RaisedButton onClick={() => submit()} label="OK" />
-          </form>);
-        }}</G.UpdateTopicComponent>;
+    return (
+      <G.UpdateTopicComponent
+        variables={{
+          id: this.props.topic.id,
+          title: this.state.title,
+          text: this.state.text,
+          tags: this.state.tags.toArray(),
+        }}
+        onCompleted={data => {
+          if (this.props.onUpdate) {
+            this.props.onUpdate(data.updateTopic);
+          }
+        }}
+      >{
+          (submit, { error }) => {
+            return (<form>
+              {error && <Errors errors={["エラーが発生しました"]} />}
+              <TextField
+                fullWidth={true}
+                floatingLabelText="タイトル"
+                value={this.state.title}
+                onChange={(_e, v) => this.setState({ title: v })}
+              />
+              <TagsInput
+                value={this.state.tags}
+                onChange={v => this.setState({ tags: v })}
+                fullWidth={true}
+              />
+              <MdEditor
+                fullWidth={true}
+                value={this.state.text}
+                onChange={v => this.setState({ text: v })}
+              />
+              <RaisedButton onClick={() => submit()} label="OK" />
+            </form>);
+          }}
+      </G.UpdateTopicComponent>
+    );
   }
 }

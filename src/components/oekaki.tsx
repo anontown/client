@@ -125,39 +125,45 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
           <div>
             太さ
           </div>
-          <Slider value={this.state.width}
+          <Slider
+            value={this.state.width}
             step={1}
             min={1}
             max={10}
-            onChange={(_e, v) => this.setState({ width: v })} />
+            onChange={(_e, v) => this.setState({ width: v })}
+          />
           <ColorPicker color={this.state.color} onChange={color => this.setState({ color })} />
-          <Checkbox label="塗りつぶす"
+          <Checkbox
+            label="塗りつぶす"
             checked={this.state.fill}
-            onCheck={(_e, v) => this.setState({ fill: v })} />
+            onCheck={(_e, v) => this.setState({ fill: v })}
+          />
           <IconButton onClick={() => this.setState({ value: this.state.value.undo() })}  >
             <FontIcon className="material-icons">undo</FontIcon>
           </IconButton>
           <IconButton onClick={() => this.setState({ value: this.state.value.redo() })} >
             <FontIcon className="material-icons">redo</FontIcon>
           </IconButton >
-          <IconButton onClick={() => {
-            // svg to formdata
-            const img = ReactDOM.findDOMNode(this.refs.img) as HTMLImageElement;
-            const canvas = document.createElement("canvas");
-            canvas.setAttribute("width", this.props.size.x.toString());
-            canvas.setAttribute("height", this.props.size.y.toString());
-            const ctx = canvas.getContext("2d");
-            if (ctx !== null) {
-              ctx.drawImage(img, 0, 0, this.props.size.x, this.props.size.y);
-              canvas.toBlob(blob => {
-                if (blob !== null) {
-                  const data = new FormData();
-                  data.append("image", blob, "oekaki.png");
-                  this.props.onSubmit(data);
-                }
-              });
-            }
-          }} >
+          <IconButton
+            onClick={() => {
+              // svg to formdata
+              const img = ReactDOM.findDOMNode(this.refs.img) as HTMLImageElement;
+              const canvas = document.createElement("canvas");
+              canvas.setAttribute("width", this.props.size.x.toString());
+              canvas.setAttribute("height", this.props.size.y.toString());
+              const ctx = canvas.getContext("2d");
+              if (ctx !== null) {
+                ctx.drawImage(img, 0, 0, this.props.size.x, this.props.size.y);
+                canvas.toBlob(blob => {
+                  if (blob !== null) {
+                    const data = new FormData();
+                    data.append("image", blob, "oekaki.png");
+                    this.props.onSubmit(data);
+                  }
+                });
+              }
+            }}
+          >
             <FontIcon className="material-icons">file_upload</FontIcon>
           </IconButton >
         </div >

@@ -29,14 +29,19 @@ const TopicForkBase = withRouter(userSwitch((props: TopicForkBaseProps) => {
   queryResultConvert(topics);
   const topic = topics.data !== undefined ? topics.data.topics[0] : null;
 
-  return <Paper zDepth={props.zDepth}>
-    <Helmet title="派生トピック" />
-    {topic !== null && topic.__typename === "TopicNormal"
-      ? <TopicFork topic={topic} onCreate={topic => {
-        props.history.push(`/topic/${topic.id}`);
-      }} />
-      : null}
-  </Paper>;
+  return (
+    <Paper zDepth={props.zDepth}>
+      <Helmet title="派生トピック" />
+      {topic !== null && topic.__typename === "TopicNormal"
+        ? <TopicFork
+          topic={topic}
+          onCreate={x => {
+            props.history.push(`/topic/${x.id}`);
+          }}
+        />
+        : null}
+    </Paper>
+  );
 }));
 
 export function TopicForkPage() {

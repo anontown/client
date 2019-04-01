@@ -35,33 +35,36 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
       <Helmet title="お知らせ" />
       <div>
         <div>
-          <RaisedButton label="最新" onClick={async () => {
-            if (msgs.data === undefined) {
-              return;
-            }
-            const first = arrayFirst(msgs.data.msgs);
-            if (first === undefined) {
-              await msgs.refetch();
-            } else {
-              msgs.fetchMore({
-                variables: {
-                  query: {
-                    date: {
-                      date: first.date,
-                      type: "gt",
+          <RaisedButton
+            label="最新"
+            onClick={async () => {
+              if (msgs.data === undefined) {
+                return;
+              }
+              const first = arrayFirst(msgs.data.msgs);
+              if (first === undefined) {
+                await msgs.refetch();
+              } else {
+                msgs.fetchMore({
+                  variables: {
+                    query: {
+                      date: {
+                        date: first.date,
+                        type: "gt",
+                      },
                     },
                   },
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) { return prev; }
-                  return {
-                    ...prev,
-                    msgs: [...fetchMoreResult.msgs, ...prev.msgs],
-                  };
-                },
-              });
-            }
-          }} />
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) { return prev; }
+                    return {
+                      ...prev,
+                      msgs: [...fetchMoreResult.msgs, ...prev.msgs],
+                    };
+                  },
+                });
+              }
+            }}
+          />
         </div>
         <div>
           {msgs.data !== undefined
@@ -73,33 +76,36 @@ export const MessagesPage = userSwitch(withRouter((_props: MessagesPageProps) =>
             : null}
         </div>
         <div>
-          <RaisedButton label="前" onClick={async () => {
-            if (msgs.data === undefined) {
-              return;
-            }
-            const last = arrayLast(msgs.data.msgs);
-            if (last === undefined) {
-              await msgs.refetch();
-            } else {
-              msgs.fetchMore({
-                variables: {
-                  query: {
-                    date: {
-                      date: last.date,
-                      type: "lt",
+          <RaisedButton
+            label="前"
+            onClick={async () => {
+              if (msgs.data === undefined) {
+                return;
+              }
+              const last = arrayLast(msgs.data.msgs);
+              if (last === undefined) {
+                await msgs.refetch();
+              } else {
+                msgs.fetchMore({
+                  variables: {
+                    query: {
+                      date: {
+                        date: last.date,
+                        type: "lt",
+                      },
                     },
                   },
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) { return prev; }
-                  return {
-                    ...prev,
-                    msgs: [...prev.msgs, ...fetchMoreResult.msgs],
-                  };
-                },
-              });
-            }
-          }} />
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) { return prev; }
+                    return {
+                      ...prev,
+                      msgs: [...prev.msgs, ...fetchMoreResult.msgs],
+                    };
+                  },
+                });
+              }
+            }}
+          />
         </div>
       </div>
     </Page>

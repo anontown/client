@@ -44,9 +44,9 @@ function isNodeNG(node: NGNode, res: G.ResFragment): boolean | null {
       const b = isNodeNG(node.child, res);
       return b !== null ? !b : null;
     case "and":
-      return node.children.filter(x => x !== null).size === 0 ? null : node.children.every(x => !!isNodeNG(x, res));
+      return node.children.size === 0 ? null : node.children.every(x => !!isNodeNG(x, res));
     case "or":
-      return node.children.filter(x => x !== null).size === 0 ? null : node.children.some(x => !!isNodeNG(x, res));
+      return node.children.size === 0 ? null : node.children.some(x => !!isNodeNG(x, res));
     case "profile":
       return res.__typename === "ResNormal" && res.profile !== null && node.profile === res.profile.id;
     case "hash":

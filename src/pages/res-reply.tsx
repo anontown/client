@@ -22,19 +22,22 @@ const ResReplyBase = withRouter(class extends React.Component<ResReplyBaseProps,
   }
 
   render() {
-    return <div>
-      <Helmet title="リプライ" />
-      <G.FindResesComponent
-        variables={{ query: { reply: this.props.match.params.id } }}>
-        {({ loading, error, data }) => {
-          if (loading) { return "Loading..."; }
-          if (error || !data) { return (<Snack msg="レス取得に失敗しました" />); }
-          return data.reses.map(res => <Paper key={res.id}>
-            <Res res={res} />
-          </Paper>);
-        }}
-      </G.FindResesComponent>
-    </div>;
+    return (
+      <div>
+        <Helmet title="リプライ" />
+        <G.FindResesComponent
+          variables={{ query: { reply: this.props.match.params.id } }}
+        >
+          {({ loading, error, data }) => {
+            if (loading) { return "Loading..."; }
+            if (error || !data) { return (<Snack msg="レス取得に失敗しました" />); }
+            return data.reses.map(res => <Paper key={res.id}>
+              <Res res={res} />
+            </Paper>);
+          }}
+        </G.FindResesComponent>
+      </div>
+    );
   }
 });
 

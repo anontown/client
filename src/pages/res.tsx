@@ -24,22 +24,25 @@ const ResBase = withRouter((class extends React.Component<ResBaseProps, ResBaseS
   }
 
   render() {
-    return <div>
-      <Helmet title="レス" />
-      <G.FindResesComponent
-        variables={{ query: { id: [this.props.match.params.id] } }}>
-        {({ loading, error, data }) => {
-          if (loading) { return "Loading..."; }
-          if (error || !data || data.reses.length === 0) { return (<Snack msg="レス取得に失敗しました" />); }
+    return (
+      <div>
+        <Helmet title="レス" />
+        <G.FindResesComponent
+          variables={{ query: { id: [this.props.match.params.id] } }}
+        >
+          {({ loading, error, data }) => {
+            if (loading) { return "Loading..."; }
+            if (error || !data || data.reses.length === 0) { return (<Snack msg="レス取得に失敗しました" />); }
 
-          return (
-            <Paper zDepth={this.props.zDepth}>
-              <Res res={data.reses[0]} />
-            </Paper>
-          );
-        }}
-      </G.FindResesComponent>
-    </div>;
+            return (
+              <Paper zDepth={this.props.zDepth}>
+                <Res res={data.reses[0]} />
+              </Paper>
+            );
+          }}
+        </G.FindResesComponent>
+      </div>
+    );
   }
 }));
 

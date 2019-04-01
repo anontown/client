@@ -27,26 +27,31 @@ export class NGProfileNodeEditor extends React.Component<NGProfileNodeEditorProp
   }
 
   render() {
-    return <>
-      <Modal
-        isOpen={this.props.openDialog}
-        onRequestClose={() => this.props.changeOpenDialog(false)}>
-        {this.props.select}
-        <TextField
-          floatingLabelText="ID"
-          value={this.props.value.profile}
-          onChange={(_e, v) => {
-            this.props.onChange({
-              ...this.props.value,
-              profile: v,
-            });
-          }} />
-      </Modal>
-      <ListItem
-        nestedLevel={this.props.nestedLevel}
-        rightIconButton={this.props.rightIconButton}
-        onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`Profile:${this.props.value.profile}`} />
-    </>;
+    return (
+      <>
+        <Modal
+          isOpen={this.props.openDialog}
+          onRequestClose={() => this.props.changeOpenDialog(false)}
+        >
+          {this.props.select}
+          <TextField
+            floatingLabelText="ID"
+            value={this.props.value.profile}
+            onChange={(_e, v) => {
+              this.props.onChange({
+                ...this.props.value,
+                profile: v,
+              });
+            }}
+          />
+        </Modal>
+        <ListItem
+          nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
+          onClick={() => this.props.changeOpenDialog(true)}
+          primaryText={`Profile:${this.props.value.profile}`}
+        />
+      </>
+    );
   }
 }

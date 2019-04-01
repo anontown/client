@@ -40,7 +40,10 @@ export function useFunctionRef<T extends any[], R>(f: (...args: T) => R): (...ar
   };
 }
 
-export function useEffectRef<T>(effect: (ref: React.MutableRefObject<T>) => void | (() => void | undefined), val: T, deps?: React.DependencyList) {
+export function useEffectRef<T>(
+  effect: (ref: React.MutableRefObject<T>) => void | (() => void | undefined),
+  val: T,
+  deps?: React.DependencyList) {
   const ref = useValueRef(val);
   React.useEffect(() => effect(ref), deps);
 }

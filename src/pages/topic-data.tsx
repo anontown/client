@@ -23,20 +23,22 @@ const TopicDataBase = withRouter(class extends React.Component<TopicDataBaseProp
   }
 
   render() {
-    this.props.match.params.id;
+    return (
+      <Paper zDepth={this.props.zDepth}>
+        <G.FindTopicsComponent
+          variables={{ query: { id: [this.props.match.params.id] } }}
+        >{
+            ({ loading, error, data }) => {
+              if (loading) { return "Loading..."; }
+              if (error || !data || data.topics.length === 0) { return (<Snack msg="トピック取得に失敗しました" />); }
 
-    return <Paper zDepth={this.props.zDepth}>
-      <G.FindTopicsComponent
-        variables={{ query: { id: [this.props.match.params.id] } }}>{
-          ({ loading, error, data }) => {
-            if (loading) { return "Loading..."; }
-            if (error || !data || data.topics.length === 0) { return (<Snack msg="トピック取得に失敗しました" />); }
-
-            return (<Paper zDepth={this.props.zDepth}>
-              <TopicData topic={data.topics[0]} />
-            </Paper>);
-          }}</G.FindTopicsComponent>
-    </Paper>;
+              return (<Paper zDepth={this.props.zDepth}>
+                <TopicData topic={data.topics[0]} />
+              </Paper>);
+            }}
+        </G.FindTopicsComponent>
+      </Paper>
+    );
   }
 });
 

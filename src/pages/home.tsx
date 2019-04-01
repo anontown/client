@@ -43,7 +43,7 @@ export const HomePage = (_props: HomePageProps) => {
                 target="_blank"
               >
                 説明書
-                </a>
+              </a>
             </li>
           </ul>
         </Paper>}

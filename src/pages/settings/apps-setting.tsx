@@ -29,7 +29,7 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
     },
   };
   const clients = G.useFindClientsQuery({
-    skip: tokens === undefined,
+    skip: tokens.data === undefined,
     variables,
   });
   queryResultConvert(clients);
@@ -37,40 +37,50 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
 
   useTitle("連携アプリ管理");
 
-  return <div>
-    <Snack
-      msg={snackMsg}
-      onHide={() => setSnackMsg(null)} />
-    {tokens.error !== undefined || clients.error !== undefined
-      ? <Errors errors={["エラーが発生しました。"]} />
-      : null}
-    {tokens.loading || clients.loading
-      ? <div>loading</div>
-      : null}
-    {clients.data !== undefined
-      ? clients.data.clients.map(c => <Paper>
-        {c.name}
-        <IconButton type="button" onClick={async () => {
-          try {
-            await delToken({
-              variables: { client: c.id }, update: cache => {
-                const clients = cache.readQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({ query: G.FindClientsDocument, variables });
-                if (clients !== null) {
-                  cache.writeQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({
-                    query: G.FindClientsDocument,
-                    variables,
-                    data: { clients: clients.clients.filter(x => x.id !== c.id) },
-                  });
-                }
-              },
-            });
-          } catch {
-            setSnackMsg("削除に失敗しました");
-          }
-        }} >
-          <FontIcon className="material-icons">delete</FontIcon>
-        </IconButton>
-      </Paper>)
-      : null}
-  </div>;
+  return (
+    <div>
+      <Snack
+        msg={snackMsg}
+        onHide={() => setSnackMsg(null)}
+      />
+      {tokens.error !== undefined || clients.error !== undefined
+        ? <Errors errors={["エラーが発生しました。"]} />
+        : null}
+      {tokens.loading || clients.loading
+        ? <div>loading</div>
+        : null}
+      {clients.data !== undefined
+        ? clients.data.clients.map(c => <Paper key={c.id}>
+          {c.name}
+          <IconButton
+            type="button"
+            onClick={async () => {
+              try {
+                await delToken({
+                  variables: { client: c.id },
+                  update: cache => {
+                    const cs = cache.readQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({
+                      query: G.FindClientsDocument,
+                      variables,
+                    });
+                    if (cs !== null) {
+                      cache.writeQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({
+                        query: G.FindClientsDocument,
+                        variables,
+                        data: { clients: cs.clients.filter(x => x.id !== c.id) },
+                      });
+                    }
+                  },
+                });
+              } catch {
+                setSnackMsg("削除に失敗しました");
+              }
+            }}
+          >
+            <FontIcon className="material-icons">delete</FontIcon>
+          </IconButton>
+        </Paper>)
+        : null}
+    </div>
+  );
 }));

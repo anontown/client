@@ -41,13 +41,15 @@ export const ProfilesPage = userSwitch(withRouter(class extends React.Component<
                       style={{ marginBottom: 10 }}
                       key={p.id}
                       profile={p}
-                      userData={this.props.userData} />)
+                      userData={this.props.userData}
+                    />)
                 );
               }}</G.FindProfilesComponent>
           </Tab>
           <Tab label="新規">
             <ProfileAdd
-              userData={this.props.userData} />
+              userData={this.props.userData}
+            />
           </Tab>
         </Tabs>
       </Page>

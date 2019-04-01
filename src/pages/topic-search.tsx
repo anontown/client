@@ -92,86 +92,99 @@ export const TopicSearchPage = withRouter((props: TopicSearchPageProps) => {
     });
   }, [formChange.current]);
 
-  return <Page>
-    <Helmet title="検索" />
-    <Paper className={style.form}>
-      {user.value !== null
-        ? <IconButton onClick={() => {
-          if (user.value === null) {
-            return;
-          }
-          const storage = user.value.storage;
-          const tf = storage.tagsFavo;
-          const tags = Im.Set(query.tags);
-          user.update({
-            ...user.value,
-            storage: {
-              ...storage,
-              tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
-            },
-          });
-        }}>
-          {user.value.storage.tagsFavo.has(Im.Set(query.tags))
-            ? <FontIcon className="material-icons">star</FontIcon>
-            : <FontIcon className="material-icons">star_border</FontIcon>}
-        </IconButton>
-        : null}
+  return (
+    <Page>
+      <Helmet title="検索" />
+      <Paper className={style.form}>
+        {user.value !== null
+          ? <IconButton
+            onClick={() => {
+              if (user.value === null) {
+                return;
+              }
+              const storage = user.value.storage;
+              const tf = storage.tagsFavo;
+              const tags = Im.Set(query.tags);
+              user.update({
+                ...user.value,
+                storage: {
+                  ...storage,
+                  tagsFavo: tf.has(tags) ? tf.delete(tags) : tf.add(tags),
+                },
+              });
+            }}
+          >
+            {user.value.storage.tagsFavo.has(Im.Set(query.tags))
+              ? <FontIcon className="material-icons">star</FontIcon>
+              : <FontIcon className="material-icons">star_border</FontIcon>}
+          </IconButton>
+          : null}
+        <div>
+          <TagsInput
+            fullWidth={true}
+            value={formTags}
+            onChange={v => {
+              setFormTags(v);
+              formChange.current.next();
+            }}
+          />
+          <TextField
+            fullWidth={true}
+            floatingLabelText="タイトル"
+            value={formTitle}
+            onChange={(_e, v) => {
+              setFormTitle(v);
+              formChange.current.next();
+            }}
+          />
+          <Checkbox
+            label="過去ログも"
+            checked={formDead}
+            onCheck={(_e, v) => {
+              setFormDead(v);
+              formChange.current.next();
+            }}
+          />
+        </div>
+      </Paper>
       <div>
-        <TagsInput
-          fullWidth={true}
-          value={formTags}
-          onChange={v => {
-            setFormTags(v);
-            formChange.current.next();
-          }} />
-        <TextField
-          fullWidth={true}
-          floatingLabelText="タイトル"
-          value={formTitle}
-          onChange={(_e, v) => {
-            setFormTitle(v);
-            formChange.current.next();
-          }} />
-        <Checkbox label="過去ログも" checked={formDead} onCheck={(_e, v) => {
-          setFormDead(v);
-          formChange.current.next();
-        }} />
-      </div>
-    </Paper>
-    <div>
-      {user.value !== null
-        ? <IconButton containerElement={<Link to="/topic/create" />}>
-          <FontIcon className="material-icons">edit</FontIcon>
+        {user.value !== null
+          ? <IconButton containerElement={<Link to="/topic/create" />}>
+            <FontIcon className="material-icons">edit</FontIcon>
+          </IconButton>
+          : null}
+        <IconButton onClick={() => topics.refetch()}>
+          <FontIcon className="material-icons">refresh</FontIcon>
         </IconButton>
-        : null}
-      <IconButton onClick={() => topics.refetch()}>
-        <FontIcon className="material-icons">refresh</FontIcon>
-      </IconButton>
-    </div>
-    <div>
-      {topics.data !== undefined
-        ? topics.data.topics.map(t =>
-          <Paper key={t.id}>
-            <TopicListItem topic={t} detail={true} />
-          </Paper>,
-        )
-        : null}
-    </div>
-    <div>
-      <RaisedButton onClick={() => {
-        topics.fetchMore({
-          variables: {
-            skip: topics.data !== undefined ? topics.data.topics.length : 0,
-          },
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) { return prev; }
-            return {
-              ...prev,
-              msgs: [...prev.topics, ...fetchMoreResult.topics],
-            };
-          },
-        });
-      }} label="もっと" />
-    </div>
-  </Page>;
+      </div>
+      <div>
+        {topics.data !== undefined
+          ? topics.data.topics.map(t =>
+            <Paper key={t.id}>
+              <TopicListItem topic={t} detail={true} />
+            </Paper>,
+          )
+          : null}
+      </div>
+      <div>
+        <RaisedButton
+          onClick={() => {
+            topics.fetchMore({
+              variables: {
+                skip: topics.data !== undefined ? topics.data.topics.length : 0,
+              },
+              updateQuery: (prev, { fetchMoreResult }) => {
+                if (!fetchMoreResult) { return prev; }
+                return {
+                  ...prev,
+                  msgs: [...prev.topics, ...fetchMoreResult.topics],
+                };
+              },
+            });
+          }}
+          label="もっと"
+        />
+      </div>
+    </Page>
+  );
 });

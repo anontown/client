@@ -25,24 +25,36 @@ export class ClientEditor extends React.Component<ClientEditorProps, ClientEdito
   }
 
   render() {
-    return (<G.UpdateClientComponent
-      variables={{
-        id: this.props.client.id,
-        name: this.state.name,
-        url: this.state.url,
-      }}
-      onCompleted={data => {
-        if (this.props.onUpdate) {
-          this.props.onUpdate(data.updateClient);
-        }
-      }}>{
-        (submit, { error }) => {
-          return (<form>
-            {error && <Errors errors={["更新に失敗"]} />}
-            <TextField floatingLabelText="名前" value={this.state.name} onChange={(_e, v) => this.setState({ name: v })} />
-            <TextField floatingLabelText="url" value={this.state.url} onChange={(_e, v) => this.setState({ url: v })} />
-            <RaisedButton onClick={() => submit()} label="OK" />
-          </form>);
-        }}</G.UpdateClientComponent>);
+    return (
+      <G.UpdateClientComponent
+        variables={{
+          id: this.props.client.id,
+          name: this.state.name,
+          url: this.state.url,
+        }}
+        onCompleted={data => {
+          if (this.props.onUpdate) {
+            this.props.onUpdate(data.updateClient);
+          }
+        }}
+      >{
+          (submit, { error }) => {
+            return (<form>
+              {error && <Errors errors={["更新に失敗"]} />}
+              <TextField
+                floatingLabelText="名前"
+                value={this.state.name}
+                onChange={(_e, v) => this.setState({ name: v })}
+              />
+              <TextField
+                floatingLabelText="url"
+                value={this.state.url}
+                onChange={(_e, v) => this.setState({ url: v })}
+              />
+              <RaisedButton onClick={() => submit()} label="OK" />
+            </form>);
+          }}
+      </G.UpdateClientComponent>
+    );
   }
 }

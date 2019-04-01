@@ -99,7 +99,7 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
 
   useEffectCond(() => {
     runCmd({ type: "reset", date: initDate });
-  }, () => data.data !== null);
+  }, () => data.data !== undefined);
 
   React.useEffect(() => {
     if (data.data !== undefined) {

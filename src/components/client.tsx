@@ -31,12 +31,14 @@ export class Client extends React.Component<ClientProps, ClientState> {
       : null;
 
     const edit = this.props.client.self
-      ? <div>
-        <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
-          <FontIcon className="material-icons">edit</FontIcon>
-        </IconButton>
-        {clientEditor}
-      </div >
+      ? (
+        <div>
+          <IconButton type="button" onClick={() => this.setState({ edit: !this.state.edit })} >
+            <FontIcon className="material-icons">edit</FontIcon>
+          </IconButton>
+          {clientEditor}
+        </div>
+      )
       : null;
 
     return (

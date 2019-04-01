@@ -24,19 +24,22 @@ const ResHashBase = withRouter(class extends React.Component<ResHashBaseProps, R
   render() {
     const hash = decodeURIComponent(this.props.match.params.hash);
 
-    return <div>
-      <Helmet title={`HASH:${hash}`} />
-      <G.FindResesComponent
-        variables={{ query: { hash } }}>
-        {({ loading, error, data }) => {
-          if (loading) { return "Loading..."; }
-          if (error || !data) { return (<Snack msg="レス取得に失敗しました" />); }
-          return data.reses.map(res => <Paper key={res.id}>
-            <Res res={res} />
-          </Paper>);
-        }}
-      </G.FindResesComponent>
-    </div>;
+    return (
+      <div>
+        <Helmet title={`HASH:${hash}`} />
+        <G.FindResesComponent
+          variables={{ query: { hash } }}
+        >
+          {({ loading, error, data }) => {
+            if (loading) { return "Loading..."; }
+            if (error || !data) { return (<Snack msg="レス取得に失敗しました" />); }
+            return data.reses.map(res => <Paper key={res.id}>
+              <Res res={res} />
+            </Paper>);
+          }}
+        </G.FindResesComponent>
+      </div>
+    );
   }
 });
 

@@ -38,12 +38,14 @@ export class History extends React.Component<HistoryProps, HistoryState> {
               : <FontIcon className="material-icons">arrow_drop_down</FontIcon>}
           </IconButton>
           {dateFormat.format(this.props.history.date)}
-          <Link to={{
-            pathname: `/hash/${encodeURIComponent(this.props.history.hash)}`,
-            state: {
-              modal: true,
-            },
-          }}>
+          <Link
+            to={{
+              pathname: `/hash/${encodeURIComponent(this.props.history.hash)}`,
+              state: {
+                modal: true,
+              },
+            }}
+          >
             HASH:{this.props.history.hash.substr(0, 6)}
           </Link>
         </div>

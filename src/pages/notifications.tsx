@@ -37,72 +37,79 @@ export const NotificationsPage = userSwitch((_props: NotificationsPageProps) => 
       <Helmet title="通知" />
       <div>
         <div>
-          <RaisedButton label="最新" onClick={async () => {
-            if (reses.data === undefined) {
-              return;
-            }
-            const first = arrayLast(reses.data.reses);
-            if (first === undefined) {
-              await reses.refetch();
-            } else {
-              reses.fetchMore({
-                variables: {
-                  query: {
-                    date: {
-                      date: first.date,
-                      type: "gt",
+          <RaisedButton
+            label="最新"
+            onClick={async () => {
+              if (reses.data === undefined) {
+                return;
+              }
+              const first = arrayLast(reses.data.reses);
+              if (first === undefined) {
+                await reses.refetch();
+              } else {
+                reses.fetchMore({
+                  variables: {
+                    query: {
+                      date: {
+                        date: first.date,
+                        type: "gt",
+                      },
+                      notice: true,
                     },
-                    notice: true,
                   },
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) { return prev; }
-                  return {
-                    ...prev,
-                    msgs: [...fetchMoreResult.reses, ...prev.reses],
-                  };
-                },
-              });
-            }
-          }} />
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) { return prev; }
+                    return {
+                      ...prev,
+                      msgs: [...fetchMoreResult.reses, ...prev.reses],
+                    };
+                  },
+                });
+              }
+            }}
+          />
         </div>
         <div>
           {reses.data !== undefined
             ? reses.data.reses.map(r => <Paper key={r.id}>
               <Res
-                res={r} />
+                res={r}
+              />
             </Paper>)
             : null}
         </div>
         <div>
-          <RaisedButton label="前" onClick={async () => {
-            if (reses.data === undefined) {
-              return;
-            }
-            const last = arrayLast(reses.data.reses);
-            if (last === undefined) {
-              await reses.refetch();
-            } else {
-              reses.fetchMore({
-                variables: {
-                  query: {
-                    date: {
-                      date: last.date,
-                      type: "lt",
+          <RaisedButton
+            label="前"
+            onClick={async () => {
+              if (reses.data === undefined) {
+                return;
+              }
+              const last = arrayLast(reses.data.reses);
+              if (last === undefined) {
+                await reses.refetch();
+              } else {
+                reses.fetchMore({
+                  variables: {
+                    query: {
+                      date: {
+                        date: last.date,
+                        type: "lt",
+                      },
+                      notice: true,
                     },
-                    notice: true,
                   },
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) { return prev; }
-                  return {
-                    ...prev,
-                    reses: [...prev.reses, ...fetchMoreResult.reses],
-                  };
-                },
-              });
-            }
-          }} />
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) { return prev; }
+                    return {
+                      ...prev,
+                      reses: [...prev.reses, ...fetchMoreResult.reses],
+                    };
+                  },
+                });
+              }
+            }}
+          />
         </div>
       </div>
     </Page>

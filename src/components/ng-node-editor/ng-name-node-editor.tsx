@@ -27,26 +27,31 @@ export class NGNameNodeEditor extends React.Component<NGNameNodeEditorProps, NGN
   }
 
   render() {
-    return <>
-      <Modal
-        isOpen={this.props.openDialog}
-        onRequestClose={() => this.props.changeOpenDialog(false)}>
-        {this.props.select}
-        <NGMatcherEditor
-          floatingLabelText="名前"
-          matcher={this.props.value.matcher}
-          onChange={v => {
-            this.props.onChange({
-              ...this.props.value,
-              matcher: v,
-            });
-          }} />
-      </Modal>
-      <ListItem
-        nestedLevel={this.props.nestedLevel}
-        rightIconButton={this.props.rightIconButton}
-        onClick={() => this.props.changeOpenDialog(true)}
-        primaryText={`NAME:${this.props.value.matcher.source}`} />
-    </>;
+    return (
+      <>
+        <Modal
+          isOpen={this.props.openDialog}
+          onRequestClose={() => this.props.changeOpenDialog(false)}
+        >
+          {this.props.select}
+          <NGMatcherEditor
+            floatingLabelText="名前"
+            matcher={this.props.value.matcher}
+            onChange={v => {
+              this.props.onChange({
+                ...this.props.value,
+                matcher: v,
+              });
+            }}
+          />
+        </Modal>
+        <ListItem
+          nestedLevel={this.props.nestedLevel}
+          rightIconButton={this.props.rightIconButton}
+          onClick={() => this.props.changeOpenDialog(true)}
+          primaryText={`NAME:${this.props.value.matcher.source}`}
+        />
+      </>
+    );
   }
 }
