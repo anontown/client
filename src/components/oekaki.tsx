@@ -7,12 +7,12 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { RGBColor } from "react-color";
-import * as ReactDOM from "react-dom";
 import {
   Command,
   toColorString,
 } from "../utils";
 import { ColorPicker } from "./color-picker";
+import { nullUnwrap } from "@kgtkr/utils";
 
 export interface Vec2d {
   x: number;
@@ -44,6 +44,7 @@ interface OekakiState {
 
 export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   defaltMinRows = 5;
+  imgRef = React.createRef<HTMLImageElement>();
 
   constructor(props: OekakiProps) {
     super(props);
@@ -57,8 +58,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
   }
 
   getPoint(cx: number, cy: number): [number, number] {
-    // TODO: findDOMNode使わずに書き直す
-    const rect = (ReactDOM.findDOMNode(this.refs.img) as Element).getBoundingClientRect();
+    const rect = nullUnwrap(this.imgRef.current).getBoundingClientRect();
     return [cx - rect.left, cy - rect.top];
   }
 
@@ -147,7 +147,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
           <IconButton
             onClick={() => {
               // svg to formdata
-              const img = ReactDOM.findDOMNode(this.refs.img) as HTMLImageElement;
+              const img = nullUnwrap(this.imgRef.current);
               const canvas = document.createElement("canvas");
               canvas.setAttribute("width", this.props.size.x.toString());
               canvas.setAttribute("height", this.props.size.y.toString());
@@ -168,7 +168,7 @@ export class Oekaki extends React.Component<OekakiProps, OekakiState> {
           </IconButton >
         </div >
         <img
-          ref="img"
+          ref={this.imgRef}
           style={{
             border: "solid 5px #888",
           }}
