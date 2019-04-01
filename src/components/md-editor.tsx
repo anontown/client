@@ -9,9 +9,9 @@ import * as op from "rxjs/operators";
 import { imgur } from "../utils";
 import { Errors } from "./errors";
 import { Md } from "./md";
+import { Modal } from "./modal";
 import { Oekaki } from "./oekaki";
 import { TextArea } from "./text-area";
-import { Modal } from "./modal";
 
 export interface MdEditorProps {
   value: string;

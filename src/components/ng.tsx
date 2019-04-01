@@ -7,8 +7,8 @@ import {
 import * as React from "react";
 import { ng, Storage, UserData } from "../models";
 import { list } from "../utils";
-import { NGEditor } from "./ng-editor";
 import { Modal } from "./modal";
+import { NGEditor } from "./ng-editor";
 
 interface NGProps {
   userData: UserData;

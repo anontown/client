@@ -3,8 +3,8 @@ import {
 } from "material-ui";
 import * as React from "react";
 import { ng } from "../../models";
-import { NGMatcherEditor } from "./ng-matcher-editor";
 import { Modal } from "../modal";
+import { NGMatcherEditor } from "./ng-matcher-editor";
 
 export interface NGNameNodeEditorProps {
   value: ng.NGNodeName;

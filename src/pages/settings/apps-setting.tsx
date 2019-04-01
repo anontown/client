@@ -53,7 +53,7 @@ export const AppsSettingPage = userSwitch(withRouter((_props: AppsSettingPagePro
         <IconButton type="button" onClick={async () => {
           try {
             await delToken({
-              variables: { client: c.id }, update:cache => {
+              variables: { client: c.id }, update: cache => {
                 const clients = cache.readQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({ query: G.FindClientsDocument, variables });
                 if (clients !== null) {
                   cache.writeQuery<G.FindClientsQuery, G.FindClientsQueryVariables>({

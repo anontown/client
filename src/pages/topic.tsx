@@ -2,12 +2,12 @@ import { arrayFirst } from "@kgtkr/utils";
 import {
   FontIcon,
   IconButton,
+  IconMenu,
+  MenuItem,
   Paper,
   RaisedButton,
   Slider,
   Toggle,
-  IconMenu,
-  MenuItem
 } from "material-ui";
 import * as moment from "moment";
 import * as React from "react";
@@ -20,13 +20,13 @@ import { useTitle } from "react-use";
 import * as rx from "rxjs";
 import * as G from "../../generated/graphql";
 import {
+  Modal,
   NG,
   Page,
   Res,
   ResWrite,
   Scroll,
   TopicFavo,
-  Modal,
 } from "../components";
 import { queryResultConvert, useUserContext } from "../utils";
 import * as style from "./topic.scss";

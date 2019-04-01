@@ -17,9 +17,9 @@ import * as G from "../../generated/graphql";
 import {
   Errors,
   MdEditor,
+  Modal,
   Page,
   TagsInput,
-  Modal,
 } from "../components";
 import { userSwitch, UserSwitchProps } from "../utils";
 
