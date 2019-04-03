@@ -264,7 +264,7 @@ export const Res = (props: ResProps) => {
                 ? <IconButton
                   containerElement={<Link
                     to={{
-                      pathname: `/res/${props.res.reply}`,
+                      pathname: `/res/${props.res.reply.id}`,
                       state: { modal: true },
                     }}
                   />}
