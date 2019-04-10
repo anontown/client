@@ -33,6 +33,7 @@ import {
   UserContextType,
 } from "../utils";
 import * as style from "./app.scss";
+import * as t from "io-ts";
 
 declare const gtag: any;
 
@@ -73,7 +74,16 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
       const tokenStr = localStorage.getItem("token");
       let token;
       if (tokenStr !== null) {
-        token = JSON.parse(tokenStr) as { id: string, key: string };
+        const tokenType = t.exact(t.type({
+          id: t.string,
+          key: t.string,
+        }));
+        const val = tokenType.decode(JSON.parse(tokenStr));
+        if (val.isRight()) {
+          token = val.value;
+        } else {
+          throw Error();
+        }
       } else {
         throw Error();
       }
