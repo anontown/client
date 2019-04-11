@@ -10,7 +10,7 @@ export const storageJSON7 = t.strict({
     res: t.string,
     count: t.number,
   })),
-  ng: t.array(ngJson)
+  ng: t.array(ngJson),
 });
 
 export type StorageJSON7 = t.TypeOf<typeof storageJSON7>;

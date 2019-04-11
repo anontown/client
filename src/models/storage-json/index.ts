@@ -1,13 +1,13 @@
-import { storageJSON1 } from "./storage-json-1";
-import { storageJSON2, convert1To2 } from "./storage-json-2";
-import { storageJSON3, convert2To3 } from "./storage-json-3";
-import { storageJSON4, convert3To4 } from "./storage-json-4";
-import { storageJSON5, convert4To5 } from "./storage-json-5";
-import { storageJSON6, convert5To6 } from "./storage-json-6";
-import { storageJSON7, convert6To7 } from "./storage-json-7";
-import { storageJSON8, convert7To8 } from "./storage-json-8";
-import { storageJSON9, convert8To9 } from "./storage-json-9";
 import * as t from "io-ts";
+import { storageJSON1 } from "./storage-json-1";
+import { convert1To2, storageJSON2 } from "./storage-json-2";
+import { convert2To3, storageJSON3 } from "./storage-json-3";
+import { convert3To4, storageJSON4 } from "./storage-json-4";
+import { convert4To5, storageJSON5 } from "./storage-json-5";
+import { convert5To6, storageJSON6 } from "./storage-json-6";
+import { convert6To7, storageJSON7 } from "./storage-json-7";
+import { convert7To8, storageJSON8 } from "./storage-json-8";
+import { convert8To9, storageJSON9 } from "./storage-json-9";
 
 export const storageJSON = t.taggedUnion("ver", [
   storageJSON1,

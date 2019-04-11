@@ -1,8 +1,8 @@
 import * as t from "io-ts";
+import * as G from "../../../generated/graphql";
+import { gqlClient } from "../../utils";
 import { ngJson } from "./ng-json";
 import { StorageJSON7 } from "./storage-json-7";
-import { gqlClient } from "../../utils";
-import * as G from "../../../generated/graphql";
 
 export const storageJSON8 = t.strict({
   ver: t.literal("8"),
@@ -12,7 +12,7 @@ export const storageJSON8 = t.strict({
     date: t.string,
     count: t.number,
   })),
-  ng: t.array(ngJson)
+  ng: t.array(ngJson),
 });
 
 export type StorageJSON8 = t.TypeOf<typeof storageJSON8>;

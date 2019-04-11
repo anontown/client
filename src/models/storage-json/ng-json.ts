@@ -2,7 +2,7 @@ import * as t from "io-ts";
 
 export const ngNodeNotJson: t.Type<NGNodeNotJson> = t.recursion("NGNodeNotJSON", () => t.strict({
   type: t.literal("not"),
-  child: ngNodeJson
+  child: ngNodeJson,
 }));
 
 export interface NGNodeNotJson {
@@ -12,7 +12,7 @@ export interface NGNodeNotJson {
 
 export const ngNodeAndJson: t.Type<NGNodeAndJson> = t.recursion("NGNodeAndJson", () => t.strict({
   type: t.literal("and"),
-  children: t.array(ngNodeJson)
+  children: t.array(ngNodeJson),
 }));
 
 export interface NGNodeAndJson {
@@ -22,7 +22,7 @@ export interface NGNodeAndJson {
 
 export const ngNodeOrJson: t.Type<NGNodeOrJson> = t.recursion("NGNodeOrJson", () => t.strict({
   type: t.literal("or"),
-  children: t.array(ngNodeJson)
+  children: t.array(ngNodeJson),
 }));
 
 export interface NGNodeOrJson {
@@ -32,14 +32,14 @@ export interface NGNodeOrJson {
 
 export const ngNodeProfileJson = t.strict({
   type: t.literal("profile"),
-  profile: t.string
+  profile: t.string,
 });
 
 export type NGNodeProfileJson = t.TypeOf<typeof ngNodeProfileJson>;
 
 export const ngNodeHashJson = t.strict({
   type: t.literal("hash"),
-  hash: t.string
+  hash: t.string,
 });
 
 export type NGNodeHashJson = t.TypeOf<typeof ngNodeHashJson>;
@@ -47,7 +47,7 @@ export type NGNodeHashJson = t.TypeOf<typeof ngNodeHashJson>;
 export const ngNodeTextMatcherRegJson = t.strict({
   type: t.literal("reg"),
   source: t.string,
-  i: t.boolean
+  i: t.boolean,
 });
 
 export type NGNodeTextMatcherRegJson = t.TypeOf<typeof ngNodeTextMatcherRegJson>;
@@ -55,7 +55,7 @@ export type NGNodeTextMatcherRegJson = t.TypeOf<typeof ngNodeTextMatcherRegJson>
 export const ngNodeTextMatcherTextJson = t.strict({
   type: t.literal("text"),
   source: t.string,
-  i: t.boolean
+  i: t.boolean,
 });
 
 export type NGNodeTextMatcherTextJson = t.TypeOf<typeof ngNodeTextMatcherTextJson>;

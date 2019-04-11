@@ -1,3 +1,4 @@
+import * as t from "io-ts";
 import {
   FontIcon,
   IconButton,
@@ -33,7 +34,6 @@ import {
   UserContextType,
 } from "../utils";
 import * as style from "./app.scss";
-import * as t from "io-ts";
 
 declare const gtag: any;
 
