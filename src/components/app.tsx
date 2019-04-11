@@ -78,10 +78,8 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
           id: t.string,
           key: t.string,
         });
-        const val = tokenType.decode(JSON.parse(tokenStr));
-        if (val.isRight()) {
-          token = val.value;
-        } else {
+        token = JSON.parse(tokenStr) as unknown;
+        if (!tokenType.is(token)) {
           throw Error();
         }
       } else {

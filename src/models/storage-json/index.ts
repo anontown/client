@@ -37,10 +37,9 @@ export const initStorage: StorageJSONLatest = {
 };
 export const verArray: Array<StorageJSON["ver"]> = ["9", "8", "7", "6", "5", "4", "3", "2", "1.0.0"];
 
-export async function convert(input: unknown): Promise<StorageJSONLatest> {
-  const storage = storageJSON.decode(input);
-  if (storage.isRight()) {
-    const s1 = storage.value;
+export async function convert(storage: unknown): Promise<StorageJSONLatest> {
+  if (storageJSON.is(storage)) {
+    const s1 = storage;
     const s2 = s1.ver === "1.0.0" ? convert1To2(s1) : s1;
     const s3 = s2.ver === "2" ? convert2To3(s2) : s2;
     const s4 = s3.ver === "3" ? convert3To4(s3) : s3;
