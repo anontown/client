@@ -74,10 +74,10 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
       const tokenStr = localStorage.getItem("token");
       let token;
       if (tokenStr !== null) {
-        const tokenType = t.exact(t.type({
+        const tokenType = t.strict({
           id: t.string,
           key: t.string,
-        }));
+        });
         const val = tokenType.decode(JSON.parse(tokenStr));
         if (val.isRight()) {
           token = val.value;

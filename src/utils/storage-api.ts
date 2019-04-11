@@ -21,7 +21,7 @@ export async function load(token: G.TokenMasterFragment) {
   const key = [...verArray, "main"].find(ver => storages.data.storages.findIndex(x => x.key === ver) !== -1);
   const sto = storages.data.storages.find(x => x.key === key);
   return toStorage(await convert(sto !== undefined
-    ? JSON.parse(sto.value) as StorageJSON
+    ? JSON.parse(sto.value)
     : initStorage));
 }
 
