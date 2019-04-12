@@ -37,7 +37,7 @@
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-tabs": "^2.3.1",
-    "@types/styled-components": "^4.1.12",
+    "@types/styled-components": "^4.1.8",
     "@types/uuid": "^3.4.4",
     "apollo": "^2.6.2",
     "clean-webpack-plugin": "^2.0.1",
@@ -52,11 +52,11 @@
     "ts-loader": "^5.3.3",
     "tslint": "^5.14.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.3.4000",
+    "typescript": "^3.4.3",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.3.1"
   },
   "dependencies": {
     "@anontown/schema": "^1.0.0",
