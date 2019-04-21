@@ -4,7 +4,6 @@ export const ngNodeNotJson: t.Type<NGNodeNotJson> = t.recursion("NGNodeNotJSON",
   type: t.literal("not"),
   child: ngNodeJson,
 }));
-
 export interface NGNodeNotJson {
   readonly type: "not";
   readonly child: NGNodeJson;
@@ -85,7 +84,7 @@ export const ngNodeVoteJson = t.strict({
 
 export type NGNodeVoteJson = t.TypeOf<typeof ngNodeVoteJson>;
 
-export const ngNodeJson = t.taggedUnion("type", [
+export const ngNodeJson: t.Type<NGNodeJson> = t.recursion("NGNodeJSON", () => t.taggedUnion("type", [
   ngNodeNotJson,
   ngNodeAndJson,
   ngNodeOrJson,
@@ -94,9 +93,17 @@ export const ngNodeJson = t.taggedUnion("type", [
   ngNodeTextJson,
   ngNodeNameJson,
   ngNodeVoteJson,
-]);
+]));
 
-export type NGNodeJson = t.TypeOf<typeof ngNodeJson>;
+export type NGNodeJson =
+  | NGNodeNotJson
+  | NGNodeAndJson
+  | NGNodeOrJson
+  | NGNodeProfileJson
+  | NGNodeHashJson
+  | NGNodeTextJson
+  | NGNodeNameJson
+  | NGNodeVoteJson;
 
 export const ngJson = t.strict({
   name: t.string,
