@@ -1,4 +1,4 @@
-import { arrayDrop, arrayFirst, arrayLast, nullMap, pipe, undefinedMap, undefinedUnwrap } from "@kgtkr/utils";
+import { arrayDrop, arrayFirst, arrayLast, nullMap, pipe, undefinedMap, undefinedUnwrap, debugPrint } from "@kgtkr/utils";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { OnSubscriptionDataOptions, useQuery, useSubscription } from "react-apollo-hooks";
@@ -340,9 +340,12 @@ export const Scroll = <T extends ListItemData, QueryResult, QueryVariables, Subs
     const el = rootEl.current;
     const subs = el !== null
       ? rx.fromEvent(el, "scroll")
-        .pipe(op.map(() => el.scrollTop + el.clientHeight),
+        .pipe(
+          op.map(() => el.scrollTop + el.clientHeight),
+          op.distinctUntilChanged(),
           op.filter(bottom => props.width >= Math.abs(el.scrollHeight - bottom)),
-          op.debounceTime(props.debounceTime))
+          op.debounceTime(props.debounceTime)
+        )
         .subscribe(() => f.current())
       : null;
     return () => {
