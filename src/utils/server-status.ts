@@ -1,4 +1,4 @@
-import { Config } from "src/env";
+import { Config } from "../env";
 
 export async function getServerStatus() {
   const server = await fetch(Config.api.origin + "/ping", { mode: "cors" })
