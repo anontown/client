@@ -35,6 +35,7 @@ import {
   getServerStatus
 } from "../utils";
 import * as style from "./app.scss";
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
 
 declare const gtag: any;
 
@@ -241,7 +242,13 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
               }}
             </User>
             : null)
-          : <div>サーバーに障害が発生しているかメンテナンス中です。</div>}
+          : <div><p>サーバーに障害が発生しているかメンテナンス中です。最新情報は<a href="https://twitter.com/anontown_bbs">Twitter</a>をご覧ください。</p>
+            <TwitterTimelineEmbed
+              sourceType="profile"
+              screenName="anontown_bbs"
+              options={{ height: "60vh" }}
+            />
+          </div>}
       </MuiThemeProvider>
     );
   }
