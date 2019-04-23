@@ -32,6 +32,7 @@ import {
   gqlClient,
   User,
   UserContextType,
+  getServerStatus
 } from "../utils";
 import * as style from "./app.scss";
 
@@ -44,6 +45,7 @@ interface AppProps extends RouteComponentProps<{}> {
 
 interface AppState {
   initUserData?: UserData | null;
+  serverStatus: boolean
 }
 
 export const App = withRouter(class extends React.Component<AppProps, AppState> {
@@ -52,8 +54,12 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
   constructor(props: AppProps) {
     super(props);
     this.state = {
+      serverStatus: true
     };
     this.changeLocation(this.props);
+    getServerStatus().then(x => {
+      this.setState({ serverStatus: x });
+    })
   }
 
   componentDidUpdate(prevProps: AppProps) {
@@ -124,116 +130,118 @@ export const App = withRouter(class extends React.Component<AppProps, AppState> 
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        {this.state.initUserData !== undefined
-          ? <User initUserData={this.state.initUserData}>
-            {user => {
-              return <div className={style.container}>
-                <Toolbar className={style.header}>
-                  <ToolbarGroup firstChild={true} className={style.big}>
-                    {(() => {
-                      const now = new Date();
-                      if (now.getMonth() + 1 === 4 && now.getDate() === 1 && now.getHours() < 12) {
-                        return <ToolbarGroup className={style.april}>April Fool！</ToolbarGroup>;
-                      } else {
-                        return <ToolbarTitle text="Anontown" />;
-                      }
-                    })()}
-                    <ToolbarTitle
-                      text={`build:${dateFormat.format(BUILD_DATE)}`}
-                      style={{ fontSize: "0.5rem" }}
-                    />
-                  </ToolbarGroup>
-                  <ToolbarGroup>
-                    <IconButton containerElement={<Link to="/" />}>
-                      <FontIcon className="material-icons">home</FontIcon>
-                    </IconButton>
-                    <IconButton containerElement={<Link to="/topic/search" />}>
-                      <FontIcon className="material-icons">search</FontIcon>
-                    </IconButton>
-                    {user.value !== null
-                      ? <IconButton containerElement={<Link to="/notifications" />}>
-                        <FontIcon className="material-icons">notifications</FontIcon>
+        {this.state.serverStatus
+          ? (this.state.initUserData !== undefined
+            ? <User initUserData={this.state.initUserData}>
+              {user => {
+                return <div className={style.container}>
+                  <Toolbar className={style.header}>
+                    <ToolbarGroup firstChild={true} className={style.big}>
+                      {(() => {
+                        const now = new Date();
+                        if (now.getMonth() + 1 === 4 && now.getDate() === 1 && now.getHours() < 12) {
+                          return <ToolbarGroup className={style.april}>April Fool！</ToolbarGroup>;
+                        } else {
+                          return <ToolbarTitle text="Anontown" />;
+                        }
+                      })()}
+                      <ToolbarTitle
+                        text={`build:${dateFormat.format(BUILD_DATE)}`}
+                        style={{ fontSize: "0.5rem" }}
+                      />
+                    </ToolbarGroup>
+                    <ToolbarGroup>
+                      <IconButton containerElement={<Link to="/" />}>
+                        <FontIcon className="material-icons">home</FontIcon>
                       </IconButton>
-                      : null}
-                    <IconMenu
-                      iconButtonElement={
-                        <IconButton touch={true}>
-                          <FontIcon className="material-icons">people</FontIcon>
-                        </IconButton>}
-                    >
+                      <IconButton containerElement={<Link to="/topic/search" />}>
+                        <FontIcon className="material-icons">search</FontIcon>
+                      </IconButton>
                       {user.value !== null
-                        ? [
-                          <MenuItem
-                            key="1"
-                            primaryText="プロフ管理"
-                            containerElement={<Link to="/profiles" />}
-                          />,
-                          <MenuItem
-                            key="2"
-                            primaryText="お知らせ"
-                            containerElement={<Link to="/messages" />}
-                          />,
-                          <MenuItem
-                            key="3"
-                            primaryText="設定"
-                            containerElement={<Link to="/settings/account" />}
-                          />,
-                          <MenuItem
-                            key="4"
-                            primaryText="ログアウト"
-                            onClick={() => this.logout(user)}
-                          />,
-                        ]
-                        : <MenuItem
-                          primaryText="ログイン"
-                          containerElement={<Link to="/login" />}
-                        />}
+                        ? <IconButton containerElement={<Link to="/notifications" />}>
+                          <FontIcon className="material-icons">notifications</FontIcon>
+                        </IconButton>
+                        : null}
+                      <IconMenu
+                        iconButtonElement={
+                          <IconButton touch={true}>
+                            <FontIcon className="material-icons">people</FontIcon>
+                          </IconButton>}
+                      >
+                        {user.value !== null
+                          ? [
+                            <MenuItem
+                              key="1"
+                              primaryText="プロフ管理"
+                              containerElement={<Link to="/profiles" />}
+                            />,
+                            <MenuItem
+                              key="2"
+                              primaryText="お知らせ"
+                              containerElement={<Link to="/messages" />}
+                            />,
+                            <MenuItem
+                              key="3"
+                              primaryText="設定"
+                              containerElement={<Link to="/settings/account" />}
+                            />,
+                            <MenuItem
+                              key="4"
+                              primaryText="ログアウト"
+                              onClick={() => this.logout(user)}
+                            />,
+                          ]
+                          : <MenuItem
+                            primaryText="ログイン"
+                            containerElement={<Link to="/login" />}
+                          />}
 
-                    </IconMenu>
-                    <IconButton
-                      containerElement={<a
-                        href="https://document.anontown.com/"
-                        target="_blank"
-                      />}
-                    >
-                      <FontIcon className="material-icons">help</FontIcon>
-                    </IconButton>
-                  </ToolbarGroup>
-                </Toolbar>
-                <div className={style.main}>
-                  <Switch location={isModal ? this.previousLocation : location}>
-                    <Route exact={true} path="/" component={pages.HomePage} />
-                    <Route exact={true} path="/res/:id" component={pages.ResPage} />
-                    <Route exact={true} path="/res/:id/reply" component={pages.ResReplyPage} />
-                    <Route exact={true} path="/hash/:hash" component={pages.ResHashPage} />
-                    <Route exact={true} path="/topic/search" component={pages.TopicSearchPage} />
-                    <Route exact={true} path="/topic/create" component={pages.TopicCreatePage} />
-                    <Route exact={true} path="/topic/:id" component={pages.TopicPage} />
-                    <Route exact={true} path="/topic/:id/data" component={pages.TopicDataPage} />
-                    <Route exact={true} path="/topic/:id/fork" component={pages.TopicForkPage} />
-                    <Route exact={true} path="/topic/:id/edit" component={pages.TopicEditPage} />
-                    <Route exact={true} path="/profiles" component={pages.ProfilesPage} />
-                    <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
-                    <Route exact={true} path="/messages" component={pages.MessagesPage} />
-                    <Route exact={true} path="/signup" component={pages.SignupPage} />
-                    <Route exact={true} path="/login" component={pages.LoginPage} />
-                    <Route exact={true} path="/auth" component={pages.AuthPage} />
-                    <Route path="/settings" component={pages.SettingsPage} />
-                    <Route exact={true} path="/profile/:id" component={pages.ProfilePage} />
-                    <Route component={pages.NotFoundPage} />
-                  </Switch>
-                  {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
-                  {isModal ? <Route path="/res/:id/reply" component={pages.ResReplyModal} /> : null}
-                  {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
-                  {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
-                  {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
-                  {isModal ? <Route path="/topic/:id/edit" component={pages.TopicEditModal} /> : null}
-                  {isModal ? <Route path="/hash/:hash" component={pages.ResHashModal} /> : null}
-                </div>
-              </div>;
-            }}
-          </User>
-          : null}
+                      </IconMenu>
+                      <IconButton
+                        containerElement={<a
+                          href="https://document.anontown.com/"
+                          target="_blank"
+                        />}
+                      >
+                        <FontIcon className="material-icons">help</FontIcon>
+                      </IconButton>
+                    </ToolbarGroup>
+                  </Toolbar>
+                  <div className={style.main}>
+                    <Switch location={isModal ? this.previousLocation : location}>
+                      <Route exact={true} path="/" component={pages.HomePage} />
+                      <Route exact={true} path="/res/:id" component={pages.ResPage} />
+                      <Route exact={true} path="/res/:id/reply" component={pages.ResReplyPage} />
+                      <Route exact={true} path="/hash/:hash" component={pages.ResHashPage} />
+                      <Route exact={true} path="/topic/search" component={pages.TopicSearchPage} />
+                      <Route exact={true} path="/topic/create" component={pages.TopicCreatePage} />
+                      <Route exact={true} path="/topic/:id" component={pages.TopicPage} />
+                      <Route exact={true} path="/topic/:id/data" component={pages.TopicDataPage} />
+                      <Route exact={true} path="/topic/:id/fork" component={pages.TopicForkPage} />
+                      <Route exact={true} path="/topic/:id/edit" component={pages.TopicEditPage} />
+                      <Route exact={true} path="/profiles" component={pages.ProfilesPage} />
+                      <Route exact={true} path="/notifications" component={pages.NotificationsPage} />
+                      <Route exact={true} path="/messages" component={pages.MessagesPage} />
+                      <Route exact={true} path="/signup" component={pages.SignupPage} />
+                      <Route exact={true} path="/login" component={pages.LoginPage} />
+                      <Route exact={true} path="/auth" component={pages.AuthPage} />
+                      <Route path="/settings" component={pages.SettingsPage} />
+                      <Route exact={true} path="/profile/:id" component={pages.ProfilePage} />
+                      <Route component={pages.NotFoundPage} />
+                    </Switch>
+                    {isModal ? <Route path="/res/:id" component={pages.ResModal} /> : null}
+                    {isModal ? <Route path="/res/:id/reply" component={pages.ResReplyModal} /> : null}
+                    {isModal ? <Route path="/profile/:id" component={pages.ProfileModal} /> : null}
+                    {isModal ? <Route path="/topic/:id/data" component={pages.TopicDataModal} /> : null}
+                    {isModal ? <Route path="/topic/:id/fork" component={pages.TopicForkModal} /> : null}
+                    {isModal ? <Route path="/topic/:id/edit" component={pages.TopicEditModal} /> : null}
+                    {isModal ? <Route path="/hash/:hash" component={pages.ResHashModal} /> : null}
+                  </div>
+                </div>;
+              }}
+            </User>
+            : null)
+          : <div>サーバーに障害が発生しているかメンテナンス中です。</div>}
       </MuiThemeProvider>
     );
   }
